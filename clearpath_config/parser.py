@@ -84,28 +84,6 @@ class Keys():
         if cls.ASSERTION:
             assert 0, msg
 
-    @staticmethod
-    def is_valid(key, value):
-        return True
-
-    @staticmethod
-    def is_ip(ip):
-        if not isinstance(ip, str):
-            Keys.print("ip: is not string")
-            return False
-        fields = ip.split(".")
-        if not len(fields) == 4:
-            Keys.print("ip: does not have exactly four fields")
-            return False
-        for field in fields:
-            if not field.isdecimal():
-                Keys.print("ip: entry is not decimal")
-                return False
-            field_int = int(field)
-            if not (0 < field_int < 256):
-                Keys.print("ip: entry is not in range 0 to 256")
-                return False
-        return True
 
 # Clearpath Configuration Parser
 class ConfigParser():
