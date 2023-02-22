@@ -41,6 +41,17 @@ class HostsConfig():
         self.platform = Host()
         self.onboard = list()
         self.remote = list()
+        if platform:
+            assert isinstance(platform, Host), "Platform host must be Host type."
+            self.platform = platform
+        if onboard:
+            assert isinstance(onboard, list), "Onboard must be a list"
+            assert all(isinstance(host, Host) for host in onboard), "Onboard hosts must all be of type Host"
+            self.onboard = onboard
+        if remote:
+            assert isinstance(onboard, list), "Remote must be a list"
+            assert all(isinstance(host, Host) for host in remote), "Remote hosts must all be of type Host"
+            self.remote = remote
 
     def assert_unique_host(self, host: Host) -> None:
         # check host
