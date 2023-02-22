@@ -30,7 +30,7 @@ class Hostname():
             return False
         # Only [A-Z][0-9] and '-' Allowed
         # - cannot end or start with a hyphen ('-')
-        allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
+        allowed = re.compile(r"(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
         return all(allowed.match(x) for x in hostname.split("."))
 
     @staticmethod
