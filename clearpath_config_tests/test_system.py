@@ -13,6 +13,7 @@ VALID_HOSTNAMES = ["cpr-x999-9999", "cpr-proj01"]
 INVALID_IP = ["regular.string",
             "0.X.0.0", # non integer field
             "255.0.0", # too few fields
+            "255.0.0.0.0", # too many fields
             "0.0.256.0", # field wider than 8 bits
             ]
 
