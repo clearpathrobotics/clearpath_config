@@ -185,7 +185,7 @@ class HostsConfig():
 # - system level configuration options
 class SystemConfig():
     def __init__(self, _self: str = None, hosts: HostsConfig = None) -> None:
-        self._self = str
+        self._self = Hostname()
         self.hosts = HostsConfig()
         if _self:
             self.set_self(_self)
@@ -198,9 +198,7 @@ class SystemConfig():
         return self._self
 
     def set_self(self, _self: str) -> None:
-        assert isinstance(_self, str), "Self hostname must be a string"
-        assert len(_self.split(" ")) == 1, "Self hostname must not contain spaces"
-        self._self = _self
+        self._self = Hostname(_self)
 
     # Hosts:
     # - hosts that are involved in this system
