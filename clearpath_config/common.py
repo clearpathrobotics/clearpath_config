@@ -1,6 +1,18 @@
 import os
 import re
 
+# Platform
+# - all supported platforms
+class Platform():
+    DINGO_DIFF = "DingoD"
+    DINGO_OMNI = "DingoO"
+    JACKAL = "Jackal"
+    HUSKY = "Husky"
+    RIDGEBACK = "Ridgeback"
+    WARTHOG = "Warthog"
+    GENERIC = "Generic"
+
+
 # Hostname
 # - hostname class
 class Hostname():
@@ -160,13 +172,13 @@ class SerialNumber():
               WARTHOG,
               GENERIC]
 
-    MODEL_NAMES = {DINGO_DIFF: "DingoD",
-                   DINGO_OMNI: "DingoO",
-                   JACKAL: "Jackal",
-                   HUSKY: "Husky",
-                   RIDGEBACK: "Ridgeback",
-                   WARTHOG: "Warthog",
-                   GENERIC: "Generic"}
+    MODEL_NAMES = {DINGO_DIFF: Platform.DINGO_DIFF,
+                   DINGO_OMNI: Platform.DINGO_OMNI,
+                   JACKAL: Platform.JACKAL,
+                   HUSKY: Platform.HUSKY,
+                   RIDGEBACK: Platform.RIDGEBACK,
+                   WARTHOG: Platform.WARTHOG,
+                   GENERIC: Platform.GENERIC}
 
     def __init__(self, sn: str) -> None:
         self.model, self.unit = SerialNumber.parse(sn)
