@@ -33,6 +33,7 @@ class Host():
     def set_ip(self, ip: str) -> None:
         self.ip = IP(ip)
 
+
 # HostsConfig
 # - these are the hosts that are involved in this system
 class HostsConfig():
@@ -181,9 +182,11 @@ class HostsConfig():
         self.remote = self.remove_host(self.remote, host, hostname, ip)
         return
 
+
 # SystemConfig:
 # - system level configuration options
 class SystemConfig():
+
     def __init__(self, _self: str = None, hosts: HostsConfig = None) -> None:
         self._self = Hostname()
         self.hosts = HostsConfig()
