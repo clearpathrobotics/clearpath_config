@@ -1,3 +1,4 @@
+from typing import List
 import os
 import re
 
@@ -11,6 +12,14 @@ class Platform():
     RIDGEBACK = "Ridgeback"
     WARTHOG = "Warthog"
     GENERIC = "Generic"
+
+    ALL = [DINGO_DIFF,
+           DINGO_OMNI,
+           JACKAL,
+           HUSKY,
+           RIDGEBACK,
+           WARTHOG,
+           GENERIC]
 
 
 # Hostname
@@ -135,6 +144,8 @@ class File():
 
     @staticmethod
     def clean(path: str) -> str:
+        if not path:
+            return None
         path = os.path.expanduser(path)
         path = os.path.normpath(path)
         path = os.path.abspath(path)
@@ -187,7 +198,7 @@ class SerialNumber():
     def parse(sn: str) -> tuple:
         assert isinstance(sn, str), "Serial Number must be string"
         sn = sn.lower().strip().split("-")
-        assert isinstance(1 < len(sn) < 4), "Serial Number must be delimited by hyphens ('-') and only have 3 (cpr-j100-0001) entries or 2 (j100-0001) entries"
+        assert 1 < len(sn) < 4, "Serial Number must be delimited by hyphens ('-') and only have 3 (cpr-j100-0001) entries or 2 (j100-0001) entries"
         # Remove CPR Prefix
         if len(sn) == 3:
             assert sn[0] == "cpr", "Serial Number with three fields (cpr-j100-0001) must start with cpr"
@@ -212,3 +223,41 @@ class SerialNumber():
             return "-".join(["cpr", self.model, self.unit])
         else:
             return "-".join([self.model, self.unit])
+
+class Accessory():
+
+    def __init__(self,
+                 parent: str = "base_link",
+                 prefix: str = "",
+                 xyz: List[float] = [0.0, 0.0, 0.0],
+                 rpy: List[float] = [0.0, 0.0, 0.0]) -> None:
+        self.parent = parent
+        self.prefix = prefix
+        self.xyz = xyz
+        self.rpy = rpy
+
+    def get_parent(self) -> str:
+        return self.parent
+
+    def set_parent(self, parent:str) -> None:
+        assert isinstance(parent, str), "Parent must be a string"
+        assert not parent[0].isdigit(), "Parent cannot start with a digit"
+        self.parent = parent
+
+    def get_prefix(self) -> str:
+        return self.prefix
+
+    def set_prefix(self, prefix: str) -> None:
+        assert isinstance(prefix, str), "Prefix must be a string"
+        assert not prefix[0].isdigit(), "Prefix cannot start with a digit"
+        self.prefix = prefix
+
+    def get_xyz(self) -> List[float]:
+        return self.xyz
+
+    def set_xyz(self, xyz: List[float]) -> None:
+        assert all([isinstance(i, float) for i in xyz]), "XYZ must have all float entries"
+        assert len(xyz) == 3, "XYZ must be three float value"
+
+    def get_rpy(self) -> List[float]:
+        assert()
