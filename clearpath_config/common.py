@@ -227,12 +227,12 @@ class SerialNumber():
 class Accessory():
 
     def __init__(self,
+                 name: str = "",
                  parent: str = "base_link",
-                 prefix: str = "",
                  xyz: List[float] = [0.0, 0.0, 0.0],
                  rpy: List[float] = [0.0, 0.0, 0.0]) -> None:
+        self.name = name
         self.parent = parent
-        self.prefix = prefix
         self.xyz = xyz
         self.rpy = rpy
 
@@ -244,13 +244,13 @@ class Accessory():
         assert not parent[0].isdigit(), "Parent cannot start with a digit"
         self.parent = parent
 
-    def get_prefix(self) -> str:
-        return self.prefix
+    def get_name(self) -> str:
+        return self.name
 
-    def set_prefix(self, prefix: str) -> None:
-        assert isinstance(prefix, str), "Prefix must be a string"
-        assert not prefix[0].isdigit(), "Prefix cannot start with a digit"
-        self.prefix = prefix
+    def set_name(self, name: str) -> None:
+        assert isinstance(name, str), "name must be a string"
+        assert not name[0].isdigit(), "name cannot start with a digit"
+        self.name = name
 
     def get_xyz(self) -> List[float]:
         return self.xyz
