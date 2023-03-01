@@ -132,7 +132,7 @@ class File():
         self.path = path
 
     def __str__(self) -> str:
-        return self.file
+        return self.path
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, str):
@@ -145,7 +145,7 @@ class File():
     @staticmethod
     def clean(path: str) -> str:
         if not path:
-            return None
+            return ""
         path = os.path.expanduser(path)
         path = os.path.normpath(path)
         path = os.path.abspath(path)
