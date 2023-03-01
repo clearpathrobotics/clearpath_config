@@ -260,6 +260,9 @@ class PlatformConfigParser(BaseConfigParser):
     SERIAL_NUMBER = "serial_number"
     DECORATIONS = "decorations"
     EXTRAS = "extras"
+    # Platform Extras KEys
+    URDF = "urdf"
+    CONTROL = "control"
 
     def __new__(cls, config: dict) -> PlatformConfig:
         pfmconfig = PlatformConfig()
@@ -269,6 +272,11 @@ class PlatformConfigParser(BaseConfigParser):
         pfmconfig.set_serial_number(cls.get_required_val(cls.SERIAL_NUMBER, platform))
         # Platform.Decorations
         pfmconfig.decorations = DecorationsConfigParser(pfmconfig.get_model_name(), platform)
+        # Platform.Extras
+        extras = cls.get_optional_val(cls.EXTRAS, platform)
+        if extras:
+            pfmconfig.extras.set_urdf_extras(cls.get_optional_val(cls.URDF, extras, ""))
+            pfmconfig.extras.set_control_extras(cls.get_optional_val(cls.CONTROL, extras, ""))
         return pfmconfig
 
 
