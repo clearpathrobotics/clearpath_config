@@ -1,39 +1,5 @@
 from clearpath_config.common import Accessory, File, Platform, SerialNumber
 from typing import List
-# platform: # These are are parameters specific to a a platform
-#     serial_number: J100-XXXXX
-#     model: J100
-#     decorations: # Platform specific accessories
-#         fenders:
-#         wibotic_mount: true
-#         pacs:
-#             full_risers:
-#               - level: 1
-#                 height: 0.1
-#               - level: 2
-#                 height: 0.2
-#             partial_riser:
-#               - row: 1
-#                 level: 1
-#                 height: 0.1
-#               - row: 2
-#                 level: 1
-#                 height: 0.1
-#             brackets:
-#               a01_bracket:
-#                   model: horizontal
-#                   extension: 0.0
-#                   parent: "A01"
-#                   xyz: [0.0, 0.0, 0.0]
-#                   rpy: [0.0, 0.0, 0.0]
-#               a02_bracket:
-#                   model: horizontal
-#                   extension: 0.0
-#                   parent: A02
-#                   xyz: [0.0, 0.0, 0.0]
-#                   rpy: [0.0, 0.0, 0.0]
-#     extras:
-#         control: PATH_TO_CONTROL_EXTRAS_YAML
 
 #PACS
 # - all PACS structures
@@ -105,20 +71,22 @@ class PACS():
 # - each platform will have its own PACS config
 class PACSConfig():
 
-    # BasePACSConfig
+    # Base PACSConfig
     class Base():
 
         def __init__(self) -> None:
             self.enabled = True
-            self.full_risers = []
-            self.row_risers = []
-            self.brackets = []
 
         def enable(self) -> None:
             self.enabled = True
 
         def disable(self) -> None:
             self.enabled = False
+
+
+    class BaseFullRisers(Base):
+        def __init__(self) -> None:
+            self.full_risers = []
 
         def get_full_risers(self) -> list:
             return self.full_risers
@@ -144,6 +112,13 @@ class PACSConfig():
                     return True
             return False
 
+
+    # Base Row Risers
+    class BaseRowRisers(Base):
+
+        def __init__(self) -> None:
+            self.row_risers = []
+
         def get_row_risers(self) -> list:
             return self.row_risers
 
@@ -168,6 +143,13 @@ class PACSConfig():
                     self.row_risers.remove(riser)
                     return True
             return False
+
+
+    # Base Brackets
+    class BaseBrackets(Base):
+
+        def __init__(self) -> None:
+            self.brackets = []
 
         def get_brackets(self) -> list:
             return self.brackets
@@ -197,6 +179,7 @@ class PACSConfig():
                     return True
             return False
 
+
     # Dingo Differential
     class DingoD():
         pass
@@ -207,15 +190,15 @@ class PACSConfig():
         pass
 
 
-    # Jackal
-    class Jackal(Base):
+    # Husky
+    class Husky(BaseFullRisers, BaseRowRisers, BaseBrackets):
 
         def __init__(self) -> None:
             super().__init__()
 
 
-    # Husky
-    class Husky(Base):
+    # Jackal
+    class Jackal(Base):
 
         def __init__(self) -> None:
             super().__init__()
@@ -244,8 +227,8 @@ class PACSConfig():
     '''
     MODEL_CONFIGS = {Platform.DINGO_DIFF: DingoD(),
                      Platform.DINGO_OMNI: DingoO(),
-                     Platform.JACKAL: Jackal(),
                      Platform.HUSKY: Husky(),
+                     Platform.JACKAL: Jackal(),
                      Platform.RIDGEBACK: Ridgeback(),
                      Platform.WARTHOG: Warthog(),
                      Platform.GENERIC: Generic()}
@@ -302,6 +285,7 @@ class Decorations():
 
         def set_model(self, model: str) -> None:
             assert model in self.MODELS, "Bumper model '%s' is not one of: %s" % (model, self.MODELS)
+            self.model = model
 
 
     # Husky Specific Decorations
@@ -340,6 +324,7 @@ class Decorations():
 
             def set_model(self, model: str) -> None:
                 assert model in self.MODELS, "Top plate model '%s' is not one of: %s" % (model, self.MODELS)
+                self.model = model
 
 
 # DecorationsConfig:
@@ -369,21 +354,6 @@ class DecorationsConfig():
             super().__init__(model = Platform.DINGO_OMNI)
 
 
-    # Jackal
-    # - Bumper (Wibotic)
-    # - AccessoryFender
-    class Jackal(Base):
-
-        def __init__(self) -> None:
-            super().__init__(model = Platform.JACKAL)
-            Bumper = Decorations.Bumper
-            self.front_bumper = Bumper(enable=True, extension=0.0, model=Bumper.DEFAULT)
-            self.rear_bumper = Bumper(enable=True, extension=0.0, model=Bumper.DEFAULT)
-            self.front_accessory_fender = False
-            self.rear_accessory_fender = False
-            self.pacs = PACSConfig(model = Platform.HUSKY)
-
-
     # Husky
     # - Bumper
     # - TopPlate
@@ -398,6 +368,20 @@ class DecorationsConfig():
             self.rear_bumper = Bumper(enable=True, extension=0.0, model=Bumper.DEFAULT)
             self.top_plate = TopPlate(enable=True, model=TopPlate.DEFAULT)
             self.pacs = PACSConfig(model = Platform.HUSKY)
+
+
+    # Jackal
+    # - Bumper (Wibotic)
+    # - AccessoryFender
+    class Jackal(Base):
+
+        def __init__(self) -> None:
+            super().__init__(model = Platform.JACKAL)
+            Bumper = Decorations.Bumper
+            self.front_bumper = Bumper(enable=True, extension=0.0, model=Bumper.DEFAULT)
+            self.rear_bumper = Bumper(enable=True, extension=0.0, model=Bumper.DEFAULT)
+            self.front_accessory_fender = False
+            self.rear_accessory_fender = False
 
 
     # Ridgeback
@@ -428,8 +412,8 @@ class DecorationsConfig():
     '''
     MODEL_CONFIGS = {Platform.DINGO_DIFF: DingoD(),
                      Platform.DINGO_OMNI: DingoO(),
-                     Platform.JACKAL: Jackal(),
                      Platform.HUSKY: Husky(),
+                     Platform.JACKAL: Jackal(),
                      Platform.RIDGEBACK: Ridgeback(),
                      Platform.WARTHOG: Warthog(),
                      Platform.GENERIC: Generic()}
