@@ -428,7 +428,7 @@ class DecorationsConfig():
 # - Control extras: YAML with overwrites or extra ROS parameters
 class ExtrasConfig():
 
-    def __init__(self, urdf: str = None, control: str = None) -> None:
+    def __init__(self, urdf: str = "", control: str = "") -> None:
         self.urdf = File(path=urdf)
         self.control = File(path=control)
 
