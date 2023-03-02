@@ -5,21 +5,28 @@ import re
 # Platform
 # - all supported platforms
 class Platform():
-    DINGO_DIFF = "DingoD"
-    DINGO_OMNI = "DingoO"
-    JACKAL = "Jackal"
-    HUSKY = "Husky"
-    RIDGEBACK = "Ridgeback"
-    WARTHOG = "Warthog"
-    GENERIC = "Generic"
+    # Dingo D V1
+    DD100 = "dd100"
+    # Dingo O V1
+    DO100 = "do100"
+    # Jackal V1
+    J100 = "j100"
+    # Husky V2
+    A200 = "a200"
+    # Ridgeback V1
+    R100 = "r100"
+    # Warthog V2
+    W200 = "w200"
+    # Genric Robot
+    GENX = "genx"
 
-    ALL = [DINGO_DIFF,
-           DINGO_OMNI,
-           JACKAL,
-           HUSKY,
-           RIDGEBACK,
-           WARTHOG,
-           GENERIC]
+    ALL = [DD100,
+           DO100,
+           J100,
+           A200,
+           R100,
+           W200,
+           GENX]
 
 
 # Hostname
@@ -167,29 +174,6 @@ class File():
 # - ex. cpr-j100-0100
 # - drop 'cpr' prefix as it is not required
 class SerialNumber():
-    DINGO_DIFF = "dd100"
-    DINGO_OMNI = "do100"
-    JACKAL = "j100"
-    HUSKY = "a200"
-    RIDGEBACK = "r100"
-    WARTHOG = "w200"
-    GENERIC = "generic"
-
-    MODELS = [DINGO_DIFF,
-              DINGO_OMNI,
-              JACKAL,
-              HUSKY,
-              RIDGEBACK,
-              WARTHOG,
-              GENERIC]
-
-    MODEL_NAMES = {DINGO_DIFF: Platform.DINGO_DIFF,
-                   DINGO_OMNI: Platform.DINGO_OMNI,
-                   JACKAL: Platform.JACKAL,
-                   HUSKY: Platform.HUSKY,
-                   RIDGEBACK: Platform.RIDGEBACK,
-                   WARTHOG: Platform.WARTHOG,
-                   GENERIC: Platform.GENERIC}
 
     def __init__(self, sn: str) -> None:
         self.model, self.unit = SerialNumber.parse(sn)
@@ -204,16 +188,13 @@ class SerialNumber():
             assert sn[0] == "cpr", "Serial Number with three fields (cpr-j100-0001) must start with cpr"
             sn = sn[1:]
         # Match to Robot
-        assert sn[0] in SerialNumber.MODELS, "Serial Number model entry must match one of %s" % SerialNumber.MODELS
+        assert sn[0] in Platform.ALL, "Serial Number model entry must match one of %s" % Platform.ALL
         # Check Number
         assert sn[1].isdecimal(), "Serial Number unit entry must be an integer value"
         return (sn[0], sn[1])
 
     def get_model(self) -> str:
         return self.model
-
-    def get_model_name(self) -> str:
-        return self.MODEL_NAMES[self.model]
 
     def get_unit(self) -> str:
         return self.unit
