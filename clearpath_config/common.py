@@ -231,33 +231,43 @@ class Accessory():
                  parent: str = "base_link",
                  xyz: List[float] = [0.0, 0.0, 0.0],
                  rpy: List[float] = [0.0, 0.0, 0.0]) -> None:
+        self.name = str()
+        self.parent = str()
+        self.xyz = list()
+        self.rpy = list()
+        self.set_name(name)
+        self.set_parent(parent)
+        self.set_xyz(xyz)
+        self.set_rpy(rpy)
+
+    def get_name(self) -> str:
+        return self.name
+
+    def set_name(self, name: str) -> None:
+        assert isinstance(name, str), "Name must be a string"
+        assert name != "", "Name cannot be empty"
+        assert not name[0].isdigit(), "Name cannot start with a digit"
         self.name = name
-        self.parent = parent
-        self.xyz = xyz
-        self.rpy = rpy
 
     def get_parent(self) -> str:
         return self.parent
 
     def set_parent(self, parent:str) -> None:
         assert isinstance(parent, str), "Parent must be a string"
+        assert parent != "", "Parent cannot be empty"
         assert not parent[0].isdigit(), "Parent cannot start with a digit"
         self.parent = parent
-
-    def get_name(self) -> str:
-        return self.name
-
-    def set_name(self, name: str) -> None:
-        assert isinstance(name, str), "name must be a string"
-        assert not name[0].isdigit(), "name cannot start with a digit"
-        self.name = name
 
     def get_xyz(self) -> List[float]:
         return self.xyz
 
     def set_xyz(self, xyz: List[float]) -> None:
         assert all([isinstance(i, float) for i in xyz]), "XYZ must have all float entries"
-        assert len(xyz) == 3, "XYZ must be three float value"
+        assert len(xyz) == 3, "XYZ must be a list of exactly three float values"
 
     def get_rpy(self) -> List[float]:
-        assert()
+        return self.rpy
+
+    def set_rpy(self, rpy: List[float]) -> None:
+        assert all([isinstance(i, float) for i in rpy]), "RPY must have all float entries"
+        assert len(rpy) == 3, "RPY must be a list of exactly three float values"
