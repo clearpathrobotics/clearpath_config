@@ -224,8 +224,8 @@ class DecorationsConfigParser(BaseConfigParser):
     # Key
     DECORATIONS = "decorations"
 
-    class Husky():
-        # Husky Decoration Keys
+    class A200():
+        # A200 Husky Decoration Keys
         FRONT_BUMPER = "front_bumper"
         REAR_BUMPER = "rear_bumper"
         TOP_PLATE = "top_plate"
@@ -246,11 +246,24 @@ class DecorationsConfigParser(BaseConfigParser):
             dcnconfig.pacs = PACSConfigParser(Platform.A200, decorations)
             return dcnconfig
 
-    class Jackal():
-        pass
+    class J100():
+        # J100 Jackal Decoration Keys
+        FRONT_BUMPER = "front_bumper"
+        REAR_BUMPER = "rear_bumper"
 
-    MODEL_CONFIGS = {Platform.A200: Husky,
-                    Platform.J100: Jackal}
+        def __new__(cls, config: dict) -> J100DecorationsConfig:
+            dcnconfig = J100DecorationsConfig()
+            dcnparser = DecorationsConfigParser
+            # Decorations
+            decorations = dcnparser.get_required_val(dcnparser.DECORATIONS, config)
+            # Decorations.Front_Bumper
+            dcnconfig.front_bumper = BumperConfigParser(cls.FRONT_BUMPER, decorations)
+            # Decorations.Rear_Bumper
+            dcnconfig.rear_bumper = BumperConfigParser(cls.REAR_BUMPER, decorations)
+            return dcnconfig
+
+    MODEL_CONFIGS = {Platform.A200: A200,
+                    Platform.J100: J100}
 
     def __new__(cls, model: str, config: dict) -> BaseDecorationsConfig:
         assert model in Platform.ALL, "Model '%s' must be one of %s" % (model, Platform.ALL)
