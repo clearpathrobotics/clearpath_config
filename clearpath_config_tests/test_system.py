@@ -1,4 +1,4 @@
-from clearpath_config.system import SystemConfig, HostsConfig, Host
+from clearpath_config.system.system import SystemConfig, HostsConfig, Host
 import unittest
 
 INVALID_HOSTNAMES = ["space in hostname",
