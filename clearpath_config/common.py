@@ -245,6 +245,7 @@ class Accessory():
     def set_xyz(self, xyz: List[float]) -> None:
         assert all([isinstance(i, float) for i in xyz]), "XYZ must have all float entries"
         assert len(xyz) == 3, "XYZ must be a list of exactly three float values"
+        self.xyz = xyz
 
     def get_rpy(self) -> List[float]:
         return self.rpy
@@ -252,3 +253,4 @@ class Accessory():
     def set_rpy(self, rpy: List[float]) -> None:
         assert all([isinstance(i, float) for i in rpy]), "RPY must have all float entries"
         assert len(rpy) == 3, "RPY must be a list of exactly three float values"
+        self.rpy = rpy
