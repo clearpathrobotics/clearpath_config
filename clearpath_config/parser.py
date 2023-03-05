@@ -1,7 +1,11 @@
-from clearpath_config.clearpath_config import ClearpathConfig
 from clearpath_config.common import Platform
-from clearpath_config.platform import PlatformConfig, DecorationsConfig, Decorations, PACSConfig, PACS
-from clearpath_config.system import SystemConfig, HostsConfig, Host
+from clearpath_config.clearpath_config import ClearpathConfig
+from clearpath_config.platform.decorations import Decorations, BaseDecorationsConfig
+from clearpath_config.platform.pacs import PACS
+from clearpath_config.platform.platform import PlatformConfig, DecorationsConfig
+from clearpath_config.platform.a200 import A200DecorationsConfig, A200PACSConfig
+from clearpath_config.platform.j100 import J100DecorationsConfig
+from clearpath_config.system.system import SystemConfig, HostsConfig, Host
 from typing import List
 import os
 import yaml
@@ -145,9 +149,9 @@ class PACSConfigParser(BaseConfigParser):
             pacs_brackets.append(PACS.Bracket(name, parent, model, extension, xyz, rpy))
         return pacs_brackets
 
-    class Husky(BaseConfigParser):
-        def __new__(cls, config: dict) -> PACSConfig.Husky:
-            pacsconfig = PACSConfig.Husky()
+    class A200(BaseConfigParser):
+        def __new__(cls, config: dict) -> A200DecorationsConfig:
+            pacsconfig = A200PACSConfig()
             # PACS
             pacs = cls.get_optional_val(PACSConfigParser.PACS_KEY, config)
             if not pacs:
@@ -164,7 +168,7 @@ class PACSConfigParser(BaseConfigParser):
     '''
     PACS Config
     '''
-    MODEL_CONFIGS = {Platform.HUSKY: Husky}
+    MODEL_CONFIGS = {Platform.A200: A200}
 
     def __new__(cls, model: str, config: dict):
         assert model in cls.MODEL_CONFIGS, "Model '%s' must be one of %s" % (model, cls.MODEL_CONFIGS.keys())
@@ -200,8 +204,8 @@ class TopPlateConfigParser(BaseConfigParser):
     ENABLE = "enable"
     MODEL = "model"
 
-    def __new__(cls, key: str, config: dict) -> Decorations.Husky.TopPlate:
-        topconfig = Decorations.Husky.TopPlate()
+    def __new__(cls, key: str, config: dict) -> Decorations.A200.TopPlate:
+        topconfig = Decorations.A200.TopPlate()
         # Top_Plate
         top_plate = cls.get_optional_val(key, config)
         if not top_plate:
@@ -227,8 +231,8 @@ class DecorationsConfigParser(BaseConfigParser):
         TOP_PLATE = "top_plate"
         PACS = "pacs"
 
-        def __new__(cls, config: dict) -> DecorationsConfig.Husky:
-            dcnconfig = DecorationsConfig.Husky()
+        def __new__(cls, config: dict) -> A200DecorationsConfig:
+            dcnconfig = A200DecorationsConfig()
             dcnparser = DecorationsConfigParser
             # Decorations
             decorations = dcnparser.get_required_val(dcnparser.DECORATIONS, config)
@@ -239,16 +243,16 @@ class DecorationsConfigParser(BaseConfigParser):
             # Decorations.Top_Plate
             dcnconfig.top_plate = TopPlateConfigParser(cls.TOP_PLATE, decorations)
             # Decorations.PACS
-            dcnconfig.pacs = PACSConfigParser(Platform.HUSKY, decorations)
+            dcnconfig.pacs = PACSConfigParser(Platform.A200, decorations)
             return dcnconfig
 
-    class Jackal(DecorationsConfig):
+    class Jackal():
         pass
 
-    MODEL_CONFIGS = {Platform.HUSKY: Husky,
-                    Platform.JACKAL: Jackal}
+    MODEL_CONFIGS = {Platform.A200: Husky,
+                    Platform.J100: Jackal}
 
-    def __new__(cls, model: str, config: dict) -> DecorationsConfig:
+    def __new__(cls, model: str, config: dict) -> BaseDecorationsConfig:
         assert model in Platform.ALL, "Model '%s' must be one of %s" % (model, Platform.ALL)
         return DecorationsConfigParser.MODEL_CONFIGS[model](config)
 
@@ -271,7 +275,7 @@ class PlatformConfigParser(BaseConfigParser):
         # Platform.SerialNumber
         pfmconfig.set_serial_number(cls.get_required_val(cls.SERIAL_NUMBER, platform))
         # Platform.Decorations
-        pfmconfig.decorations = DecorationsConfigParser(pfmconfig.get_model_name(), platform)
+        pfmconfig.decorations = DecorationsConfigParser(pfmconfig.get_model(), platform)
         # Platform.Extras
         extras = cls.get_optional_val(cls.EXTRAS, platform)
         if extras:
