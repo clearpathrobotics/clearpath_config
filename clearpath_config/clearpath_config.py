@@ -1,5 +1,5 @@
-from clearpath_config.system import SystemConfig
-from clearpath_config.platform import PlatformConfig
+from clearpath_config.system.system import SystemConfig
+from clearpath_config.platform.platform import PlatformConfig
 
 # ClearpathConfig: 
 #  - top level configurator
