@@ -2,7 +2,7 @@ from clearpath_config.common import Accessory, File, Platform, SerialNumber
 from clearpath_config.platform.decorations import BaseDecorationsConfig
 from clearpath_config.platform.a200 import A200DecorationsConfig
 from clearpath_config.platform.j100 import J100DecorationsConfig
-from clearpath_config.platform.genx import GENXDecorationsConfig
+from clearpath_config.platform.generic import GENERICDecorationsConfig
 from typing import List
 '''
 I was thinking about creating a directory: platform under which we could have platform.py, pacs.py, decorations.py, and all of the robots in their respective folders, i.e. a200.py, j100.py etc. or husky.py, jackal.py, etc.
@@ -33,7 +33,7 @@ class DecorationsConfig():
                      Platform.J100: J100DecorationsConfig(),
                      Platform.R100: None,
                      Platform.W200: None,
-                     Platform.GENX: GENXDecorationsConfig()}
+                     Platform.GENERIC: GENERICDecorationsConfig()}
 
     def __new__(self, model) -> None:
         assert model in Platform.ALL, "Model passed '%s' is not expected. must be one of the following: %s" % (model, Platform.ALL)
@@ -67,7 +67,7 @@ class ExtrasConfig():
 class PlatformConfig():
 
     def __init__(self, 
-                 serial: str = "genx-0000",
+                 serial: str = "generic",
                  decorations: BaseDecorationsConfig = None,
                  extras: ExtrasConfig = None) -> None:
         self.serial = SerialNumber(sn = serial)
