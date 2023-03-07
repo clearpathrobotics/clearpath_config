@@ -39,7 +39,12 @@ class Decorations():
             return self.extension
 
         def set_extension(self, extension) -> None:
+            try:
+                extension = float(extension)
+            except ValueError as e:
+                raise AssertionError(e.args[0])
             assert isinstance(extension, float), "Bumper extension must be of type float, unexpected type '%s'" % type(extension)
+            assert extension >= 0, "Bumper extension must be a positive value"
             self.extension = extension
 
         def get_model(self) -> str:
