@@ -3,7 +3,7 @@ from clearpath_config.common import Platform
 from clearpath_config.platform.decorations import BaseDecorationsConfig
 
 # GENX Generic Decorations Configuration
-class GENXDecorationsConfig(BaseDecorationsConfig):
+class GENERICDecorationsConfig(BaseDecorationsConfig):
 
     def __init__(self) -> None:
-        super().__init__(model = Platform.GENX)
+        super().__init__(model = Platform.GENERIC)
