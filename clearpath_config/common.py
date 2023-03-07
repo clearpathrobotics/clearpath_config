@@ -18,7 +18,7 @@ class Platform():
     # Warthog V2
     W200 = "w200"
     # Genric Robot
-    GENX = "genx"
+    GENERIC = "generic"
 
     ALL = [DD100,
            DO100,
@@ -26,7 +26,7 @@ class Platform():
            A200,
            R100,
            W200,
-           GENX]
+           GENERIC]
 
 
 # Hostname
@@ -70,7 +70,7 @@ class Hostname():
         # No Trailing Dots
         assert hostname[-1] != ".", "Hostname '%s' should not end with a ('.') period." % hostname
         # Only [A-Z][0-9] and '-' Allowed
-        allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
+        allowed = re.compile(r"(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
         assert all(allowed.match(x) for x in hostname.split(".")), "Hostname '%s' cannot contain characters other than [A-Z][0-9] and hypens ('-')." % hostname
 
 
@@ -182,13 +182,19 @@ class SerialNumber():
     def parse(sn: str) -> tuple:
         assert isinstance(sn, str), "Serial Number must be string"
         sn = sn.lower().strip().split("-")
-        assert 1 < len(sn) < 4, "Serial Number must be delimited by hyphens ('-') and only have 3 (cpr-j100-0001) entries or 2 (j100-0001) entries"
+        assert 0 < len(sn) < 4, "Serial Number must be delimited by hyphens ('-') and only have 3 (cpr-j100-0001) entries, 2 (j100-0001) entries, or 1 (generic) entry"
         # Remove CPR Prefix
         if len(sn) == 3:
             assert sn[0] == "cpr", "Serial Number with three fields (cpr-j100-0001) must start with cpr"
             sn = sn[1:]
         # Match to Robot
         assert sn[0] in Platform.ALL, "Serial Number model entry must match one of %s" % Platform.ALL
+        # Generic Robot
+        if sn[0] == Platform.GENERIC:
+            if len(sn) > 1:
+                return (sn[0], sn[1])
+            else:
+                return (sn[0], "xxxx")
         # Check Number
         assert sn[1].isdecimal(), "Serial Number unit entry must be an integer value"
         return (sn[0], sn[1])
@@ -204,6 +210,7 @@ class SerialNumber():
             return "-".join(["cpr", self.model, self.unit])
         else:
             return "-".join([self.model, self.unit])
+
 
 class Accessory():
 
