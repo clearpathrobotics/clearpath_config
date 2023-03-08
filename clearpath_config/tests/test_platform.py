@@ -1,8 +1,7 @@
 from clearpath_config.platform.decorations import Decorations
 from clearpath_config.platform.pacs import PACS, FullRisersConfig, RowRisersConfig, BracketsConfig
 from clearpath_config.platform.platform import PlatformConfig, Platform
-from clearpath_config.platform.a200 import A200DecorationsConfig, A200PACSConfig
-from clearpath_config_tests.utils import valid_object_variable_check, invalid_object_variable_check, assert_not_errors
+from clearpath_config.tests.test_utils import valid_object_variable_check, invalid_object_variable_check, assert_not_errors
 
 INVALID_SERIAL_NUMBERS = ["randomstring",        # Random String
                           "string-with-hyphens", # String with Hyphens
