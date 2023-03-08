@@ -33,6 +33,7 @@ class Host():
     def set_ip(self, ip: str) -> None:
         self.ip = IP(ip)
 
+
 # HostsConfig
 # - these are the hosts that are involved in this system
 class HostsConfig():
@@ -150,7 +151,7 @@ class HostsConfig():
             return []
 
     def set_onboard(self, onboard: List[Host]) -> None:
-        self.onboard = self.set_hostlist(destination=self.onboard, hostlist=onboard)
+        self.onboard = self.set_hostlist(destination=self.get_onboard(), hostlist=onboard)
 
     def add_onboard(self, host: Host = None, hostname: str = None, ip: str = None) -> None:
         self.onboard = self.add_host(destination=self.get_onboard(), host=host, hostname=hostname, ip=ip)
@@ -170,20 +171,22 @@ class HostsConfig():
             return []
 
     def set_remote(self, remote: List[Host]) -> None:
-        self.remote = self.set_hostlist(remote, self.remote)
+        self.remote = self.set_hostlist(destination=self.get_remote(), hostlist=remote)
         return
 
     def add_remote(self, host: Host = None, hostname: str = None, ip: str = None) -> None:
-        self.remote = self.add_host(self.remote, host, hostname, ip)
+        self.remote = self.add_host(destination=self.get_remote(), host=host, hostname=hostname, ip=ip)
         return
 
     def remove_remote(self, host: Host = None, hostname: str = None, ip: str = None) -> bool:
-        self.remote = self.remove_host(self.remote, host, hostname, ip)
+        self.remote = self.remove_host(destination=self.get_remote(), host=host, hostname=hostname, ip=ip)
         return
+
 
 # SystemConfig:
 # - system level configuration options
 class SystemConfig():
+
     def __init__(self, _self: str = None, hosts: HostsConfig = None) -> None:
         self._self = Hostname()
         self.hosts = HostsConfig()

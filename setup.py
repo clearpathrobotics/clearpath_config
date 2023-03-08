@@ -3,7 +3,8 @@ import clearpath_config
 
 setup(
     name="clearpath_config",
-    packages=["clearpath_config", "clearpath_config.base"],
+    packages=["clearpath_config", "clearpath_config.platform",
+              "clearpath_system"],
     version=clearpath_config.__version__,
     install_requires=[
         'requests',

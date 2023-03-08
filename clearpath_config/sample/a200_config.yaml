@@ -1,16 +1,16 @@
 version: 0
  
 system: # These are system level configs
-    self: J100-1
+    self: A200-1
     hosts: # These are the hosts that are involved in this system
         platform: # The main computer for this system, ie the robot's computer
-            J100-1: 192.168.131.1
+            A200-1: 192.168.131.1
         onboard: # These are additional on-board computers such as a secondary computer or software kit
-            J100-1B: 192.168.131.5
+            A200-B: 192.168.131.5
             ONAV-KIT: 192.168.131.10
         remote: # These are remote machines which need to interact with this system such as laptops or other robots
             CPR12345: 10.10.10.101
-            A200-1: 192.168.1.111
+            USERS-PC: 10.10.10.1
     ros2:
         namespace: HOSTNAME
         domain_id: 123
