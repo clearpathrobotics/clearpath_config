@@ -2,9 +2,10 @@ from typing import List
 import os
 import re
 
+
 # Platform
 # - all supported platforms
-class Platform():
+class Platform:
     # Dingo D V1
     DD100 = "dd100"
     # Dingo O V1
@@ -20,19 +21,12 @@ class Platform():
     # Genric Robot
     GENERIC = "generic"
 
-    ALL = [DD100,
-           DO100,
-           J100,
-           A200,
-           R100,
-           W200,
-           GENERIC]
+    ALL = [DD100, DO100, J100, A200, R100, W200, GENERIC]
 
 
 # Hostname
 # - hostname class
-class Hostname():
-
+class Hostname:
     def __init__(self, hostname: str = "hostname") -> None:
         self.assert_valid(hostname)
         self.hostname = hostname
@@ -46,7 +40,6 @@ class Hostname():
 
     def __str__(self) -> str:
         return self.hostname
-
 
     @staticmethod
     def is_valid(hostname: str):
@@ -64,20 +57,28 @@ class Hostname():
 
     @staticmethod
     def assert_valid(hostname: str):
-        assert isinstance(hostname, str), "Hostname '%s' must be of type 'str'" % hostname
+        assert isinstance(hostname, str), (
+            "Hostname '%s' must be of type 'str'" % hostname
+        )
         # Max 253 ASCII Characters
-        assert len(hostname) < 254, "Hostname '%s' exceeds 253 ASCII character limit." % hostname
+        assert len(hostname) < 254, (
+            "Hostname '%s' exceeds 253 ASCII character limit." % hostname
+        )
         # No Trailing Dots
-        assert hostname[-1] != ".", "Hostname '%s' should not end with a ('.') period." % hostname
+        assert hostname[-1] != ".", (
+            "Hostname '%s' should not end with a ('.') period." % hostname
+        )
         # Only [A-Z][0-9] and '-' Allowed
         allowed = re.compile(r"(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
-        assert all(allowed.match(x) for x in hostname.split(".")), "Hostname '%s' cannot contain characters other than [A-Z][0-9] and hypens ('-')." % hostname
+        assert all(allowed.match(x) for x in hostname.split(".")), (
+            "Hostname '%s' cannot contain characters other than [A-Z][0-9] and hypens ('-')."
+            % hostname
+        )
 
 
 # IP
 # - ip class
-class IP():
-
+class IP:
     def __init__(self, ip: str = "0.0.0.0") -> None:
         self.assert_valid(ip)
         self.ip_str = ip
@@ -90,7 +91,7 @@ class IP():
         else:
             return False
 
-    def  __str__(self) -> str:
+    def __str__(self) -> str:
         return self.ip_str
 
     @staticmethod
@@ -118,7 +119,7 @@ class IP():
         # Must have Four Fields Delimited by '.'
         fields = ip.split(".")
         assert len(fields) == 4, "IP '%s' must have four entries" % ip
-        for field in fields: 
+        for field in fields:
             # Fields Must be Integer
             assert field.isdecimal(), "IP '%s' entries must be integers" % ip
             # Fields Must be 8-Bits Wide
@@ -128,8 +129,7 @@ class IP():
 
 # File
 # - file class
-class File():
-
+class File:
     def __init__(self, path: str, creatable=False, exists=False) -> None:
         if creatable:
             assert File.is_creatable(path)
@@ -175,8 +175,7 @@ class File():
 # - Clearpath Robots Serial Number
 # - ex. cpr-j100-0100
 # - drop 'cpr' prefix as it is not required
-class SerialNumber():
-
+class SerialNumber:
     def __init__(self, sn: str) -> None:
         self.model, self.unit = SerialNumber.parse(sn)
 
@@ -184,13 +183,22 @@ class SerialNumber():
     def parse(sn: str) -> tuple:
         assert isinstance(sn, str), "Serial Number must be string"
         sn = sn.lower().strip().split("-")
-        assert 0 < len(sn) < 4, "Serial Number must be delimited by hyphens ('-') and only have 3 (cpr-j100-0001) entries, 2 (j100-0001) entries, or 1 (generic) entry"
+        assert (
+            0 < len(sn) < 4
+        ), "Serial Number must be delimited by hyphens ('-') \
+            and only have 3 (cpr-j100-0001) entries, \
+            2 (j100-0001) entries, \
+            or 1 (generic) entry"
         # Remove CPR Prefix
         if len(sn) == 3:
-            assert sn[0] == "cpr", "Serial Number with three fields (cpr-j100-0001) must start with cpr"
+            assert (
+                sn[0] == "cpr"
+            ), "Serial Number with three fields (cpr-j100-0001) must start with cpr"
             sn = sn[1:]
         # Match to Robot
-        assert sn[0] in Platform.ALL, "Serial Number model entry must match one of %s" % Platform.ALL
+        assert sn[0] in Platform.ALL, (
+            "Serial Number model entry must match one of %s" % Platform.ALL
+        )
         # Generic Robot
         if sn[0] == Platform.GENERIC:
             if len(sn) > 1:
@@ -207,7 +215,7 @@ class SerialNumber():
     def get_unit(self) -> str:
         return self.unit
 
-    def get_serial(self, prefix = False) -> str:
+    def get_serial(self, prefix=False) -> str:
         if prefix:
             return "-".join(["cpr", self.model, self.unit])
         else:
@@ -254,7 +262,9 @@ class Accessory():
         return self.xyz
 
     def set_xyz(self, xyz: List[float]) -> None:
-        assert all([isinstance(i, float) for i in xyz]), "XYZ must have all float entries"
+        assert all(
+            [isinstance(i, float) for i in xyz]
+        ), "XYZ must have all float entries"
         assert len(xyz) == 3, "XYZ must be a list of exactly three float values"
         self.xyz = xyz
 
@@ -262,7 +272,9 @@ class Accessory():
         return self.rpy
 
     def set_rpy(self, rpy: List[float]) -> None:
-        assert all([isinstance(i, float) for i in rpy]), "RPY must have all float entries"
+        assert all(
+            [isinstance(i, float) for i in rpy]
+        ), "RPY must have all float entries"
         assert len(rpy) == 3, "RPY must be a list of exactly three float values"
         self.rpy = rpy
 

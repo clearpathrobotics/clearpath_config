@@ -1,10 +1,10 @@
 from clearpath_config.common import Hostname, IP
 from typing import List
 
+
 # Host
 # - hostname and config pair
-class Host():
-
+class Host:
     def __init__(self, hostname: str = "hostname", ip: str = "0.0.0.0") -> None:
         self.hostname = Hostname()
         self.ip = IP()
@@ -36,9 +36,10 @@ class Host():
 
 # HostsConfig
 # - these are the hosts that are involved in this system
-class HostsConfig():
-
-    def __init__(self, platform: Host = None, onboard: List[Host] = [], remote: List[Host] = []) -> None:
+class HostsConfig:
+    def __init__(
+        self, platform: Host = None, onboard: List[Host] = [], remote: List[Host] = []
+    ) -> None:
         self.platform = Host()
         self.onboard = list()
         self.remote = list()
@@ -47,11 +48,15 @@ class HostsConfig():
             self.platform = platform
         if onboard:
             assert isinstance(onboard, list), "Onboard must be a list"
-            assert all(isinstance(host, Host) for host in onboard), "Onboard hosts must all be of type Host"
+            assert all(
+                isinstance(host, Host) for host in onboard
+            ), "Onboard hosts must all be of type Host"
             self.onboard = onboard
         if remote:
             assert isinstance(onboard, list), "Remote must be a list"
-            assert all(isinstance(host, Host) for host in remote), "Remote hosts must all be of type Host"
+            assert all(
+                isinstance(host, Host) for host in remote
+            ), "Remote hosts must all be of type Host"
             self.remote = remote
 
     def assert_unique_host(self, host: Host) -> None:
@@ -62,19 +67,29 @@ class HostsConfig():
 
     def assert_unique_hostname(self, hostname: str) -> None:
         # check platform hostname
-        assert hostname != self.get_platform_hostname(), "Hostname %s is already the platform's hostname" % hostname
+        assert hostname != self.get_platform_hostname(), (
+            "Hostname %s is already the platform's hostname" % hostname
+        )
         # check onboard hostnames
-        assert hostname not in [host.get_hostname() for host in self.get_onboard()], "Hostname %s is already an onboard host" % hostname
+        assert hostname not in [host.get_hostname() for host in self.get_onboard()], (
+            "Hostname %s is already an onboard host" % hostname
+        )
         # check remote hostnames
-        assert hostname not in [host.get_hostname() for host in self.get_remote()], "Hostname %s is already a remote host" % hostname
+        assert hostname not in [host.get_hostname() for host in self.get_remote()], (
+            "Hostname %s is already a remote host" % hostname
+        )
 
     def assert_unique_ip(self, ip: str) -> None:
         # check platform ip
         assert ip != self.get_platform_ip(), "IP %s is already the platform's IP." % ip
         # check onboard ip's
-        assert ip not in [host.get_ip() for host in self.get_onboard()], "IP %s is already an onboard host IP" % ip
+        assert ip not in [host.get_ip() for host in self.get_onboard()], (
+            "IP %s is already an onboard host IP" % ip
+        )
         # check remote ip's
-        assert ip not in [host.get_ip() for host in self.get_remote()], "IP %s is already a remote host IP" % ip
+        assert ip not in [host.get_ip() for host in self.get_remote()], (
+            "IP %s is already a remote host IP" % ip
+        )
 
     # Platform:
     # - the main computer for tis system (i.e. the robot's computer)
@@ -102,7 +117,7 @@ class HostsConfig():
     # HostList:
     # - general functions to set, add, and remove from a list of hosts
     def set_hostlist(self, destination: list, hostlist: List[Host]) -> List[Host]:
-        assert isinstance(hostlist, list), "Onboard/Remote list must be list of Hosts" 
+        assert isinstance(hostlist, list), "Onboard/Remote list must be list of Hosts"
         for host in hostlist:
             assert isinstance(host, Host), "Onboard/Remote list must be list of Hosts"
             self.assert_unique_host(host)
@@ -110,21 +125,31 @@ class HostsConfig():
         destination.extend(hostlist)
         return destination
 
-    def add_host(self, destination: list, host: Host = None, hostname:str = None, ip: str = None) -> List[Host]:
+    def add_host(
+        self, destination: list, host: Host = None, hostname: str = None, ip: str = None
+    ) -> List[Host]:
         assert isinstance(destination, list), "Destination list must be of type List"
         if host:
-            assert isinstance(host, Host), "Onboard/Remote host entry must be of type Host"
+            assert isinstance(
+                host, Host
+            ), "Onboard/Remote host entry must be of type Host"
             self.assert_unique_host(host)
             destination.append(host)
         else:
-            assert hostname and ip, "Onboard/Remote entry needs both hostname and ip if Host type is not passed"
+            assert (
+                hostname and ip
+            ), "Onboard/Remote entry needs both hostname and ip if Host type is not passed"
             self.assert_unique_host(Host(hostname, ip))
-            destination.append(Host(hostname,ip))
+            destination.append(Host(hostname, ip))
         return destination
 
-    def remove_host(self, destination: list, host: Host = None, hostname: str = None, ip: str = None) -> List[Host]:
+    def remove_host(
+        self, destination: list, host: Host = None, hostname: str = None, ip: str = None
+    ) -> List[Host]:
         assert isinstance(destination, list), "Destination list must be of type List"
-        assert host or hostname or ip, "One of Host, hostname, or ip must be specified to be removed"
+        assert (
+            host or hostname or ip
+        ), "One of Host, hostname, or ip must be specified to be removed"
         if host:
             assert host in destination, "Host %s does not exist in hosts" % host
             destination.remove(host)
@@ -151,14 +176,24 @@ class HostsConfig():
             return []
 
     def set_onboard(self, onboard: List[Host]) -> None:
-        self.onboard = self.set_hostlist(destination=self.get_onboard(), hostlist=onboard)
+        self.onboard = self.set_hostlist(
+            destination=self.get_onboard(), hostlist=onboard
+        )
 
-    def add_onboard(self, host: Host = None, hostname: str = None, ip: str = None) -> None:
-        self.onboard = self.add_host(destination=self.get_onboard(), host=host, hostname=hostname, ip=ip)
+    def add_onboard(
+        self, host: Host = None, hostname: str = None, ip: str = None
+    ) -> None:
+        self.onboard = self.add_host(
+            destination=self.get_onboard(), host=host, hostname=hostname, ip=ip
+        )
         return
 
-    def remove_onboard(self, host: Host = None, hostname: str = None, ip: str = None) -> bool:
-        self.onboard = self.remove_host(destination=self.get_onboard(), host=host, hostname=hostname, ip=ip)
+    def remove_onboard(
+        self, host: Host = None, hostname: str = None, ip: str = None
+    ) -> bool:
+        self.onboard = self.remove_host(
+            destination=self.get_onboard(), host=host, hostname=hostname, ip=ip
+        )
         return
 
     # Remote:
@@ -174,19 +209,26 @@ class HostsConfig():
         self.remote = self.set_hostlist(destination=self.get_remote(), hostlist=remote)
         return
 
-    def add_remote(self, host: Host = None, hostname: str = None, ip: str = None) -> None:
-        self.remote = self.add_host(destination=self.get_remote(), host=host, hostname=hostname, ip=ip)
+    def add_remote(
+        self, host: Host = None, hostname: str = None, ip: str = None
+    ) -> None:
+        self.remote = self.add_host(
+            destination=self.get_remote(), host=host, hostname=hostname, ip=ip
+        )
         return
 
-    def remove_remote(self, host: Host = None, hostname: str = None, ip: str = None) -> bool:
-        self.remote = self.remove_host(destination=self.get_remote(), host=host, hostname=hostname, ip=ip)
+    def remove_remote(
+        self, host: Host = None, hostname: str = None, ip: str = None
+    ) -> bool:
+        self.remote = self.remove_host(
+            destination=self.get_remote(), host=host, hostname=hostname, ip=ip
+        )
         return
 
 
 # SystemConfig:
 # - system level configuration options
-class SystemConfig():
-
+class SystemConfig:
     def __init__(self, _self: str = None, hosts: HostsConfig = None) -> None:
         self._self = Hostname()
         self.hosts = HostsConfig()
@@ -207,7 +249,7 @@ class SystemConfig():
     # - hosts that are involved in this system
     def get_hosts(self) -> HostsConfig:
         return self.hosts
- 
+
     def set_hosts(self, hosts: HostsConfig) -> None:
         assert isinstance(hosts, HostsConfig), "Hosts must be of type HostsConfig"
         self.hosts = hosts

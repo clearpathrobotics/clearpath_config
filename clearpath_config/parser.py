@@ -3,7 +3,7 @@ from clearpath_config.clearpath_config import ClearpathConfig
 from clearpath_config.mounts.mounts import MountsConfig, Mount
 from clearpath_config.platform.decorations import Decorations, BaseDecorationsConfig
 from clearpath_config.platform.pacs import PACS
-from clearpath_config.platform.platform import PlatformConfig, DecorationsConfig
+from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.platform.a200 import A200DecorationsConfig, A200PACSConfig
 from clearpath_config.platform.j100 import J100DecorationsConfig
 from clearpath_config.system.system import SystemConfig, HostsConfig, Host
@@ -12,16 +12,16 @@ import os
 import yaml
 
 
-class BaseConfigParser():
-
+class BaseConfigParser:
     @staticmethod
     def check_key_exists(key: str, config: dict) -> bool:
         return key in config
 
     @staticmethod
     def assert_key_exists(key: str, config: dict) -> None:
-        assert BaseConfigParser.check_key_exists(key, config),\
-            "Key '%s' must be in YAML"
+        assert BaseConfigParser.check_key_exists(
+            key, config
+        ), "Key '%s' must be in YAML"
 
     @staticmethod
     def get_required_val(key: str, config: dict):
@@ -29,7 +29,7 @@ class BaseConfigParser():
         return config[key]
 
     @staticmethod
-    def get_optional_val(key: str, config: dict, default = None):
+    def get_optional_val(key: str, config: dict, default=None):
         if BaseConfigParser.check_key_exists(key, config):
             return config[key]
         else:
@@ -39,7 +39,7 @@ class BaseConfigParser():
 class HostsConfigParser(BaseConfigParser):
     # Key
     HOSTS = "hosts"
-    ## Host Keys
+    # Host Keys
     PLATFORM = "platform"
     ONBOARD = "onboard"
     REMOTE = "remote"
@@ -63,8 +63,10 @@ class HostsConfigParser(BaseConfigParser):
         platform = cls.get_required_val(cls.PLATFORM, config)
         assert isinstance(platform, dict), "Platform host must be a dictionary"
         entries = list(platform.items())
-        assert len(entries) == 1, "Platform must have exactly one ('hostname': 'ip') entry"
-        hostname, ip =  entries[0]
+        assert (
+            len(entries) == 1
+        ), "Platform must have exactly one ('hostname': 'ip') entry"
+        hostname, ip = entries[0]
         return Host(hostname, ip)
 
     @classmethod
@@ -72,7 +74,9 @@ class HostsConfigParser(BaseConfigParser):
         hostlist = cls.get_optional_val(key, config)
         if not hostlist:
             return []
-        assert isinstance(hostlist, dict), "%s host list must be a dictionary" % key.title()
+        assert isinstance(hostlist, dict), (
+            "%s host list must be a dictionary" % key.title()
+        )
         hosts = []
         for hostname, value in hostlist.items():
             hosts.append(Host(hostname, value))
@@ -82,7 +86,7 @@ class HostsConfigParser(BaseConfigParser):
 class SystemConfigParser(BaseConfigParser):
     # Key
     SYSTEM = "system"
-    ## System Keys
+    # System Keys
     SELF = "self"
     HOSTS = "hosts"
 
@@ -112,7 +116,9 @@ class PACSConfigParser(BaseConfigParser):
         if not config_full_risers:
             return []
         assert isinstance(config_full_risers, list), "Full Risers must be a list"
-        assert all([isinstance(entry, dict) for entry in config_full_risers]), "Full Risers must be a list of 'dict's"
+        assert all(
+            [isinstance(entry, dict) for entry in config_full_risers]
+        ), "Full Risers must be a list of 'dict's"
         for riser in config_full_risers:
             level = cls.get_required_val("level", riser)
             height = cls.get_required_val("height", riser)
@@ -126,7 +132,9 @@ class PACSConfigParser(BaseConfigParser):
         if not config_row_risers:
             return []
         assert isinstance(config_row_risers, list), "Row Risers must be a list"
-        assert all([isinstance(entry, dict) for entry in config_row_risers]), "Row Risers must be a list of 'dict's"
+        assert all(
+            [isinstance(entry, dict) for entry in config_row_risers]
+        ), "Row Risers must be a list of 'dict's"
         for riser in config_row_risers:
             row = cls.get_required_val("row", riser)
             level = cls.get_required_val("level", riser)
@@ -166,13 +174,16 @@ class PACSConfigParser(BaseConfigParser):
             pacsconfig.brackets = PACSConfigParser.get_brackets(pacs)
             return pacsconfig
 
-    '''
+    """
     PACS Config
-    '''
+    """
     MODEL_CONFIGS = {Platform.A200: A200}
 
     def __new__(cls, model: str, config: dict):
-        assert model in cls.MODEL_CONFIGS, "Model '%s' must be one of %s" % (model, cls.MODEL_CONFIGS.keys())
+        assert model in cls.MODEL_CONFIGS, "Model '%s' must be one of %s" % (
+            model,
+            cls.MODEL_CONFIGS.keys(),
+        )
         return cls.MODEL_CONFIGS[model](config)
 
 
@@ -225,7 +236,7 @@ class DecorationsConfigParser(BaseConfigParser):
     # Key
     DECORATIONS = "decorations"
 
-    class A200():
+    class A200:
         # A200 Husky Decoration Keys
         FRONT_BUMPER = "front_bumper"
         REAR_BUMPER = "rear_bumper"
@@ -247,7 +258,7 @@ class DecorationsConfigParser(BaseConfigParser):
             dcnconfig.pacs = PACSConfigParser(Platform.A200, decorations)
             return dcnconfig
 
-    class J100():
+    class J100:
         # J100 Jackal Decoration Keys
         FRONT_BUMPER = "front_bumper"
         REAR_BUMPER = "rear_bumper"
@@ -263,11 +274,13 @@ class DecorationsConfigParser(BaseConfigParser):
             dcnconfig.rear_bumper = BumperConfigParser(cls.REAR_BUMPER, decorations)
             return dcnconfig
 
-    MODEL_CONFIGS = {Platform.A200: A200,
-                    Platform.J100: J100}
+    MODEL_CONFIGS = {Platform.A200: A200, Platform.J100: J100}
 
     def __new__(cls, model: str, config: dict) -> BaseDecorationsConfig:
-        assert model in Platform.ALL, "Model '%s' must be one of %s" % (model, Platform.ALL)
+        assert model in Platform.ALL, "Model '%s' must be one of %s" % (
+            model,
+            Platform.ALL,
+        )
         return DecorationsConfigParser.MODEL_CONFIGS[model](config)
 
 
@@ -294,7 +307,9 @@ class PlatformConfigParser(BaseConfigParser):
         extras = cls.get_optional_val(cls.EXTRAS, platform)
         if extras:
             pfmconfig.extras.set_urdf_extras(cls.get_optional_val(cls.URDF, extras, ""))
-            pfmconfig.extras.set_control_extras(cls.get_optional_val(cls.CONTROL, extras, ""))
+            pfmconfig.extras.set_control_extras(
+                cls.get_optional_val(cls.CONTROL, extras, "")
+            )
         return pfmconfig
 
 class AccessoryParser(BaseConfigParser):
@@ -449,7 +464,6 @@ class MountsConfigParser(BaseConfigParser):
 
 # Clearpath Configuration Parser
 class ClearpathConfigParser(BaseConfigParser):
-
     @staticmethod
     # Get Valid Path
     def find_valid_path(path, cwd=None):
@@ -477,21 +491,29 @@ class ClearpathConfigParser(BaseConfigParser):
         except yaml.scanner.ScannerError:
             raise AssertionError("YAML file '%s' is not well formed" % path)
         except yaml.constructor.ConstructorError:
-            raise AssertionError("YAML file '%s' is attempting to create unsafe objects" % path)
+            raise AssertionError(
+                "YAML file '%s' is attempting to create unsafe objects" % path
+            )
         # Check contents are a Dictionary
         assert isinstance(config, dict), "YAML file '%s' is not a dictionary" % path
         return config
 
-    @staticmethod 
+    @staticmethod
     def write_yaml(path: str, config: dict) -> None:
-        yaml_file = open(path, 'w+')
-        yaml.dump(config, yaml_file, sort_keys=False, default_flow_style=None, allow_unicode=True)
+        yaml_file = open(path, "w+")
+        yaml.dump(
+            config,
+            yaml_file,
+            sort_keys=False,
+            default_flow_style=None,
+            allow_unicode=True,
+        )
 
-
-    '''
+    """
     ConfigParser():
         - will take a config file path or a config and return a ClearpathConfig
-    '''
+    """
+
     def __new__(self, config):
         # Path: if config is path to config file, read YAML
         if isinstance(config, str):

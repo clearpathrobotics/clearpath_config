@@ -2,11 +2,10 @@ from clearpath_config.system.system import SystemConfig
 from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.mounts.mounts import MountsConfig
 
-# ClearpathConfig: 
+# ClearpathConfig:
 #  - top level configurator
-#  - contains 
-class ClearpathConfig():
-
+#  - contains
+class ClearpathConfig:
     def __init__(self, config: dict = None) -> None:
         self.config = config
         self.version = 0
