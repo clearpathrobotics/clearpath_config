@@ -62,15 +62,34 @@ platform: # These are are parameters specific to a a platform
 
 
 mounts:
-    front_pivot:
-        enabled: true
-        parent_link: front_mount
-        accessory_link: front_pivot_mount
-        model: fath_pivot
-        angle: 0
-        xyz: [0, 0, 0]
-        rpy: [0, 0, 0]
- 
+  - name: "front_pivot"
+    model: "fath_pivot"
+    parent: "base_link"
+    mounting_link: "front_pivot_mount"
+    angle: 0.0
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+
+  - name: "ptu"
+    model: "flir_ptu"
+    parent: "base_link"
+    mounting_link: "ptu_mount"
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+    tty_port: "/dev/ptu"
+    tcp_port: 4000
+    ip: "192.168.131.70"
+    connection_type: "tty"
+    limits_enabled: False
+#    front_pivot:
+#        enabled: true
+#        parent_link: front_mount
+#        accessory_link: front_pivot_mount
+#        model: fath_pivot
+#        angle: 0
+#        xyz: [0, 0, 0]
+#        rpy: [0, 0, 0]
+
 sensors: # Various sensors
     lidars:
         0:
