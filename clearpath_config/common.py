@@ -131,12 +131,11 @@ class IP:
 # - file class
 class File:
     def __init__(self, path: str, creatable=False, exists=False) -> None:
-        path = File.clean(path)
         if creatable:
             assert File.is_creatable(path)
         if exists:
             assert File.is_exists(path)
-        self.path = path
+        self.path = File.clean(path)
 
     def __str__(self) -> str:
         return self.path
@@ -169,6 +168,8 @@ class File:
         path = File.clean(path)
         return os.path.exists(path)
 
+    def get_path(self) -> str:
+        return self.path
 
 # SerialNumber
 # - Clearpath Robots Serial Number
@@ -221,14 +222,19 @@ class SerialNumber:
             return "-".join([self.model, self.unit])
 
 
-class Accessory:
+class Accessory():
+    # Defaults
+    PARENT = "base_link"
+    XYZ = [0.0, 0.0, 0.0]
+    RPY = [0.0, 0.0, 0.0]
+
     def __init__(
-        self,
-        name: str = "",
-        parent: str = "base_link",
-        xyz: List[float] = [0.0, 0.0, 0.0],
-        rpy: List[float] = [0.0, 0.0, 0.0],
-    ) -> None:
+            self,
+            name: str,
+            parent: str = PARENT,
+            xyz: List[float] = XYZ,
+            rpy: List[float] = RPY
+        ) -> None:
         self.name = str()
         self.parent = str()
         self.xyz = list()
@@ -242,18 +248,14 @@ class Accessory:
         return self.name
 
     def set_name(self, name: str) -> None:
-        assert isinstance(name, str), "Name must be a string"
-        assert name != "", "Name cannot be empty"
-        assert not name[0].isdigit(), "Name cannot start with a digit"
+        self.assert_valid_link(name)
         self.name = name
 
     def get_parent(self) -> str:
         return self.parent
 
     def set_parent(self, parent: str) -> None:
-        assert isinstance(parent, str), "Parent must be a string"
-        assert parent != "", "Parent cannot be empty"
-        assert not parent[0].isdigit(), "Parent cannot start with a digit"
+        self.assert_valid_link(parent)
         self.parent = parent
 
     def get_xyz(self) -> List[float]:
@@ -275,3 +277,17 @@ class Accessory:
         ), "RPY must have all float entries"
         assert len(rpy) == 3, "RPY must be a list of exactly three float values"
         self.rpy = rpy
+
+    def assert_valid_link(self, link: str) -> None:
+        # Link name must be a string
+        assert (isinstance(link, str)
+            ), "Link name '%s' must be string" % link
+        # Link name must not be empty
+        assert (link
+            ), "Link name '%s' must not be empty" % link
+        # Link name must not have spaces
+        assert (" " not in link
+            ), "Link name '%s' must no have spaces" % link
+        # Link name must not start with a digit
+        assert (not link[0].isdigit()
+            ), "Link name '%s' must not start with a digit" % link

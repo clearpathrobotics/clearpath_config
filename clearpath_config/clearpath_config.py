@@ -1,6 +1,6 @@
 from clearpath_config.system.system import SystemConfig
 from clearpath_config.platform.platform import PlatformConfig
-
+from clearpath_config.mounts.mounts import MountsConfig
 
 # ClearpathConfig:
 #  - top level configurator
@@ -11,5 +11,5 @@ class ClearpathConfig:
         self.version = 0
         self.system = SystemConfig()
         self.platform = PlatformConfig()
-        # self.mounts = MountsConfig()
-        # self.sensors = SensorsConfig()
+        self.mounts = MountsConfig()
+        #self.sensors = SensorsConfig()
