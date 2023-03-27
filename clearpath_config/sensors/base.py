@@ -25,12 +25,15 @@ class BaseSensor(Accessory):
         # - should be automatically determined by the sensor's index
         # - should match the Clearpath API
         self.topic = str()
+        self.set_topic(topic)
         # URDF Enable
         # - enables the sensor description in the generated URDF
         self.urdf_enabled = True
+        self.enable_urdf() if urdf_enabled else self.disable_urdf()
         # Launch Enable
         # - enables the sensor launch in the generated launch
         self.launch_enabled = True
+        self.enable_launch if launch_enabled else self.disable_launch()
 
     def get_topic(self) -> str:
         return self.topic

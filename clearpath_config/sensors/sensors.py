@@ -1,5 +1,6 @@
 from clearpath_config.sensors.base import BaseSensor, List
 
+
 # Sensor Config
 class SensorConfig:
 
@@ -8,7 +9,7 @@ class SensorConfig:
             lidars_2d: List[BaseSensor],
             lidars_3d: List[BaseSensor],
             cameras: List[BaseSensor],
-        ) -> None:
+            ) -> None:
         # 2D Lidars
         self.lidars_2d = list()
         # 3D Lidars
