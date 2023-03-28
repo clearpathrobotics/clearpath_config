@@ -53,9 +53,10 @@ class Decorations:
                 raise AssertionError(e.args[0])
             assert isinstance(
                 extension, float
-            ), "Bumper extension must be of type float, unexpected type '%s'" % type(
-                extension
-            )
+            ), " ".join([
+                "Bumper extension must be of type float,",
+                " unexpected type '%s'" % type(extension)
+            ])
             assert extension >= 0, "Bumper extension must be a positive value"
             self.extension = extension
 
@@ -63,9 +64,11 @@ class Decorations:
             return self.model
 
         def set_model(self, model: str) -> None:
-            assert model in self.MODELS, "Bumper model '%s' is not one of: %s" % (
-                model,
-                self.MODELS,
+            assert model in self.MODELS, (
+                "Bumper model '%s' is not one of: %s" % (
+                    model,
+                    self.MODELS,
+                )
             )
             self.model = model
 
