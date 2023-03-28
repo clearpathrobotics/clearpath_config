@@ -2,10 +2,11 @@ from clearpath_config.common import Platform
 from clearpath_config.platform.decorations import Decorations
 from clearpath_config.platform.pacs import PACS
 from copy import deepcopy
-from typing import Callable, Generic, List, TypeVar
+from typing import Any, Callable, Generic, List, TypeVar
 
 # Generic Type
 T = TypeVar("T")
+U = TypeVar("U")
 
 
 # Unique Identifier: Name
@@ -26,7 +27,7 @@ def uid_level_row(T) -> tuple:
 # ListConfigs
 # - holds a list of an object type
 # - generic class
-class ListConfig(Generic[T]):
+class ListConfig(Generic[T, U]):
 
     def __init__(self, uid: Callable) -> None:
         self.__list: List[T] = []
@@ -34,11 +35,25 @@ class ListConfig(Generic[T]):
 
     def find(
             self,
-            _obj: T,
-            ) -> T:
-        for obj in self.__list:
-            if self.__uid(obj) == self.__uid(_obj):
-                return obj
+            _obj: T | U,
+            ) -> int:
+        # Object: T: Template
+        if isinstance(_obj, self.__orig_class__.__args__[0]):
+            uid = self.__uid(_obj)
+        # Object: U: Unique ID
+        elif isinstance(_obj, self.__orig_class__.__args__[1]):
+            uid = _obj
+        # Error
+        else:
+            raise AssertionError(
+                "Object must be of type %s or %s" % (
+                    self.__orig_class__.__args__[0].__name__,
+                    self.__orig_class__.__args__[1].__name__
+                )
+            )
+        for idx, obj in enumerate(self.__list):
+            if self.__uid(obj) == uid:
+                return idx
         return None
 
     def add(
@@ -55,6 +70,20 @@ class ListConfig(Generic[T]):
         )
         self.__list.append(obj)
 
+    def replace(
+            self,
+            obj: T,
+            ) -> None:
+        assert isinstance(obj, self.__orig_class__.__args__[0]), (
+            "Object must be of type %s" % T
+        )
+        assert self.find(obj) is not None, (
+            "Object with uid %s cannot be replaced. Does not exist." % (
+                self.__uid(obj)
+            )
+        )
+        self.__list[self.find(obj)] = obj
+
     def remove(
             self,
             _obj: T,
@@ -64,10 +93,26 @@ class ListConfig(Generic[T]):
                 self.__list.remove(obj)
                 return
 
-    def get(self) -> List[T]:
+    def get(
+            self,
+            _obj: T | U,
+            ) -> T:
+        idx = self.find(_obj)
+        return None if idx is None else self.__list[idx]
+
+    def get_all(self) -> List[T]:
         return self.__list
 
     def set(
+            self,
+            obj: T
+            ) -> None:
+        if self.find(obj) is None:
+            self.add(obj)
+        else:
+            self.replace(obj)
+
+    def set_all(
             self,
             _list: List[T],
             ) -> None:
@@ -100,12 +145,14 @@ class BaseDecorationsConfig:
             )
         )
         # Standard Platform Decorations
-        self.__bumpers = ListConfig[Decorations.Bumper](uid=uid_name)
-        self.__top_plates = ListConfig[Decorations.TopPlate](uid=uid_name)
+        self.__bumpers = ListConfig[Decorations.Bumper, str](uid=uid_name)
+        self.__top_plates = ListConfig[Decorations.TopPlate, str](uid=uid_name)
         # PACS Platform Decorations
-        self.__full_risers = ListConfig[PACS.FullRiser](uid=uid_level)
-        self.__row_risers = ListConfig[PACS.RowRiser](uid=uid_level_row)
-        self.__brackets = ListConfig[PACS.Bracket](uid=uid_name)
+        self.__full_risers = ListConfig[PACS.FullRiser, int](uid=uid_level)
+        self.__row_risers = ListConfig[
+                PACS.RowRiser, tuple[int, int]](
+                    uid=uid_level_row)
+        self.__brackets = ListConfig[PACS.Bracket, str](uid=uid_name)
 
     # Bumper: Add
     def add_bumper(
@@ -144,17 +191,31 @@ class BaseDecorationsConfig:
         self.__bumpers.remove(bumper)
 
     # Bumper: Get
+    def get_bumper(
+            self,
+            name: str,
+            ) -> Decorations.Bumper:
+        return self.__bumpers.get(name)
+
+    # Bumper: Get All
     def get_bumpers(
             self
             ) -> List[Decorations.Bumper]:
-        return self.__bumpers.get()
+        return self.__bumpers.get_all()
 
     # Bumper: Set
+    def set_bumper(
+            self,
+            bumper: Decorations.Bumper,
+            ) -> None:
+        self.__bumpers.set(bumper)
+
+    # Bumper: Set All
     def set_bumpers(
             self,
             bumpers: List[Decorations.Bumper],
             ) -> None:
-        self.__bumpers.set(bumpers)
+        self.__bumpers.set_all(bumpers)
 
     # Top Plate: Add
     def add_top_plate(
@@ -189,17 +250,31 @@ class BaseDecorationsConfig:
         self.__top_plates.remove(top_plate)
 
     # Top Plate: Get
+    def get_top_plate(
+            self,
+            name: str
+            ) -> Decorations.TopPlate:
+        return self.__top_plates.get(name)
+
+    # Top Plate: Get All
     def get_top_plates(
             self
             ) -> List[Decorations.TopPlate]:
-        return self.__top_plates.get()
+        return self.__top_plates.get_all()
 
     # Top Plate: Set
+    def set_top_plate(
+            self,
+            top_plate: Decorations.TopPlate
+            ) -> None:
+        self.__top_plates.set(top_plate)
+
+    # Top Plate: Set All
     def set_top_plates(
             self,
             top_plates: List[Decorations.TopPlate]
             ) -> None:
-        self.__top_plates.set(top_plates)
+        self.__top_plates.set_all(top_plates)
 
     # Full Risers: Add
     def add_full_riser(
@@ -231,18 +306,32 @@ class BaseDecorationsConfig:
             full_riser = PACS.FullRiser(level=level)
         self.__full_risers.remove(full_riser)
 
-    # Full Risers: Get
+    # Full Riser: Get
+    def get_full_riser(
+            self,
+            level: int
+            ) -> PACS.FullRiser:
+        return self.__full_risers.get(level)
+
+    # Full Risers: Get All
     def get_full_risers(
             self,
             ) -> List[PACS.FullRiser]:
-        return self.__full_risers.get()
+        return self.__full_risers.get_all()
 
-    # Full Risers: Set
+    # Full Riser: Set
+    def set_full_riser(
+            self,
+            full_riser: PACS.FullRiser
+            ) -> None:
+        self.__full_risers.set(full_riser)
+
+    # Full Risers: Set All
     def set_full_risers(
             self,
             full_risers: List[PACS.FullRiser]
             ) -> None:
-        self.__full_risers.set(full_risers)
+        self.__full_risers.set_all(full_risers)
 
     # Row Risers: Add
     def add_row_riser(
@@ -284,18 +373,33 @@ class BaseDecorationsConfig:
             )
         self.__row_risers.remove(row_riser)
 
-    # Row Risers: Get
+    # Row Riser: Get
+    def get_row_riser(
+            self,
+            level: int,
+            row: int,
+            ) -> PACS.RowRiser:
+        return self.__row_risers.get((level, row))
+
+    # Row Risers: Get All
     def get_row_risers(
             self,
             ) -> List[PACS.RowRiser]:
-        return self.__row_risers.get()
+        return self.__row_risers.get_all()
 
     # Row Risers: Set
+    def set_row_riser(
+            self,
+            row_riser: PACS.RowRiser,
+            ) -> None:
+        self.__row_risers.set(row_riser)
+
+    # Row Risers: Set All
     def set_row_risers(
             self,
             row_risers: List[PACS.RowRiser]
             ) -> None:
-        self.__row_risers.set(row_risers)
+        self.__row_risers.set_all(row_risers)
 
     # Brackets: Add
     def add_bracket(
@@ -335,15 +439,29 @@ class BaseDecorationsConfig:
             bracket = PACS.Bracket(name=name)
         self.__brackets.remove(bracket)
 
-    # Brackets: Get
+    # Bracket: Get
+    def get_bracket(
+            self,
+            name: str,
+            ) -> PACS.Bracket:
+        return self.__brackets.get(name)
+
+    # Brackets: Get All
     def get_brackets(
             self,
             ) -> List[PACS.Bracket]:
-        return self.__brackets.get()
+        return self.__brackets.get_all()
 
-    # Brackets: Set
+    # Bracket: Set
+    def set_bracket(
+            self,
+            bracket: PACS.Bracket,
+            ) -> None:
+        self.__brackets.set(bracket)
+
+    # Brackets: Set All
     def set_brackets(
             self,
             brackets: List[PACS.Bracket],
             ) -> None:
-        self.__brackets.set(brackets)
+        self.__brackets.set_all(brackets)
