@@ -1,5 +1,5 @@
 from clearpath_config.common import File, Platform, SerialNumber
-from clearpath_config.platform.decorations import BaseDecorationsConfig
+from clearpath_config.platform.base import BaseDecorationsConfig
 from clearpath_config.platform.a200 import A200DecorationsConfig
 from clearpath_config.platform.j100 import J100DecorationsConfig
 from clearpath_config.platform.generic import GENERICDecorationsConfig
@@ -29,10 +29,10 @@ class DecorationsConfig:
     def __new__(self, model) -> None:
         assert (
             model in Platform.ALL
-        ), "Model passed '%s' is not expected. must be one of the following: %s" % (
-            model,
-            Platform.ALL,
-        )
+        ), " ".join([
+            "Model passed '%s' is not expected." % model,
+            "Must be one of the following: %s" % Platform.ALL
+        ])
         return self.MODEL_CONFIGS[model]
 
 
@@ -72,8 +72,10 @@ class PlatformConfig:
         self.extras = ExtrasConfig()
         if decorations:
             assert isinstance(decorations, BaseDecorationsConfig), (
-                "Decorations must be of type DecorationsConfig, unexpected type: '%s'"
-                % type(decorations)
+                "Decorations must be of type: %s, unexpected type: '%s'" % (
+                    BaseDecorationsConfig,
+                    type(decorations)
+                )
             )
             assert (
                 decorations.model == self.model
@@ -82,8 +84,8 @@ class PlatformConfig:
         if extras:
             assert isinstance(
                 extras, ExtrasConfig
-            ), "Extras must be of type ExtrasConfig, unexpected type: '%s'" % type(
-                extras
+            ), "Extras must be of type ExtrasConfig, unexpected type: '%s'" % (
+                    type(extras)
             )
             self.extras = extras
 
