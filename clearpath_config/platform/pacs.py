@@ -1,5 +1,4 @@
 from clearpath_config.common import Accessory
-from copy import deepcopy
 from typing import List
 
 
@@ -147,12 +146,10 @@ class PACS:
             return self.model
 
         def set_model(self, model: str) -> None:
-            assert (
-                model in self.MODELS
-            ), "Unexpected Bracket model '%s', it must be one of the following: %s" % (
-                model,
-                self.MODELS,
-            )
+            assert model in self.MODELS, " ".join([
+                "Unexpected Bracket model '%s'," % model,
+                "it must be one of the following: %s" % self.MODELS
+            ])
             self.model = model
 
         def get_extension(self) -> float:
