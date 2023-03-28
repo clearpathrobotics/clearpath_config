@@ -1,10 +1,11 @@
 from clearpath_config.common import Platform, Accessory
 from clearpath_config.clearpath_config import ClearpathConfig
 from clearpath_config.mounts.mounts import MountsConfig, Mount
-from clearpath_config.platform.decorations import Decorations, BaseDecorationsConfig
+from clearpath_config.platform.base import BaseDecorationsConfig
+from clearpath_config.platform.decorations import Decorations
 from clearpath_config.platform.pacs import PACS
 from clearpath_config.platform.platform import PlatformConfig
-from clearpath_config.platform.a200 import A200DecorationsConfig, A200PACSConfig
+from clearpath_config.platform.a200 import A200DecorationsConfig
 from clearpath_config.platform.j100 import J100DecorationsConfig
 from clearpath_config.system.system import SystemConfig, HostsConfig, Host
 from typing import List
@@ -55,7 +56,6 @@ class HostsConfigParser(BaseConfigParser):
         htsconfig.set_onboard(cls.get_hostlists(cls.ONBOARD, hosts))
         # Hosts.Remote
         htsconfig.set_remote(cls.get_hostlists(cls.REMOTE, hosts))
-        print(htsconfig.get_remote())
         return htsconfig
 
     @classmethod
@@ -167,11 +167,11 @@ class PACSConfigParser(BaseConfigParser):
                 pacsconfig.disable()
                 return pacsconfig
             # PACS.Full_Risers
-            pacsconfig.full_risers = PACSConfigParser.get_full_risers(pacs)
+            full_risers = PACSConfigParser.get_full_risers(pacs)
             # PACS.Row_Risers
-            pacsconfig.row_risers = PACSConfigParser.get_row_risers(pacs)
+            row_risers = PACSConfigParser.get_row_risers(pacs)
             # PACS.Brackets
-            pacsconfig.brackets = PACSConfigParser.get_brackets(pacs)
+            brackets = PACSConfigParser.get_brackets(pacs)
             return pacsconfig
 
     """
@@ -194,7 +194,7 @@ class BumperConfigParser(BaseConfigParser):
     MODEL = "model"
 
     def __new__(cls, key: str, config: dict) -> Decorations.Bumper:
-        bmpconfig = Decorations.Bumper()
+        bmpconfig = Decorations.Bumper(key)
         # Bumper
         bumper = cls.get_optional_val(key, config)
         if not bumper:
@@ -216,8 +216,8 @@ class TopPlateConfigParser(BaseConfigParser):
     ENABLE = "enable"
     MODEL = "model"
 
-    def __new__(cls, key: str, config: dict) -> Decorations.A200.TopPlate:
-        topconfig = Decorations.A200.TopPlate()
+    def __new__(cls, key: str, config: dict) -> Decorations.TopPlate:
+        topconfig = Decorations.TopPlate(key)
         # Top_Plate
         top_plate = cls.get_optional_val(key, config)
         if not top_plate:
@@ -249,13 +249,16 @@ class DecorationsConfigParser(BaseConfigParser):
             # Decorations
             decorations = dcnparser.get_required_val(dcnparser.DECORATIONS, config)
             # Decorations.Front_Bumper
-            dcnconfig.front_bumper = BumperConfigParser(cls.FRONT_BUMPER, decorations)
+            dcnconfig.set_bumper(BumperConfigParser(cls.FRONT_BUMPER, decorations))
             # Decorations.Rear_Bumper
-            dcnconfig.rear_bumper = BumperConfigParser(cls.REAR_BUMPER, decorations)
+            dcnconfig.set_bumper(BumperConfigParser(cls.REAR_BUMPER, decorations))
             # Decorations.Top_Plate
-            dcnconfig.top_plate = TopPlateConfigParser(cls.TOP_PLATE, decorations)
+            dcnconfig.set_top_plate(TopPlateConfigParser(cls.TOP_PLATE, decorations))
             # Decorations.PACS
-            dcnconfig.pacs = PACSConfigParser(Platform.A200, decorations)
+            pacs = dcnparser.get_required_val(dcnparser.A200.PACS, decorations)
+            dcnconfig.set_full_risers(PACSConfigParser.get_full_risers(pacs))
+            dcnconfig.set_row_risers(PACSConfigParser.get_row_risers(pacs))
+            dcnconfig.set_brackets(PACSConfigParser.get_brackets(pacs))
             return dcnconfig
 
     class J100:
@@ -269,9 +272,9 @@ class DecorationsConfigParser(BaseConfigParser):
             # Decorations
             decorations = dcnparser.get_required_val(dcnparser.DECORATIONS, config)
             # Decorations.Front_Bumper
-            dcnconfig.front_bumper = BumperConfigParser(cls.FRONT_BUMPER, decorations)
+            dcnconfig.set_bumper(BumperConfigParser(cls.FRONT_BUMPER, decorations))
             # Decorations.Rear_Bumper
-            dcnconfig.rear_bumper = BumperConfigParser(cls.REAR_BUMPER, decorations)
+            dcnconfig.set_bumper(BumperConfigParser(cls.REAR_BUMPER, decorations))
             return dcnconfig
 
     MODEL_CONFIGS = {Platform.A200: A200, Platform.J100: J100}
@@ -341,8 +344,8 @@ class MountParser(BaseConfigParser):
                 config,
             )
             mounting_link = cls.get_optional_val(
-                MountParser.Base.MOUNTING_LINK, 
-                config, 
+                MountParser.Base.MOUNTING_LINK,
+                config,
                 Mount.Base.MOUNTING_LINK,
             )
             return Mount.Base(
