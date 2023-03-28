@@ -2,7 +2,7 @@ from clearpath_config.common import Platform
 from clearpath_config.platform.decorations import Decorations
 from clearpath_config.platform.pacs import PACS
 from copy import deepcopy
-from typing import Any, Callable, Generic, List, TypeVar
+from typing import Callable, Generic, List, TypeVar
 
 # Generic Type
 T = TypeVar("T")
