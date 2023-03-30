@@ -1,4 +1,5 @@
-from typing import List
+from copy import deepcopy
+from typing import Callable, Generic, List, TypeVar
 import os
 import re
 
@@ -47,7 +48,8 @@ class Hostname:
         if len(hostname) > 253:
             return False
         # No Trailing Dots
-        # - not excatly a standard but generally undefined behaviour and should be avoided
+        # - not exactly a standard, but generally results in undefined
+        #       behaviour and should be avoided
         if hostname[-1] == ".":
             return False
         # Only [A-Z][0-9] and '-' Allowed
@@ -71,8 +73,10 @@ class Hostname:
         # Only [A-Z][0-9] and '-' Allowed
         allowed = re.compile(r"(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
         assert all(allowed.match(x) for x in hostname.split(".")), (
-            "Hostname '%s' cannot contain characters other than [A-Z][0-9] and hypens ('-')."
-            % hostname
+            "Hostname '%s' cannot contain characters other than %s." % (
+                hostname,
+                "[A-Z][0-9] and hypens ('-')"
+            )
         )
 
 
@@ -115,16 +119,20 @@ class IP:
     @staticmethod
     def assert_valid(ip: str) -> None:
         # Must be String
-        assert isinstance(ip, str), "IP '%s' must be string" % ip
+        assert isinstance(ip, str), (
+            "IP '%s' must be string" % ip)
         # Must have Four Fields Delimited by '.'
         fields = ip.split(".")
-        assert len(fields) == 4, "IP '%s' must have four entries" % ip
+        assert len(fields) == 4, (
+            "IP '%s' must have four entries" % ip)
         for field in fields:
             # Fields Must be Integer
-            assert field.isdecimal(), "IP '%s' entries must be integers" % ip
+            assert field.isdecimal(), (
+                "IP '%s' entries must be integers" % ip)
             # Fields Must be 8-Bits Wide
             field_int = int(field)
-            assert 0 <= field_int < 256, "IP '%s' entries must in range 0 to 255" % ip
+            assert 0 <= field_int < 256, (
+                "IP '%s' entries must in range 0 to 255" % ip)
 
 
 # File
@@ -171,6 +179,7 @@ class File:
     def get_path(self) -> str:
         return self.path
 
+
 # SerialNumber
 # - Clearpath Robots Serial Number
 # - ex. cpr-j100-0100
@@ -193,7 +202,9 @@ class SerialNumber:
         if len(sn) == 3:
             assert (
                 sn[0] == "cpr"
-            ), "Serial Number with three fields (cpr-j100-0001) must start with cpr"
+            ), "Serial Number with three fields (%s) must start with cpr" % (
+                "cpr-j100-0001",
+            )
             sn = sn[1:]
         # Match to Robot
         assert sn[0] in Platform.ALL, (
@@ -206,7 +217,8 @@ class SerialNumber:
             else:
                 return (sn[0], "xxxx")
         # Check Number
-        assert sn[1].isdecimal(), "Serial Number unit entry must be an integer value"
+        assert sn[1].isdecimal(), (
+            "Serial Number unit entry must be an integer value")
         return (sn[0], sn[1])
 
     def get_model(self) -> str:
@@ -234,7 +246,7 @@ class Accessory():
             parent: str = PARENT,
             xyz: List[float] = XYZ,
             rpy: List[float] = RPY
-        ) -> None:
+            ) -> None:
         self.name = str()
         self.parent = str()
         self.xyz = list()
@@ -265,7 +277,9 @@ class Accessory():
         assert all(
             [isinstance(i, float) for i in xyz]
         ), "XYZ must have all float entries"
-        assert len(xyz) == 3, "XYZ must be a list of exactly three float values"
+        assert len(xyz) == 3, (
+            "XYZ must be a list of exactly three float values"
+        )
         self.xyz = xyz
 
     def get_rpy(self) -> List[float]:
@@ -275,19 +289,125 @@ class Accessory():
         assert all(
             [isinstance(i, float) for i in rpy]
         ), "RPY must have all float entries"
-        assert len(rpy) == 3, "RPY must be a list of exactly three float values"
+        assert len(rpy) == 3, (
+            "RPY must be a list of exactly three float values")
         self.rpy = rpy
 
     def assert_valid_link(self, link: str) -> None:
         # Link name must be a string
-        assert (isinstance(link, str)
-            ), "Link name '%s' must be string" % link
+        assert isinstance(link, str), "Link name '%s' must be string" % link
         # Link name must not be empty
-        assert (link
-            ), "Link name '%s' must not be empty" % link
+        assert link, "Link name '%s' must not be empty" % link
         # Link name must not have spaces
-        assert (" " not in link
-            ), "Link name '%s' must no have spaces" % link
+        assert " " not in link, "Link name '%s' must no have spaces" % link
         # Link name must not start with a digit
-        assert (not link[0].isdigit()
-            ), "Link name '%s' must not start with a digit" % link
+        assert not link[0].isdigit(), "Link name '%s' must not start with a digit" % link
+
+
+# ListConfigs
+# - holds a list of an object type
+# - generic class
+
+# Generic Type
+T = TypeVar("T")
+U = TypeVar("U")
+
+
+class ListConfig(Generic[T, U]):
+
+    def __init__(self, uid: Callable) -> None:
+        self.__list: List[T] = []
+        self.__uid: Callable = uid
+
+    def find(
+            self,
+            _obj: T | U,
+            ) -> int:
+        # Object: T: Template
+        if isinstance(_obj, self.__orig_class__.__args__[0]):
+            uid = self.__uid(_obj)
+        # Object: U: Unique ID
+        elif isinstance(_obj, self.__orig_class__.__args__[1]):
+            uid = _obj
+        # Error
+        else:
+            raise AssertionError(
+                "Object must be of type %s or %s" % (
+                    self.__orig_class__.__args__[0].__name__,
+                    self.__orig_class__.__args__[1].__name__
+                )
+            )
+        for idx, obj in enumerate(self.__list):
+            if self.__uid(obj) == uid:
+                return idx
+        return None
+
+    def add(
+            self,
+            obj: T,
+            ) -> None:
+        assert isinstance(obj, self.__orig_class__.__args__[0]), (
+            "Object must be of type %s" % T
+        )
+        assert self.find(obj) is None, (
+            "Object with uid %s is not unique." % (
+                self.__uid(obj)
+            )
+        )
+        self.__list.append(obj)
+
+    def replace(
+            self,
+            obj: T,
+            ) -> None:
+        assert isinstance(obj, self.__orig_class__.__args__[0]), (
+            "Object must be of type %s" % T
+        )
+        assert self.find(obj) is not None, (
+            "Object with uid %s cannot be replaced. Does not exist." % (
+                self.__uid(obj)
+            )
+        )
+        self.__list[self.find(obj)] = obj
+
+    def remove(
+            self,
+            _obj: T | U,
+            ) -> None:
+        idx = self.find(_obj)
+        if idx is not None:
+            self.__list.remove(self.__list[idx])
+
+    def get(
+            self,
+            _obj: T | U,
+            ) -> T:
+        idx = self.find(_obj)
+        return None if idx is None else self.__list[idx]
+
+    def get_all(self) -> List[T]:
+        return self.__list
+
+    def set(
+            self,
+            obj: T
+            ) -> None:
+        if self.find(obj) is None:
+            self.add(obj)
+        else:
+            self.replace(obj)
+
+    def set_all(
+            self,
+            _list: List[T],
+            ) -> None:
+        # Copy and Clear
+        tmp_list = deepcopy(self.__list)
+        self.__list.clear()
+        # Add One-by-One
+        try:
+            for obj in _list:
+                self.add(obj)
+        # Restore Save if Failure
+        except AssertionError:
+            self.__list = tmp_list
