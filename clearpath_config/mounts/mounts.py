@@ -5,7 +5,6 @@ from clearpath_config.common import (
     List,
     ListConfig
 )
-from copy import deepcopy
 from math import pi
 
 
@@ -196,8 +195,20 @@ class MountsConfig:
         )
         self.set_mounts(mounts)
 
+    def get_mount(
+            self,
+            name: str,
+            ) -> BaseMount:
+        return self.__mounts.get(name)
+
     def get_mounts(self) -> List[BaseMount]:
         return self.__mounts.get_all()
+
+    def set_mount(
+            self,
+            mount: BaseMount,
+            ) -> None:
+        self.__mounts.set(mount)
 
     def set_mounts(self, mounts: List[BaseMount]) -> None:
         self.__mounts.set_all(mounts)
