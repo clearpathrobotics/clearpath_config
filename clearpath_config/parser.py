@@ -1,6 +1,6 @@
 from clearpath_config.common import Platform, Accessory
 from clearpath_config.clearpath_config import ClearpathConfig
-from clearpath_config.mounts.mounts import MountsConfig, Mount
+from clearpath_config.mounts.mounts import MountsConfig, Mount, BaseMount, FlirPTU, FathPivot
 from clearpath_config.platform.base import BaseDecorationsConfig
 from clearpath_config.platform.decorations import Decorations
 from clearpath_config.platform.pacs import PACS
@@ -337,7 +337,7 @@ class MountParser(BaseConfigParser):
         MODEL = "model"
         MOUNTING_LINK = "mounting_link"
 
-        def __new__(cls, config: dict) -> Mount.Base:
+        def __new__(cls, config: dict) -> BaseMount:
             a = AccessoryParser(config)
             model = cls.get_required_val(
                 MountParser.Base.MODEL,
@@ -346,9 +346,9 @@ class MountParser(BaseConfigParser):
             mounting_link = cls.get_optional_val(
                 MountParser.Base.MOUNTING_LINK,
                 config,
-                Mount.Base.MOUNTING_LINK,
+                BaseMount.MOUNTING_LINK,
             )
-            return Mount.Base(
+            return BaseMount(
                 name=a.get_name(),
                 parent=a.get_parent(),
                 xyz=a.get_xyz(),
@@ -361,15 +361,15 @@ class MountParser(BaseConfigParser):
         # Keys
         ANGLE = "angle"
 
-        def __new__(cls, config:dict) -> Mount.FathPivot:
+        def __new__(cls, config:dict) -> FathPivot:
             b = MountParser.Base(config)
             # Pivot Angle
             angle = cls.get_optional_val(
                 MountParser.FathPivot.ANGLE,
                 config,
-                Mount.FathPivot.ANGLE,
+                FathPivot.ANGLE,
             )
-            return Mount.FathPivot(
+            return FathPivot(
                 name=b.get_name(),
                 parent=b.get_parent(),
                 xyz=b.get_xyz(),
@@ -386,39 +386,39 @@ class MountParser(BaseConfigParser):
         CONNECTION_TYPE = "connection_type"
         LIMITS_ENABLED = "limits_enabled"
 
-        def __new__(cls, config: dict) -> Mount.Base:
+        def __new__(cls, config: dict) -> BaseMount:
             b = MountParser.Base(config)
             # TTY Port
             tty_port = cls.get_optional_val(
                 MountParser.FlirPTU.TTY_PORT,
                 config,
-                Mount.FlirPTU.TTY_PORT,
+                FlirPTU.TTY_PORT,
             )
             # TCP Port
             tcp_port = cls.get_optional_val(
                 MountParser.FlirPTU.TCP_PORT,
                 config,
-                Mount.FlirPTU.TCP_PORT,
+                FlirPTU.TCP_PORT,
             )
             # IP Address
             ip = cls.get_optional_val(
                 MountParser.FlirPTU.IP_ADDRESS,
                 config,
-                Mount.FlirPTU.IP_ADDRESS,
+                FlirPTU.IP_ADDRESS,
             )
             # Connection Type
             connection_type = cls.get_optional_val(
                 MountParser.FlirPTU.CONNECTION_TYPE,
                 config,
-                Mount.FlirPTU.CONNECTION_TYPE
+                FlirPTU.CONNECTION_TYPE
             )
             # Limits Enabled
             limits_enabled = cls.get_optional_val(
                 MountParser.FlirPTU.LIMITS_ENABLED,
                 config,
-                Mount.FlirPTU.LIMITS_ENABLED,
+                FlirPTU.LIMITS_ENABLED,
             )
-            return Mount.FlirPTU(
+            return FlirPTU(
                 name=b.get_name(),
                 parent=b.get_parent(),
                 xyz=b.get_xyz(),
@@ -435,7 +435,7 @@ class MountParser(BaseConfigParser):
         Mount.FATH_PIVOT: FathPivot,
         Mount.FLIR_PTU: FlirPTU,
     }
-    def __new__(cls, config: dict) -> Mount.Base:
+    def __new__(cls, config: dict) -> BaseMount:
         model = cls.get_required_val(
             MountParser.Base.MODEL,
             config
