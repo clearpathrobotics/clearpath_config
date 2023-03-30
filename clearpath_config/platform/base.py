@@ -1,12 +1,7 @@
-from clearpath_config.common import Platform
+from clearpath_config.common import ListConfig, Platform
 from clearpath_config.platform.decorations import Decorations
 from clearpath_config.platform.pacs import PACS
-from copy import deepcopy
-from typing import Callable, Generic, List, TypeVar
-
-# Generic Type
-T = TypeVar("T")
-U = TypeVar("U")
+from typing import List
 
 
 # Unique Identifier: Name
@@ -22,110 +17,6 @@ def uid_level(T) -> int:
 # Unique Identifier: Level-Row
 def uid_level_row(T) -> tuple:
     return (T.get_level(), T.get_row())
-
-
-# ListConfigs
-# - holds a list of an object type
-# - generic class
-class ListConfig(Generic[T, U]):
-
-    def __init__(self, uid: Callable) -> None:
-        self.__list: List[T] = []
-        self.__uid: Callable = uid
-
-    def find(
-            self,
-            _obj: T | U,
-            ) -> int:
-        # Object: T: Template
-        if isinstance(_obj, self.__orig_class__.__args__[0]):
-            uid = self.__uid(_obj)
-        # Object: U: Unique ID
-        elif isinstance(_obj, self.__orig_class__.__args__[1]):
-            uid = _obj
-        # Error
-        else:
-            raise AssertionError(
-                "Object must be of type %s or %s" % (
-                    self.__orig_class__.__args__[0].__name__,
-                    self.__orig_class__.__args__[1].__name__
-                )
-            )
-        for idx, obj in enumerate(self.__list):
-            if self.__uid(obj) == uid:
-                return idx
-        return None
-
-    def add(
-            self,
-            obj: T,
-            ) -> None:
-        assert isinstance(obj, self.__orig_class__.__args__[0]), (
-            "Object must be of type %s" % T
-        )
-        assert self.find(obj) is None, (
-            "Object with uid %s is not unique." % (
-                self.__uid(obj)
-            )
-        )
-        self.__list.append(obj)
-
-    def replace(
-            self,
-            obj: T,
-            ) -> None:
-        assert isinstance(obj, self.__orig_class__.__args__[0]), (
-            "Object must be of type %s" % T
-        )
-        assert self.find(obj) is not None, (
-            "Object with uid %s cannot be replaced. Does not exist." % (
-                self.__uid(obj)
-            )
-        )
-        self.__list[self.find(obj)] = obj
-
-    def remove(
-            self,
-            _obj: T,
-            ) -> None:
-        for obj in self.__list:
-            if self.__uid(obj) == self.__uid(_obj):
-                self.__list.remove(obj)
-                return
-
-    def get(
-            self,
-            _obj: T | U,
-            ) -> T:
-        idx = self.find(_obj)
-        return None if idx is None else self.__list[idx]
-
-    def get_all(self) -> List[T]:
-        return self.__list
-
-    def set(
-            self,
-            obj: T
-            ) -> None:
-        if self.find(obj) is None:
-            self.add(obj)
-        else:
-            self.replace(obj)
-
-    def set_all(
-            self,
-            _list: List[T],
-            ) -> None:
-        # Copy and Clear
-        tmp_list = deepcopy(self.__list)
-        self.__list.clear()
-        # Add One-by-One
-        try:
-            for obj in _list:
-                self.add(obj)
-        # Restore Save if Failure
-        except AssertionError:
-            self.__list = tmp_list
 
 
 # Base Decorations Config
@@ -179,15 +70,9 @@ class BaseDecorationsConfig:
     # Bumper: Remove
     def remove_bumper(
             self,
-            # By Object
-            bumper: Decorations.Bumper = None,
-            # By Name
-            name: str = None,
+            # By Object or Name
+            bumper: Decorations.Bumper | str,
             ) -> None:
-        assert bumper or name, "Bumper object or name must be passed"
-        # Create Object
-        if name and not bumper:
-            bumper = Decorations.Bumper(name)
         self.__bumpers.remove(bumper)
 
     # Bumper: Get
@@ -239,14 +124,9 @@ class BaseDecorationsConfig:
     # Top Plate: Remove
     def remove_top_plate(
             self,
-            # By Object
-            top_plate: Decorations.TopPlate = None,
-            # By Name
-            name: str = None
+            # By Object or Name
+            top_plate: Decorations.TopPlate | str,
             ) -> None:
-        assert top_plate or name, "Top plate object or name must be passed."
-        if name and not top_plate:
-            top_plate = Decorations.TopPlate(name=name)
         self.__top_plates.remove(top_plate)
 
     # Top Plate: Get
@@ -296,14 +176,9 @@ class BaseDecorationsConfig:
     # Full Risers: Remove
     def remove_full_riser(
             self,
-            # By Object
-            full_riser: PACS.FullRiser = None,
-            # By Level
-            level: int = None
+            # By Object or Level
+            full_riser: PACS.FullRiser | int,
             ) -> None:
-        assert full_riser or level, "Full riser object or level must be passed"
-        if level and not full_riser:
-            full_riser = PACS.FullRiser(level=level)
         self.__full_risers.remove(full_riser)
 
     # Full Riser: Get
@@ -357,20 +232,9 @@ class BaseDecorationsConfig:
     # Row Risers: Remove
     def remove_row_riser(
             self,
-            # By Object
-            row_riser: PACS.RowRiser = None,
-            # By Level and Row
-            level: int = None,
-            row: int = None,
+            # By Object or (Level, Row)
+            row_riser: PACS.RowRiser | tuple[int],
             ) -> None:
-        assert row_riser or (level and row), (
-            "Row riser object or level and row must be passed."
-        )
-        if (level and row) and not row_riser:
-            row_riser = PACS.RowRiser(
-                level=level,
-                row=row,
-            )
         self.__row_risers.remove(row_riser)
 
     # Row Riser: Get
@@ -429,14 +293,9 @@ class BaseDecorationsConfig:
     # Brackets: Remove
     def remove_bracket(
             self,
-            # By Object
-            bracket: PACS.Bracket = None,
-            # By Parameters
-            name: str = None
+            # By Object or Name
+            bracket: PACS.Bracket | str,
             ) -> None:
-        assert bracket or name, "Bracket object or name must be passed"
-        if name and not bracket:
-            bracket = PACS.Bracket(name=name)
         self.__brackets.remove(bracket)
 
     # Bracket: Get
