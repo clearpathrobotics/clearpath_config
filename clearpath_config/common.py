@@ -301,18 +301,19 @@ class Accessory():
         # Link name must not have spaces
         assert " " not in link, "Link name '%s' must no have spaces" % link
         # Link name must not start with a digit
-        assert not link[0].isdigit(), "Link name '%s' must not start with a digit" % link
+        assert not link[0].isdigit(), (
+            "Link name '%s' must not start with a digit" % link
+        )
+
+
+# ListConfigs: Generic Types
+T = TypeVar("T")
+U = TypeVar("U")
 
 
 # ListConfigs
 # - holds a list of an object type
 # - generic class
-
-# Generic Type
-T = TypeVar("T")
-U = TypeVar("U")
-
-
 class ListConfig(Generic[T, U]):
 
     def __init__(self, uid: Callable) -> None:
