@@ -412,3 +412,18 @@ class ListConfig(Generic[T, U]):
         # Restore Save if Failure
         except AssertionError:
             self.__list = tmp_list
+
+    # Unique Identifier: Name
+    @staticmethod
+    def uid_name(T) -> str:
+        return T.get_name()
+
+    # Unique Identifier: Level
+    @staticmethod
+    def uid_level(T) -> int:
+        return T.get_level()
+
+    # Unique Identifier: Level-Row
+    @staticmethod
+    def uid_level_row(T) -> tuple:
+        return (T.get_level(), T.get_row())
