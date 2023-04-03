@@ -12,14 +12,13 @@ class FathPivot(BaseMount):
 
     def __init__(
         self,
-        name: str,
         parent: str = Accessory.PARENT,
         angle: float = ANGLE,
         xyz: List[float] = Accessory.XYZ,
         rpy: List[float] = Accessory.RPY,
     ) -> None:
         super().__init__(
-            name,
+            FathPivot.get_name_from_idx(0),
             parent,
             xyz,
             rpy)
