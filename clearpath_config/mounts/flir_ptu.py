@@ -4,9 +4,8 @@ from typing import List
 
 
 class FlirPTU(BaseMount):
-    MODEL = "flir_ptu"
+    MOUNT_MODEL = "flir_ptu"
     # Default Values
-    MOUNTING_LINK = None
     TTY_PORT = "/dev/ptu"
     TCP_PORT = 4000
     IP_ADDRESS = "192.168.131.70"
@@ -22,7 +21,6 @@ class FlirPTU(BaseMount):
         self,
         name: str,
         parent: str = Accessory.PARENT,
-        mounting_link: str = MOUNTING_LINK,
         xyz: List[float] = Accessory.XYZ,
         rpy: List[float] = Accessory.RPY,
         tty_port: str = TTY_PORT,
@@ -33,9 +31,7 @@ class FlirPTU(BaseMount):
     ) -> None:
         super().__init__(
             name,
-            FlirPTU.MODEL,
             parent,
-            mounting_link,
             xyz,
             rpy,
         )

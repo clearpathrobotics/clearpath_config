@@ -6,25 +6,21 @@ from typing import List
 
 
 class FathPivot(BaseMount):
-    MODEL = "fath_pivot"
+    MOUNT_MODEL = "fath_pivot"
     # Default Values
-    MOUNTING_LINK = None
     ANGLE = 0.0
 
     def __init__(
         self,
         name: str,
         parent: str = Accessory.PARENT,
-        mounting_link: str = MOUNTING_LINK,
         angle: float = ANGLE,
         xyz: List[float] = Accessory.XYZ,
         rpy: List[float] = Accessory.RPY,
     ) -> None:
         super().__init__(
             name,
-            FathPivot.MODEL,
             parent,
-            mounting_link,
             xyz,
             rpy)
         self.angle = 0.0
