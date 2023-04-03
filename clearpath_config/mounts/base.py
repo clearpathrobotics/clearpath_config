@@ -14,5 +14,13 @@ class BaseMount(Accessory):
     ) -> None:
         super().__init__(name, parent, xyz, rpy)
 
-    def get_model(self) -> str:
-        return self.MOUNT_MODEL
+    @classmethod
+    def get_mount_model(cls) -> str:
+        return cls.MOUNT_MODEL
+
+    @classmethod
+    def get_name_from_idx(cls, idx: int) -> str:
+        return "%s_%s" % (
+            cls.get_mount_model(),
+            idx
+        )
