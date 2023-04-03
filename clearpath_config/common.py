@@ -427,3 +427,123 @@ class ListConfig(Generic[T, U]):
     @staticmethod
     def uid_level_row(T) -> tuple:
         return (T.get_level(), T.get_row())
+
+
+# OrderedListConfig
+# - uid is an integer
+# - index will be enforced to match uid
+# - obj_to_idx
+# - idx_to_obj
+class OrderedListConfig(Generic[T]):
+
+    def __init__(
+            self,
+            # Unique identifier to index
+            obj_to_idx: Callable,
+            idx_to_obj: Callable
+            ) -> None:
+        self.__list: List[T] = []
+        self.__obj_to_idx: Callable = obj_to_idx
+        self.__idx_to_obj: Callable = idx_to_obj
+
+    def find(
+            self,
+            obj: T | int
+            ) -> int:
+        if isinstance(obj, self.__orig_class__.__args__[0]):
+            idx = self.__obj_to_idx(obj)
+        elif isinstance(obj, int):
+            idx = obj
+        else:
+            raise AssertionError(
+                "Object must of type %s or %s" % (
+                    self.__orig_class__.__args__[0], int
+                )
+            )
+        if idx < len(self.__list):
+            return idx
+        else:
+            return None
+
+    def update(self):
+        for idx, obj in enumerate(self.__list):
+            if self.__obj_to_idx(obj) != idx:
+                self.__list[idx] = self.__idx_to_obj(obj, idx)
+
+    def add(
+            self,
+            obj: T
+            ) -> None:
+        assert isinstance(obj, self.__orig_class__.__args__[0]), (
+            "Object must be of type %s" % T
+        )
+        self.__list.append(obj)
+        self.update()
+
+    def replace(
+            self,
+            obj: T,
+            ) -> None:
+        idx = self.find(obj)
+        assert idx is not None, (
+            "Object not found. Cannot be replaced"
+        )
+        self.__list[idx] = obj
+        self.update()
+
+    def remove(
+            self,
+            obj: T | int
+            ) -> None:
+        idx = self.find(obj)
+        if idx is not None:
+            self.__list.remove(self.__list[idx])
+        self.update()
+
+    def get(
+            self,
+            obj: T | int,
+            ) -> T:
+        idx = self.find(obj)
+        return None if idx is None else self.__list[idx]
+
+    def get_all(
+            self
+            ) -> List[T]:
+        return self.__list
+
+    def set(
+            self,
+            obj: T
+            ) -> None:
+        if self.find(obj) is None:
+            self.add(obj)
+        else:
+            self.replace(obj)
+
+    def set_all(
+            self,
+            _list: List[T],
+            ) -> None:
+        # Copy and Clear
+        tmp_list = deepcopy(self.__list)
+        self.__list.clear()
+        # Add One-by-One
+        try:
+            for obj in _list:
+                self.add(obj)
+        # Restore Save if Failure
+        except AssertionError:
+            self.__list = tmp_list
+
+    # Name as Unique ID to Index
+    @staticmethod
+    def name_obj_to_idx(obj: T):
+        name = obj.get_name()
+        str_idx = name.split("_")[-1]
+        return int(str_idx)
+
+    @staticmethod
+    def name_idx_to_obj(obj: T, idx: int):
+        obj.set_name(obj.get_name_from_idx(idx))
+        return obj
