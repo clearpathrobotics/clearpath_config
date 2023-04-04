@@ -528,6 +528,9 @@ class OrderedListConfig(Generic[T]):
         # Copy and Clear
         tmp_list = deepcopy(self.__list)
         self.__list.clear()
+        # If Empty Keep Empty
+        if not _list:
+            return
         # Add One-by-One
         try:
             for obj in _list:
@@ -535,6 +538,7 @@ class OrderedListConfig(Generic[T]):
         # Restore Save if Failure
         except AssertionError:
             self.__list = tmp_list
+        self.update()
 
     # Name as Unique ID to Index
     @staticmethod
