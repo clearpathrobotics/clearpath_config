@@ -106,3 +106,22 @@ class TopPlate(BaseDecoration):
             model: str = DEFAULT
             ) -> None:
         super().__init__(name, enabled, model)
+
+
+class Decoration():
+    BUMPER = Bumper.DECORATION_MODEL
+    TOP_PLATE = TopPlate.DECORATION_MODEL
+
+    MODEL = {
+        BUMPER: Bumper,
+        TOP_PLATE: TopPlate
+    }
+
+    def __new__(cls, model: str) -> BaseDecoration:
+        assert model in Decoration.MODEL, (
+            "Model '%s' must be one of: '%s'" % (
+                model,
+                Decoration.MODEL.keys()
+            )
+        )
+        return Decoration.MODEL[model]()
