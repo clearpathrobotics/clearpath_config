@@ -7,7 +7,7 @@ class BaseMount(Accessory):
 
     def __init__(
         self,
-        name: str,
+        name: str = "base_mount_0",
         parent: str = Accessory.PARENT,
         xyz: List[float] = Accessory.XYZ,
         rpy: List[float] = Accessory.RPY,
