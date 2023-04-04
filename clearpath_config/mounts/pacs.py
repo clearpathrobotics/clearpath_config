@@ -10,7 +10,7 @@ class PACS:
     MAX_COLUMNS = 7
 
     class Riser(BaseMount):
-        MOUNT_MODEL = "pacs_riser"
+        MOUNT_MODEL = "riser"
         THICKNESS = 0.00635
 
         def __init__(
@@ -87,7 +87,7 @@ class PACS:
             - allows multiple sensors to be mounted
             - should be added to any
         """
-        MOUNT_MODEL = "pacs_bracket"
+        MOUNT_MODEL = "bracket"
         HORIZONTAL = "horizontal"
         HORIZONTAL_LARGE = "large"
         VERTICAL = "vertical"
