@@ -1,5 +1,5 @@
 from clearpath_config.common import ListConfig, Platform
-from clearpath_config.platform.decorations import Bumper, TopPlate
+from clearpath_config.platform.decorations import BaseDecoration, Bumper, TopPlate
 from typing import List
 
 
@@ -26,6 +26,13 @@ class BaseDecorationsConfig:
         self.__top_plates = ListConfig[
             TopPlate, str](
                 uid=ListConfig.uid_name)
+
+    # Decorations: Get All
+    def get_all_decorations(self) -> List[BaseDecoration]:
+        decorations = []
+        decorations.extend(self.get_bumpers())
+        decorations.extend(self.get_top_plates())
+        return decorations
 
     # Bumper: Add
     def add_bumper(
