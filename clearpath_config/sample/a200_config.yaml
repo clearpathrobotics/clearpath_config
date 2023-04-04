@@ -23,7 +23,7 @@ platform: # These are are parameters specific to a a platform
             extension: 0.1
             model: wibotic
         rear_bumper:
-            extension: 0.2
+            extension: 0
             model: default
         top_plate:
             model: pacs
@@ -31,54 +31,38 @@ platform: # These are are parameters specific to a a platform
         urdf: /fake/path/empty.urdf.xacro
         control: /fake/path/empty.yaml
 
-
 mounts:
     fath_pivot:
-      - parent: "base_link"
+      - parent: "top_plate_mount_a1"
+        angle: 1.5707
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+      - parent: "top_plate_mount_a2"
         angle: 0.0
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
-      - parent: "base_link"
-        angle: 0.0
-        xyz: [0.0, 0.0, 0.0]
-        rpy: [0.0, 0.0, 0.0]
-    flir_ptu:
-      - parent: "base_link"
-        xyz: [0.0, 0.0, 0.0]
-        rpy: [0.0, 0.0, 0.0]
-        tty_port: "/dev/ptu"
-        tcp_port: 4000
-        ip: "192.168.131.70"
-        connection_type: "tty"
-        limits_enabled: False
-      - parent: "base_link"
-        xyz: [0.0, 0.0, 0.0]
-        rpy: [0.0, 0.0, 0.0]
-        tty_port: "/dev/ptu"
-        tcp_port: 4000
-        ip: "192.168.131.70"
-        connection_type: "tty"
-        limits_enabled: False
     riser:
       - rows: 8
         columns: 7
+        height: 0.1
         thickness: 0.00635
-        parent: "base_link"
-        xyz: [0.0, 0.0, 0.0]
+        parent: "top_plate_mount_a1"
+        xyz: [0.0, 0.0, 0.1]
         rpy: [0.0, 0.0, 0.0]
       - rows: 1
-        columns: 1
+        columns: 7
+        height: 0.1
         thickness: 0.00635
-        parent: "base_link"
-        xyz: [0.0, 0.0, 0.0]
+        parent: "top_plate_mount_a6"
+        xyz: [0.0, 0.0, 0.2]
         rpy: [0.0, 0.0, 0.0]
     bracket:
       - model: "horizontal"
-        parent: "base_link"
+        parent: "riser_1_mount_g6"
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
       - model: "vertical"
-        parent: "base_link"
+        parent: "riser_1_mount_a6"
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
 
