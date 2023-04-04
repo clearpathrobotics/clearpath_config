@@ -1,5 +1,5 @@
 version: 0
- 
+
 system: # These are system level configs
     self: A200-1
     hosts: # These are the hosts that are involved in this system
@@ -62,33 +62,57 @@ platform: # These are are parameters specific to a a platform
 
 
 mounts:
-  - name: "front_pivot"
-    model: "fath_pivot"
-    parent: "base_link"
-    mounting_link: "front_pivot_mount"
-    angle: 0.0
-    xyz: [0.0, 0.0, 0.0]
-    rpy: [0.0, 0.0, 0.0]
+    fath_pivot:
+      - parent: "base_link"
+        angle: 0.0
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+      - parent: "base_link"
+        angle: 0.0
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+    flir_ptu:
+      - parent: "base_link"
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+        tty_port: "/dev/ptu"
+        tcp_port: 4000
+        ip: "192.168.131.70"
+        connection_type: "tty"
+        limits_enabled: False
+      - parent: "base_link"
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+        tty_port: "/dev/ptu"
+        tcp_port: 4000
+        ip: "192.168.131.70"
+        connection_type: "tty"
+        limits_enabled: False
+    riser:
+      - rows: 7
+        columns: 8
+        height: 0.10
+        thickness: 0.0635
+        parent: "base_link"
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+      - rows: 1
+        columns: 1
+        height: 0.10
+        thickness: 0.0635
+        parent: "base_link"
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+    bracket:
+      - model: "horizontal"
+        parent: "base_link"
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+      - model: "vertical"
+        parent: "base_link"
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
 
-  - name: "ptu"
-    model: "flir_ptu"
-    parent: "base_link"
-    mounting_link: "ptu_mount"
-    xyz: [0.0, 0.0, 0.0]
-    rpy: [0.0, 0.0, 0.0]
-    tty_port: "/dev/ptu"
-    tcp_port: 4000
-    ip: "192.168.131.70"
-    connection_type: "tty"
-    limits_enabled: False
-#    front_pivot:
-#        enabled: true
-#        parent_link: front_mount
-#        accessory_link: front_pivot_mount
-#        model: fath_pivot
-#        angle: 0
-#        xyz: [0, 0, 0]
-#        rpy: [0, 0, 0]
 
 sensors: # Various sensors
     lidars:
