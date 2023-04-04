@@ -1,5 +1,5 @@
 from clearpath_config.common import ListConfig, Platform
-from clearpath_config.platform.decorations import Decorations
+from clearpath_config.platform.decorations import Bumper, TopPlate
 from typing import List
 
 
@@ -21,29 +21,29 @@ class BaseDecorationsConfig:
         )
         # Standard Platform Decorations
         self.__bumpers = ListConfig[
-            Decorations.Bumper, str](
+            Bumper, str](
                 uid=ListConfig.uid_name)
         self.__top_plates = ListConfig[
-            Decorations.TopPlate, str](
+            TopPlate, str](
                 uid=ListConfig.uid_name)
 
     # Bumper: Add
     def add_bumper(
             self,
             # By Object
-            bumper: Decorations.Bumper = None,
+            bumper: Bumper = None,
             # By Parameters
             name: str = None,
-            enable: bool = True,
+            enabled: bool = True,
             extension: float = 0.0,
-            model: str = Decorations.Bumper.DEFAULT,
+            model: str = Bumper.DEFAULT,
             ) -> None:
         assert bumper or name, "Bumper object or name must be passed"
         # Create Object
         if name and not bumper:
-            bumper = Decorations.Bumper(
+            bumper = Bumper(
                 name=name,
-                enable=enable,
+                enabled=enabled,
                 extension=extension,
                 model=model
             )
@@ -53,7 +53,7 @@ class BaseDecorationsConfig:
     def remove_bumper(
             self,
             # By Object or Name
-            bumper: Decorations.Bumper | str,
+            bumper: Bumper | str,
             ) -> None:
         self.__bumpers.remove(bumper)
 
@@ -61,26 +61,26 @@ class BaseDecorationsConfig:
     def get_bumper(
             self,
             name: str,
-            ) -> Decorations.Bumper:
+            ) -> Bumper:
         return self.__bumpers.get(name)
 
     # Bumper: Get All
     def get_bumpers(
             self
-            ) -> List[Decorations.Bumper]:
+            ) -> List[Bumper]:
         return self.__bumpers.get_all()
 
     # Bumper: Set
     def set_bumper(
             self,
-            bumper: Decorations.Bumper,
+            bumper: Bumper,
             ) -> None:
         self.__bumpers.set(bumper)
 
     # Bumper: Set All
     def set_bumpers(
             self,
-            bumpers: List[Decorations.Bumper],
+            bumpers: List[Bumper],
             ) -> None:
         self.__bumpers.set_all(bumpers)
 
@@ -88,17 +88,17 @@ class BaseDecorationsConfig:
     def add_top_plate(
             self,
             # By Object
-            top_plate: Decorations.TopPlate = None,
+            top_plate: TopPlate = None,
             # By Parameters
             name: str = None,
-            enable: bool = True,
-            model: str = Decorations.TopPlate.DEFAULT,
+            enabled: bool = True,
+            model: str = TopPlate.DEFAULT,
             ) -> None:
         assert top_plate or name, "Top plate object or name must be passed."
         if name and not top_plate:
-            top_plate = Decorations.TopPlate(
+            top_plate = TopPlate(
                 name=name,
-                enable=enable,
+                enabled=enabled,
                 model=model
             )
         self.__top_plates.add(top_plate)
@@ -107,7 +107,7 @@ class BaseDecorationsConfig:
     def remove_top_plate(
             self,
             # By Object or Name
-            top_plate: Decorations.TopPlate | str,
+            top_plate: TopPlate | str,
             ) -> None:
         self.__top_plates.remove(top_plate)
 
@@ -115,25 +115,25 @@ class BaseDecorationsConfig:
     def get_top_plate(
             self,
             name: str
-            ) -> Decorations.TopPlate:
+            ) -> TopPlate:
         return self.__top_plates.get(name)
 
     # Top Plate: Get All
     def get_top_plates(
             self
-            ) -> List[Decorations.TopPlate]:
+            ) -> List[TopPlate]:
         return self.__top_plates.get_all()
 
     # Top Plate: Set
     def set_top_plate(
             self,
-            top_plate: Decorations.TopPlate
+            top_plate: TopPlate
             ) -> None:
         self.__top_plates.set(top_plate)
 
     # Top Plate: Set All
     def set_top_plates(
             self,
-            top_plates: List[Decorations.TopPlate]
+            top_plates: List[TopPlate]
             ) -> None:
         self.__top_plates.set_all(top_plates)

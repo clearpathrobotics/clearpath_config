@@ -20,42 +20,13 @@ platform: # These are are parameters specific to a a platform
     serial_number: cpr-a200-0001
     decorations: # Platform specific accessories
         front_bumper:
-            enable: true
             extension: 0.1
             model: wibotic
         rear_bumper:
-            enable: true
             extension: 0.2
             model: default
         top_plate:
-            enable: false
             model: pacs
-        pacs:
-            full_risers:
-              - level: 1
-                height: 0.5
-              - level: 2
-                height: 0.5
-            row_risers:
-              - row: 1
-                level: 1
-                height: 0.5
-              - row: 2
-                level: 1
-                height: 0.5
-            brackets:
-              a01_bracket:
-                  model: horizontal
-                  extension: 0.0
-                  parent: "A01"
-                  xyz: [0.0, 0.0, 0.2]
-                  rpy: [0.0, 0.0, 0.0]
-              a02_bracket:
-                  model: horizontal
-                  extension: 0.0
-                  parent: A02
-                  xyz: [0.0, 0.0, 0.0]
-                  rpy: [0.0, 0.0, 0.0]
     extras:
         urdf: /fake/path/empty.urdf.xacro
         control: /fake/path/empty.yaml

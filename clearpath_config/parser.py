@@ -1,8 +1,20 @@
-from clearpath_config.common import Platform, Accessory
+from clearpath_config.common import (
+    Platform,
+    Accessory
+)
 from clearpath_config.clearpath_config import ClearpathConfig
-from clearpath_config.mounts.mounts import MountsConfig, Mount, BaseMount, FlirPTU, FathPivot
+from clearpath_config.mounts.mounts import (
+    MountsConfig,
+    Mount,
+    BaseMount,
+    FlirPTU,
+    FathPivot
+)
 from clearpath_config.platform.base import BaseDecorationsConfig
-from clearpath_config.platform.decorations import Decorations
+from clearpath_config.platform.decorations import (
+    Bumper,
+    TopPlate
+)
 from clearpath_config.mounts.pacs import PACS
 from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.platform.a200 import A200DecorationsConfig
@@ -103,18 +115,18 @@ class SystemConfigParser(BaseConfigParser):
 
 class BumperConfigParser(BaseConfigParser):
     # Bumper Keys
-    ENABLE = "enable"
+    ENABLED = "enabled"
     EXTENSION = "extension"
     MODEL = "model"
 
-    def __new__(cls, key: str, config: dict) -> Decorations.Bumper:
-        bmpconfig = Decorations.Bumper(key)
+    def __new__(cls, key: str, config: dict) -> Bumper:
+        bmpconfig = Bumper(key)
         # Bumper
         bumper = cls.get_optional_val(key, config)
         if not bumper:
             return bmpconfig
         # Bumper.Enable
-        if cls.get_required_val(cls.ENABLE, bumper):
+        if cls.get_optional_val(cls.ENABLED, bumper, False):
             bmpconfig.enable()
         else:
             bmpconfig.disable()
@@ -127,17 +139,17 @@ class BumperConfigParser(BaseConfigParser):
 
 class TopPlateConfigParser(BaseConfigParser):
     # Top Plate Keys
-    ENABLE = "enable"
+    ENABLED = "enabled"
     MODEL = "model"
 
-    def __new__(cls, key: str, config: dict) -> Decorations.TopPlate:
-        topconfig = Decorations.TopPlate(key)
+    def __new__(cls, key: str, config: dict) -> TopPlate:
+        topconfig = TopPlate(key)
         # Top_Plate
         top_plate = cls.get_optional_val(key, config)
         if not top_plate:
             return topconfig
         # Top_Plate.Enable
-        if cls.get_required_val(cls.ENABLE, top_plate):
+        if cls.get_required_val(cls.ENABLED, top_plate):
             topconfig.enable()
         else:
             topconfig.disable()
@@ -161,13 +173,17 @@ class DecorationsConfigParser(BaseConfigParser):
             dcnconfig = A200DecorationsConfig()
             dcnparser = DecorationsConfigParser
             # Decorations
-            decorations = dcnparser.get_required_val(dcnparser.DECORATIONS, config)
+            decorations = (
+                dcnparser.get_required_val(dcnparser.DECORATIONS, config))
             # Decorations.Front_Bumper
-            dcnconfig.set_bumper(BumperConfigParser(cls.FRONT_BUMPER, decorations))
+            dcnconfig.set_bumper(
+                BumperConfigParser(cls.FRONT_BUMPER, decorations))
             # Decorations.Rear_Bumper
-            dcnconfig.set_bumper(BumperConfigParser(cls.REAR_BUMPER, decorations))
+            dcnconfig.set_bumper(
+                BumperConfigParser(cls.REAR_BUMPER, decorations))
             # Decorations.Top_Plate
-            dcnconfig.set_top_plate(TopPlateConfigParser(cls.TOP_PLATE, decorations))
+            dcnconfig.set_top_plate(
+                TopPlateConfigParser(cls.TOP_PLATE, decorations))
             return dcnconfig
 
     class J100:
@@ -179,11 +195,14 @@ class DecorationsConfigParser(BaseConfigParser):
             dcnconfig = J100DecorationsConfig()
             dcnparser = DecorationsConfigParser
             # Decorations
-            decorations = dcnparser.get_required_val(dcnparser.DECORATIONS, config)
+            decorations = (
+                dcnparser.get_required_val(dcnparser.DECORATIONS, config))
             # Decorations.Front_Bumper
-            dcnconfig.set_bumper(BumperConfigParser(cls.FRONT_BUMPER, decorations))
+            dcnconfig.set_bumper(
+                BumperConfigParser(cls.FRONT_BUMPER, decorations))
             # Decorations.Rear_Bumper
-            dcnconfig.set_bumper(BumperConfigParser(cls.REAR_BUMPER, decorations))
+            dcnconfig.set_bumper(
+                BumperConfigParser(cls.REAR_BUMPER, decorations))
             return dcnconfig
 
     MODEL_CONFIGS = {Platform.A200: A200, Platform.J100: J100}
@@ -212,16 +231,18 @@ class PlatformConfigParser(BaseConfigParser):
         # Platform
         platform = cls.get_required_val(cls.PLATFORM, config)
         # Platform.SerialNumber
-        pfmconfig.set_serial_number(cls.get_required_val(cls.SERIAL_NUMBER, platform))
+        pfmconfig.set_serial_number(
+            cls.get_required_val(cls.SERIAL_NUMBER, platform))
         # Platform.Decorations
-        pfmconfig.decorations = DecorationsConfigParser(pfmconfig.get_model(), platform)
+        pfmconfig.decorations = (
+            DecorationsConfigParser(pfmconfig.get_model(), platform))
         # Platform.Extras
         extras = cls.get_optional_val(cls.EXTRAS, platform)
         if extras:
-            pfmconfig.extras.set_urdf_extras(cls.get_optional_val(cls.URDF, extras, ""))
+            pfmconfig.extras.set_urdf_extras(
+                cls.get_optional_val(cls.URDF, extras, ""))
             pfmconfig.extras.set_control_extras(
-                cls.get_optional_val(cls.CONTROL, extras, "")
-            )
+                cls.get_optional_val(cls.CONTROL, extras, ""))
         return pfmconfig
 
 
@@ -233,10 +254,14 @@ class AccessoryParser(BaseConfigParser):
     RPY = "rpy"
 
     def __new__(cls, config: dict) -> Accessory:
-        name = cls.get_required_val(AccessoryParser.NAME, config)
-        parent = cls.get_optional_val(AccessoryParser.PARENT, config, Accessory.PARENT)
-        xyz = cls.get_optional_val(AccessoryParser.XYZ, config, Accessory.XYZ)
-        rpy = cls.get_optional_val(AccessoryParser.RPY, config, Accessory.RPY)
+        name = cls.get_required_val(
+            AccessoryParser.NAME, config)
+        parent = cls.get_optional_val(
+            AccessoryParser.PARENT, config, Accessory.PARENT)
+        xyz = cls.get_optional_val(
+            AccessoryParser.XYZ, config, Accessory.XYZ)
+        rpy = cls.get_optional_val(
+            AccessoryParser.RPY, config, Accessory.RPY)
         return Accessory(name, parent, xyz, rpy)
 
 
@@ -248,9 +273,12 @@ class MountParser(BaseConfigParser):
         MOUNTING_LINK = "mounting_link"
 
         def __new__(cls, config: dict) -> BaseMount:
-            parent = cls.get_optional_val(AccessoryParser.PARENT, config, Accessory.PARENT)
-            xyz = cls.get_optional_val(AccessoryParser.XYZ, config, Accessory.XYZ)
-            rpy = cls.get_optional_val(AccessoryParser.RPY, config, Accessory.RPY)
+            parent = cls.get_optional_val(
+                AccessoryParser.PARENT, config, Accessory.PARENT)
+            xyz = cls.get_optional_val(
+                AccessoryParser.XYZ, config, Accessory.XYZ)
+            rpy = cls.get_optional_val(
+                AccessoryParser.RPY, config, Accessory.RPY)
             return BaseMount(
                 parent=parent,
                 xyz=xyz,
@@ -437,7 +465,8 @@ class ClearpathConfigParser(BaseConfigParser):
         if cwd:
             relpath = os.path.join(cwd, path)
         else:
-            relpath = os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
+            relpath = os.path.join(
+                os.path.dirname(os.path.abspath(__file__)), path)
         if not os.path.isfile(abspath) and not os.path.isfile(relpath):
             return None
         if os.path.isfile(abspath):
@@ -455,13 +484,15 @@ class ClearpathConfigParser(BaseConfigParser):
         try:
             config = yaml.load(open(path), Loader=yaml.SafeLoader)
         except yaml.scanner.ScannerError:
-            raise AssertionError("YAML file '%s' is not well formed" % path)
+            raise AssertionError(
+                "YAML file '%s' is not well formed" % path)
         except yaml.constructor.ConstructorError:
             raise AssertionError(
-                "YAML file '%s' is attempting to create unsafe objects" % path
-            )
+                "YAML file '%s' is attempting to create unsafe objects" % (
+                    path))
         # Check contents are a Dictionary
-        assert isinstance(config, dict), "YAML file '%s' is not a dictionary" % path
+        assert isinstance(config, dict), (
+            "YAML file '%s' is not a dictionary" % path)
         return config
 
     @staticmethod

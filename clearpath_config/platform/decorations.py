@@ -1,122 +1,108 @@
-# DecorationAccessories
-class Decorations:
-    # General Decorations
-    class Bumper:
-        """
-        Bumpers on the Husky can be:
-            - toggled on/off
-            - extended
-            - swapped for a Wibotic charger bumper
-        """
+class BaseDecoration:
+    """
+    BaseDecoration
+     - enable: whether decoration is enabled or not
+     - model: what type of that decoration it is
+    """
+    DECORATION_MODEL = "base_decoration"
+    DEFAULT = "default"
+    MODELS = [DEFAULT]
 
-        DEFAULT = "default"
-        WIBOTIC = "wibotic"
-        MODELS = [DEFAULT, WIBOTIC]
+    def __init__(
+            self,
+            name: str = DECORATION_MODEL,
+            enabled: bool = False,
+            model: str = DEFAULT
+            ) -> None:
+        self.enabled: bool = bool(enabled)
+        self.name: str = BaseDecoration.DECORATION_MODEL
+        self.set_name(name)
+        self.model: str = BaseDecoration.DEFAULT
+        self.set_model(model)
 
-        def __init__(
-                self,
-                name: str,
-                enable: bool = True,
-                extension: float = 0.0,
-                model: str = DEFAULT
-                ) -> None:
-            self.name = name
-            self.enabled = True
-            self.extension = 0.0
-            self.model = self.DEFAULT
-            if enable:
-                self.enable()
-            if extension:
-                self.set_extension(extension)
-            if model:
-                self.set_model(model)
+    def get_name(self) -> str:
+        return self.name
 
-        def get_name(self) -> str:
-            return self.name
+    def set_name(self, name) -> None:
+        self.name = name
 
-        def set_name(self, name) -> None:
-            self.name = name
+    def enable(self) -> None:
+        self.enabled = True
 
-        def enable(self) -> None:
-            self.enabled = True
+    def disable(self) -> None:
+        self.enabled = False
 
-        def disable(self) -> None:
-            self.enabled = False
+    def get_model(self) -> str:
+        return self.model
 
-        def get_extension(self) -> float:
-            return self.extension
-
-        def set_extension(self, extension) -> None:
-            try:
-                extension = float(extension)
-            except ValueError as e:
-                raise AssertionError(e.args[0])
-            assert isinstance(
-                extension, float
-            ), " ".join([
-                "Bumper extension must be of type float,",
-                " unexpected type '%s'" % type(extension)
-            ])
-            assert extension >= 0, "Bumper extension must be a positive value"
-            self.extension = extension
-
-        def get_model(self) -> str:
-            return self.model
-
-        def set_model(self, model: str) -> None:
-            assert model in self.MODELS, (
-                "Bumper model '%s' is not one of: %s" % (
-                    model,
-                    self.MODELS,
-                )
+    def set_model(self, model: str) -> None:
+        assert model in self.MODELS, (
+            "%s model '%s' is not one of: '%s'" % (
+                self.DECORATION_MODEL.title(),
+                model,
+                self.MODELS,
             )
-            self.model = model
+        )
+        self.model = model
 
-    class TopPlate:
-        """
-        Top Plate on the Husky can be:
-            - toggled on/off
-            - swapped for larger plate and pacs plate
-            - PACS plate is required
-        """
 
-        DEFAULT = "default"
-        LARGE = "large"
-        PACS = "pacs"
-        MODELS = [DEFAULT, LARGE, PACS]
+class Bumper(BaseDecoration):
+    """
+    Bumper
+     - enabled: can be toggled
+     - model: can be swapped to a Wibotic charger bumper
+     - extension: meters by which it is extended
+    """
+    DECORATION_MODEL = "bumper"
+    DEFAULT = "default"
+    WIBOTIC = "wibotic"
+    MODELS = [DEFAULT, WIBOTIC]
 
-        def __init__(
-                self,
-                name: str,
-                enable: bool = True,
-                model: str = DEFAULT
-                ) -> None:
-            self.name = name
-            self.enabled = True
-            self.extension = 0.0
-            self.model = self.DEFAULT
-            if enable:
-                self.enable()
-            if model:
-                self.set_model(model)
+    def __init__(
+            self,
+            name: str = DECORATION_MODEL,
+            enabled: bool = False,
+            model: str = DEFAULT,
+            extension: float = 0.0,
+            ) -> None:
+        super().__init__(name, enabled, model)
+        self.extension: float = 0.0
+        self.set_extension(extension)
 
-        def set_name(self, name: str) -> None:
-            self.name = name
+    def get_extension(self) -> float:
+        return self.extension
 
-        def get_name(self) -> str:
-            return self.name
+    def set_extension(self, extension: float) -> None:
+        try:
+            extension = float(extension)
+        except ValueError as e:
+            raise AssertionError(e.args[0])
+        assert isinstance(
+            extension, float
+        ), " ".join([
+            "Bumper extension must be of type float,",
+            " unexpected type '%s'" % type(extension)
+        ])
+        assert extension >= 0, "Bumper extension must be a positive value"
+        self.extension = extension
 
-        def enable(self) -> None:
-            self.enabled = True
 
-        def disable(self) -> None:
-            self.enabled = False
+class TopPlate(BaseDecoration):
+    """
+    TopPlate
+     - enabled: can be toggled
+     - model: can be swapped to a large or PACS plate
+    """
+    DECORATION_MODEL = "top_plate"
+    DEFAULT = "default"
+    LARGE = "large"
+    PACS = "pacs"
+    MODELS = [DEFAULT, LARGE, PACS]
 
-        def get_model(self) -> str:
-            return self.model
-
-        def set_model(self, model: str) -> None:
-            assert (
-                model in self.MODELS
-            ), "Top plate model '%s' is not one of: %s" % (model, self.MODELS)
-            self.model = model
+    def __init__(
+            self,
+            name: str = DECORATION_MODEL,
+            enabled: bool = False,
+            model: str = DEFAULT
+            ) -> None:
+        super().__init__(name, enabled, model)
