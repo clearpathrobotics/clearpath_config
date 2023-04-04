@@ -149,7 +149,7 @@ class TopPlateConfigParser(BaseConfigParser):
         if not top_plate:
             return topconfig
         # Top_Plate.Enable
-        if cls.get_required_val(cls.ENABLED, top_plate):
+        if cls.get_optional_val(cls.ENABLED, top_plate, False):
             topconfig.enable()
         else:
             topconfig.disable()
