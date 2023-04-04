@@ -331,7 +331,6 @@ class MountParser(BaseConfigParser):
         # Keys
         ROWS = "rows"
         COLUMNS = "columns"
-        HEIGHT = "height"
         THICKNESS = "thickness"
 
         def __new__(cls, config: dict) -> PACS.Riser:
@@ -346,11 +345,6 @@ class MountParser(BaseConfigParser):
                 MountParser.PACSRiser.COLUMNS,
                 config
             )
-            # Height
-            height = cls.get_required_val(
-                MountParser.PACSRiser.HEIGHT,
-                config
-            )
             # Thickness
             thickness = cls.get_optional_val(
                 MountParser.PACSRiser.THICKNESS,
@@ -360,7 +354,6 @@ class MountParser(BaseConfigParser):
             return PACS.Riser(
                 rows=rows,
                 columns=columns,
-                height=height,
                 thickness=thickness,
                 parent=b.get_parent(),
                 xyz=b.get_xyz(),

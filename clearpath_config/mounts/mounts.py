@@ -186,7 +186,6 @@ class MountsConfig:
             # By Parameters
             rows: int = None,
             columns: int = None,
-            height: float = None,
             thickness: float = PACS.Riser.THICKNESS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
@@ -194,15 +193,13 @@ class MountsConfig:
             ) -> None:
         assert riser or (
             rows is not None and (
-                columns is not None) and (
-                height is not None)), (
+                columns is not None)), (
             "Riser object or rows, columns, and height must be passed"
         )
         if not riser:
             riser = PACS.Riser(
                 rows,
                 columns,
-                height,
                 thickness,
                 parent,
                 xyz,
@@ -253,7 +250,6 @@ class MountsConfig:
             # By Parameters
             parent: str = "base_link",
             model: str = PACS.Bracket.DEFAULT,
-            extension: float = 0.0,
             xyz: List[float] = [0.0, 0.0, 0.0],
             rpy: List[float] = [0.0, 0.0, 0.0]
             ) -> None:
@@ -261,7 +257,6 @@ class MountsConfig:
             bracket = PACS.Bracket(
                 parent=parent,
                 model=model,
-                extension=extension,
                 xyz=xyz,
                 rpy=rpy
             )

@@ -17,7 +17,6 @@ class PACS:
                 self,
                 rows: int,
                 columns: int,
-                height: float,
                 thickness: float = THICKNESS,
                 parent: str = Accessory.PARENT,
                 xyz: List[float] = Accessory.XYZ,
@@ -33,8 +32,6 @@ class PACS:
             self.set_rows(rows)
             self.columns: int = 0
             self.set_columns(columns)
-            self.height: float = 0.0
-            self.set_height(height)
             self.thickness: float = 0.0
             self.set_thickness(thickness)
 
@@ -59,9 +56,9 @@ class PACS:
             assert isinstance(columns, int), (
                 "Riser columns must be an integer."
             )
-            assert 0 < columns <= PACS.MAX_ROWS, (
+            assert 0 < columns <= PACS.MAX_COLUMNS, (
                 "Riser rows must be between %s and %s" % (
-                    0, PACS.MAX_ROWS
+                    0, PACS.MAX_COLUMNS
                 )
             )
             self.columns = columns
@@ -98,7 +95,6 @@ class PACS:
             self,
             parent: str = "base_link",
             model: str = DEFAULT,
-            extension: float = 0.0,
             xyz: List[float] = [0.0, 0.0, 0.0],
             rpy: List[float] = [0.0, 0.0, 0.0],
         ) -> None:
@@ -113,10 +109,6 @@ class PACS:
             self.model = PACS.Bracket.DEFAULT
             if model:
                 self.set_model(model)
-            # Extension: length of standoffs in meters
-            self.extension = 0.0
-            if extension:
-                self.set_extension(extension)
 
         def get_model(self) -> str:
             return self.model
@@ -127,14 +119,3 @@ class PACS:
                 "it must be one of the following: %s" % self.MODELS
             ])
             self.model = model
-
-        def get_extension(self) -> float:
-            return self.extension
-
-        def set_extension(self, extension) -> None:
-            try:
-                extension = float(extension)
-            except ValueError as e:
-                raise AssertionError(e.args[0])
-            assert extension >= 0, "Bracket extension must be a positive value"
-            self.extension = extension
