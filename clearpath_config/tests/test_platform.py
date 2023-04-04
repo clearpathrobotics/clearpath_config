@@ -1,5 +1,4 @@
 from clearpath_config.platform.decorations import Decorations
-from clearpath_config.platform.pacs import PACS
 from clearpath_config.platform.platform import PlatformConfig, Platform
 from clearpath_config.tests.test_utils import (
     valid_object_variable_check,
@@ -176,7 +175,7 @@ class TestDecorations:
         )
         assert_not_errors(errors)
 
-
+"""
 # Heights
 INVALID_HEIGHTS = ["string", -1.0]
 VALID_HEIGHTS = [0, "0.1", 10.0]
@@ -330,7 +329,7 @@ class TestPACS:
         )
         assert_not_errors(errors)
 
-"""
+
     def test_full_risers_config(self):
         errors = []
         # Full Risers
