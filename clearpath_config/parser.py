@@ -126,7 +126,7 @@ class BumperConfigParser(BaseConfigParser):
         if not bumper:
             return bmpconfig
         # Bumper.Enable
-        if cls.get_optional_val(cls.ENABLED, bumper, False):
+        if cls.get_optional_val(cls.ENABLED, bumper, True):
             bmpconfig.enable()
         else:
             bmpconfig.disable()
@@ -149,7 +149,7 @@ class TopPlateConfigParser(BaseConfigParser):
         if not top_plate:
             return topconfig
         # Top_Plate.Enable
-        if cls.get_optional_val(cls.ENABLED, top_plate, False):
+        if cls.get_optional_val(cls.ENABLED, top_plate, True):
             topconfig.enable()
         else:
             topconfig.disable()
