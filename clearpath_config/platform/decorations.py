@@ -26,6 +26,9 @@ class BaseDecoration:
     def set_name(self, name) -> None:
         self.name = name
 
+    def get_enabled(self) -> bool:
+        return self.enabled
+
     def enable(self) -> None:
         self.enabled = True
 
