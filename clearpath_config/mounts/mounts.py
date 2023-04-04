@@ -60,6 +60,15 @@ class MountsConfig:
             )
         )
 
+    # Get All Mounts
+    def get_all_mounts(self) -> List[BaseMount]:
+        mounts = []
+        mounts.extend(self.get_fath_pivots())
+        mounts.extend(self.get_flir_ptus())
+        mounts.extend(self.get_risers())
+        mounts.extend(self.get_brackets())
+        return mounts
+
     # FathPivot: Add
     def add_fath_pivot(
             self,
