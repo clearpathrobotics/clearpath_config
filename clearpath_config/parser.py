@@ -3,7 +3,7 @@ from clearpath_config.clearpath_config import ClearpathConfig
 from clearpath_config.mounts.mounts import MountsConfig, Mount, BaseMount, FlirPTU, FathPivot
 from clearpath_config.platform.base import BaseDecorationsConfig
 from clearpath_config.platform.decorations import Decorations
-from clearpath_config.platform.pacs import PACS
+from clearpath_config.mounts.pacs import PACS
 from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.platform.a200 import A200DecorationsConfig
 from clearpath_config.platform.j100 import J100DecorationsConfig
@@ -101,92 +101,6 @@ class SystemConfigParser(BaseConfigParser):
         return sysconfig
 
 
-class PACSConfigParser(BaseConfigParser):
-    # Key
-    PACS_KEY = "pacs"
-    # PACS Keys
-    FULL_RISERS = "full_risers"
-    ROW_RISERS = "row_risers"
-    BRACKETS = "brackets"
-
-    @classmethod
-    def get_full_risers(cls, config: dict) -> List[PACS.FullRiser]:
-        pacs_full_risers = []
-        config_full_risers = cls.get_optional_val(cls.FULL_RISERS, config)
-        if not config_full_risers:
-            return []
-        assert isinstance(config_full_risers, list), "Full Risers must be a list"
-        assert all(
-            [isinstance(entry, dict) for entry in config_full_risers]
-        ), "Full Risers must be a list of 'dict's"
-        for riser in config_full_risers:
-            level = cls.get_required_val("level", riser)
-            height = cls.get_required_val("height", riser)
-            pacs_full_risers.append(PACS.FullRiser(level, height))
-        return pacs_full_risers
-
-    @classmethod
-    def get_row_risers(cls, config: dict) -> List[PACS.RowRiser]:
-        pacs_row_risers = []
-        config_row_risers = cls.get_optional_val(cls.ROW_RISERS, config)
-        if not config_row_risers:
-            return []
-        assert isinstance(config_row_risers, list), "Row Risers must be a list"
-        assert all(
-            [isinstance(entry, dict) for entry in config_row_risers]
-        ), "Row Risers must be a list of 'dict's"
-        for riser in config_row_risers:
-            row = cls.get_required_val("row", riser)
-            level = cls.get_required_val("level", riser)
-            height = cls.get_required_val("height", riser)
-            pacs_row_risers.append(PACS.RowRiser(level, row, height))
-        return pacs_row_risers
-
-    @classmethod
-    def get_brackets(cls, config: dict) -> List[PACS.Bracket]:
-        pacs_brackets = []
-        config_brackets = cls.get_optional_val(cls.BRACKETS, config)
-        if not config_brackets:
-            return []
-        assert isinstance(config_brackets, dict), "Brackets must be a dict"
-        for name, bracket in config_brackets.items():
-            model = cls.get_optional_val("model", bracket, PACS.Bracket.DEFAULT)
-            parent = cls.get_required_val("parent", bracket)
-            extension = cls.get_optional_val("extension", bracket, 0.0)
-            xyz = cls.get_optional_val("xyz", bracket, [0.0, 0.0, 0.0])
-            rpy = cls.get_optional_val("rpy", bracket, [0.0, 0.0, 0.0])
-            pacs_brackets.append(PACS.Bracket(name, parent, model, extension, xyz, rpy))
-        return pacs_brackets
-
-    class A200(BaseConfigParser):
-        def __new__(cls, config: dict) -> A200DecorationsConfig:
-            pacsconfig = A200PACSConfig()
-            # PACS
-            pacs = cls.get_optional_val(PACSConfigParser.PACS_KEY, config)
-            if not pacs:
-                pacsconfig.disable()
-                return pacsconfig
-            # PACS.Full_Risers
-            full_risers = PACSConfigParser.get_full_risers(pacs)
-            # PACS.Row_Risers
-            row_risers = PACSConfigParser.get_row_risers(pacs)
-            # PACS.Brackets
-            brackets = PACSConfigParser.get_brackets(pacs)
-            return pacsconfig
-
-    """
-    PACS Config
-    """
-    MODEL_CONFIGS = {Platform.A200: A200}
-
-    def __new__(cls, model: str, config: dict):
-        assert model in cls.MODEL_CONFIGS, "Model '%s' must be one of %s" % (
-            model,
-            cls.MODEL_CONFIGS.keys(),
-        )
-        return cls.MODEL_CONFIGS[model](config)
-
-
 class BumperConfigParser(BaseConfigParser):
     # Bumper Keys
     ENABLE = "enable"
@@ -254,11 +168,6 @@ class DecorationsConfigParser(BaseConfigParser):
             dcnconfig.set_bumper(BumperConfigParser(cls.REAR_BUMPER, decorations))
             # Decorations.Top_Plate
             dcnconfig.set_top_plate(TopPlateConfigParser(cls.TOP_PLATE, decorations))
-            # Decorations.PACS
-            pacs = dcnparser.get_required_val(dcnparser.A200.PACS, decorations)
-            dcnconfig.set_full_risers(PACSConfigParser.get_full_risers(pacs))
-            dcnconfig.set_row_risers(PACSConfigParser.get_row_risers(pacs))
-            dcnconfig.set_brackets(PACSConfigParser.get_brackets(pacs))
             return dcnconfig
 
     class J100:
@@ -315,6 +224,7 @@ class PlatformConfigParser(BaseConfigParser):
             )
         return pfmconfig
 
+
 class AccessoryParser(BaseConfigParser):
     # Keys
     NAME = "name"
@@ -338,30 +248,20 @@ class MountParser(BaseConfigParser):
         MOUNTING_LINK = "mounting_link"
 
         def __new__(cls, config: dict) -> BaseMount:
-            a = AccessoryParser(config)
-            model = cls.get_required_val(
-                MountParser.Base.MODEL,
-                config,
-            )
-            mounting_link = cls.get_optional_val(
-                MountParser.Base.MOUNTING_LINK,
-                config,
-                BaseMount.MOUNTING_LINK,
-            )
+            parent = cls.get_optional_val(AccessoryParser.PARENT, config, Accessory.PARENT)
+            xyz = cls.get_optional_val(AccessoryParser.XYZ, config, Accessory.XYZ)
+            rpy = cls.get_optional_val(AccessoryParser.RPY, config, Accessory.RPY)
             return BaseMount(
-                name=a.get_name(),
-                parent=a.get_parent(),
-                xyz=a.get_xyz(),
-                rpy=a.get_rpy(),
-                model=model,
-                mounting_link=mounting_link,
-            )
+                parent=parent,
+                xyz=xyz,
+                rpy=rpy,
+                )
 
     class FathPivot(BaseConfigParser):
         # Keys
         ANGLE = "angle"
 
-        def __new__(cls, config:dict) -> FathPivot:
+        def __new__(cls, config: dict) -> FathPivot:
             b = MountParser.Base(config)
             # Pivot Angle
             angle = cls.get_optional_val(
@@ -370,11 +270,9 @@ class MountParser(BaseConfigParser):
                 FathPivot.ANGLE,
             )
             return FathPivot(
-                name=b.get_name(),
                 parent=b.get_parent(),
                 xyz=b.get_xyz(),
                 rpy=b.get_rpy(),
-                mounting_link=b.get_mounting_link(),
                 angle=angle,
             )
 
@@ -386,7 +284,7 @@ class MountParser(BaseConfigParser):
         CONNECTION_TYPE = "connection_type"
         LIMITS_ENABLED = "limits_enabled"
 
-        def __new__(cls, config: dict) -> BaseMount:
+        def __new__(cls, config: dict) -> FlirPTU:
             b = MountParser.Base(config)
             # TTY Port
             tty_port = cls.get_optional_val(
@@ -419,11 +317,9 @@ class MountParser(BaseConfigParser):
                 FlirPTU.LIMITS_ENABLED,
             )
             return FlirPTU(
-                name=b.get_name(),
                 parent=b.get_parent(),
                 xyz=b.get_xyz(),
                 rpy=b.get_rpy(),
-                mounting_link=b.get_mounting_link(),
                 tty_port=tty_port,
                 tcp_port=tcp_port,
                 ip=ip,
@@ -431,14 +327,78 @@ class MountParser(BaseConfigParser):
                 limits_enabled=limits_enabled,
             )
 
+    class PACSRiser(BaseConfigParser):
+        # Keys
+        ROWS = "rows"
+        COLUMNS = "columns"
+        HEIGHT = "height"
+        THICKNESS = "thickness"
+
+        def __new__(cls, config: dict) -> PACS.Riser:
+            b = MountParser.Base(config)
+            # Rows
+            rows = cls.get_required_val(
+                MountParser.PACSRiser.ROWS,
+                config
+            )
+            # Columns
+            columns = cls.get_required_val(
+                MountParser.PACSRiser.COLUMNS,
+                config
+            )
+            # Height
+            height = cls.get_required_val(
+                MountParser.PACSRiser.HEIGHT,
+                config
+            )
+            # Thickness
+            thickness = cls.get_optional_val(
+                MountParser.PACSRiser.THICKNESS,
+                config,
+                PACS.Riser.THICKNESS
+            )
+            return PACS.Riser(
+                rows=rows,
+                columns=columns,
+                height=height,
+                thickness=thickness,
+                parent=b.get_parent(),
+                xyz=b.get_xyz(),
+                rpy=b.get_rpy(),
+            )
+
+    class PACSBracket(BaseConfigParser):
+        # Keys
+        MODEL = "model"
+
+        def __new__(cls, config: dict) -> PACS.Riser:
+            b = MountParser.Base(config)
+            # Model
+            model = cls.get_optional_val(
+                MountParser.PACSBracket.MODEL,
+                config,
+                PACS.Bracket.DEFAULT
+            )
+            return PACS.Bracket(
+                model=model,
+                parent=b.get_parent(),
+                xyz=b.get_xyz(),
+                rpy=b.get_rpy(),
+            )
+
     MODELS = {
         Mount.FATH_PIVOT: FathPivot,
         Mount.FLIR_PTU: FlirPTU,
+        Mount.PACS_RISER: PACSRiser,
+        Mount.PACS_BRACKET: PACSBracket
     }
-    def __new__(cls, config: dict) -> BaseMount:
-        model = cls.get_required_val(
-            MountParser.Base.MODEL,
-            config
+
+    def __new__(cls, model, config: dict) -> BaseMount:
+        assert model in MountParser.MODELS, (
+            "Model '%s' must be one of '%s'" % (
+                model,
+                MountParser.MODELS
+            )
         )
         return cls.MODELS[model](config)
 
@@ -452,17 +412,27 @@ class MountsConfigParser(BaseConfigParser):
         mntconfig = MountsConfig()
         # Mounts
         mounts = cls.get_optional_val(cls.MOUNTS, config)
-        mntconfig.set_mounts(cls.get_mounts(mounts))
+        mntconfig.set_fath_pivots(cls.get_mounts(mounts, Mount.FATH_PIVOT))
+        mntconfig.set_flir_ptus(cls.get_mounts(mounts, Mount.FLIR_PTU))
+        mntconfig.set_risers(cls.get_mounts(mounts, Mount.PACS_RISER))
+        mntconfig.set_brackets(cls.get_mounts(mounts, Mount.PACS_BRACKET))
         return mntconfig
 
-    @staticmethod
-    def get_mounts(config: list) -> List[Mount]:
-        # Assert List of Dictionaries
-        assert (isinstance(config, list)
-            ), "Config must be a list of dictionaries"
-        assert ((all([isinstance(c, dict) for c in config]))
-            ), "Config must be a list of dictionaries"
-        return [MountParser(c) for c in config]
+    @classmethod
+    def get_mounts(cls, config: dict, model: str) -> List[Mount]:
+        # Assert Dictionary
+        assert isinstance(config, dict), (
+            "Mounts must be a dictionary of lists"
+        )
+        entries = cls.get_optional_val(model, config, [])
+        # Assert List
+        assert isinstance(entries, list), (
+            "Model entries must be in a list"
+        )
+        models = []
+        for entry in entries:
+            models.append(MountParser(model, entry))
+        return models
 
 
 # Clearpath Configuration Parser
