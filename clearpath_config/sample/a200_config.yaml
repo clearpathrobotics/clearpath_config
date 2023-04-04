@@ -89,17 +89,15 @@ mounts:
         connection_type: "tty"
         limits_enabled: False
     riser:
-      - rows: 7
-        columns: 8
-        height: 0.10
-        thickness: 0.0635
+      - rows: 8
+        columns: 7
+        thickness: 0.00635
         parent: "base_link"
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
       - rows: 1
         columns: 1
-        height: 0.10
-        thickness: 0.0635
+        thickness: 0.00635
         parent: "base_link"
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
