@@ -19,14 +19,14 @@ class Mount():
         PACS_BRACKET: PACS.Bracket
     }
 
-    def __new__(cls, name: str, model: str) -> BaseMount:
+    def __new__(cls, model: str) -> BaseMount:
         assert model in Mount.MODEL, (
             "Model '%s' must be one of: '%s'" % (
                 model,
                 Mount.MODEL.keys()
             )
         )
-        return Mount.MODEL[model](name)
+        return Mount.MODEL[model]()
 
 
 class MountsConfig:
