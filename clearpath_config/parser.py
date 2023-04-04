@@ -22,7 +22,7 @@ class BaseConfigParser:
     def assert_key_exists(key: str, config: dict) -> None:
         assert BaseConfigParser.check_key_exists(
             key, config
-        ), "Key '%s' must be in YAML"
+        ), "Key '%s' must be in YAML" % key
 
     @staticmethod
     def get_required_val(key: str, config: dict):
