@@ -1,6 +1,6 @@
 # GENX Generic Robot Platform Configuration
 from clearpath_config.common import Platform
-from clearpath_config.platform.decorations import BaseDecorationsConfig
+from clearpath_config.platform.base import BaseDecorationsConfig
 
 
 # GENX Generic Decorations Configuration

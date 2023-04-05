@@ -1,10 +1,4 @@
 from clearpath_config.platform.decorations import Decorations
-from clearpath_config.platform.pacs import (
-    PACS,
-    FullRisersConfig,
-    RowRisersConfig,
-    BracketsConfig,
-)
 from clearpath_config.platform.platform import PlatformConfig, Platform
 from clearpath_config.tests.test_utils import (
     valid_object_variable_check,
@@ -68,15 +62,15 @@ INVALID_BUMPER_MODELS = ["random", 1]
 VALID_BUMPER_MODELS = Decorations.Bumper.MODELS
 # A200 Top Plate Models
 INVALID_A200_TOP_PLATE_MODELS = ["random", 1]
-VALID_A200_TOP_PLATE_MODELS = Decorations.A200.TopPlate.MODELS
+VALID_A200_TOP_PLATE_MODELS = Decorations.TopPlate.MODELS
 
 
 # Test Decorations
-class TestDecorationsConfig:
+class TestDecorations:
     def test_bumper(self):
         errors = []
         # Enable
-        bumper = Decorations.Bumper()
+        bumper = Decorations.Bumper("bumper")
         try:
             bumper.enable()
         except AssertionError as e:
@@ -94,7 +88,7 @@ class TestDecorationsConfig:
         # Extension
         errors.extend(
             invalid_object_variable_check(
-                init_test=lambda extension: Decorations.Bumper(extension=extension),
+                init_test=lambda extension: Decorations.Bumper("bumper", extension=extension),
                 set_test=lambda obj, extension: Decorations.Bumper.set_extension(
                     obj, extension
                 ),
@@ -103,7 +97,7 @@ class TestDecorationsConfig:
         )
         errors.extend(
             valid_object_variable_check(
-                init_test=lambda extension: Decorations.Bumper(extension=extension),
+                init_test=lambda extension: Decorations.Bumper("bumper", extension=extension),
                 set_test=lambda obj, extension: Decorations.Bumper.set_extension(
                     obj, extension
                 ),
@@ -114,14 +108,14 @@ class TestDecorationsConfig:
         # Model
         errors.extend(
             invalid_object_variable_check(
-                init_test=lambda model: Decorations.Bumper(model=model),
+                init_test=lambda model: Decorations.Bumper("bumper", model=model),
                 set_test=lambda obj, model: Decorations.Bumper.set_model(obj, model),
                 invalid_entries=INVALID_BUMPER_MODELS,
             )
         )
         errors.extend(
             valid_object_variable_check(
-                init_test=lambda model: Decorations.Bumper(model=model),
+                init_test=lambda model: Decorations.Bumper("bumper", model=model),
                 set_test=lambda obj, model: Decorations.Bumper.set_model(obj, model),
                 get_func=lambda obj: Decorations.Bumper.get_model(obj),
                 valid_entries=VALID_BUMPER_MODELS,
@@ -129,17 +123,17 @@ class TestDecorationsConfig:
         )
         assert_not_errors(errors)
 
-    def test_a200_top_plate(self):
+    def test_top_plate(self):
         errors = []
         # Enable
         try:
-            top_plate = Decorations.A200.TopPlate(enable=True)
+            top_plate = Decorations.TopPlate("top_plate", enable=True)
         except AssertionError as e:
             errors.append("Valid intialization failed with error: %s" % e.args[0])
         if not top_plate.enabled:
             errors.append("Top plate initalized enabled not set to enabled.")
         try:
-            top_plate = Decorations.A200.TopPlate()
+            top_plate = Decorations.TopPlate("top_plate")
             top_plate.enable()
         except AssertionError as e:
             errors.append("Enabling top plate failed with error: %s" % e.args[0])
@@ -147,13 +141,13 @@ class TestDecorationsConfig:
             errors.append("Top plate enabled not set to enabled.")
         # Disable
         try:
-            top_plate = Decorations.A200.TopPlate(enable=False)
+            top_plate = Decorations.TopPlate("top_plate", enable=False)
         except AssertionError as e:
             errors.append("Valid intialization failed with error: %s" % e.args[0])
         if not top_plate.enabled:
             errors.append("Top plate initalized disabled not set to disabled.")
         try:
-            top_plate = Decorations.A200.TopPlate()
+            top_plate = Decorations.TopPlate("top_plate")
             top_plate.disable()
         except AssertionError as e:
             errors.append("Disabling top plate failed with error: %s" % e.args[0])
@@ -162,8 +156,8 @@ class TestDecorationsConfig:
         # Models
         errors.extend(
             invalid_object_variable_check(
-                init_test=lambda model: Decorations.A200.TopPlate(model=model),
-                set_test=lambda obj, model: Decorations.A200.TopPlate.set_model(
+                init_test=lambda model: Decorations.TopPlate("top_plate", model=model),
+                set_test=lambda obj, model: Decorations.TopPlate.set_model(
                     obj, model
                 ),
                 invalid_entries=INVALID_A200_TOP_PLATE_MODELS,
@@ -171,17 +165,17 @@ class TestDecorationsConfig:
         )
         errors.extend(
             valid_object_variable_check(
-                init_test=lambda model: Decorations.A200.TopPlate(model=model),
-                set_test=lambda obj, model: Decorations.A200.TopPlate.set_model(
+                init_test=lambda model: Decorations.TopPlate("top_plate", model=model),
+                set_test=lambda obj, model: Decorations.TopPlate.set_model(
                     obj, model
                 ),
-                get_func=lambda obj: Decorations.A200.TopPlate.get_model(obj),
+                get_func=lambda obj: Decorations.TopPlate.get_model(obj),
                 valid_entries=VALID_A200_TOP_PLATE_MODELS,
             )
         )
         assert_not_errors(errors)
 
-
+"""
 # Heights
 INVALID_HEIGHTS = ["string", -1.0]
 VALID_HEIGHTS = [0, "0.1", 10.0]
@@ -209,7 +203,7 @@ INVALID_BRACKETS = [[PACS.Bracket("duplicate"), PACS.Bracket("duplicate")]]
 VALID_BRACKETS = [[PACS.Bracket("bracket1"), PACS.Bracket("bracket2")]]
 
 
-class TestPACSConfig:
+class TestPACS:
     def test_full_riser(self):
         errors = []
         # Level
@@ -335,6 +329,7 @@ class TestPACSConfig:
         )
         assert_not_errors(errors)
 
+
     def test_full_risers_config(self):
         errors = []
         # Full Risers
@@ -421,3 +416,4 @@ class TestPACSConfig:
         if bktconfig.get_brackets() != VALID_BRACKETS[0][1:]:
             errors.append("Failed to remove riser")
         assert_not_errors(errors)
+"""

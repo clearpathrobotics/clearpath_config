@@ -1,194 +1,307 @@
-from clearpath_config.common import Accessory, File, IP, List
-from copy import deepcopy
-from math import pi
+from clearpath_config.common import Accessory, OrderedListConfig
+from clearpath_config.mounts.base import BaseMount
+from clearpath_config.mounts.fath_pivot import FathPivot
+from clearpath_config.mounts.flir_ptu import FlirPTU
+from clearpath_config.mounts.pacs import PACS
+from typing import List
+
 
 class Mount():
-    FATH_PIVOT = "fath_pivot"
-    FLIR_PTU = "flir_ptu"
-    ALL = [FATH_PIVOT, FLIR_PTU]
-
-    class Base(Accessory):
-        MOUNTING_LINK = None
-
-        def __init__(
-                self,
-                name: str,
-                model: str,
-                parent: str = Accessory.PARENT,
-                mounting_link: str = MOUNTING_LINK,
-                xyz: List[float] = Accessory.XYZ,
-                rpy: List[float] = Accessory.RPY,
-            ) -> None:
-            super().__init__(name, parent, xyz, rpy)
-            self.model = str()
-            self.set_model(model)
-            self.mounting_link = "%s_mount" % self.get_name()
-            if mounting_link:
-                self.set_mounting_link(mounting_link)
-
-        def get_model(self) -> str:
-            return self.model
-
-        def set_model(self, model: str) -> None:
-            assert (model in Mount.ALL
-                ), "Model '%s' must be one of '%s'" % (model, self.MODELS)
-            self.model = model
-
-        def get_mounting_link(self) -> str:
-            return self.mounting_link
-
-        def set_mounting_link(self, mounting_link: str) -> None:
-            self.assert_valid_link(mounting_link)
-            self.mounting_link = mounting_link
-
-
-    class FathPivot(Base):
-        MOUNTING_LINK = None
-        ANGLE = 0.0
-
-        def __init__(
-                self,
-                name: str,
-                parent: str = Accessory.PARENT,
-                mounting_link: str = MOUNTING_LINK,
-                angle: float = ANGLE,
-                xyz: List[float] = Accessory.XYZ,
-                rpy: List[float] = Accessory.RPY,
-            ) -> None:
-            super().__init__(name, Mount.FATH_PIVOT, parent, mounting_link, xyz, rpy)
-            self.angle = 0.0
-            if angle:
-                self.set_angle(angle)
-
-        def get_angle(self) -> float:
-            return self.angle
-
-        def set_angle(self, angle: float) -> None:
-            assert(-pi < angle <= pi
-                ), "Angle '%s' must be in radian and  between pi and -pi"
-            self.angle = angle
-
-
-    class FlirPTU(Base):
-        # Default Values
-        MOUNTING_LINK = None
-        TTY_PORT = "/dev/ptu"
-        TCP_PORT = 4000
-        IP_ADDRESS = "192.168.131.70"
-        LIMITS_ENABLED = False
-        TTY = "tty"
-        TCP = "tcp"
-        CONNECTION_TYPE = TTY
-        # TTY (uses tty_port)
-        # TCP (uses ip_addr and tcp_port)
-        CONNECTION_TYPES = [TTY, TCP]
-
-        def __init__(
-                self,
-                name: str,
-                parent: str = Accessory.PARENT,
-                mounting_link: str = MOUNTING_LINK,
-                xyz: List[float] = Accessory.XYZ,
-                rpy: List[float] = Accessory.RPY,
-                tty_port: str = TTY_PORT,
-                tcp_port: int = TCP_PORT,
-                ip: str = IP_ADDRESS,
-                connection_type: str = CONNECTION_TYPE,
-                limits_enabled: bool = LIMITS_ENABLED,
-            ) -> None:
-            super().__init__(name, Mount.FLIR_PTU, parent, mounting_link, xyz, rpy)
-            # Serial Port
-            self.tty_port = File(self.TTY_PORT)
-            self.set_tty_port(tty_port)
-            # TCP Port
-            self.tcp_port = self.TCP_PORT
-            self.set_tcp_port(tcp_port)
-            # IP
-            self.ip = IP()
-            self.set_ip(ip)
-            # Connection Type
-            self.connection_type = self.TTY
-            self.set_connection_type(connection_type)
-            # Limits
-            self.limits_enabled = False
-            self.set_limits_enabled(limits_enabled)
-
-        def get_tty_port(self) -> str:
-            return self.tty_port.get_path()
-
-        def set_tty_port(self, tty_port: str) -> None:
-            self.tty_port = File(tty_port)
-
-        def get_tcp_port(self) -> str:
-            return self.tcp_port
-
-        def set_tcp_port(self, tcp_port: int) -> None:
-            assert(1024 < tcp_port < 65536
-                ), "TCP port '%s' must be in range 1024 to 65536" % tcp_port
-            self.tcp_port = tcp_port
-
-        def get_ip(self) -> str:
-            return str(self.ip)
-
-        def set_ip(self, ip: str) -> None:
-            self.ip = IP(ip)
-
-        def get_connection_type(self) -> str:
-            return self.connection_type
-
-        def set_connection_type(self, connection_type: str) -> None:
-            assert(connection_type in self.CONNECTION_TYPES
-                ), "Connection type '%s' must be one of '%s'" % (
-                connection_type, self.CONNECTION_TYPES
-                )
-            self.connection_type = connection_type
-
-        def get_limits_enabled(self) -> bool:
-            return self.limits_enabled
-
-        def set_limits_enabled(self, limits_enabled: bool) -> None:
-            self.limits_enabled = limits_enabled
+    FATH_PIVOT = FathPivot.MOUNT_MODEL
+    FLIR_PTU = FlirPTU.MOUNT_MODEL
+    PACS_RISER = PACS.Riser.MOUNT_MODEL
+    PACS_BRACKET = PACS.Bracket.MOUNT_MODEL
 
     MODEL = {
         FATH_PIVOT: FathPivot,
         FLIR_PTU: FlirPTU,
-        }
+        PACS_RISER: PACS.Riser,
+        PACS_BRACKET: PACS.Bracket
+    }
 
-    def __new__(cls, name: str, model: str) -> Base:
-        return Mount.MODEL[model](name)
+    def __new__(cls, model: str) -> BaseMount:
+        assert model in Mount.MODEL, (
+            "Model '%s' must be one of: '%s'" % (
+                model,
+                Mount.MODEL.keys()
+            )
+        )
+        return Mount.MODEL[model]()
 
 
 class MountsConfig:
+    def __init__(self) -> None:
+        # Fath Pivot
+        self.__fath_pivots = (
+            OrderedListConfig[FathPivot](
+                OrderedListConfig.name_obj_to_idx,
+                OrderedListConfig.name_idx_to_obj
+            )
+        )
+        # Flir PTU
+        self.__flir_ptus = (
+            OrderedListConfig[FlirPTU](
+                OrderedListConfig.name_obj_to_idx,
+                OrderedListConfig.name_idx_to_obj
+            )
+        )
+        # PACS Riser
+        self.__pacs_risers = (
+            OrderedListConfig[PACS.Riser](
+                OrderedListConfig.name_obj_to_idx,
+                OrderedListConfig.name_idx_to_obj
+            )
+        )
+        # PACS Brackets
+        self.__pacs_brackets = (
+            OrderedListConfig[PACS.Bracket](
+                OrderedListConfig.name_obj_to_idx,
+                OrderedListConfig.name_idx_to_obj
+            )
+        )
 
-    def __init__(self, mounts: List[Mount.Base] = []) -> None:
-        self.mounts = list()
-        self.set_mounts(mounts)
+    # Get All Mounts
+    def get_all_mounts(self) -> List[BaseMount]:
+        mounts = []
+        mounts.extend(self.get_fath_pivots())
+        mounts.extend(self.get_flir_ptus())
+        mounts.extend(self.get_risers())
+        mounts.extend(self.get_brackets())
+        return mounts
 
-    def get_mounts(self) -> List[Mount.Base]:
-        return self.mounts
+    # FathPivot: Add
+    def add_fath_pivot(
+            self,
+            # By Object
+            fath_pivot: FathPivot = None,
+            # By Parameters
+            parent: str = "base_link",
+            angle: float = FathPivot.ANGLE,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ):
+        if not fath_pivot:
+            fath_pivot = FathPivot(
+                parent,
+                angle,
+                xyz,
+                rpy
+            )
+        self.__fath_pivots.add(fath_pivot)
 
-    def set_mounts(self, mounts: List[Mount.Base]) -> None:
-        assert (isinstance(mounts, list)
-            ), "Mounts must be a list of Mount objects"
-        assert (all([isinstance(m, Mount.Base) for m in mounts])
-            ), "Mounts must be a list of Mount objects"
-        temp = deepcopy(self.mounts)
-        self.mounts.clear()
-        for mount in mounts:
-            self.add_mount(mount)
+    # FathPivot: Remove
+    def remove_fath_pivot(
+            self,
+            # By Object or Index
+            fath_pivot: FathPivot | int,
+            ) -> None:
+        self.__fath_pivots.remove(fath_pivot)
 
-    def add_mount(self, mount: Mount.Base) -> None:
-        assert (isinstance(mount, Mount.Base)
-            ), "Mount '%s' must be of type Mount." % mount
-        assert (mount.get_name() not in [m.get_name() for m in self.mounts]
-            ), "Mount name '%s' must be unique." % mount.get_name()
-        self.mounts.append(mount)
+    # FathPivot: Get
+    def get_fath_pivot(
+            self,
+            idx: int
+            ) -> FathPivot:
+        self.__fath_pivots.get(idx)
 
-    def remove_mount(self, mount: Mount.Base = None, name: str = None) -> None:
-        assert (mount or name
-            ), "Mount or name of mount must be passed to 'remove_mount'"
-        if mount:
-            name = mount.get_name()
-        for mount in self.mounts:
-            if mount.get_name() == name:
-                self.mounts.remove(mount)
+    # FathPivot: Get All
+    def get_fath_pivots(
+            self,
+            ) -> List[FathPivot]:
+        return self.__fath_pivots.get_all()
+
+    # FathPivot: Set
+    def set_fath_pivot(
+            self,
+            fath_pivot: FathPivot
+            ) -> None:
+        self.__fath_pivots.set(fath_pivot)
+
+    # FathPivot: Set All
+    def set_fath_pivots(
+            self,
+            fath_pivots: List[FathPivot],
+            ) -> None:
+        self.__fath_pivots.set_all(fath_pivots)
+
+    # FlirPTU: Add
+    def add_flir_ptu(
+            self,
+            # By Object
+            flir_ptu: FlirPTU = None,
+            # By Parameters
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY,
+            tty_port: str = FlirPTU.TTY_PORT,
+            tcp_port: int = FlirPTU.TCP_PORT,
+            ip: str = FlirPTU.IP_ADDRESS,
+            connection_type: str = FlirPTU.CONNECTION_TYPE,
+            limits_enabled: bool = FlirPTU.LIMITS_ENABLED,
+            ) -> None:
+        if not flir_ptu:
+            flir_ptu = FlirPTU(
+                parent,
+                xyz,
+                rpy,
+                tty_port,
+                tcp_port,
+                ip,
+                connection_type,
+                limits_enabled,
+            )
+        self.__flir_ptus.add(flir_ptu)
+
+    # FlirPTU: Remove
+    def remove_flir_ptu(
+            self,
+            # By Object or Index
+            flir_ptu: FlirPTU | int,
+            ) -> None:
+        self.__flir_ptus.remove(flir_ptu)
+
+    # FlirPTU: Get
+    def get_flir_ptu(
+            self,
+            idx: int
+            ) -> FlirPTU:
+        return self.__flir_ptus.get(idx)
+
+    # FlirPTU: Get All
+    def get_flir_ptus(
+            self
+            ) -> List[FlirPTU]:
+        return self.__flir_ptus.get_all()
+
+    # FlirPTU: Set
+    def set_flir_ptu(
+            self,
+            flir_ptu: FlirPTU,
+            ) -> None:
+        self.__flir_ptus.set(flir_ptu)
+
+    # FlirPTU: Set All
+    def set_flir_ptus(
+            self,
+            flir_ptus: List[FlirPTU]
+            ) -> None:
+        self.__flir_ptus.set_all(flir_ptus)
+
+    # Risers: Add
+    def add_riser(
+            self,
+            # By Object
+            riser: PACS.Riser = None,
+            # By Parameters
+            rows: int = None,
+            columns: int = None,
+            thickness: float = PACS.Riser.THICKNESS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY,
+            ) -> None:
+        assert riser or (
+            rows is not None and (
+                columns is not None)), (
+            "Riser object or rows, columns, and height must be passed"
+        )
+        if not riser:
+            riser = PACS.Riser(
+                rows,
+                columns,
+                thickness,
+                parent,
+                xyz,
+                rpy
+            )
+        self.__pacs_risers.add(riser)
+
+    # Risers: Remove
+    def remove_riser(
+            self,
+            # By Object or Index
+            riser: PACS.Riser | int,
+            ) -> None:
+        self.__pacs_risers.remove(riser)
+
+    # Risers: Get
+    def get_riser(
+            self,
+            idx: int
+            ) -> PACS.Riser:
+        return self.__pacs_risers.get(idx)
+
+    # Risers: Get All
+    def get_risers(
+            self
+            ) -> List[PACS.Riser]:
+        return self.__pacs_risers.get_all()
+
+    # Risers: Set
+    def set_riser(
+            self,
+            riser: PACS.Riser
+            ) -> None:
+        self.__pacs_risers.set(riser)
+
+    # Risers: Set All
+    def set_risers(
+            self,
+            risers: List[PACS.Riser]
+            ) -> None:
+        self.__pacs_risers.set_all(risers)
+
+    # Brackets: Add
+    def add_bracket(
+            self,
+            # By Object
+            bracket: PACS.Bracket = None,
+            # By Parameters
+            parent: str = "base_link",
+            model: str = PACS.Bracket.DEFAULT,
+            xyz: List[float] = [0.0, 0.0, 0.0],
+            rpy: List[float] = [0.0, 0.0, 0.0]
+            ) -> None:
+        if not bracket:
+            bracket = PACS.Bracket(
+                parent=parent,
+                model=model,
+                xyz=xyz,
+                rpy=rpy
+            )
+        self.__pacs_brackets.add(bracket)
+
+    # Brackets: Remove
+    def remove_bracket(
+            self,
+            # By Object or Name
+            bracket: PACS.Bracket | int,
+            ) -> None:
+        self.__pacs_brackets.remove(bracket)
+
+    # Bracket: Get
+    def get_bracket(
+            self,
+            idx: int,
+            ) -> PACS.Bracket:
+        return self.__pacs_brackets.get(idx)
+
+    # Brackets: Get All
+    def get_brackets(
+            self,
+            ) -> List[PACS.Bracket]:
+        return self.__pacs_brackets.get_all()
+
+    # Bracket: Set
+    def set_bracket(
+            self,
+            bracket: PACS.Bracket,
+            ) -> None:
+        self.__pacs_brackets.set(bracket)
+
+    # Brackets: Set All
+    def set_brackets(
+            self,
+            brackets: List[PACS.Bracket],
+            ) -> None:
+        self.__pacs_brackets.set_all(brackets)

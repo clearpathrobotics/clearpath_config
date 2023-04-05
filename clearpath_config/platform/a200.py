@@ -1,28 +1,31 @@
 # A200 Husky Platform Configuration
 from clearpath_config.common import Platform
-from clearpath_config.platform.decorations import BaseDecorationsConfig, Decorations
-from clearpath_config.platform.pacs import (
-    BracketsConfig,
-    FullRisersConfig,
-    RowRisersConfig,
-)
-
-
-# A200 Husky PACS Configuration
-class A200PACSConfig(BracketsConfig, FullRisersConfig, RowRisersConfig):
-    def __init__(self) -> None:
-        super().__init__()
+from clearpath_config.platform.base import BaseDecorationsConfig
+from clearpath_config.platform.decorations import Bumper, TopPlate
 
 
 # A200 Husky Decorations Configuration
 class A200DecorationsConfig(BaseDecorationsConfig):
+
     def __init__(self) -> None:
         super().__init__(model=Platform.A200)
-        self.front_bumper = Decorations.Bumper(
-            enable=True, extension=0.0, model=Decorations.Bumper.DEFAULT
+        # Front Bumper
+        self.add_bumper(
+            name="front_bumper",
+            enabled=True,
+            extension=0.0,
+            model=Bumper.DEFAULT
         )
-        self.rear_bumper = Decorations.Bumper(
-            enable=True, extension=0.0, model=Decorations.Bumper.DEFAULT
+        # Rear Bumper
+        self.add_bumper(
+            name="rear_bumper",
+            enabled=True,
+            extension=0.0,
+            model=Bumper.DEFAULT
         )
-        self.top_plate = Decorations.A200.TopPlate()
-        self.pacs = A200PACSConfig()
+        # Top Plate
+        self.add_top_plate(
+            name="top_plate",
+            enabled=True,
+            model=TopPlate.DEFAULT
+        )
