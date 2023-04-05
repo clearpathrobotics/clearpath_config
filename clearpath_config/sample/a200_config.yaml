@@ -44,14 +44,12 @@ mounts:
     riser:
       - rows: 8
         columns: 7
-        height: 0.1
         thickness: 0.00635
         parent: "top_plate_mount_a1"
         xyz: [0.0, 0.0, 0.1]
         rpy: [0.0, 0.0, 0.0]
       - rows: 1
         columns: 7
-        height: 0.1
         thickness: 0.00635
         parent: "top_plate_mount_a6"
         xyz: [0.0, 0.0, 0.2]
