@@ -64,34 +64,55 @@ mounts:
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
 
-
-sensors: # Various sensors
-    lidars:
-        0:
-            model: hokuyo_ust10 # model of the sensor
-            driver: true # If the driver should be launched
-            host: J100-1 # The host where the driver will launched on
-            description: true # If the description is enabled
-            parent_link: front_pivot_mount
-            xyz: [0, 0, 0]
-            rpy: [0, 0, 0]
-            # Below are sensor specific params
-            error_limit: 5
-        1:
-            model: sick-lms100
-            driver: true
-            host: J100-1B
-            description: true
-            parent_link: front_pivot_1
-            xyz: [0, 0, 0]
-            rpy: [0, 0, 0]
-            error_limit: 5
-    gps:
-        0:
-            model: nmea
-            driver: true
-            host: J100-1
-            description: true
-            parent_link: front_gps_mount
-            xyz: [0, 0, 0]
-            rpy: [0, 0, 0]
+# Sensors: grouped by sensor types.
+#  - model: unique model of that sensor type
+#  - urdf_enabled: toggle to add model to description
+#  - launch_enabled: toggle to add node to launch file
+sensors:
+    # List of Cameras
+    camera:
+      - model: blackfly
+        urdf_enabled: true
+        launch_enabled: true
+        connection_type: USB3
+        encoding: BayerRG8
+        fps: 30
+        serial: 0
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+      - model: realsense
+        urdf_enabled: true
+        launch_enabled: true
+        fps: 30
+        serial: 0
+        width: 640
+        height: 480
+        depth_enabled: true
+        depth_fps: 30
+        depth_width: 640
+        depth_height: 480
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+    lidar2d:
+      - model: lms1xx
+        urdf_enabled: true
+        launch_enabled: true
+        ip: 192.168.131.20
+        port: 6000
+        min_angle: -3.1415
+        max_angle: 3.1415
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+      - model: ust10
+        urdf_enabled: true
+        launch_enabled: true
+        ip: 192.168.131.21
+        port: 6000
+        min_angle: -3.1415
+        max_angle: 3.1415
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
