@@ -9,6 +9,11 @@ class BaseLidar2D(BaseSensor):
         - contains all common laser scan parameters
         - all 2d lidars must be of type Camera.Lidar2D
     """
+    SENSOR_MODEL = "lidar2d"
+    LIDAR2D_MODEL = "base"
+    NAME = SENSOR_MODEL + "_0"
+    TOPIC = NAME + "/scan"
+
     IP_ADDRESS = "192.168.131.20"
     IP_PORT = 6000
     MIN_ANGLE = -pi
@@ -16,8 +21,8 @@ class BaseLidar2D(BaseSensor):
 
     def __init__(
             self,
-            name: str,
-            topic: str,
+            name: str = NAME,
+            topic: str = TOPIC,
             ip: str = IP_ADDRESS,
             port: int = IP_PORT,
             min_angle: float = MIN_ANGLE,
@@ -66,35 +71,29 @@ class BaseLidar2D(BaseSensor):
         return self.min_angle
 
     def set_min_angle(self, angle: float) -> None:
-        assert angle > self.MIN_ANGLE, (
-            "Min angle '%s' must be greater than limit '%s'" % (
-                angle,
-                self.MIN_ANGLE
-            )
-        )
+        if angle < self.MIN_ANGLE:
+            angle = self.MIN_ANGLE
         self.min_angle = angle
 
     def get_max_angle(self) -> float:
         return self.max_angle
 
     def set_max_angle(self, angle: float) -> None:
-        assert angle > self.MAX_ANGLE, (
-            "Max angle '%s' must be greater than limit '%s'" % (
-                angle,
-                self.MAX_ANGLE
-            )
-        )
+        if angle > self.MAX_ANGLE:
+            angle = self.MAX_ANGLE
         self.min_angle = angle
 
 
 class UST10(BaseLidar2D):
+    LIDAR2D_MODEL = "ust10"
+
     MIN_ANGLE = -pi
     MAX_ANGLE = pi
 
     def __init__(
             self,
-            name: str,
-            topic: str,
+            name: str = BaseLidar2D.NAME,
+            topic: str = BaseLidar2D.TOPIC,
             ip: str = BaseLidar2D.IP_ADDRESS,
             port: int = BaseLidar2D.IP_PORT,
             min_angle: float = MIN_ANGLE,
@@ -120,14 +119,16 @@ class UST10(BaseLidar2D):
         )
 
 
-class LMS1xx(BaseLidar2D):
+class LMS1XX(BaseLidar2D):
+    LIDAR2D_MODEL = "lms1xx"
+
     MIN_ANGLE = -2.391
     MAX_ANGLE = 2.391
 
     def __init__(
             self,
-            name: str,
-            topic: str,
+            name: str = BaseLidar2D.NAME,
+            topic: str = BaseLidar2D.TOPIC,
             ip: str = BaseLidar2D.IP_ADDRESS,
             port: int = BaseLidar2D.IP_PORT,
             min_angle: float = MIN_ANGLE,

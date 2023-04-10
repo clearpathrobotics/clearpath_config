@@ -7,13 +7,18 @@ class BaseCamera(BaseSensor):
         - contains all common camera parameters
         - all cameras must be of type Camera.Common
     """
+    SENSOR_MODEL = "camera"
+    CAMERA_MODEL = "base"
+    NAME = SENSOR_MODEL + "_0"
+    TOPIC = NAME + "/image"
+
     FPS = 30
     SERIAL = "0"
 
     def __init__(
             self,
-            name: str,
-            topic: str,
+            name: str = NAME,
+            topic: str = TOPIC,
             fps: int = FPS,
             serial: str = SERIAL,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
@@ -47,11 +52,11 @@ class BaseCamera(BaseSensor):
         return self.fps
 
     def set_fps(self, fps: int) -> None:
-        self.assert_valid_fps()
+        BaseCamera.assert_valid_fps(fps)
         self.fps = fps
 
     @staticmethod
-    def assert_valid_fps(self, fps: int) -> None:
+    def assert_valid_fps(fps: int) -> None:
         assert isinstance(fps, int), (
             "FPS '%s' is invalid, must be an integer." % fps
         )
@@ -76,6 +81,8 @@ class Realsense(BaseCamera):
         - Depth Width: [640] : Width of depth image.
         - Depth Height: [480] : Height of depth image.
     """
+    CAMERA_MODEL = "realsense"
+
     FPS = 30
     WIDTH = 640
     HEIGHT = 480
@@ -87,10 +94,10 @@ class Realsense(BaseCamera):
 
     def __init__(
             self,
-            name: str,
-            topic: str,
-            serial: str = BaseCamera.SERIAL,
+            name: str = BaseCamera.NAME,
+            topic: str = BaseCamera.TOPIC,
             fps: int = FPS,
+            serial: str = BaseCamera.SERIAL,
             width: int = WIDTH,
             height: int = HEIGHT,
             depth_enabled: bool = DEPTH_ENABLED,
@@ -161,6 +168,9 @@ class Realsense(BaseCamera):
     def is_depth_enabled(self) -> bool:
         return self.depth_enabled
 
+    def set_depth_enabled(self, enable: bool) -> None:
+        self.depth_enabled = bool(enable)
+
     def set_depth_fps(self, fps: int) -> None:
         self.assert_valid_fps(fps)
         self.depth_fps = fps
@@ -191,6 +201,8 @@ class Blackfly(BaseCamera):
     - Encoding: [BayerRG8] : Image encoding.
                     Must use BayerRG8 encoding to get more than 15 FPS.
     """
+    CAMERA_MODEL = "blackfly"
+
     USB3_CONNECTION = "USB3"
     GIGE_CONNECTION = "GigE"
     CONNECTION_TYPE = USB3_CONNECTION
@@ -206,17 +218,17 @@ class Blackfly(BaseCamera):
     YCBCR_8 = "YCbCr8"
     YCBCR_422_8 = "YCbCr422_8"
     YCBCR_411_8 = "YCbCr411_8"
-    BGR_8 = "BGR8",
-    BGRA_8 = "BGRa8",
-    RGB_8_PACKED = "RGB8Packed",
-    BAYER_GR8 = "BayerGR8",
-    BAYER_RG8 = "BayerRG8",
-    BAYER_GB8 = "BayerGB8",
-    BAYER_BG8 = "BayerBG8",
-    BAYER_GR16 = "BayerGR16",
-    BAYER_RG16 = "BayerRG16",
-    BAYER_GB16 = "BayerGB16",
-    BAYER_BG16 = "BayerBG16",
+    BGR_8 = "BGR8"
+    BGRA_8 = "BGRa8"
+    RGB_8_PACKED = "RGB8Packed"
+    BAYER_GR8 = "BayerGR8"
+    BAYER_RG8 = "BayerRG8"
+    BAYER_GB8 = "BayerGB8"
+    BAYER_BG8 = "BayerBG8"
+    BAYER_GR16 = "BayerGR16"
+    BAYER_RG16 = "BayerRG16"
+    BAYER_GB16 = "BayerGB16"
+    BAYER_BG16 = "BayerBG16"
     BAYER_GR12 = "BayerGR12p"
     BAYER_RG12 = "BayerRG12p"
     BAYER_GB12 = "BayerGB12p"
@@ -260,8 +272,8 @@ class Blackfly(BaseCamera):
 
     def __init__(
             self,
-            name: str,
-            topic: str,
+            name: str = BaseCamera.NAME,
+            topic: str = BaseCamera.TOPIC,
             connection_type: str = CONNECTION_TYPE,
             encoding: str = BAYER_RG8,
             fps: int = BaseCamera.FPS,
@@ -284,7 +296,9 @@ class Blackfly(BaseCamera):
             rpy
         )
         self.connection_type: str = Blackfly.CONNECTION_TYPE
+        self.set_connection_type(connection_type)
         self.encoding: str = Blackfly.BAYER_RG8
+        self.set_encoding(encoding)
 
     def set_connection_type(self, connection_type: str) -> None:
         assert connection_type in Blackfly.CONNECTION_TYPES
@@ -294,7 +308,11 @@ class Blackfly(BaseCamera):
         return self.connection_type
 
     def set_encoding(self, encoding: str) -> None:
-        assert encoding in Blackfly.ENCODINGS
+        assert encoding in Blackfly.ENCODINGS, (
+            "Encoding '%s' not found in support encodings: '%s'" % (
+                encoding, Blackfly.ENCODINGS
+            )
+        )
         self.encoding = encoding
 
     def get_encoding(self) -> str:
