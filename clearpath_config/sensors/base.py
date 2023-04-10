@@ -1,4 +1,5 @@
-from clearpath_config.common import Accessory, List
+from clearpath_config.common import Accessory
+from typing import List
 
 
 class BaseSensor(Accessory):
@@ -7,13 +8,16 @@ class BaseSensor(Accessory):
      - inherits from Accessory.
      - contains all common parameters shared by all sensors.
     """
+    SENSOR_MODEL = "base_sensor"
+    NAME = SENSOR_MODEL + "_0"
+    TOPIC = ""
     URDF_ENABLED = True
     LAUNCH_ENABLED = True
 
     def __init__(
             self,
-            name: str,
-            topic: str,
+            name: str = NAME,
+            topic: str = TOPIC,
             urdf_enabled: bool = URDF_ENABLED,
             launch_enabled: bool = LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
@@ -35,6 +39,17 @@ class BaseSensor(Accessory):
         self.launch_enabled = True
         self.enable_launch if launch_enabled else self.disable_launch()
 
+    @classmethod
+    def get_sensor_model(cls) -> str:
+        return cls.SENSOR_MODEL
+
+    @classmethod
+    def get_name_from_idx(cls, idx: int) -> str:
+        return "%s_%s" % (
+            cls.get_sensor_model(),
+            idx
+        )
+
     def get_topic(self) -> str:
         return self.topic
 
@@ -53,8 +68,20 @@ class BaseSensor(Accessory):
     def disable_urdf(self) -> None:
         self.urdf_enabled = False
 
+    def set_urdf_enabled(self, enabled: bool) -> None:
+        self.enable_urdf() if enabled else self.disable_urdf()
+
+    def get_urdf_enabled(self) -> bool:
+        return self.urdf_enabled
+
     def enable_launch(self) -> None:
         self.launch_enabled = True
 
     def disable_launch(self) -> None:
         self.launch_enabled = False
+
+    def set_launch_enabled(self, enabled: bool) -> None:
+        self.enable_launch() if enabled else self.disable_launch()
+
+    def get_launch_enabled(self) -> bool:
+        return self.launch_enabled
