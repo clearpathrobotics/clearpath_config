@@ -7,9 +7,9 @@ class BaseCamera(BaseSensor):
         - contains all common camera parameters
         - all cameras must be of type Camera.Common
     """
-    SENSOR_MODEL = "camera"
+    SENSOR_TYPE = "camera"
     CAMERA_MODEL = "base"
-    NAME = SENSOR_MODEL + "_0"
+    NAME = SENSOR_TYPE + "_0"
     TOPIC = NAME + "/image"
 
     FPS = 30

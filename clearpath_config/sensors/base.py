@@ -8,8 +8,8 @@ class BaseSensor(Accessory):
      - inherits from Accessory.
      - contains all common parameters shared by all sensors.
     """
-    SENSOR_MODEL = "base_sensor"
-    NAME = SENSOR_MODEL + "_0"
+    SENSOR_TYPE = "base_sensor"
+    NAME = SENSOR_TYPE + "_0"
     TOPIC = ""
     URDF_ENABLED = True
     LAUNCH_ENABLED = True
@@ -41,7 +41,7 @@ class BaseSensor(Accessory):
 
     @classmethod
     def get_sensor_model(cls) -> str:
-        return cls.SENSOR_MODEL
+        return cls.SENSOR_TYPE
 
     @classmethod
     def get_name_from_idx(cls, idx: int) -> str:

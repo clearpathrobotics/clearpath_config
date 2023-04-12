@@ -9,9 +9,9 @@ class BaseLidar2D(BaseSensor):
         - contains all common laser scan parameters
         - all 2d lidars must be of type Camera.Lidar2D
     """
-    SENSOR_MODEL = "lidar2d"
-    LIDAR2D_MODEL = "base"
-    NAME = SENSOR_MODEL + "_0"
+    SENSOR_TYPE = "lidar2d"
+    SENSOR_MODEL = "base"
+    NAME = SENSOR_TYPE + "_0"
     TOPIC = NAME + "/scan"
 
     IP_ADDRESS = "192.168.131.20"
@@ -85,7 +85,7 @@ class BaseLidar2D(BaseSensor):
 
 
 class UST10(BaseLidar2D):
-    LIDAR2D_MODEL = "ust10"
+    SENSOR_MODEL = "ust10"
 
     MIN_ANGLE = -pi
     MAX_ANGLE = pi
@@ -120,7 +120,7 @@ class UST10(BaseLidar2D):
 
 
 class LMS1XX(BaseLidar2D):
-    LIDAR2D_MODEL = "lms1xx"
+    SENSOR_MODEL = "lms1xx"
 
     MIN_ANGLE = -2.391
     MAX_ANGLE = 2.391

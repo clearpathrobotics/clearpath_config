@@ -37,8 +37,8 @@ class Camera():
 
 
 class Lidar2D():
-    UST10 = UST10Lidar2D.LIDAR2D_MODEL
-    LMS1XX = LMS1XXLidar2D.LIDAR2D_MODEL
+    UST10 = UST10Lidar2D.SENSOR_MODEL
+    LMS1XX = LMS1XXLidar2D.SENSOR_MODEL
 
     MODEL = {
         UST10: UST10Lidar2D,
@@ -60,8 +60,8 @@ class Lidar2D():
 
 
 class Sensor():
-    CAMERA = BaseCamera.SENSOR_MODEL
-    LIDAR2D = BaseLidar2D.SENSOR_MODEL
+    CAMERA = BaseCamera.SENSOR_TYPE
+    LIDAR2D = BaseLidar2D.SENSOR_TYPE
 
     TYPE = {
         CAMERA: Camera,
@@ -226,7 +226,7 @@ class SensorConfig:
         Lidar2D.assert_model(model)
         all_model_lidar_2d = []
         for lidar_2d in self.get_all_lidar_2d():
-            if lidar_2d.LIDAR2D_MODEL == model:
+            if lidar_2d.SENSOR_MODEL == model:
                 all_model_lidar_2d.append(lidar_2d)
         return all_model_lidar_2d
 
