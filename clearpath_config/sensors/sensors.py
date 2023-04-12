@@ -104,7 +104,10 @@ class SensorConfig:
     # Get All Sensors
     def get_all_sensors(self) -> List[BaseSensor]:
         sensors = []
-        sensors.extend()
+        # Lidar2D
+        sensors.extend(self.get_all_lidar_2d())
+        # Cameras
+        sensors.extend(self.get_all_cameras())
         return sensors
 
     # Lidar2D: Add Lidar2D by Object or Common Lidar2D Parameters
