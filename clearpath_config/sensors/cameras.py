@@ -8,7 +8,7 @@ class BaseCamera(BaseSensor):
         - all cameras must be of type Camera.Common
     """
     SENSOR_TYPE = "camera"
-    CAMERA_MODEL = "base"
+    SENSOR_MODEL = "base"
     NAME = SENSOR_TYPE + "_0"
     TOPIC = NAME + "/image"
 
@@ -71,9 +71,9 @@ class BaseCamera(BaseSensor):
         self.serial = str(serial)
 
 
-class Realsense(BaseCamera):
+class IntelRealsense(BaseCamera):
     """
-    Realsense Camera Class.
+    IntelRealsense Camera Class.
     - Width: [640] : Width of image image
     - Height: [480] : Height of color image
     - Depth Enable : [True] : Toggle for depth data acquisition.
@@ -81,7 +81,7 @@ class Realsense(BaseCamera):
         - Depth Width: [640] : Width of depth image.
         - Depth Height: [480] : Height of depth image.
     """
-    CAMERA_MODEL = "realsense"
+    SENSOR_MODEL = "intel_realsense"
 
     FPS = 30
     WIDTH = 640
@@ -121,17 +121,17 @@ class Realsense(BaseCamera):
             xyz,
             rpy
         )
-        self.width: int = Realsense.WIDTH
+        self.width: int = IntelRealsense.WIDTH
         self.set_width(width)
-        self.height: int = Realsense.HEIGHT
+        self.height: int = IntelRealsense.HEIGHT
         self.set_height(height)
-        self.depth_enabled: bool = Realsense.DEPTH_ENABLED
+        self.depth_enabled: bool = IntelRealsense.DEPTH_ENABLED
         self.enable_depth() if depth_enabled else self.disable_depth()
-        self.depth_fps: int = Realsense.DEPTH_FPS
+        self.depth_fps: int = IntelRealsense.DEPTH_FPS
         self.set_depth_fps(depth_fps)
-        self.depth_width: int = Realsense.DEPTH_WIDTH
+        self.depth_width: int = IntelRealsense.DEPTH_WIDTH
         self.set_depth_width(depth_width)
-        self.detph_height: int = Realsense.DEPTH_HEIGHT
+        self.detph_height: int = IntelRealsense.DEPTH_HEIGHT
         self.set_depth_height(depth_height)
 
     def assert_pixel_length(
@@ -193,15 +193,15 @@ class Realsense(BaseCamera):
         return self.depth_height
 
 
-class Blackfly(BaseCamera):
+class FlirBlackfly(BaseCamera):
     """
-    Blackfly Camera Class
+    Flir FlirBlackfly Camera Class
     Parameters:
     - Device: [USB3 or GigE] : Device connection type.
     - Encoding: [BayerRG8] : Image encoding.
                     Must use BayerRG8 encoding to get more than 15 FPS.
     """
-    CAMERA_MODEL = "blackfly"
+    SENSOR_MODEL = "flir_blackfly"
 
     USB3_CONNECTION = "USB3"
     GIGE_CONNECTION = "GigE"
@@ -295,22 +295,22 @@ class Blackfly(BaseCamera):
             xyz,
             rpy
         )
-        self.connection_type: str = Blackfly.CONNECTION_TYPE
+        self.connection_type: str = FlirBlackfly.CONNECTION_TYPE
         self.set_connection_type(connection_type)
-        self.encoding: str = Blackfly.BAYER_RG8
+        self.encoding: str = FlirBlackfly.BAYER_RG8
         self.set_encoding(encoding)
 
     def set_connection_type(self, connection_type: str) -> None:
-        assert connection_type in Blackfly.CONNECTION_TYPES
+        assert connection_type in FlirBlackfly.CONNECTION_TYPES
         self.connection_type = connection_type
 
     def get_connection_type(self) -> str:
         return self.connection_type
 
     def set_encoding(self, encoding: str) -> None:
-        assert encoding in Blackfly.ENCODINGS, (
+        assert encoding in FlirBlackfly.ENCODINGS, (
             "Encoding '%s' not found in support encodings: '%s'" % (
-                encoding, Blackfly.ENCODINGS
+                encoding, FlirBlackfly.ENCODINGS
             )
         )
         self.encoding = encoding

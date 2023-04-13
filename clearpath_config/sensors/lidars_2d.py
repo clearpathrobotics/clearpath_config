@@ -84,8 +84,8 @@ class BaseLidar2D(BaseSensor):
         self.min_angle = angle
 
 
-class UST10(BaseLidar2D):
-    SENSOR_MODEL = "ust10"
+class HokuyoUST10(BaseLidar2D):
+    SENSOR_MODEL = "hokuyo_ust10"
 
     MIN_ANGLE = -pi
     MAX_ANGLE = pi
@@ -119,8 +119,8 @@ class UST10(BaseLidar2D):
         )
 
 
-class LMS1XX(BaseLidar2D):
-    SENSOR_MODEL = "lms1xx"
+class SickLMS1XX(BaseLidar2D):
+    SENSOR_MODEL = "sick_lms1xx"
 
     MIN_ANGLE = -2.391
     MAX_ANGLE = 2.391

@@ -71,7 +71,7 @@ mounts:
 sensors:
     # List of Cameras
     camera:
-      - model: blackfly
+      - model: flir_blackfly
         urdf_enabled: true
         launch_enabled: true
         connection_type: USB3
@@ -81,7 +81,7 @@ sensors:
         parent: base_link
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
-      - model: realsense
+      - model: intel_realsense
         urdf_enabled: true
         launch_enabled: true
         fps: 30
@@ -96,7 +96,7 @@ sensors:
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
     lidar2d:
-      - model: lms1xx
+      - model: sick_lms1xx
         urdf_enabled: true
         launch_enabled: true
         ip: 192.168.131.20
@@ -106,7 +106,7 @@ sensors:
         parent: base_link
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
-      - model: ust10
+      - model: hokuyo_ust10
         urdf_enabled: true
         launch_enabled: true
         ip: 192.168.131.21

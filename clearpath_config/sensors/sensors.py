@@ -2,24 +2,24 @@ from clearpath_config.common import Accessory, OrderedListConfig
 from clearpath_config.sensors.base import BaseSensor
 from clearpath_config.sensors.cameras import (
     BaseCamera,
-    Blackfly as BlackflyCamera,
-    Realsense as RealsenseCamera,
+    FlirBlackfly,
+    IntelRealsense,
 )
 from clearpath_config.sensors.lidars_2d import (
     BaseLidar2D,
-    LMS1XX as LMS1XXLidar2D,
-    UST10 as UST10Lidar2D,
+    HokuyoUST10,
+    SickLMS1XX,
 )
 from typing import List
 
 
 class Camera():
-    BLACKFLY = BlackflyCamera.CAMERA_MODEL
-    REALSENSE = RealsenseCamera.CAMERA_MODEL
+    FLIR_BLACKFLY = FlirBlackfly.SENSOR_MODEL
+    INTEL_REALSENSE = IntelRealsense.SENSOR_MODEL
 
     MODEL = {
-        BLACKFLY: BlackflyCamera,
-        REALSENSE: RealsenseCamera
+        FLIR_BLACKFLY: FlirBlackfly,
+        INTEL_REALSENSE: IntelRealsense
     }
 
     @classmethod
@@ -37,12 +37,12 @@ class Camera():
 
 
 class Lidar2D():
-    UST10 = UST10Lidar2D.SENSOR_MODEL
-    LMS1XX = LMS1XXLidar2D.SENSOR_MODEL
+    HOKUYO_UST10 = HokuyoUST10.SENSOR_MODEL
+    SICK_LMS1XX = SickLMS1XX.SENSOR_MODEL
 
     MODEL = {
-        UST10: UST10Lidar2D,
-        LMS1XX: LMS1XXLidar2D
+        HOKUYO_UST10: HokuyoUST10,
+        SICK_LMS1XX: SickLMS1XX
     }
 
     @classmethod
@@ -147,12 +147,12 @@ class SensorConfig:
     def add_ust10(
             self,
             # By Object
-            ust10: UST10Lidar2D = None,
+            ust10: HokuyoUST10 = None,
             # By Parameters
             ip: str = BaseLidar2D.IP_ADDRESS,
             port: int = BaseLidar2D.IP_PORT,
-            min_angle: float = UST10Lidar2D.MIN_ANGLE,
-            max_angle: float = UST10Lidar2D.MAX_ANGLE,
+            min_angle: float = HokuyoUST10.MIN_ANGLE,
+            max_angle: float = HokuyoUST10.MAX_ANGLE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
@@ -160,7 +160,7 @@ class SensorConfig:
             rpy: List[float] = Accessory.RPY
             ) -> None:
         if ust10 is None:
-            ust10 = UST10Lidar2D(
+            ust10 = HokuyoUST10(
                 ip=ip,
                 port=port,
                 min_angle=min_angle,
@@ -171,7 +171,7 @@ class SensorConfig:
                 xyz=xyz,
                 rpy=rpy
             )
-        assert isinstance(ust10, UST10Lidar2D), (
+        assert isinstance(ust10, HokuyoUST10), (
             "Lidar2D object must be of type UST10"
         )
         self.__lidars_2d.add(ust10)
@@ -180,12 +180,12 @@ class SensorConfig:
     def add_lms1xx(
             self,
             # By Object
-            lms1xx: LMS1XXLidar2D = None,
+            lms1xx: SickLMS1XX = None,
             # By Parameters
             ip: str = BaseLidar2D.IP_ADDRESS,
             port: int = BaseLidar2D.IP_PORT,
-            min_angle: float = LMS1XXLidar2D.MIN_ANGLE,
-            max_angle: float = LMS1XXLidar2D.MAX_ANGLE,
+            min_angle: float = SickLMS1XX.MIN_ANGLE,
+            max_angle: float = SickLMS1XX.MAX_ANGLE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
@@ -193,7 +193,7 @@ class SensorConfig:
             rpy: List[float] = Accessory.RPY
             ) -> None:
         if lms1xx is None:
-            lms1xx = LMS1XXLidar2D(
+            lms1xx = SickLMS1XX(
                 ip=ip,
                 port=port,
                 min_angle=min_angle,
@@ -204,7 +204,7 @@ class SensorConfig:
                 xyz=xyz,
                 rpy=rpy
             )
-        assert isinstance(lms1xx, LMS1XXLidar2D), (
+        assert isinstance(lms1xx, SickLMS1XX), (
             "Lidar2D object must be of type LMS1XX"
         )
         self.__lidars_2d.add(lms1xx)
@@ -231,11 +231,11 @@ class SensorConfig:
         return all_model_lidar_2d
 
     # Lidar2D: Get All Objects of Model UST10
-    def get_all_ust10(self) -> List[UST10Lidar2D]:
+    def get_all_ust10(self) -> List[HokuyoUST10]:
         return self.get_all_lidar_2d_by_model(Lidar2D.UST10)
 
     # Lidar2D: Get All Objects of Model LMS1XX
-    def get_all_lms1xx(self) -> List[LMS1XXLidar2D]:
+    def get_all_lms1xx(self) -> List[SickLMS1XX]:
         return self.get_all_lidar_2d_by_model(Lidar2D.LMS1XX)
 
     # Lidar2D: Set Lidar2D Object
@@ -279,10 +279,10 @@ class SensorConfig:
     def add_blackfly(
             self,
             # By Object
-            blackfly: BlackflyCamera = None,
+            blackfly: FlirBlackfly = None,
             # By Parameters
-            connection_type: str = BlackflyCamera.CONNECTION_TYPE,
-            encoding: str = BlackflyCamera.BAYER_RG8,
+            connection_type: str = FlirBlackfly.CONNECTION_TYPE,
+            encoding: str = FlirBlackfly.BAYER_RG8,
             fps: int = BaseCamera.FPS,
             serial: str = BaseCamera.SERIAL,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
@@ -292,7 +292,7 @@ class SensorConfig:
             rpy: List[float] = Accessory.RPY
             ) -> None:
         if blackfly is None:
-            blackfly = BlackflyCamera(
+            blackfly = FlirBlackfly(
                 connection_type=connection_type,
                 encoding=encoding,
                 fps=fps,
@@ -303,7 +303,7 @@ class SensorConfig:
                 xyz=xyz,
                 rpy=rpy,
             )
-        assert isinstance(blackfly, BlackflyCamera), (
+        assert isinstance(blackfly, FlirBlackfly), (
             "Blackfly object must be of type Blackfly"
         )
         self.__cameras.add(blackfly)
@@ -312,16 +312,16 @@ class SensorConfig:
     def add_realsense(
             self,
             # By Object
-            realsense: RealsenseCamera = None,
+            realsense: IntelRealsense = None,
             # By Parameters
-            fps: int = RealsenseCamera.FPS,
+            fps: int = IntelRealsense.FPS,
             serial: str = BaseCamera.SERIAL,
-            width: int = RealsenseCamera.WIDTH,
-            height: int = RealsenseCamera.HEIGHT,
-            depth_enabled: bool = RealsenseCamera.DEPTH_ENABLED,
-            depth_fps: int = RealsenseCamera.DEPTH_FPS,
-            depth_width: int = RealsenseCamera.DEPTH_WIDTH,
-            depth_height: int = RealsenseCamera.DEPTH_HEIGHT,
+            width: int = IntelRealsense.WIDTH,
+            height: int = IntelRealsense.HEIGHT,
+            depth_enabled: bool = IntelRealsense.DEPTH_ENABLED,
+            depth_fps: int = IntelRealsense.DEPTH_FPS,
+            depth_width: int = IntelRealsense.DEPTH_WIDTH,
+            depth_height: int = IntelRealsense.DEPTH_HEIGHT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
@@ -329,7 +329,7 @@ class SensorConfig:
             rpy: List[float] = Accessory.RPY
             ) -> None:
         if realsense is None:
-            realsense = RealsenseCamera(
+            realsense = IntelRealsense(
                 fps=fps,
                 serial=serial,
                 width=width,
@@ -344,7 +344,7 @@ class SensorConfig:
                 xyz=xyz,
                 rpy=rpy,
             )
-        assert isinstance(realsense, RealsenseCamera), (
+        assert isinstance(realsense, IntelRealsense), (
             "Realsense object must be of type Realsense"
         )
         self.__cameras.add(realsense)

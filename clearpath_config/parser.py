@@ -24,8 +24,8 @@ from clearpath_config.sensors.sensors import (
     BaseSensor,
     Camera,
     BaseCamera,
-    BlackflyCamera,
-    RealsenseCamera,
+    FlirBlackfly,
+    IntelRealsense,
     Lidar2D,
     BaseLidar2D,
     SensorConfig
@@ -589,62 +589,62 @@ class CameraParser(BaseConfigParser):
         camera.set_fps(base.get_fps())
         camera.set_serial(base.get_serial())
         # Set Specific Parameters
-        if model == Camera.BLACKFLY:
+        if model == Camera.FLIR_BLACKFLY:
             camera.set_connection_type(
                 cls.get_optional_val(
                     CameraParser.CONNECTION_TYPE,
                     config,
-                    BlackflyCamera.CONNECTION_TYPE
+                    FlirBlackfly.CONNECTION_TYPE
                 )
             )
             camera.set_encoding(
                 cls.get_optional_val(
                     CameraParser.ENCODING,
                     config,
-                    BlackflyCamera.BAYER_RG8
+                    FlirBlackfly.BAYER_RG8
                 )
             )
-        elif model == Camera.REALSENSE:
+        elif model == Camera.INTEL_REALSENSE:
             camera.set_width(
                 cls.get_optional_val(
                     CameraParser.WIDTH,
                     config,
-                    RealsenseCamera.WIDTH
+                    IntelRealsense.WIDTH
                 )
             )
             camera.set_height(
                 cls.get_optional_val(
                     CameraParser.HEIGHT,
                     config,
-                    RealsenseCamera.HEIGHT
+                    IntelRealsense.HEIGHT
                 )
             )
             camera.set_depth_enabled(
                 cls.get_optional_val(
                     CameraParser.DEPTH_ENABLED,
                     config,
-                    RealsenseCamera.DEPTH_ENABLED
+                    IntelRealsense.DEPTH_ENABLED
                 )
             )
             camera.set_depth_fps(
                 cls.get_optional_val(
                     CameraParser.DEPTH_FPS,
                     config,
-                    RealsenseCamera.DEPTH_FPS
+                    IntelRealsense.DEPTH_FPS
                 )
             )
             camera.set_depth_width(
                 cls.get_optional_val(
                     CameraParser.DEPTH_WIDTH,
                     config,
-                    RealsenseCamera.DEPTH_WIDTH
+                    IntelRealsense.DEPTH_WIDTH
                 )
             )
             camera.set_depth_height(
                 cls.get_optional_val(
                     CameraParser.DEPTH_HEIGHT,
                     config,
-                    RealsenseCamera.DEPTH_HEIGHT
+                    IntelRealsense.DEPTH_HEIGHT
                 )
             )
         return camera
