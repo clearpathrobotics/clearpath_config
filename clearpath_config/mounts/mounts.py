@@ -102,7 +102,7 @@ class MountsConfig:
             self,
             idx: int
             ) -> FathPivot:
-        self.__fath_pivots.get(idx)
+        return self.__fath_pivots.get(idx)
 
     # FathPivot: Get All
     def get_fath_pivots(
