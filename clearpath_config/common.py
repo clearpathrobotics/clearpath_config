@@ -350,6 +350,45 @@ class Accessory():
         )
 
 
+class IndexedAccessory(Accessory):
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        if name is None:
+            name = self.get_name_from_idx(0)
+        super().__init__(
+            name,
+            parent,
+            xyz,
+            rpy
+        )
+        # Index:
+        # - index of sensor
+        # - used to modify parameters to allow for multiple instances
+        #   of the same sensor.
+        self.idx = 0
+        if idx is not None:
+            self.set_idx(idx)
+
+    @classmethod
+    def get_name_from_idx(idx):
+        return "accessory_%s" % idx
+
+    def get_idx(self) -> str:
+        return self.idx
+
+    def set_idx(self, idx: int) -> None:
+        assert isinstance(idx, int), "Index must be an integer"
+        assert idx >= 0, "Index must be a positive integer"
+        self.name = self.get_name_from_idx(idx)
+
+
 # ListConfigs: Generic Types
 T = TypeVar("T")
 U = TypeVar("U")
