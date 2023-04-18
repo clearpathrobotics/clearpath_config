@@ -474,28 +474,21 @@ class ListConfig(Generic[T, U]):
 
 
 # OrderedListConfig
-# - uid is an integer
-# - index will be enforced to match uid
-# - obj_to_idx
-# - idx_to_obj
+# - T must have the following methods:
+#   - get_idx(): return an index from members
+#   - set_idx(idx): set an index and update members
 class OrderedListConfig(Generic[T]):
 
-    def __init__(
-            self,
-            # Unique identifier to index
-            obj_to_idx: Callable,
-            idx_to_obj: Callable
-            ) -> None:
+    def __init__(self, start_idx: int = 0) -> None:
+        self.start_idx = start_idx
         self.__list: List[T] = []
-        self.__obj_to_idx: Callable = obj_to_idx
-        self.__idx_to_obj: Callable = idx_to_obj
 
     def find(
             self,
             obj: T | int
             ) -> int:
         if isinstance(obj, self.__orig_class__.__args__[0]):
-            idx = self.__obj_to_idx(obj)
+            idx = obj.get_idx()
         elif isinstance(obj, int):
             idx = obj
         else:
@@ -504,15 +497,16 @@ class OrderedListConfig(Generic[T]):
                     self.__orig_class__.__args__[0], int
                 )
             )
-        if idx < len(self.__list):
+        if self.start_idx <= idx < len(self.__list) + self.start_idx:
             return idx
         else:
             return None
 
     def update(self):
-        for idx, obj in enumerate(self.__list):
-            if self.__obj_to_idx(obj) != idx:
-                self.__list[idx] = self.__idx_to_obj(obj, idx)
+        for raw_idx, obj in enumerate(self.__list):
+            idx = raw_idx + self.start_idx
+            if obj.get_idx() != idx:
+                self.__list[raw_idx].set_idx(idx)
 
     def add(
             self,
@@ -532,7 +526,7 @@ class OrderedListConfig(Generic[T]):
         assert idx is not None, (
             "Object not found. Cannot be replaced"
         )
-        self.__list[idx] = obj
+        self.__list[idx - self.start_idx] = obj
         self.update()
 
     def remove(
@@ -541,7 +535,7 @@ class OrderedListConfig(Generic[T]):
             ) -> None:
         idx = self.find(obj)
         if idx is not None:
-            self.__list.remove(self.__list[idx])
+            self.__list.remove(self.__list[idx - self.start_idx])
         self.update()
 
     def get(
@@ -549,7 +543,7 @@ class OrderedListConfig(Generic[T]):
             obj: T | int,
             ) -> T:
         idx = self.find(obj)
-        return None if idx is None else self.__list[idx]
+        return None if idx is None else self.__list[idx - self.start_idx]
 
     def get_all(
             self
@@ -583,15 +577,3 @@ class OrderedListConfig(Generic[T]):
         except AssertionError:
             self.__list = tmp_list
         self.update()
-
-    # Name as Unique ID to Index
-    @staticmethod
-    def name_obj_to_idx(obj: T):
-        name = obj.get_name()
-        str_idx = name.split("_")[-1]
-        return int(str_idx)
-
-    @staticmethod
-    def name_idx_to_obj(obj: T, idx: int):
-        obj.set_name(obj.get_name_from_idx(idx))
-        return obj
