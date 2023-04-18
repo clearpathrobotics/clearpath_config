@@ -11,8 +11,7 @@ class BaseLidar2D(BaseSensor):
     """
     SENSOR_TYPE = "lidar2d"
     SENSOR_MODEL = "base"
-    NAME = SENSOR_TYPE + "_0"
-    TOPIC = NAME + "/scan"
+    TOPIC = "scan"
 
     IP_ADDRESS = "192.168.131.20"
     IP_PORT = 6000
@@ -21,7 +20,8 @@ class BaseLidar2D(BaseSensor):
 
     def __init__(
             self,
-            name: str = NAME,
+            idx: int = None,
+            name: str = None,
             topic: str = TOPIC,
             ip: str = IP_ADDRESS,
             port: int = IP_PORT,
@@ -33,15 +33,6 @@ class BaseLidar2D(BaseSensor):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
             ) -> None:
-        super().__init__(
-            name,
-            topic,
-            urdf_enabled,
-            launch_enabled,
-            parent,
-            xyz,
-            rpy,
-            )
         # IP Address
         self.ip = IP(self.IP_ADDRESS)
         self.set_ip(ip)
@@ -54,6 +45,30 @@ class BaseLidar2D(BaseSensor):
         # Max Angle
         self.max_angle = float(self.MAX_ANGLE)
         self.set_max_angle(max_angle)
+        # Initialize Base
+        super().__init__(
+            idx,
+            name,
+            topic,
+            urdf_enabled,
+            launch_enabled,
+            parent,
+            xyz,
+            rpy,
+            )
+
+    @classmethod
+    def get_ip_from_idx(cls, idx: int) -> str:
+        ip = cls.IP_ADDRESS.split('.')
+        network_id = ip[0:3]
+        host_id = int(ip[-1]) + idx
+        return '.'.join(network_id) + '.' + str(host_id)
+
+    def set_idx(self, idx: int) -> None:
+        # Set Base: Name and Topic
+        super().set_idx(idx)
+        # Set IP
+        self.set_ip(self.get_ip_from_idx(idx))
 
     def get_ip(self) -> str:
         return str(self.ip)
@@ -92,7 +107,8 @@ class HokuyoUST10(BaseLidar2D):
 
     def __init__(
             self,
-            name: str = BaseLidar2D.NAME,
+            idx: int = None,
+            name: str = None,
             topic: str = BaseLidar2D.TOPIC,
             ip: str = BaseLidar2D.IP_ADDRESS,
             port: int = BaseLidar2D.IP_PORT,
@@ -105,6 +121,7 @@ class HokuyoUST10(BaseLidar2D):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         super().__init__(
+            idx,
             name,
             topic,
             ip,
@@ -127,7 +144,8 @@ class SickLMS1XX(BaseLidar2D):
 
     def __init__(
             self,
-            name: str = BaseLidar2D.NAME,
+            idx: int = None,
+            name: str = None,
             topic: str = BaseLidar2D.TOPIC,
             ip: str = BaseLidar2D.IP_ADDRESS,
             port: int = BaseLidar2D.IP_PORT,
@@ -140,6 +158,7 @@ class SickLMS1XX(BaseLidar2D):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         super().__init__(
+            idx,
             name,
             topic,
             ip,
