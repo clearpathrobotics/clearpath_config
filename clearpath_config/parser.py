@@ -185,7 +185,9 @@ class DecorationsConfigParser(BaseConfigParser):
             dcnparser = DecorationsConfigParser
             # Decorations
             decorations = (
-                dcnparser.get_required_val(dcnparser.DECORATIONS, config))
+                dcnparser.get_optional_val(dcnparser.DECORATIONS, config))
+            if decorations is None:
+                return dcnconfig
             # Decorations.Front_Bumper
             dcnconfig.set_bumper(
                 BumperConfigParser(cls.FRONT_BUMPER, decorations))
@@ -207,7 +209,9 @@ class DecorationsConfigParser(BaseConfigParser):
             dcnparser = DecorationsConfigParser
             # Decorations
             decorations = (
-                dcnparser.get_required_val(dcnparser.DECORATIONS, config))
+                dcnparser.get_optional_val(dcnparser.DECORATIONS, config))
+            if decorations is None:
+                return dcnconfig
             # Decorations.Front_Bumper
             dcnconfig.set_bumper(
                 BumperConfigParser(cls.FRONT_BUMPER, decorations))
@@ -443,6 +447,8 @@ class MountsConfigParser(BaseConfigParser):
         mntconfig = MountsConfig()
         # Mounts
         mounts = cls.get_optional_val(cls.MOUNTS, config)
+        if mounts is None:
+            return mntconfig
         mntconfig.set_fath_pivots(cls.get_mounts(mounts, Mount.FATH_PIVOT))
         mntconfig.set_flir_ptus(cls.get_mounts(mounts, Mount.FLIR_PTU))
         mntconfig.set_risers(cls.get_mounts(mounts, Mount.PACS_RISER))
