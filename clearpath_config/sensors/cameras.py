@@ -23,6 +23,7 @@ class BaseCamera(BaseSensor):
             serial: str = SERIAL,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
@@ -33,6 +34,7 @@ class BaseCamera(BaseSensor):
             topic,
             urdf_enabled,
             launch_enabled,
+            ros_parameters,
             parent,
             xyz,
             rpy,
@@ -108,6 +110,7 @@ class IntelRealsense(BaseCamera):
             depth_height: int = DEPTH_HEIGHT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
@@ -120,6 +123,7 @@ class IntelRealsense(BaseCamera):
             serial,
             urdf_enabled,
             launch_enabled,
+            ros_parameters,
             parent,
             xyz,
             rpy
@@ -284,6 +288,7 @@ class FlirBlackfly(BaseCamera):
             serial: str = BaseCamera.SERIAL,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
@@ -296,6 +301,7 @@ class FlirBlackfly(BaseCamera):
             serial,
             urdf_enabled,
             launch_enabled,
+            ros_parameters,
             parent,
             xyz,
             rpy

@@ -13,6 +13,7 @@ class BaseSensor(IndexedAccessory):
     TOPIC = "base"
     URDF_ENABLED = True
     LAUNCH_ENABLED = True
+    ROS_PARAMETERS = {}
 
     def __init__(
             self,
@@ -21,6 +22,7 @@ class BaseSensor(IndexedAccessory):
             topic: str = TOPIC,
             urdf_enabled: bool = URDF_ENABLED,
             launch_enabled: bool = LAUNCH_ENABLED,
+            ros_parameters: str = ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
@@ -38,6 +40,10 @@ class BaseSensor(IndexedAccessory):
         # - enables the sensor launch in the generated launch
         self.launch_enabled = True
         self.enable_launch if launch_enabled else self.disable_launch()
+        # ROS Parameters
+        # - dictionary with parameters for launch file
+        self.ros_parameters = {}
+        self.set_ros_parameters(ros_parameters)
         super().__init__(idx, name, parent, xyz, rpy)
 
     @classmethod
@@ -101,3 +107,15 @@ class BaseSensor(IndexedAccessory):
 
     def get_launch_enabled(self) -> bool:
         return self.launch_enabled
+
+    def update_ros_parameters(self) -> None:
+        pass
+
+    def set_ros_parameters(self, ros_parameters: dict) -> None:
+        assert isinstance(ros_parameters, dict), (
+            "ROS paramaters must be a dictionary")
+        self.ros_parameters = ros_parameters
+
+    def get_ros_parameters(self) -> dict:
+        self.update_ros_parameters()
+        return self.ros_parameters

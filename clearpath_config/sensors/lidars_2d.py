@@ -29,6 +29,7 @@ class BaseLidar2D(BaseSensor):
             max_angle: float = MAX_ANGLE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
@@ -52,6 +53,7 @@ class BaseLidar2D(BaseSensor):
             topic,
             urdf_enabled,
             launch_enabled,
+            ros_parameters,
             parent,
             xyz,
             rpy,
@@ -116,6 +118,7 @@ class HokuyoUST10(BaseLidar2D):
             max_angle: float = MAX_ANGLE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
@@ -130,6 +133,7 @@ class HokuyoUST10(BaseLidar2D):
             max_angle,
             urdf_enabled,
             launch_enabled,
+            ros_parameters,
             parent,
             xyz,
             rpy
@@ -153,6 +157,7 @@ class SickLMS1XX(BaseLidar2D):
             max_angle: float = MAX_ANGLE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
@@ -167,6 +172,7 @@ class SickLMS1XX(BaseLidar2D):
             max_angle,
             urdf_enabled,
             launch_enabled,
+            ros_parameters,
             parent,
             xyz,
             rpy
