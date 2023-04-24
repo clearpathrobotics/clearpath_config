@@ -1,18 +1,19 @@
-from clearpath_config.common import Accessory
+from clearpath_config.common import Accessory, IndexedAccessory
 from typing import List
 
 
-class BaseMount(Accessory):
+class BaseMount(IndexedAccessory):
     MOUNT_MODEL = "base_mount"
 
     def __init__(
         self,
-        name: str = "base_mount_0",
+        idx: int = None,
+        name: str = None,
         parent: str = Accessory.PARENT,
         xyz: List[float] = Accessory.XYZ,
         rpy: List[float] = Accessory.RPY,
     ) -> None:
-        super().__init__(name, parent, xyz, rpy)
+        super().__init__(idx, name, parent, xyz, rpy)
 
     @classmethod
     def get_mount_model(cls) -> str:

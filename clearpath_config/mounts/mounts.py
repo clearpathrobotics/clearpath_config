@@ -32,33 +32,13 @@ class Mount():
 class MountsConfig:
     def __init__(self) -> None:
         # Fath Pivot
-        self.__fath_pivots = (
-            OrderedListConfig[FathPivot](
-                OrderedListConfig.name_obj_to_idx,
-                OrderedListConfig.name_idx_to_obj
-            )
-        )
+        self.__fath_pivots = OrderedListConfig[FathPivot]()
         # Flir PTU
-        self.__flir_ptus = (
-            OrderedListConfig[FlirPTU](
-                OrderedListConfig.name_obj_to_idx,
-                OrderedListConfig.name_idx_to_obj
-            )
-        )
+        self.__flir_ptus = OrderedListConfig[FlirPTU]()
         # PACS Riser
-        self.__pacs_risers = (
-            OrderedListConfig[PACS.Riser](
-                OrderedListConfig.name_obj_to_idx,
-                OrderedListConfig.name_idx_to_obj
-            )
-        )
+        self.__pacs_risers = OrderedListConfig[PACS.Riser]()
         # PACS Brackets
-        self.__pacs_brackets = (
-            OrderedListConfig[PACS.Bracket](
-                OrderedListConfig.name_obj_to_idx,
-                OrderedListConfig.name_idx_to_obj
-            )
-        )
+        self.__pacs_brackets = OrderedListConfig[PACS.Bracket]()
 
     # Get All Mounts
     def get_all_mounts(self) -> List[BaseMount]:

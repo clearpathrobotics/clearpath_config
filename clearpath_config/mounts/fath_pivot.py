@@ -18,10 +18,10 @@ class FathPivot(BaseMount):
         rpy: List[float] = Accessory.RPY,
     ) -> None:
         super().__init__(
-            FathPivot.get_name_from_idx(0),
-            parent,
-            xyz,
-            rpy)
+            name=FathPivot.get_name_from_idx(0),
+            parent=parent,
+            xyz=xyz,
+            rpy=rpy)
         self.angle = 0.0
         if angle:
             self.set_angle(angle)

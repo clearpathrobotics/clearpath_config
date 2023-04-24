@@ -84,21 +84,17 @@ class Sensor():
 
 # Sensor Config
 class SensorConfig:
+    LIDAR2D_INDEX = 0
+    CAMERA_INDEX = 0
 
     def __init__(self) -> None:
         # 2D Lidars
-        self.__lidars_2d = (
-            OrderedListConfig[BaseLidar2D](
-                OrderedListConfig.name_obj_to_idx,
-                OrderedListConfig.name_idx_to_obj
-            )
+        self.__lidars_2d = OrderedListConfig[BaseLidar2D](
+            SensorConfig.LIDAR2D_INDEX
         )
         # Cameras
-        self.__cameras = (
-            OrderedListConfig[BaseCamera](
-                OrderedListConfig.name_obj_to_idx,
-                OrderedListConfig.name_idx_to_obj
-            )
+        self.__cameras = OrderedListConfig[BaseCamera](
+            SensorConfig.CAMERA_INDEX
         )
 
     # Get All Sensors

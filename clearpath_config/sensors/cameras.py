@@ -9,15 +9,15 @@ class BaseCamera(BaseSensor):
     """
     SENSOR_TYPE = "camera"
     SENSOR_MODEL = "base"
-    NAME = SENSOR_TYPE + "_0"
-    TOPIC = NAME + "/image"
+    TOPIC = "image"
 
     FPS = 30
     SERIAL = "0"
 
     def __init__(
             self,
-            name: str = NAME,
+            idx: int = None,
+            name: str = None,
             topic: str = TOPIC,
             fps: int = FPS,
             serial: str = SERIAL,
@@ -28,6 +28,7 @@ class BaseCamera(BaseSensor):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         super().__init__(
+            idx,
             name,
             topic,
             urdf_enabled,
@@ -94,7 +95,8 @@ class IntelRealsense(BaseCamera):
 
     def __init__(
             self,
-            name: str = BaseCamera.NAME,
+            idx: int = None,
+            name: str = None,
             topic: str = BaseCamera.TOPIC,
             fps: int = FPS,
             serial: str = BaseCamera.SERIAL,
@@ -111,6 +113,7 @@ class IntelRealsense(BaseCamera):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         super().__init__(
+            idx,
             name,
             topic,
             fps,
@@ -272,7 +275,8 @@ class FlirBlackfly(BaseCamera):
 
     def __init__(
             self,
-            name: str = BaseCamera.NAME,
+            idx: int = None,
+            name: str = None,
             topic: str = BaseCamera.TOPIC,
             connection_type: str = CONNECTION_TYPE,
             encoding: str = BAYER_RG8,
@@ -285,6 +289,7 @@ class FlirBlackfly(BaseCamera):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         super().__init__(
+            idx,
             name,
             topic,
             fps,

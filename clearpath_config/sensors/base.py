@@ -1,22 +1,23 @@
-from clearpath_config.common import Accessory
+from clearpath_config.common import Accessory, IndexedAccessory
 from typing import List
 
 
-class BaseSensor(Accessory):
+class BaseSensor(IndexedAccessory):
     """
     Base Sensor Class
      - inherits from Accessory.
      - contains all common parameters shared by all sensors.
     """
-    SENSOR_TYPE = "base_sensor"
-    NAME = SENSOR_TYPE + "_0"
-    TOPIC = ""
+    SENSOR_TYPE = "generic"
+    SENSOR_MODEL = "base"
+    TOPIC = "base"
     URDF_ENABLED = True
     LAUNCH_ENABLED = True
 
     def __init__(
             self,
-            name: str = NAME,
+            idx: int = None,
+            name: str = None,
             topic: str = TOPIC,
             urdf_enabled: bool = URDF_ENABLED,
             launch_enabled: bool = LAUNCH_ENABLED,
@@ -24,7 +25,6 @@ class BaseSensor(Accessory):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
             ) -> None:
-        super().__init__(name, parent, xyz, rpy)
         # Topic:
         # - should be automatically determined by the sensor's index
         # - should match the Clearpath API
@@ -38,17 +38,33 @@ class BaseSensor(Accessory):
         # - enables the sensor launch in the generated launch
         self.launch_enabled = True
         self.enable_launch if launch_enabled else self.disable_launch()
+        super().__init__(idx, name, parent, xyz, rpy)
+
+    @classmethod
+    def get_sensor_type(cls) -> str:
+        return cls.SENSOR_TYPE
 
     @classmethod
     def get_sensor_model(cls) -> str:
-        return cls.SENSOR_TYPE
+        return cls.SENSOR_MODEL
 
     @classmethod
     def get_name_from_idx(cls, idx: int) -> str:
         return "%s_%s" % (
-            cls.get_sensor_model(),
+            cls.get_sensor_type(),
             idx
         )
+
+    @classmethod
+    def get_topic_from_idx(cls, idx: int) -> str:
+        return "%s/%s" % (
+            cls.get_name_from_idx(idx),
+            cls.TOPIC
+        )
+
+    def set_idx(self, idx: int) -> None:
+        super().set_idx(idx)
+        self.topic = self.get_topic_from_idx(idx)
 
     def get_topic(self) -> str:
         return self.topic

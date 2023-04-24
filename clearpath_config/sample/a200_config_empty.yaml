@@ -1,0 +1,14 @@
+version: 0
+
+system: # These are system level configs
+    self: A200-1
+    hosts: # These are the hosts that are involved in this system
+        platform: # The main computer for this system, ie the robot's computer
+            A200-1: 192.168.131.1
+    ros2:
+        namespace: HOSTNAME
+        domain_id: 123
+        rmw_implementation: rmw_fastrtps_cpp
+
+platform: # These are are parameters specific to a a platform
+    serial_number: cpr-a200-0001

@@ -29,10 +29,10 @@ class FlirPTU(BaseMount):
         limits_enabled: bool = LIMITS_ENABLED,
     ) -> None:
         super().__init__(
-            FlirPTU.get_name_from_idx(0),
-            parent,
-            xyz,
-            rpy,
+            name=FlirPTU.get_name_from_idx(0),
+            parent=parent,
+            xyz=xyz,
+            rpy=rpy,
         )
         # Serial Port
         self.tty_port = File(self.TTY_PORT)
