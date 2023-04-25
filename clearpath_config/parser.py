@@ -1,6 +1,7 @@
 from clearpath_config.common import (
     Platform,
-    Accessory
+    Accessory,
+    flatten_dict
 )
 from clearpath_config.clearpath_config import ClearpathConfig
 from clearpath_config.mounts.mounts import (
@@ -523,8 +524,8 @@ class BaseSensorParser(BaseConfigParser):
             BaseSensorParser.URDF_ENABLED, config, BaseSensor.URDF_ENABLED)
         launch_enabled = cls.get_optional_val(
             BaseSensorParser.LAUNCH_ENABLED, config, BaseSensor.LAUNCH_ENABLED)
-        ros_parameters = cls.get_optional_val(
-            BaseSensorParser.ROS_PARAMETERS, config, BaseSensor.ROS_PARAMETERS)
+        ros_parameters = flatten_dict(cls.get_optional_val(
+            BaseSensorParser.ROS_PARAMETERS, config, BaseSensor.ROS_PARAMETERS))
         return BaseSensor(
             parent=parent,
             xyz=xyz, rpy=rpy,
