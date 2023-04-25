@@ -630,7 +630,7 @@ class CameraParser(BaseConfigParser):
     # ROS Parameters
     ROS_PARAMETERS = "ros_parameters"
 
-    def __new__(cls, config: dict) -> BaseLidar2D:
+    def __new__(cls, config: dict) -> BaseCamera:
         base = BaseCameraParser(config)
         model = cls.get_required_val(CameraParser.MODEL, config)
         camera = Camera(model)
