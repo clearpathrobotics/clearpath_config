@@ -5,7 +5,7 @@ class BaseCamera(BaseSensor):
     """
     Common Camera Class.
         - contains all common camera parameters
-        - all cameras must be of type Camera.Common
+        - all cameras must be of type BaseCamera
     """
     SENSOR_TYPE = "camera"
     SENSOR_MODEL = "base"
