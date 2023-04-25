@@ -578,6 +578,7 @@ class Lidar2DParser(BaseConfigParser):
         lidar2d.set_rpy(base.get_rpy())
         lidar2d.set_urdf_enabled(base.get_urdf_enabled())
         lidar2d.set_launch_enabled(base.get_launch_enabled())
+        lidar2d.set_frame_id(base.get_frame_id())
         lidar2d.set_ip(base.get_ip())
         lidar2d.set_port(base.get_port())
         lidar2d.set_min_angle(base.get_min_angle())
