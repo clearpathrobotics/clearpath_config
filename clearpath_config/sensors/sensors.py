@@ -113,6 +113,7 @@ class SensorConfig:
             lidar2d: BaseLidar2D = None,
             # By Model and Paramters
             model: str = None,
+            frame_id: str = BaseLidar2D.FRAME_ID,
             ip: str = BaseLidar2D.IP_ADDRESS,
             port: int = BaseLidar2D.IP_PORT,
             min_angle: float = BaseLidar2D.MIN_ANGLE,
@@ -128,6 +129,7 @@ class SensorConfig:
         )
         if not lidar2d and model:
             lidar2d = Lidar2D(model)
+            lidar2d.set_frame_id(frame_id)
             lidar2d.set_ip(ip)
             lidar2d.set_port(port)
             lidar2d.set_min_angle(min_angle)
@@ -145,18 +147,20 @@ class SensorConfig:
             # By Object
             ust10: HokuyoUST10 = None,
             # By Parameters
-            ip: str = BaseLidar2D.IP_ADDRESS,
-            port: int = BaseLidar2D.IP_PORT,
+            frame_id: str = HokuyoUST10.FRAME_ID,
+            ip: str = HokuyoUST10.IP_ADDRESS,
+            port: int = HokuyoUST10.IP_PORT,
             min_angle: float = HokuyoUST10.MIN_ANGLE,
             max_angle: float = HokuyoUST10.MAX_ANGLE,
-            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
-            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            urdf_enabled: bool = HokuyoUST10.URDF_ENABLED,
+            launch_enabled: bool = HokuyoUST10.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
         if ust10 is None:
             ust10 = HokuyoUST10(
+                frame_id=frame_id,
                 ip=ip,
                 port=port,
                 min_angle=min_angle,
@@ -178,18 +182,20 @@ class SensorConfig:
             # By Object
             lms1xx: SickLMS1XX = None,
             # By Parameters
-            ip: str = BaseLidar2D.IP_ADDRESS,
-            port: int = BaseLidar2D.IP_PORT,
+            frame_id: str = SickLMS1XX.FRAME_ID,
+            ip: str = SickLMS1XX.IP_ADDRESS,
+            port: int = SickLMS1XX.IP_PORT,
             min_angle: float = SickLMS1XX.MIN_ANGLE,
             max_angle: float = SickLMS1XX.MAX_ANGLE,
-            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
-            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            urdf_enabled: bool = SickLMS1XX.URDF_ENABLED,
+            launch_enabled: bool = SickLMS1XX.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
         if lms1xx is None:
             lms1xx = SickLMS1XX(
+                frame_id=frame_id,
                 ip=ip,
                 port=port,
                 min_angle=min_angle,
