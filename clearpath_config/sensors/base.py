@@ -1,5 +1,6 @@
 from clearpath_config.common import Accessory, IndexedAccessory
-from typing import List
+from typing import List, Callable
+import copy
 
 
 class BaseSensor(IndexedAccessory):
@@ -14,6 +15,17 @@ class BaseSensor(IndexedAccessory):
     URDF_ENABLED = True
     LAUNCH_ENABLED = True
     ROS_PARAMETERS = {}
+
+    class ROSParameter:
+        def __init__(
+                self,
+                key: str,
+                get: Callable,
+                set: Callable
+                ) -> None:
+            self.key = key
+            self.get = get
+            self.set = set
 
     def __init__(
             self,
@@ -43,6 +55,7 @@ class BaseSensor(IndexedAccessory):
         # ROS Parameters
         # - dictionary with parameters for launch file
         self.ros_parameters = {}
+        self.ros_parameter_pairs = {}
         self.set_ros_parameters(ros_parameters)
         super().__init__(idx, name, parent, xyz, rpy)
 
@@ -108,14 +121,45 @@ class BaseSensor(IndexedAccessory):
     def get_launch_enabled(self) -> bool:
         return self.launch_enabled
 
-    def update_ros_parameters(self) -> None:
-        pass
+    @staticmethod
+    def __get_key_recursive(keys: list, config: dict) -> any:
+        key = keys.pop(0)
+        if key in config:
+            if keys:
+                return BaseSensor.__get_key_recursive(
+                    keys,
+                    config[key]
+                )
+            else:
+                return config[key]
+        else:
+            return None
 
     def set_ros_parameters(self, ros_parameters: dict) -> None:
         assert isinstance(ros_parameters, dict), (
             "ROS paramaters must be a dictionary")
+        for key, val in ros_parameters.items():
+            for _, param in self.ros_parameter_pairs.items():
+                if "." in param.key:
+                    val = BaseSensor.__get_key_recursive(
+                        param.key.split("."),
+                        ros_parameters
+                    )
+                    if val is not None:
+                        param.set(self, val)
+                else:
+                    if key == param.key:
+                        param.set(self, val)
         self.ros_parameters = ros_parameters
 
     def get_ros_parameters(self) -> dict:
-        self.update_ros_parameters()
+        for _, param in self.ros_parameter_pairs.items():
+            if "." in param.key:
+                keys = param.key.split(".")
+                params = {keys.pop(): param.get(self)}
+                for i in range(len(keys) - 1, -1, -1):
+                    params = {keys[i]: params}
+                self.ros_parameters.update(params)
+            else:
+                self.ros_parameters[param.key] = param.get(self)
         return self.ros_parameters

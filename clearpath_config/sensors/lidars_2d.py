@@ -18,6 +18,12 @@ class BaseLidar2D(BaseSensor):
     MIN_ANGLE = -pi
     MAX_ANGLE = pi
 
+    class ROS_PARAMETER_KEYS:
+        IP_ADDRESS = "ip_address"
+        IP_PORT = "ip_port"
+        MIN_ANGLE = "min_angle"
+        MAX_ANGLE = "max_angle"
+
     def __init__(
             self,
             idx: int = None,
@@ -58,6 +64,35 @@ class BaseLidar2D(BaseSensor):
             xyz,
             rpy,
             )
+        # ROS Parameter Keys
+        pairs = {
+            # IP Address
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.IP_ADDRESS,
+                    get=lambda obj: obj.get_ip(),
+                    set=lambda obj, val: obj.set_ip(val))),
+            # IP Port
+            self.ROS_PARAMETER_KEYS.IP_PORT: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.IP_PORT,
+                    get=lambda obj: obj.get_port(),
+                    set=lambda obj, val: obj.set_port(val))),
+            # Min. Angle
+            self.ROS_PARAMETER_KEYS.MIN_ANGLE: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.MIN_ANGLE,
+                    get=lambda obj: obj.get_min_angle(),
+                    set=lambda obj, val: obj.set_min_angle(val))),
+            # Max. Angle
+            self.ROS_PARAMETER_KEYS.MAX_ANGLE: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.MIN_ANGLE,
+                    get=lambda obj: obj.get_max_angle(),
+                    set=lambda obj, val: obj.set_max_angle(val))),
+        }
+        self.ros_parameter_pairs.update(pairs)
+        self.set_ros_parameters(ros_parameters)
 
     @classmethod
     def get_ip_from_idx(cls, idx: int) -> str:
@@ -98,12 +133,13 @@ class BaseLidar2D(BaseSensor):
     def set_max_angle(self, angle: float) -> None:
         if angle > self.MAX_ANGLE:
             angle = self.MAX_ANGLE
-        self.min_angle = angle
+        self.max_angle = angle
 
 
 class HokuyoUST10(BaseLidar2D):
     SENSOR_MODEL = "hokuyo_ust10"
 
+    IP_PORT = 10940
     MIN_ANGLE = -pi
     MAX_ANGLE = pi
 
@@ -113,7 +149,7 @@ class HokuyoUST10(BaseLidar2D):
             name: str = None,
             topic: str = BaseLidar2D.TOPIC,
             ip: str = BaseLidar2D.IP_ADDRESS,
-            port: int = BaseLidar2D.IP_PORT,
+            port: int = IP_PORT,
             min_angle: float = MIN_ANGLE,
             max_angle: float = MAX_ANGLE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
@@ -138,11 +174,21 @@ class HokuyoUST10(BaseLidar2D):
             xyz,
             rpy
         )
+        # ROS Parameter Keys
+        self.ros_parameter_pairs[
+            BaseLidar2D.ROS_PARAMETER_KEYS.IP_ADDRESS].key = "ip_address"
+        self.ros_parameter_pairs[
+            BaseLidar2D.ROS_PARAMETER_KEYS.IP_PORT].key = "ip_port"
+        self.ros_parameter_pairs[
+            BaseLidar2D.ROS_PARAMETER_KEYS.MIN_ANGLE].key = "angle_min"
+        self.ros_parameter_pairs[
+            BaseLidar2D.ROS_PARAMETER_KEYS.MAX_ANGLE].key = "angle_max"
 
 
 class SickLMS1XX(BaseLidar2D):
     SENSOR_MODEL = "sick_lms1xx"
 
+    IP_PORT = 2112
     MIN_ANGLE = -2.391
     MAX_ANGLE = 2.391
 
@@ -152,7 +198,7 @@ class SickLMS1XX(BaseLidar2D):
             name: str = None,
             topic: str = BaseLidar2D.TOPIC,
             ip: str = BaseLidar2D.IP_ADDRESS,
-            port: int = BaseLidar2D.IP_PORT,
+            port: int = IP_PORT,
             min_angle: float = MIN_ANGLE,
             max_angle: float = MAX_ANGLE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
@@ -177,3 +223,12 @@ class SickLMS1XX(BaseLidar2D):
             xyz,
             rpy
         )
+        # ROS Parameter Keys
+        self.ros_parameter_pairs[
+            BaseLidar2D.ROS_PARAMETER_KEYS.IP_ADDRESS].key = "hostname"
+        self.ros_parameter_pairs[
+            BaseLidar2D.ROS_PARAMETER_KEYS.IP_PORT].key = "port"
+        self.ros_parameter_pairs[
+            BaseLidar2D.ROS_PARAMETER_KEYS.MIN_ANGLE].key = "min_ang"
+        self.ros_parameter_pairs[
+            BaseLidar2D.ROS_PARAMETER_KEYS.MAX_ANGLE].key = "max_ang"

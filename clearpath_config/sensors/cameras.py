@@ -14,6 +14,10 @@ class BaseCamera(BaseSensor):
     FPS = 30
     SERIAL = "0"
 
+    class ROS_PARAMETER_KEYS:
+        FPS = "fps"
+        SERIAL = "serial"
+
     def __init__(
             self,
             idx: int = None,
@@ -86,28 +90,49 @@ class IntelRealsense(BaseCamera):
     """
     SENSOR_MODEL = "intel_realsense"
 
-    FPS = 30
-    WIDTH = 640
-    HEIGHT = 480
+    D415 = "d415"
+    D435 = "d435"
+    D435i = "d435i"
+    DEVICE_TYPE = D435
+    DEVICE_TYPES = [D415, D435, D435i]
+
+    COLOR_ENABLED = True
+    COLOR_FPS = 30
+    COLOR_WIDTH = 640
+    COLOR_HEIGHT = 480
 
     DEPTH_ENABLED = True
     DEPTH_FPS = 30
     DEPTH_WIDTH = 640
     DEPTH_HEIGHT = 480
 
+    POINTCLOUD_ENABLED = True
+
+    class ROS_PARAMETER_KEYS:
+        SERIAL = "serial_no"
+        DEVICE_TYPE = "device_type"
+        DEPTH_PROFILE = "depth_module.profile"
+        DEPTH_ENABLE = "enable_depth"
+        COLOR_PROFILE = "rgb_camera.profile"
+        COLOR_ENABLE = "enable_color"
+        POINTCLOUD_ENABLE = "pointcloud.enable"
+
     def __init__(
             self,
             idx: int = None,
             name: str = None,
             topic: str = BaseCamera.TOPIC,
-            fps: int = FPS,
             serial: str = BaseCamera.SERIAL,
-            width: int = WIDTH,
-            height: int = HEIGHT,
+            device_type: str = DEVICE_TYPE,
+            color_enabled: bool = COLOR_ENABLED,
+            color_fps: bool = COLOR_FPS,
+            color_width: int = COLOR_WIDTH,
+            color_height: int = COLOR_HEIGHT,
             depth_enabled: bool = DEPTH_ENABLED,
             depth_fps: int = DEPTH_FPS,
             depth_width: int = DEPTH_WIDTH,
             depth_height: int = DEPTH_HEIGHT,
+            pointcloud_enabled: bool = POINTCLOUD_ENABLED,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -119,7 +144,7 @@ class IntelRealsense(BaseCamera):
             idx,
             name,
             topic,
-            fps,
+            color_fps,
             serial,
             urdf_enabled,
             launch_enabled,
@@ -128,18 +153,106 @@ class IntelRealsense(BaseCamera):
             xyz,
             rpy
         )
-        self.width: int = IntelRealsense.WIDTH
-        self.set_width(width)
-        self.height: int = IntelRealsense.HEIGHT
-        self.set_height(height)
+        self.device_type: str = IntelRealsense.DEVICE_TYPE
+        self.set_device_type(device_type)
+        # Color Image
+        self.color_enabled: bool = IntelRealsense.COLOR_ENABLED
+        self.color_width: int = IntelRealsense.COLOR_WIDTH
+        self.color_height: int = IntelRealsense.COLOR_HEIGHT
+        self.set_color_enabled(color_enabled)
+        self.set_color_width(color_width)
+        self.set_color_height(color_height)
+        # Depth Image
         self.depth_enabled: bool = IntelRealsense.DEPTH_ENABLED
-        self.enable_depth() if depth_enabled else self.disable_depth()
-        self.depth_fps: int = IntelRealsense.DEPTH_FPS
-        self.set_depth_fps(depth_fps)
         self.depth_width: int = IntelRealsense.DEPTH_WIDTH
+        self.depth_height: int = IntelRealsense.DEPTH_HEIGHT
+        self.depth_fps: int = IntelRealsense.DEPTH_FPS
+        self.set_depth_enabled(depth_enabled)
         self.set_depth_width(depth_width)
-        self.detph_height: int = IntelRealsense.DEPTH_HEIGHT
         self.set_depth_height(depth_height)
+        self.set_depth_fps(depth_fps)
+        # Pointcloud
+        self.pointcloud_enabled: bool = IntelRealsense.POINTCLOUD_ENABLED
+        self.set_pointcloud_enabled(pointcloud_enabled)
+        # ROS Parameter Keys
+        pairs = {
+            # Device Type
+            self.ROS_PARAMETER_KEYS.DEVICE_TYPE: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.DEVICE_TYPE,
+                    get=lambda obj: obj.get_device_type(),
+                    set=lambda obj, val: obj.set_device_type(val)
+                )
+            ),
+            # Device Serial
+            self.ROS_PARAMETER_KEYS.SERIAL: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.SERIAL,
+                    get=lambda obj: obj.get_serial(),
+                    set=lambda obj, val: obj.set_serial(val)
+                )
+            ),
+            # Color Enable
+            self.ROS_PARAMETER_KEYS.COLOR_ENABLE: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.COLOR_ENABLE,
+                    get=lambda obj: obj.get_color_enabled(),
+                    set=lambda obj, val: obj.set_color_enabled(val)
+                )
+            ),
+            # Color Profile
+            self.ROS_PARAMETER_KEYS.COLOR_PROFILE: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.COLOR_PROFILE,
+                    get=lambda obj: obj.get_color_profile(),
+                    set=lambda obj, val: obj.set_color_profile(val)
+                )
+            ),
+            # Depth Enable
+            self.ROS_PARAMETER_KEYS.DEPTH_ENABLE: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.DEPTH_ENABLE,
+                    get=lambda obj: obj.get_depth_enabled(),
+                    set=lambda obj, val: obj.set_depth_enabled(val)
+                )
+            ),
+            # Depth Profile
+            self.ROS_PARAMETER_KEYS.DEPTH_PROFILE: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.DEPTH_PROFILE,
+                    get=lambda obj: obj.get_depth_profile(),
+                    set=lambda obj, val: obj.set_depth_profile(val)
+                )
+            ),
+            # Pointcloud Enable
+            self.ROS_PARAMETER_KEYS.POINTCLOUD_ENABLE: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.POINTCLOUD_ENABLE,
+                    get=lambda obj: obj.get_pointcloud_enabled(),
+                    set=lambda obj, val: obj.set_pointcloud_enabled(val)
+                )
+            ),
+        }
+        self.ros_parameter_pairs.update(pairs)
+        self.set_ros_parameters(ros_parameters)
+
+    @staticmethod
+    def clean_profile(profile: str | list) -> list:
+        if isinstance(profile, str):
+            profile = profile.split(",")
+            assert len(profile) == 3, (
+                "Profile '%s' is not three comma separated values")
+            try:
+                profile = [int(entry) for entry in profile]
+            except ValueError:
+                raise AssertionError(
+                    "Profile '%s' cannot be cast to integer")
+        else:
+            assert len(profile) == 3, (
+                "Profile '%s' is not three integer values")
+            assert all([isinstance(entry, int) for entry in profile]), (
+                "Profile '%s' is not three integer values")
+        return profile
 
     def assert_pixel_length(
             self,
@@ -152,19 +265,65 @@ class IntelRealsense(BaseCamera):
             "Pixel length must be positive"
         )
 
-    def set_height(self, height: int) -> None:
+    def get_device_type(self) -> str:
+        return self.device_type
+
+    def set_device_type(self, device_type: str) -> None:
+        assert device_type in self.DEVICE_TYPES, (
+            "Device type '%s' is not one of '%s'" % (
+                device_type,
+                self.DEVICE_TYPES
+            )
+        )
+        self.device_type = device_type
+
+    def enable_color(self) -> None:
+        self.color_enabled = True
+
+    def disable_color(self) -> None:
+        self.color_enabled = False
+
+    def is_color_enabled(self) -> bool:
+        return self.color_enabled
+
+    def get_color_enabled(self) -> bool:
+        return self.color_enabled
+
+    def set_color_enabled(self, enable: bool) -> None:
+        self.color_enabled = bool(enable)
+
+    def set_color_fps(self, fps: int) -> None:
+        self.set_fps(fps)
+
+    def get_color_fps(self) -> int:
+        return self.get_fps()
+
+    def set_color_height(self, height: int) -> None:
         self.assert_pixel_length(height)
         self.height = height
 
-    def get_height(self) -> int:
-        return self.get_height
+    def get_color_height(self) -> int:
+        return self.color_height
 
-    def set_width(self, width: int) -> None:
+    def set_color_width(self, width: int) -> None:
         self.assert_pixel_length(width)
         self.width = width
 
-    def get_width(self) -> int:
-        return self.get_width
+    def get_color_width(self) -> int:
+        return self.color_width
+
+    def set_color_profile(self, profile: str | list) -> None:
+        profile = self.clean_profile(profile)
+        self.set_color_width(profile[0])
+        self.set_color_height(profile[1])
+        self.set_color_fps(profile[2])
+
+    def get_color_profile(self) -> str:
+        return "%s,%s,%s" % (
+            self.get_color_width(),
+            self.get_color_height(),
+            self.get_color_fps()
+        )
 
     def enable_depth(self) -> None:
         self.depth_enabled = True
@@ -173,6 +332,9 @@ class IntelRealsense(BaseCamera):
         self.depth_enabled = False
 
     def is_depth_enabled(self) -> bool:
+        return self.depth_enabled
+
+    def get_depth_enabled(self) -> bool:
         return self.depth_enabled
 
     def set_depth_enabled(self, enable: bool) -> None:
@@ -198,6 +360,34 @@ class IntelRealsense(BaseCamera):
 
     def get_depth_height(self) -> int:
         return self.depth_height
+
+    def set_depth_profile(self, profile: str | list) -> None:
+        profile = self.clean_profile(profile)
+        self.set_depth_width(profile[0])
+        self.set_depth_height(profile[1])
+        self.set_depth_fps(profile[2])
+
+    def get_depth_profile(self) -> str:
+        return "%s,%s,%s" % (
+            self.get_depth_width(),
+            self.get_depth_height(),
+            self.get_depth_fps()
+        )
+
+    def enable_pointcloud(self) -> None:
+        self.pointcloud_enabled = True
+
+    def disable_pointcloud(self) -> None:
+        self.pointcloud_enabled = False
+
+    def is_pointcloud_enabled(self) -> bool:
+        return self.pointcloud_enabled
+
+    def get_pointcloud_enabled(self) -> bool:
+        return self.pointcloud_enabled
+
+    def set_pointcloud_enabled(self, enable: bool) -> None:
+        self.pointcloud_enabled = bool(enable)
 
 
 class FlirBlackfly(BaseCamera):
