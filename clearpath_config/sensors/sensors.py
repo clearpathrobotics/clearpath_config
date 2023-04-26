@@ -135,6 +135,8 @@ class SensorConfig:
         sensors.extend(self.get_all_lidar_2d())
         # Cameras
         sensors.extend(self.get_all_cameras())
+        # IMU
+        sensors.extend(self.get_all_imu())
         return sensors
 
     # Lidar2D: Add Lidar2D by Object or Common Lidar2D Parameters
