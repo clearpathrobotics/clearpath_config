@@ -138,7 +138,7 @@ class BaseLidar2D(BaseSensor):
     def get_frame_id(self) -> str:
         return self.frame_id
 
-    def set_frame_id(self, link: str) -> str:
+    def set_frame_id(self, link: str) -> None:
         Accessory.assert_valid_link(link)
         self.frame_id = link
 
