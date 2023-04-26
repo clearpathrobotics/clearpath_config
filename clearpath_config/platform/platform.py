@@ -3,6 +3,7 @@ from clearpath_config.platform.base import BaseDecorationsConfig
 from clearpath_config.platform.a200 import A200DecorationsConfig
 from clearpath_config.platform.j100 import J100DecorationsConfig
 from clearpath_config.platform.generic import GENERICDecorationsConfig
+from clearpath_config.sensors.sensors import SensorConfig
 
 
 # DecorationsConfig:
@@ -92,6 +93,11 @@ class PlatformConfig:
     def set_serial_number(self, serial_number: str) -> None:
         self.serial = SerialNumber(serial_number)
         self.decorations = DecorationsConfig(model=self.get_model())
+        # Increment IMU Count
+        if self.get_model() != Platform.A200:
+            SensorConfig.IMU_INDEX = 1
+        else:
+            SensorConfig.IMU_INDEX = 0
 
     def get_serial_number(self, prefix: bool = False) -> str:
         return self.serial.get_serial(prefix)
