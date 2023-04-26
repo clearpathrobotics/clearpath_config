@@ -253,6 +253,7 @@ class SensorConfig:
             serial: str = BaseCamera.SERIAL,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
@@ -266,6 +267,7 @@ class SensorConfig:
             camera.set_serial(serial)
             camera.set_urdf_enabled(urdf_enabled)
             camera.set_launch_enabled(launch_enabled)
+            camera.set_ros_parameters(ros_parameters)
             camera.set_parent(parent)
             camera.set_xyz(xyz)
             camera.set_rpy(rpy)
@@ -310,32 +312,40 @@ class SensorConfig:
             # By Object
             realsense: IntelRealsense = None,
             # By Parameters
-            fps: int = IntelRealsense.FPS,
             serial: str = BaseCamera.SERIAL,
-            width: int = IntelRealsense.WIDTH,
-            height: int = IntelRealsense.HEIGHT,
+            device_type: str = IntelRealsense.DEVICE_TYPE,
+            color_enabled: bool = IntelRealsense.COLOR_ENABLED,
+            color_fps: bool = IntelRealsense.COLOR_FPS,
+            color_width: int = IntelRealsense.COLOR_WIDTH,
+            color_height: int = IntelRealsense.COLOR_HEIGHT,
             depth_enabled: bool = IntelRealsense.DEPTH_ENABLED,
             depth_fps: int = IntelRealsense.DEPTH_FPS,
             depth_width: int = IntelRealsense.DEPTH_WIDTH,
             depth_height: int = IntelRealsense.DEPTH_HEIGHT,
+            pointcloud_enabled: bool = IntelRealsense.POINTCLOUD_ENABLED,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
         if realsense is None:
             realsense = IntelRealsense(
-                fps=fps,
                 serial=serial,
-                width=width,
-                height=height,
+                device_type=device_type,
+                color_enabled=color_enabled,
+                color_fps=color_fps,
+                color_width=color_width,
+                color_height=color_height,
                 depth_enabled=depth_enabled,
                 depth_fps=depth_fps,
                 depth_width=depth_width,
                 depth_height=depth_height,
+                pointcloud_enabled=pointcloud_enabled,
                 urdf_enabled=urdf_enabled,
                 launch_enabled=launch_enabled,
+                ros_parameters=ros_parameters,
                 parent=parent,
                 xyz=xyz,
                 rpy=rpy,
@@ -364,3 +374,20 @@ class SensorConfig:
     # Camera: Set All
     def set_all_camera(self, cameras: List[BaseCamera]) -> None:
         self.__cameras.set_all(cameras)
+
+    # Camera: Get All Objects of a Specified Model
+    def get_all_cameras_by_model(self, model: str) -> List[BaseLidar2D]:
+        Camera.assert_model(model)
+        all_model_camera = []
+        for camera in self.get_all_cameras():
+            if camera.SENSOR_MODEL == model:
+                all_model_camera.append(camera)
+        return all_model_camera
+
+    # Lidar2D: Get All Objects of Model UST10
+    def get_all_realsense(self) -> List[IntelRealsense]:
+        return self.get_all_cameras_by_model(Camera.INTEL_REALSENSE)
+
+    # Lidar2D: Get All Objects of Model LMS1XX
+    def get_all_blackfly(self) -> List[FlirBlackfly]:
+        return self.get_all_cameras_by_model(Camera.FLIR_BLACKFLY)

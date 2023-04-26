@@ -38,8 +38,26 @@ import yaml
 
 class BaseConfigParser:
     @staticmethod
+    def is_nested_key(key: str) -> bool:
+        return "." in key
+
+    @staticmethod
+    def get_nested_keys(key: str) -> list:
+        return key.split(".")
+
+    @staticmethod
     def check_key_exists(key: str, config: dict) -> bool:
-        return key in config
+        if BaseConfigParser.is_nested_key(key):
+            keys = BaseConfigParser.get_nested_keys(key)
+            key = keys.pop(0)
+            if key in config:
+                return False
+            else:
+                return BaseConfigParser.check_key_exists(
+                    ".".join(keys), config
+                )
+        else:
+            return key in config
 
     @staticmethod
     def assert_key_exists(key: str, config: dict) -> None:
@@ -50,12 +68,28 @@ class BaseConfigParser:
     @staticmethod
     def get_required_val(key: str, config: dict):
         BaseConfigParser.assert_key_exists(key, config)
+        if BaseConfigParser.is_nested_key(key):
+            keys = BaseConfigParser.get_nested_keys(key)
+            key = keys.pop(0)
+            return BaseConfigParser.get_required_val(
+                key=".".join(keys),
+                config=config[key]
+            )
         return config[key]
 
     @staticmethod
     def get_optional_val(key: str, config: dict, default=None):
         if BaseConfigParser.check_key_exists(key, config):
-            return config[key]
+            if BaseConfigParser.is_nested_key(key):
+                keys = BaseConfigParser.get_nested_keys(key)
+                key = keys.pop(0)
+                return BaseConfigParser.get_optional_val(
+                    key=".".join(keys),
+                    config=config[key],
+                    default=default
+                )
+            else:
+                return config[key]
         else:
             return default
 
@@ -476,6 +510,7 @@ class BaseSensorParser(BaseConfigParser):
     # Keys
     URDF_ENABLED = "urdf_enabled"
     LAUNCH_ENABLED = "launch_enabled"
+    ROS_PARAMETERS = "ros_parameters"
 
     def __new__(cls, config: dict) -> BaseSensor:
         parent = cls.get_optional_val(
@@ -488,11 +523,14 @@ class BaseSensorParser(BaseConfigParser):
             BaseSensorParser.URDF_ENABLED, config, BaseSensor.URDF_ENABLED)
         launch_enabled = cls.get_optional_val(
             BaseSensorParser.LAUNCH_ENABLED, config, BaseSensor.LAUNCH_ENABLED)
+        ros_parameters = cls.get_optional_val(
+            BaseSensorParser.ROS_PARAMETERS, config, BaseSensor.ROS_PARAMETERS)
         return BaseSensor(
             parent=parent,
             xyz=xyz, rpy=rpy,
             urdf_enabled=urdf_enabled,
-            launch_enabled=launch_enabled
+            launch_enabled=launch_enabled,
+            ros_parameters=ros_parameters
         )
 
 
@@ -519,6 +557,7 @@ class BaseLidar2DParser(BaseConfigParser):
             rpy=sensor.get_rpy(),
             urdf_enabled=sensor.get_urdf_enabled(),
             launch_enabled=sensor.get_launch_enabled(),
+            ros_parameters=sensor.get_ros_parameters(),
             ip=ip,
             port=port,
             min_angle=min_angle,
@@ -543,6 +582,7 @@ class Lidar2DParser(BaseConfigParser):
         lidar2d.set_port(base.get_port())
         lidar2d.set_min_angle(base.get_min_angle())
         lidar2d.set_max_angle(base.get_max_angle())
+        lidar2d.set_ros_parameters(base.get_ros_parameters())
         return lidar2d
 
 
@@ -562,6 +602,7 @@ class BaseCameraParser(BaseConfigParser):
             rpy=sensor.get_rpy(),
             urdf_enabled=sensor.get_urdf_enabled(),
             launch_enabled=sensor.get_launch_enabled(),
+            ros_parameters=sensor.get_ros_parameters(),
             fps=fps,
             serial=serial
         )
@@ -575,25 +616,23 @@ class CameraParser(BaseConfigParser):
     ENCODING = "encoding"
 
     # Realsense Parameters
-    WIDTH = "width"
-    HEIGHT = "height"
+    COLOR_ENABLE = "color_enabled"
+    COLOR_FPS = "color_fps"
+    COLOR_WIDTH = "color_width"
+    COLOR_HEIGHT = "color_height"
     DEPTH_ENABLED = "depth_enabled"
     DEPTH_FPS = "depth_fps"
     DEPTH_WIDTH = "depth_width"
     DEPTH_HEIGHT = "depth_height"
+    POINTCLOUD_ENABLED = "pointcloud_enabled"
+
+    # ROS Parameters
+    ROS_PARAMETERS = "ros_parameters"
 
     def __new__(cls, config: dict) -> BaseLidar2D:
         base = BaseCameraParser(config)
         model = cls.get_required_val(CameraParser.MODEL, config)
         camera = Camera(model)
-        # Set Base Parameters
-        camera.set_parent(base.get_parent())
-        camera.set_xyz(base.get_xyz())
-        camera.set_rpy(base.get_rpy())
-        camera.set_urdf_enabled(base.get_urdf_enabled())
-        camera.set_launch_enabled(base.get_launch_enabled())
-        camera.set_fps(base.get_fps())
-        camera.set_serial(base.get_serial())
         # Set Specific Parameters
         if model == Camera.FLIR_BLACKFLY:
             camera.set_connection_type(
@@ -611,18 +650,32 @@ class CameraParser(BaseConfigParser):
                 )
             )
         elif model == Camera.INTEL_REALSENSE:
-            camera.set_width(
+            camera.set_color_enabled(
                 cls.get_optional_val(
-                    CameraParser.WIDTH,
+                    CameraParser.COLOR_ENABLE,
                     config,
-                    IntelRealsense.WIDTH
+                    IntelRealsense.COLOR_ENABLED
                 )
             )
-            camera.set_height(
+            camera.set_color_fps(
                 cls.get_optional_val(
-                    CameraParser.HEIGHT,
+                    CameraParser.COLOR_FPS,
                     config,
-                    IntelRealsense.HEIGHT
+                    IntelRealsense.COLOR_FPS
+                )
+            )
+            camera.set_color_width(
+                cls.get_optional_val(
+                    CameraParser.COLOR_WIDTH,
+                    config,
+                    IntelRealsense.COLOR_WIDTH
+                )
+            )
+            camera.set_color_height(
+                cls.get_optional_val(
+                    CameraParser.COLOR_HEIGHT,
+                    config,
+                    IntelRealsense.COLOR_HEIGHT
                 )
             )
             camera.set_depth_enabled(
@@ -653,6 +706,22 @@ class CameraParser(BaseConfigParser):
                     IntelRealsense.DEPTH_HEIGHT
                 )
             )
+            camera.set_pointcloud_enabled(
+                cls.get_optional_val(
+                    CameraParser.POINTCLOUD_ENABLED,
+                    config,
+                    IntelRealsense.POINTCLOUD_ENABLED
+                )
+            )
+        # Set Base Parameters
+        camera.set_parent(base.get_parent())
+        camera.set_xyz(base.get_xyz())
+        camera.set_rpy(base.get_rpy())
+        camera.set_urdf_enabled(base.get_urdf_enabled())
+        camera.set_launch_enabled(base.get_launch_enabled())
+        camera.set_fps(base.get_fps())
+        camera.set_serial(base.get_serial())
+        camera.set_ros_parameters(base.get_ros_parameters())
         return camera
 
 

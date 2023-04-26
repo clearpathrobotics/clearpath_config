@@ -41,6 +41,9 @@ mounts:
         angle: 0.0
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
+    flir_ptu:
+      - {}
+      - {}
     riser:
       - rows: 8
         columns: 7
@@ -74,45 +77,52 @@ sensors:
       - model: flir_blackfly
         urdf_enabled: true
         launch_enabled: true
-        connection_type: USB3
-        encoding: BayerRG8
-        fps: 30
-        serial: 0
         parent: base_link
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
+        ros_parameters:
+          connection_type: USB3
+          encoding: BayerRG8
+          fps: 30
+          serial: 0
       - model: intel_realsense
         urdf_enabled: true
         launch_enabled: true
-        fps: 30
-        serial: 0
-        width: 640
-        height: 480
-        depth_enabled: true
-        depth_fps: 30
-        depth_width: 640
-        depth_height: 480
         parent: base_link
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
+        ros_parameters:
+          serial_no: 12345
+          device_type: d435
+          enable_color: true
+          rgb_camera:
+            profile: "640,480,30"
+          enable_depth: true
+          depth_module:
+            profile: "640,480,30"
+          pointcloud:
+            enable: true
+          anything: true
     lidar2d:
       - model: sick_lms1xx
         urdf_enabled: true
         launch_enabled: true
-        ip: 192.168.131.20
-        port: 6000
-        min_angle: -3.1415
-        max_angle: 3.1415
         parent: base_link
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
+        ros_parameters:
+          hostname: 192.168.131.20
+          port: 6000
+          min_ang: -3.1415
+          max_ang: 3.1415
       - model: hokuyo_ust10
         urdf_enabled: true
         launch_enabled: true
-        ip: 192.168.131.21
-        port: 6000
-        min_angle: -3.1415
-        max_angle: 3.1415
         parent: base_link
         xyz: [0.0, 0.0, 0.0]
         rpy: [0.0, 0.0, 0.0]
+        ros_parameters:
+          ip_address: 192.168.131.21
+          ip_port: 6000
+          angle_max: -3.1415
+          angle_min: 3.1415
