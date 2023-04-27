@@ -141,7 +141,7 @@ class IP:
 class Port:
     def __init__(self, port: int) -> None:
         self.assert_valid(port)
-        self.port = port
+        self.port = int(port)
 
     def __str__(self) -> str:
         return str(self.port)
