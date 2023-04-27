@@ -103,6 +103,17 @@ sensors:
           pointcloud:
             enable: true
           anything: true
+    lidar3d:
+      - model: velodyne_lidar
+        urdf_enabled: true
+        launch_enabled: true
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+        ros_parameters:
+          device_ip: 192.168.131.20
+          port: 2368
+          model: VLP16
     lidar2d:
       - model: sick_lms1xx
         urdf_enabled: true
