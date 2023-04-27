@@ -1,6 +1,5 @@
 from clearpath_config.common import Accessory, IndexedAccessory
 from typing import List, Callable
-import copy
 
 
 class BaseSensor(IndexedAccessory):

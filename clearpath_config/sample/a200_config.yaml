@@ -103,6 +103,18 @@ sensors:
           pointcloud:
             enable: true
           anything: true
+    gps:
+      - model: swiftnav_duro
+        urdf_enabled: true
+        launch_enabled: true
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+        ros_parameters:
+          ip_address: 192.168.131.30
+          port: 55555
+          gps_receiver_frame: duro
+          imu_frame: duro
     lidar3d:
       - model: velodyne_lidar
         urdf_enabled: true
