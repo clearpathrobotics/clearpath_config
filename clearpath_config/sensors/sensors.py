@@ -10,7 +10,31 @@ from clearpath_config.sensors.lidars_2d import (
     HokuyoUST10,
     SickLMS1XX,
 )
+from clearpath_config.sensors.imu import (
+    BaseIMU,
+    Microstrain,
+)
 from typing import List
+
+
+class InertialMeasurementUnit():
+    MICROSTRAIN_IMU = Microstrain.SENSOR_MODEL
+    MODEL = {
+        MICROSTRAIN_IMU: Microstrain
+    }
+
+    @classmethod
+    def assert_model(cls, model: str) -> None:
+        assert model in InertialMeasurementUnit.MODEL, (
+            "Model '%s' must be one of: '%s'" % (
+                model,
+                InertialMeasurementUnit.MODEL.keys()
+            )
+        )
+
+    def __new__(cls, model: str) -> BaseIMU:
+        cls.assert_model(model)
+        return InertialMeasurementUnit.MODEL[model]()
 
 
 class Camera():
@@ -62,10 +86,12 @@ class Lidar2D():
 class Sensor():
     CAMERA = BaseCamera.SENSOR_TYPE
     LIDAR2D = BaseLidar2D.SENSOR_TYPE
+    IMU = BaseIMU.SENSOR_TYPE
 
     TYPE = {
         CAMERA: Camera,
-        LIDAR2D: Lidar2D
+        LIDAR2D: Lidar2D,
+        IMU: InertialMeasurementUnit,
     }
 
     @classmethod
@@ -86,6 +112,7 @@ class Sensor():
 class SensorConfig:
     LIDAR2D_INDEX = 0
     CAMERA_INDEX = 0
+    IMU_INDEX = 0
 
     def __init__(self) -> None:
         # 2D Lidars
@@ -96,6 +123,10 @@ class SensorConfig:
         self.__cameras = OrderedListConfig[BaseCamera](
             SensorConfig.CAMERA_INDEX
         )
+        # IMU
+        self.__imu = OrderedListConfig[BaseIMU](
+            SensorConfig.IMU_INDEX
+        )
 
     # Get All Sensors
     def get_all_sensors(self) -> List[BaseSensor]:
@@ -104,6 +135,8 @@ class SensorConfig:
         sensors.extend(self.get_all_lidar_2d())
         # Cameras
         sensors.extend(self.get_all_cameras())
+        # IMU
+        sensors.extend(self.get_all_imu())
         return sensors
 
     # Lidar2D: Add Lidar2D by Object or Common Lidar2D Parameters
@@ -113,6 +146,7 @@ class SensorConfig:
             lidar2d: BaseLidar2D = None,
             # By Model and Paramters
             model: str = None,
+            frame_id: str = BaseLidar2D.FRAME_ID,
             ip: str = BaseLidar2D.IP_ADDRESS,
             port: int = BaseLidar2D.IP_PORT,
             min_angle: float = BaseLidar2D.MIN_ANGLE,
@@ -128,6 +162,7 @@ class SensorConfig:
         )
         if not lidar2d and model:
             lidar2d = Lidar2D(model)
+            lidar2d.set_frame_id(frame_id)
             lidar2d.set_ip(ip)
             lidar2d.set_port(port)
             lidar2d.set_min_angle(min_angle)
@@ -145,18 +180,20 @@ class SensorConfig:
             # By Object
             ust10: HokuyoUST10 = None,
             # By Parameters
-            ip: str = BaseLidar2D.IP_ADDRESS,
-            port: int = BaseLidar2D.IP_PORT,
+            frame_id: str = HokuyoUST10.FRAME_ID,
+            ip: str = HokuyoUST10.IP_ADDRESS,
+            port: int = HokuyoUST10.IP_PORT,
             min_angle: float = HokuyoUST10.MIN_ANGLE,
             max_angle: float = HokuyoUST10.MAX_ANGLE,
-            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
-            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            urdf_enabled: bool = HokuyoUST10.URDF_ENABLED,
+            launch_enabled: bool = HokuyoUST10.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
         if ust10 is None:
             ust10 = HokuyoUST10(
+                frame_id=frame_id,
                 ip=ip,
                 port=port,
                 min_angle=min_angle,
@@ -178,18 +215,20 @@ class SensorConfig:
             # By Object
             lms1xx: SickLMS1XX = None,
             # By Parameters
-            ip: str = BaseLidar2D.IP_ADDRESS,
-            port: int = BaseLidar2D.IP_PORT,
+            frame_id: str = SickLMS1XX.FRAME_ID,
+            ip: str = SickLMS1XX.IP_ADDRESS,
+            port: int = SickLMS1XX.IP_PORT,
             min_angle: float = SickLMS1XX.MIN_ANGLE,
             max_angle: float = SickLMS1XX.MAX_ANGLE,
-            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
-            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            urdf_enabled: bool = SickLMS1XX.URDF_ENABLED,
+            launch_enabled: bool = SickLMS1XX.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
         if lms1xx is None:
             lms1xx = SickLMS1XX(
+                frame_id=frame_id,
                 ip=ip,
                 port=port,
                 min_angle=min_angle,
@@ -391,3 +430,99 @@ class SensorConfig:
     # Lidar2D: Get All Objects of Model LMS1XX
     def get_all_blackfly(self) -> List[FlirBlackfly]:
         return self.get_all_cameras_by_model(Camera.FLIR_BLACKFLY)
+
+    # IMU: Add IMU by Object or Common IMU Parameters
+    def add_imu(
+            self,
+            # By Object
+            imu: BaseIMU = None,
+            # By Model and Parameters
+            model: str = None,
+            frame_id: str = BaseIMU.FRAME_ID,
+            port: str = BaseIMU.PORT,
+            use_enu: bool = BaseIMU.USE_ENU,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        assert imu or model, (
+            "IMU object or model must be passed."
+        )
+        if not imu and model:
+            imu = InertialMeasurementUnit(model)
+            imu.set_frame_id(frame_id)
+            imu.set_port(port)
+            imu.set_use_enu(use_enu)
+            imu.set_urdf_enabled(urdf_enabled)
+            imu.set_launch_enabled(launch_enabled)
+            imu.set_parent(parent)
+            imu.set_xyz(xyz)
+            imu.set_rpy(rpy)
+        self.__imu.add(imu)
+
+    # IMU: Add Microstrain
+    def add_microstrain(
+            self,
+            # By Object
+            imu: Microstrain = None,
+            # By Parameters
+            frame_id: str = Microstrain.FRAME_ID,
+            port: str = Microstrain.PORT,
+            use_enu: bool = Microstrain.USE_ENU,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        if imu is None:
+            imu = Microstrain(
+                frame_id=frame_id,
+                port=port,
+                use_enu=use_enu,
+                urdf_enabled=urdf_enabled,
+                launch_enabled=launch_enabled,
+                parent=parent,
+                xyz=xyz,
+                rpy=rpy
+            )
+        assert isinstance(imu, Microstrain), (
+            "IMU object must be of type Microstrain"
+        )
+        self.__imu.add(imu)
+
+    # IMU: Remove IMU by passing object or index
+    def remove_imu(self, imu: BaseIMU | int) -> None:
+        self.__imu.remove(imu)
+
+    # IMU: Get Single Object
+    def get_imu(self, idx: int) -> BaseIMU:
+        return self.__imu.get(idx)
+
+    # IMU: Get All Objects
+    def get_all_imu(self) -> List[BaseIMU]:
+        return self.__imu.get_all()
+
+    # IMU: Get All Objects of a Specified Model
+    def get_all_imu_by_model(self, model: str) -> List[BaseIMU]:
+        InertialMeasurementUnit.assert_model(model)
+        all_model_imu = []
+        for imu in self.get_all_imu():
+            if imu.SENSOR_MODEL == model:
+                all_model_imu.append(imu)
+        return all_model_imu
+
+    # IMU: Get All Objects of Model Microstrain
+    def get_all_microstrain(self) -> List[Microstrain]:
+        return self.get_all_imu_by_model(
+            InertialMeasurementUnit.MICROSTRAIN_IMU)
+
+    # IMU: Set IMU Object
+    def set_imu(self, imu: BaseIMU) -> None:
+        self.__imu.set(imu)
+
+    # IMU: Set All IMU
+    def set_all_imu(self, all_imu: List[BaseIMU]) -> None:
+        self.__imu.set_all(all_imu)

@@ -1,3 +1,4 @@
+from collections.abc import MutableMapping
 from copy import deepcopy
 from typing import Callable, Generic, List, TypeVar
 import os
@@ -337,7 +338,8 @@ class Accessory():
             "RPY must be a list of exactly three float values")
         self.rpy = rpy
 
-    def assert_valid_link(self, link: str) -> None:
+    @staticmethod
+    def assert_valid_link(link: str) -> None:
         # Link name must be a string
         assert isinstance(link, str), "Link name '%s' must be string" % link
         # Link name must not be empty
@@ -544,8 +546,7 @@ class OrderedListConfig(Generic[T]):
     def update(self):
         for raw_idx, obj in enumerate(self.__list):
             idx = raw_idx + self.start_idx
-            if obj.get_idx() != idx:
-                self.__list[raw_idx].set_idx(idx)
+            self.__list[raw_idx].set_idx(idx)
 
     def add(
             self,
@@ -616,3 +617,17 @@ class OrderedListConfig(Generic[T]):
         except AssertionError:
             self.__list = tmp_list
         self.update()
+
+
+# Flatten Dictionary
+def _flatten_dict_gen(d, parent_key, dlim):
+    for k, v in d.items():
+        new_key = parent_key + dlim + str(k) if parent_key else str(k)
+        if isinstance(v, MutableMapping):
+            yield from flatten_dict(v, new_key, dlim=dlim).items()
+        else:
+            yield new_key, v
+
+
+def flatten_dict(d: MutableMapping, parent_key: str = '', dlim: str = '.'):
+    return dict(_flatten_dict_gen(d, parent_key, dlim))

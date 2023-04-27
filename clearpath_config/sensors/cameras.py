@@ -5,7 +5,7 @@ class BaseCamera(BaseSensor):
     """
     Common Camera Class.
         - contains all common camera parameters
-        - all cameras must be of type Camera.Common
+        - all cameras must be of type BaseCamera
     """
     SENSOR_TYPE = "camera"
     SENSOR_MODEL = "base"
@@ -109,6 +109,7 @@ class IntelRealsense(BaseCamera):
     POINTCLOUD_ENABLED = True
 
     class ROS_PARAMETER_KEYS:
+        CAMERA_NAME = "camera_name"
         SERIAL = "serial_no"
         DEVICE_TYPE = "device_type"
         DEPTH_PROFILE = "depth_module.profile"
@@ -176,6 +177,14 @@ class IntelRealsense(BaseCamera):
         self.set_pointcloud_enabled(pointcloud_enabled)
         # ROS Parameter Keys
         pairs = {
+            # Camera Name
+            self.ROS_PARAMETER_KEYS.CAMERA_NAME: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.CAMERA_NAME,
+                    get=lambda obj: obj.get_name(),
+                    set=lambda obj, val: obj.set_name(val)
+                )
+            ),
             # Device Type
             self.ROS_PARAMETER_KEYS.DEVICE_TYPE: (
                 BaseSensor.ROSParameter(

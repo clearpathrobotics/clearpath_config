@@ -1,6 +1,7 @@
 from clearpath_config.common import (
     Platform,
-    Accessory
+    Accessory,
+    flatten_dict
 )
 from clearpath_config.clearpath_config import ClearpathConfig
 from clearpath_config.mounts.mounts import (
@@ -22,13 +23,18 @@ from clearpath_config.platform.j100 import J100DecorationsConfig
 from clearpath_config.sensors.sensors import (
     Sensor,
     BaseSensor,
+    SensorConfig,
+    # Cameras
     Camera,
     BaseCamera,
     FlirBlackfly,
     IntelRealsense,
+    # Lidars
     Lidar2D,
     BaseLidar2D,
-    SensorConfig
+    # IMU
+    InertialMeasurementUnit,
+    BaseIMU,
 )
 from clearpath_config.system.system import SystemConfig, HostsConfig, Host
 from typing import List
@@ -523,8 +529,12 @@ class BaseSensorParser(BaseConfigParser):
             BaseSensorParser.URDF_ENABLED, config, BaseSensor.URDF_ENABLED)
         launch_enabled = cls.get_optional_val(
             BaseSensorParser.LAUNCH_ENABLED, config, BaseSensor.LAUNCH_ENABLED)
-        ros_parameters = cls.get_optional_val(
-            BaseSensorParser.ROS_PARAMETERS, config, BaseSensor.ROS_PARAMETERS)
+        ros_parameters = flatten_dict(cls.get_optional_val(
+            BaseSensorParser.ROS_PARAMETERS,
+            config,
+            BaseSensor.ROS_PARAMETERS
+            )
+        )
         return BaseSensor(
             parent=parent,
             xyz=xyz, rpy=rpy,
@@ -565,6 +575,23 @@ class BaseLidar2DParser(BaseConfigParser):
         )
 
 
+class IMUParser(BaseConfigParser):
+    MODEL = "model"
+
+    def __new__(cls, config: dict) -> BaseIMU:
+        base = BaseSensorParser(config)
+        model = cls.get_required_val(IMUParser.MODEL, config)
+        imu = InertialMeasurementUnit(model)
+        # Set Base Parameters
+        imu.set_parent(base.get_parent())
+        imu.set_xyz(base.get_xyz())
+        imu.set_rpy(base.get_rpy())
+        imu.set_urdf_enabled(base.get_urdf_enabled())
+        imu.set_launch_enabled(base.get_launch_enabled())
+        imu.set_ros_parameters(base.get_ros_parameters())
+        return imu
+
+
 class Lidar2DParser(BaseConfigParser):
     MODEL = "model"
 
@@ -578,6 +605,7 @@ class Lidar2DParser(BaseConfigParser):
         lidar2d.set_rpy(base.get_rpy())
         lidar2d.set_urdf_enabled(base.get_urdf_enabled())
         lidar2d.set_launch_enabled(base.get_launch_enabled())
+        lidar2d.set_frame_id(base.get_frame_id())
         lidar2d.set_ip(base.get_ip())
         lidar2d.set_port(base.get_port())
         lidar2d.set_min_angle(base.get_min_angle())
@@ -629,7 +657,7 @@ class CameraParser(BaseConfigParser):
     # ROS Parameters
     ROS_PARAMETERS = "ros_parameters"
 
-    def __new__(cls, config: dict) -> BaseLidar2D:
+    def __new__(cls, config: dict) -> BaseCamera:
         base = BaseCameraParser(config)
         model = cls.get_required_val(CameraParser.MODEL, config)
         camera = Camera(model)
@@ -733,6 +761,8 @@ class SensorParser(BaseConfigParser):
             return Lidar2DParser(config)
         elif model == Sensor.CAMERA:
             return CameraParser(config)
+        elif model == Sensor.IMU:
+            return IMUParser(config)
 
 
 class SensorConfigParser(BaseConfigParser):
@@ -749,6 +779,8 @@ class SensorConfigParser(BaseConfigParser):
         snrconfig.set_all_lidar_2d(cls.get_sensors(sensors, Sensor.LIDAR2D))
         # Camera
         snrconfig.set_all_camera(cls.get_sensors(sensors, Sensor.CAMERA))
+        # IMU
+        snrconfig.set_all_imu(cls.get_sensors(sensors, Sensor.IMU))
         return snrconfig
 
     @classmethod

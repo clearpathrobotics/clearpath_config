@@ -126,3 +126,14 @@ sensors:
           ip_port: 6000
           angle_max: -3.1415
           angle_min: 3.1415
+    imu:
+      - model: microstrain_imu
+        urdf_enabled: true
+        launch_enabled: true
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+        ros_parameters:
+          imu_frame_id: test_link
+          port: /dev/test
+          use_enu_frame: false
