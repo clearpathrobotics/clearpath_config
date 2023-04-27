@@ -29,9 +29,12 @@ from clearpath_config.sensors.sensors import (
     BaseCamera,
     FlirBlackfly,
     IntelRealsense,
-    # Lidars
+    # Lidar2D
     Lidar2D,
     BaseLidar2D,
+    # Lidar3D
+    Lidar3D,
+    BaseLidar3D,
     # IMU
     InertialMeasurementUnit,
     BaseIMU,
@@ -575,23 +578,6 @@ class BaseLidar2DParser(BaseConfigParser):
         )
 
 
-class IMUParser(BaseConfigParser):
-    MODEL = "model"
-
-    def __new__(cls, config: dict) -> BaseIMU:
-        base = BaseSensorParser(config)
-        model = cls.get_required_val(IMUParser.MODEL, config)
-        imu = InertialMeasurementUnit(model)
-        # Set Base Parameters
-        imu.set_parent(base.get_parent())
-        imu.set_xyz(base.get_xyz())
-        imu.set_rpy(base.get_rpy())
-        imu.set_urdf_enabled(base.get_urdf_enabled())
-        imu.set_launch_enabled(base.get_launch_enabled())
-        imu.set_ros_parameters(base.get_ros_parameters())
-        return imu
-
-
 class Lidar2DParser(BaseConfigParser):
     MODEL = "model"
 
@@ -612,6 +598,66 @@ class Lidar2DParser(BaseConfigParser):
         lidar2d.set_max_angle(base.get_max_angle())
         lidar2d.set_ros_parameters(base.get_ros_parameters())
         return lidar2d
+
+
+class BaseLidar3DParser(BaseConfigParser):
+    # Keys
+    IP = "ip"
+    PORT = "port"
+
+    def __new__(cls, config: dict) -> BaseLidar3D:
+        sensor = BaseSensorParser(config)
+        ip = cls.get_optional_val(
+            BaseLidar3DParser.IP, config, BaseLidar3D.IP_ADDRESS)
+        port = cls.get_optional_val(
+            BaseLidar3DParser.PORT, config, BaseLidar3D.IP_PORT)
+        return BaseLidar3D(
+            parent=sensor.get_parent(),
+            xyz=sensor.get_xyz(),
+            rpy=sensor.get_rpy(),
+            urdf_enabled=sensor.get_urdf_enabled(),
+            launch_enabled=sensor.get_launch_enabled(),
+            ros_parameters=sensor.get_ros_parameters(),
+            ip=ip,
+            port=port,
+        )
+
+
+class Lidar3DParser(BaseConfigParser):
+    MODEL = "model"
+
+    def __new__(cls, config: dict) -> BaseLidar3D:
+        base = BaseLidar3DParser(config)
+        model = cls.get_required_val(Lidar3DParser.MODEL, config)
+        lidar3d = Lidar3D(model)
+        # Set Base Parameters
+        lidar3d.set_parent(base.get_parent())
+        lidar3d.set_xyz(base.get_xyz())
+        lidar3d.set_rpy(base.get_rpy())
+        lidar3d.set_urdf_enabled(base.get_urdf_enabled())
+        lidar3d.set_launch_enabled(base.get_launch_enabled())
+        lidar3d.set_frame_id(base.get_frame_id())
+        lidar3d.set_ip(base.get_ip())
+        lidar3d.set_port(base.get_port())
+        lidar3d.set_ros_parameters(base.get_ros_parameters())
+        return lidar3d
+
+
+class IMUParser(BaseConfigParser):
+    MODEL = "model"
+
+    def __new__(cls, config: dict) -> BaseIMU:
+        base = BaseSensorParser(config)
+        model = cls.get_required_val(IMUParser.MODEL, config)
+        imu = InertialMeasurementUnit(model)
+        # Set Base Parameters
+        imu.set_parent(base.get_parent())
+        imu.set_xyz(base.get_xyz())
+        imu.set_rpy(base.get_rpy())
+        imu.set_urdf_enabled(base.get_urdf_enabled())
+        imu.set_launch_enabled(base.get_launch_enabled())
+        imu.set_ros_parameters(base.get_ros_parameters())
+        return imu
 
 
 class BaseCameraParser(BaseConfigParser):
@@ -759,6 +805,8 @@ class SensorParser(BaseConfigParser):
         Sensor.assert_type(model)
         if model == Sensor.LIDAR2D:
             return Lidar2DParser(config)
+        elif model == Sensor.LIDAR3D:
+            return Lidar3DParser(config)
         elif model == Sensor.CAMERA:
             return CameraParser(config)
         elif model == Sensor.IMU:
@@ -777,6 +825,8 @@ class SensorConfigParser(BaseConfigParser):
             return snrconfig
         # Lidar2D
         snrconfig.set_all_lidar_2d(cls.get_sensors(sensors, Sensor.LIDAR2D))
+        # Lidar3D
+        snrconfig.set_all_lidar_3d(cls.get_sensors(sensors, Sensor.LIDAR3D))
         # Camera
         snrconfig.set_all_camera(cls.get_sensors(sensors, Sensor.CAMERA))
         # IMU

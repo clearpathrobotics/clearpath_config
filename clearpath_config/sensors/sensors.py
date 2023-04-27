@@ -10,6 +10,10 @@ from clearpath_config.sensors.lidars_2d import (
     HokuyoUST10,
     SickLMS1XX,
 )
+from clearpath_config.sensors.lidars_3d import (
+    BaseLidar3D,
+    VelodyneLidar,
+)
 from clearpath_config.sensors.imu import (
     BaseIMU,
     Microstrain,
@@ -25,16 +29,16 @@ class InertialMeasurementUnit():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in InertialMeasurementUnit.MODEL, (
+        assert model in cls.MODEL, (
             "Model '%s' must be one of: '%s'" % (
                 model,
-                InertialMeasurementUnit.MODEL.keys()
+                cls.MODEL.keys()
             )
         )
 
     def __new__(cls, model: str) -> BaseIMU:
         cls.assert_model(model)
-        return InertialMeasurementUnit.MODEL[model]()
+        return cls.MODEL[model]()
 
 
 class Camera():
@@ -48,16 +52,16 @@ class Camera():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in Camera.MODEL, (
+        assert model in cls.MODEL, (
             "Model '%s' must be one of: '%s'" % (
                 model,
-                Camera.MODEL.keys()
+                cls.MODEL.keys()
             )
         )
 
     def __new__(cls, model: str) -> BaseCamera:
         cls.assert_model(model)
-        return Camera.MODEL[model]()
+        return cls.MODEL[model]()
 
 
 class Lidar2D():
@@ -71,46 +75,70 @@ class Lidar2D():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in Lidar2D.MODEL, (
+        assert model in cls.MODEL, (
             "Model '%s' must be one of: '%s'" % (
                 model,
-                Lidar2D.MODEL.keys()
+                cls.MODEL.keys()
             )
         )
 
     def __new__(cls, model: str) -> BaseLidar2D:
         cls.assert_model(model)
-        return Lidar2D.MODEL[model]()
+        return cls.MODEL[model]()
+
+
+class Lidar3D():
+    VELODYNE_LIDAR = VelodyneLidar.SENSOR_MODEL
+
+    MODEL = {
+        VELODYNE_LIDAR: VelodyneLidar
+    }
+
+    @classmethod
+    def assert_model(cls, model: str) -> None:
+        assert model in cls.MODEL, (
+            "Model '%s' must be one of: '%s'" % (
+                model,
+                cls.MODEL.keys()
+            )
+        )
+
+    def __new__(cls, model: str) -> BaseLidar3D:
+        cls.assert_model(model)
+        return cls.MODEL[model]()
 
 
 class Sensor():
     CAMERA = BaseCamera.SENSOR_TYPE
     LIDAR2D = BaseLidar2D.SENSOR_TYPE
+    LIDAR3D = BaseLidar3D.SENSOR_TYPE
     IMU = BaseIMU.SENSOR_TYPE
 
     TYPE = {
         CAMERA: Camera,
         LIDAR2D: Lidar2D,
+        LIDAR3D: Lidar3D,
         IMU: InertialMeasurementUnit,
     }
 
     @classmethod
     def assert_type(cls, _type: str) -> None:
-        assert _type in Sensor.TYPE, (
+        assert _type in cls.TYPE, (
             "Sensor type '%s' must be one of: '%s'" % (
                 _type,
-                Sensor.TYPE.keys()
+                cls.TYPE.keys()
             )
         )
 
-    def __new__(cls, _type: str, _model: str) -> BaseLidar2D:
+    def __new__(cls, _type: str, _model: str) -> BaseSensor:
         cls.assert_sensor_type(_type)
-        return Sensor.TYPE[_type](_model)
+        return cls.TYPE[_type](_model)
 
 
 # Sensor Config
 class SensorConfig:
     LIDAR2D_INDEX = 0
+    LIDAR3D_INDEX = 0
     CAMERA_INDEX = 0
     IMU_INDEX = 0
 
@@ -118,6 +146,10 @@ class SensorConfig:
         # 2D Lidars
         self.__lidars_2d = OrderedListConfig[BaseLidar2D](
             SensorConfig.LIDAR2D_INDEX
+        )
+        # 3D Lidars
+        self.__lidars_3d = OrderedListConfig[BaseLidar3D](
+            SensorConfig.LIDAR3D_INDEX
         )
         # Cameras
         self.__cameras = OrderedListConfig[BaseCamera](
@@ -133,6 +165,8 @@ class SensorConfig:
         sensors = []
         # Lidar2D
         sensors.extend(self.get_all_lidar_2d())
+        # Lidar3D
+        sensors.extend(self.get_all_lidar_3d())
         # Cameras
         sensors.extend(self.get_all_cameras())
         # IMU
@@ -281,6 +315,103 @@ class SensorConfig:
     def set_all_lidar_2d(self, all_lidar_2d: List[BaseLidar2D]) -> None:
         self.__lidars_2d.set_all(all_lidar_2d)
 
+    # Lidar3D: Add Lidar3D by Object or Common Lidar3D Parameters
+    def add_lidar3d(
+            self,
+            # By Object
+            lidar3d: BaseLidar3D = None,
+            # By Model and Parameters
+            model: str = None,
+            frame_id: str = BaseLidar3D.FRAME_ID,
+            ip: str = BaseLidar3D.IP_ADDRESS,
+            port: int = BaseLidar3D.IP_PORT,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        assert lidar3d or model, (
+            "Lidar3D object or model must be passed."
+        )
+        if not lidar3d and model:
+            lidar3d = Lidar3D(model)
+            lidar3d.set_frame_id(frame_id)
+            lidar3d.set_ip(ip)
+            lidar3d.set_port(port)
+            lidar3d.set_urdf_enabled(urdf_enabled)
+            lidar3d.set_launch_enabled(launch_enabled)
+            lidar3d.set_parent(parent)
+            lidar3d.set_xyz(xyz)
+            lidar3d.set_rpy(rpy)
+        self.__lidars_3d.add(lidar3d)
+
+    # Lidar3D: Add Velodyne
+    def add_velodyne(
+            self,
+            # By Object
+            velodyne: VelodyneLidar = None,
+            # By Parameters
+            frame_id: str = VelodyneLidar.FRAME_ID,
+            ip: str = VelodyneLidar.IP_ADDRESS,
+            port: int = VelodyneLidar.IP_PORT,
+            device_type: str = VelodyneLidar.DEVICE_TYPE,
+            urdf_enabled: bool = VelodyneLidar.URDF_ENABLED,
+            launch_enabled: bool = VelodyneLidar.LAUNCH_ENABLED,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        if velodyne is None:
+            velodyne = VelodyneLidar(
+                frame_id=frame_id,
+                ip=ip,
+                port=port,
+                device_type=device_type,
+                urdf_enabled=urdf_enabled,
+                launch_enabled=launch_enabled,
+                parent=parent,
+                xyz=xyz,
+                rpy=rpy
+            )
+        assert isinstance(velodyne, VelodyneLidar), (
+            "Lidar3D object must be of type VelodyneLidar"
+        )
+        self.__lidars_3d.add(velodyne)
+
+    # Lidar3D: Remove Lidar3D by passing object or index
+    def remove_lidar_3d(self, lidar_3d: BaseLidar3D | int) -> None:
+        self.__lidars_3d.remove(lidar_3d)
+
+    # Lidar3D: Get Single Object
+    def get_lidar_3d(self, idx: int) -> BaseLidar3D:
+        return self.__lidars_3d.get(idx)
+
+    # Lidar3D: Get All Objects
+    def get_all_lidar_3d(self) -> List[BaseLidar3D]:
+        return self.__lidars_3d.get_all()
+
+    # Lidar3D: Get All Objects of a Specified Model
+    def get_all_lidar_3d_by_model(self, model: str) -> List[BaseLidar3D]:
+        Lidar3D.assert_model(model)
+        all_model_lidar_3d = []
+        for lidar_3d in self.get_all_lidar_3d():
+            if lidar_3d.SENSOR_MODEL == model:
+                all_model_lidar_3d.append(lidar_3d)
+        return all_model_lidar_3d
+
+    # Lidar3D: Get All Objects of Model UST10
+    def get_all_velodyne(self) -> List[VelodyneLidar]:
+        return self.get_all_lidar_3d_by_model(Lidar3D.VELODYNE_LIDAR)
+
+    # Lidar3D: Set Lidar3D Object
+    def set_lidar_3d(self, lidar_3d: BaseLidar3D) -> None:
+        self.__lidars_3d.set(lidar_3d)
+
+    # Lidar3D: Set All Lidar3D Objects
+    def set_all_lidar_3d(self, all_lidar_3d: List[BaseLidar3D]) -> None:
+        self.__lidars_3d.set_all(all_lidar_3d)
+
     # Camera: Add Camera
     def add_camera(
             self,
@@ -415,7 +546,7 @@ class SensorConfig:
         self.__cameras.set_all(cameras)
 
     # Camera: Get All Objects of a Specified Model
-    def get_all_cameras_by_model(self, model: str) -> List[BaseLidar2D]:
+    def get_all_cameras_by_model(self, model: str) -> List[BaseCamera]:
         Camera.assert_model(model)
         all_model_camera = []
         for camera in self.get_all_cameras():
@@ -423,11 +554,11 @@ class SensorConfig:
                 all_model_camera.append(camera)
         return all_model_camera
 
-    # Lidar2D: Get All Objects of Model UST10
+    # Camera: Get All Objects of Model UST10
     def get_all_realsense(self) -> List[IntelRealsense]:
         return self.get_all_cameras_by_model(Camera.INTEL_REALSENSE)
 
-    # Lidar2D: Get All Objects of Model LMS1XX
+    # Camera: Get All Objects of Model LMS1XX
     def get_all_blackfly(self) -> List[FlirBlackfly]:
         return self.get_all_cameras_by_model(Camera.FLIR_BLACKFLY)
 
