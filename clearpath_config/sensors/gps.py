@@ -140,8 +140,8 @@ class SwiftNavDuro(BaseGPS):
     IP_PORT = 55555
 
     class ROS_PARAMETER_KEYS:
-        GPS_FRAME = "gps_receiver_frame"
-        IMU_FRAME = "imu_frame"
+        GPS_FRAME = "gps_receiver_frame_id"
+        IMU_FRAME = "imu_frame_id"
 
     def __init__(
             self,

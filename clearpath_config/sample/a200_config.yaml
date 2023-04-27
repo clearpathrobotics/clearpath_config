@@ -113,8 +113,8 @@ sensors:
         ros_parameters:
           ip_address: 192.168.131.30
           port: 55555
-          gps_receiver_frame: duro
-          imu_frame: duro
+          gps_receiver_frame_id: duro
+          imu_frame_id: duro
     lidar3d:
       - model: velodyne_lidar
         urdf_enabled: true
