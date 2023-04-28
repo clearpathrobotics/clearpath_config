@@ -127,7 +127,7 @@ class BaseIMU(BaseSensor):
 class Microstrain(BaseIMU):
     SENSOR_MODEL = "microstrain_imu"
 
-    PORT = "/dev/ttyACM0"
+    PORT = "/dev/microstrain_main"
     FRAME_ID = "link"
     USE_ENU = True
 
