@@ -160,6 +160,8 @@ class VelodyneLidar(BaseLidar3D):
 
     class ROS_PARAMETER_KEYS:
         DEVICE_TYPE = "model"
+        FIXED_FRAME = "fixed_frame"
+        TARGET_FRAME = "target_frame"
 
     def __init__(
             self,
@@ -208,6 +210,22 @@ class VelodyneLidar(BaseLidar3D):
                     key=self.ROS_PARAMETER_KEYS.DEVICE_TYPE,
                     get=lambda obj: obj.get_device_type(),
                     set=lambda obj, val: obj.set_device_type(val)
+                )
+            ),
+            # Fixed Frame
+            self.ROS_PARAMETER_KEYS.FIXED_FRAME: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.FIXED_FRAME,
+                    get=lambda obj: obj.get_frame_id(),
+                    set=lambda obj, val: obj.set_frame_id(val),
+                )
+            ),
+            # Target Frame
+            self.ROS_PARAMETER_KEYS.TARGET_FRAME: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.TARGET_FRAME,
+                    get=lambda obj: obj.get_frame_id(),
+                    set=lambda obj, val: obj.set_frame_id(val),
                 )
             ),
         }
