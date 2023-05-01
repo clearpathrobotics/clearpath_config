@@ -478,6 +478,8 @@ class ListConfig(Generic[T, U]):
             self,
             obj: T
             ) -> None:
+        if obj is None:
+            return
         if self.find(obj) is None:
             self.add(obj)
         else:
