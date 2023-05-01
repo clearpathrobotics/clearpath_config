@@ -14,7 +14,8 @@ from clearpath_config.mounts.mounts import (
 from clearpath_config.platform.base import BaseDecorationsConfig
 from clearpath_config.platform.decorations import (
     Bumper,
-    TopPlate
+    TopPlate,
+    Structure
 )
 from clearpath_config.mounts.pacs import PACS
 from clearpath_config.platform.platform import PlatformConfig
@@ -215,6 +216,27 @@ class TopPlateConfigParser(BaseConfigParser):
         return topconfig
 
 
+class StructureConfigParser(BaseConfigParser):
+    # Structure Keys
+    ENABLED = "enabled"
+    MODEL = "model"
+
+    def __new__(cls, key: str, config: dict) -> Structure:
+        structconfig = Structure(key)
+        # Structure
+        structure = cls.get_optional_val(key, config)
+        if not structure:
+            return None
+        # Structure.Enable
+        if cls.get_optional_val(cls.ENABLED, structure, Structure.ENABLED):
+            structconfig.enable()
+        else:
+            structconfig.disable()
+        # Structure.Model
+        structconfig.set_model(cls.get_optional_val(cls.MODEL, structure))
+        return structconfig
+
+
 class DecorationsConfigParser(BaseConfigParser):
     # Key
     DECORATIONS = "decorations"
@@ -224,6 +246,7 @@ class DecorationsConfigParser(BaseConfigParser):
         FRONT_BUMPER = "front_bumper"
         REAR_BUMPER = "rear_bumper"
         TOP_PLATE = "top_plate"
+        STRUCTURE = "structure"
         PACS = "pacs"
 
         def __new__(cls, config: dict) -> A200DecorationsConfig:
@@ -243,6 +266,9 @@ class DecorationsConfigParser(BaseConfigParser):
             # Decorations.Top_Plate
             dcnconfig.set_top_plate(
                 TopPlateConfigParser(cls.TOP_PLATE, decorations))
+            # Decorations.SensorArch
+            dcnconfig.set_structure(
+                StructureConfigParser(cls.STRUCTURE, decorations))
             return dcnconfig
 
     class J100:

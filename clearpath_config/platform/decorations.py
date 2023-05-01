@@ -133,13 +133,46 @@ class TopPlate(BaseDecoration):
         )
 
 
+class Structure(BaseDecoration):
+    """
+    Structure:
+     - enabled: can be toggled
+     - model: type of structure must be selected
+    """
+    DECORATION_MODEL = "structure"
+    DEFAULT = ""
+    ARCH_300 = "sensor_arch_300"
+    ARCH_510 = "sensor_arch_510"
+    MODELS = [DEFAULT, ARCH_300, ARCH_510]
+
+    def __init__(
+            self,
+            name: str = DECORATION_MODEL,
+            enabled: bool = BaseDecoration.ENABLED,
+            model: str = DEFAULT,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(
+            name,
+            enabled,
+            model,
+            parent,
+            xyz,
+            rpy
+        )
+
+
 class Decoration():
     BUMPER = Bumper.DECORATION_MODEL
     TOP_PLATE = TopPlate.DECORATION_MODEL
+    STRUCTURE = Structure.DECORATION_MODEL
 
     MODEL = {
         BUMPER: Bumper,
-        TOP_PLATE: TopPlate
+        TOP_PLATE: TopPlate,
+        STRUCTURE: Structure
     }
 
     def __new__(cls, model: str) -> BaseDecoration:
