@@ -5,6 +5,14 @@ from clearpath_config.sensors.cameras import (
     FlirBlackfly,
     IntelRealsense,
 )
+from clearpath_config.sensors.gps import (
+    BaseGPS,
+    SwiftNavDuro
+)
+from clearpath_config.sensors.imu import (
+    BaseIMU,
+    Microstrain,
+)
 from clearpath_config.sensors.lidars_2d import (
     BaseLidar2D,
     HokuyoUST10,
@@ -14,10 +22,7 @@ from clearpath_config.sensors.lidars_3d import (
     BaseLidar3D,
     VelodyneLidar,
 )
-from clearpath_config.sensors.imu import (
-    BaseIMU,
-    Microstrain,
-)
+
 from typing import List
 
 
@@ -60,6 +65,27 @@ class Camera():
         )
 
     def __new__(cls, model: str) -> BaseCamera:
+        cls.assert_model(model)
+        return cls.MODEL[model]()
+
+
+class GlobalPositioningSystem():
+    SWIFTNAV_DURO = SwiftNavDuro.SENSOR_MODEL
+
+    MODEL = {
+        SWIFTNAV_DURO: SwiftNavDuro,
+    }
+
+    @classmethod
+    def assert_model(cls, model: str) -> None:
+        assert model in cls.MODEL, (
+            "Model '%s' must be one of: '%s'" % (
+                model,
+                cls.MODEL.keys()
+            )
+        )
+
+    def __new__(cls, model: str) -> BaseGPS:
         cls.assert_model(model)
         return cls.MODEL[model]()
 
@@ -113,12 +139,14 @@ class Sensor():
     LIDAR2D = BaseLidar2D.SENSOR_TYPE
     LIDAR3D = BaseLidar3D.SENSOR_TYPE
     IMU = BaseIMU.SENSOR_TYPE
+    GPS = BaseGPS.SENSOR_TYPE
 
     TYPE = {
         CAMERA: Camera,
         LIDAR2D: Lidar2D,
         LIDAR3D: Lidar3D,
         IMU: InertialMeasurementUnit,
+        GPS: GlobalPositioningSystem,
     }
 
     @classmethod
@@ -141,6 +169,7 @@ class SensorConfig:
     LIDAR3D_INDEX = 0
     CAMERA_INDEX = 0
     IMU_INDEX = 0
+    GPS_INDEX = 0
 
     def __init__(self) -> None:
         # 2D Lidars
@@ -159,6 +188,10 @@ class SensorConfig:
         self.__imu = OrderedListConfig[BaseIMU](
             SensorConfig.IMU_INDEX
         )
+        # GPS
+        self.__gps = OrderedListConfig[BaseGPS](
+            SensorConfig.GPS_INDEX
+        )
 
     # Get All Sensors
     def get_all_sensors(self) -> List[BaseSensor]:
@@ -171,6 +204,8 @@ class SensorConfig:
         sensors.extend(self.get_all_cameras())
         # IMU
         sensors.extend(self.get_all_imu())
+        # GPS
+        sensors.extend(self.get_all_gps())
         return sensors
 
     # Lidar2D: Add Lidar2D by Object or Common Lidar2D Parameters
@@ -657,3 +692,99 @@ class SensorConfig:
     # IMU: Set All IMU
     def set_all_imu(self, all_imu: List[BaseIMU]) -> None:
         self.__imu.set_all(all_imu)
+
+    # GPS: Add GPS by Object or Common GPS Parameters
+    def add_gps(
+            self,
+            # By Object
+            gps:  BaseGPS = None,
+            # By Model and Paramters
+            model: str = None,
+            frame_id: str = BaseGPS.FRAME_ID,
+            ip: str = BaseGPS.IP_ADDRESS,
+            port: int = BaseGPS.IP_PORT,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        assert gps or model, (
+            "GPS object or model must be passed."
+        )
+        if not gps and model:
+            gps = GlobalPositioningSystem(model)
+            gps.set_frame_id(frame_id)
+            gps.set_ip(ip)
+            gps.set_port(port)
+            gps.set_urdf_enabled(urdf_enabled)
+            gps.set_launch_enabled(launch_enabled)
+            gps.set_parent(parent)
+            gps.set_xyz(xyz)
+            gps.set_rpy(rpy)
+        self.__gps.add(gps)
+
+    # GPS: Add SwiftNav Duro
+    def add_duro(
+            self,
+            # By Object
+            duro: SwiftNavDuro = None,
+            # By Parameters
+            frame_id: str = SwiftNavDuro.FRAME_ID,
+            ip: str = SwiftNavDuro.IP_ADDRESS,
+            port: int = SwiftNavDuro.IP_PORT,
+            urdf_enabled: bool = SwiftNavDuro.URDF_ENABLED,
+            launch_enabled: bool = SwiftNavDuro.LAUNCH_ENABLED,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        if duro is None:
+            duro = SwiftNavDuro(
+                frame_id=frame_id,
+                ip=ip,
+                port=port,
+                urdf_enabled=urdf_enabled,
+                launch_enabled=launch_enabled,
+                parent=parent,
+                xyz=xyz,
+                rpy=rpy
+            )
+        assert isinstance(duro, SwiftNavDuro), (
+            "GPS object must be of type UST10"
+        )
+        self.__gps.add(duro)
+
+    # GPS: Remove GPS by passing object or index
+    def remove_gps(self, gps:  BaseGPS | int) -> None:
+        self.__gps.remove(gps)
+
+    # GPS: Get Single Object
+    def get_gps(self, idx: int) -> BaseGPS:
+        return self.__gps.get(idx)
+
+    # GPS: Get All Objects
+    def get_all_gps(self) -> List[BaseGPS]:
+        return self.__gps.get_all()
+
+    # GPS: Get All Objects of a Specified Model
+    def get_all_gps_by_model(self, model: str) -> List[BaseGPS]:
+        GlobalPositioningSystem.assert_model(model)
+        all_model_gps = []
+        for gps in self.get_all_gps():
+            if gps.SENSOR_MODEL == model:
+                all_model_gps.append(gps)
+        return all_model_gps
+
+    # GPS: Get All Objects of Model UST10
+    def get_all_duro(self) -> List[SwiftNavDuro]:
+        return self.get_all_gps_by_model(
+            GlobalPositioningSystem.SWIFTNAV_DURO)
+
+    # GPS: Set GPS Object
+    def set_gps(self, gps:  BaseGPS) -> None:
+        self.__gps.set(gps)
+
+    # GPS: Set All GPS Objects
+    def set_all_gps(self, all_gps: List[BaseGPS]) -> None:
+        self.__gps.set_all(all_gps)

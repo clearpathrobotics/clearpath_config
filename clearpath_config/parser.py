@@ -38,6 +38,9 @@ from clearpath_config.sensors.sensors import (
     # IMU
     InertialMeasurementUnit,
     BaseIMU,
+    # GPS
+    GlobalPositioningSystem,
+    BaseGPS,
 )
 from clearpath_config.system.system import SystemConfig, HostsConfig, Host
 from typing import List
@@ -643,6 +646,53 @@ class Lidar3DParser(BaseConfigParser):
         return lidar3d
 
 
+class BaseGPSParser(BaseConfigParser):
+    # Keys
+    IP = "ip"
+    PORT = "port"
+    FRAME_ID = "frame_id"
+
+    def __new__(cls, config: dict) -> BaseGPS:
+        sensor = BaseSensorParser(config)
+        ip = cls.get_optional_val(
+            BaseGPSParser.IP, config, BaseGPS.IP_ADDRESS)
+        port = cls.get_optional_val(
+            BaseGPSParser.PORT, config, BaseGPS.IP_PORT)
+        frame_id = cls.get_optional_val(
+            BaseGPSParser.FRAME_ID, config, BaseGPS.FRAME_ID)
+        return BaseGPS(
+            parent=sensor.get_parent(),
+            xyz=sensor.get_xyz(),
+            rpy=sensor.get_rpy(),
+            urdf_enabled=sensor.get_urdf_enabled(),
+            launch_enabled=sensor.get_launch_enabled(),
+            ros_parameters=sensor.get_ros_parameters(),
+            ip=ip,
+            port=port,
+            frame_id=frame_id
+        )
+
+
+class GPSParser(BaseConfigParser):
+    MODEL = "model"
+
+    def __new__(cls, config: dict) -> BaseGPS:
+        base = BaseGPSParser(config)
+        model = cls.get_required_val(GPSParser.MODEL, config)
+        gps = GlobalPositioningSystem(model)
+        # Set Base Parameters
+        gps.set_parent(base.get_parent())
+        gps.set_xyz(base.get_xyz())
+        gps.set_rpy(base.get_rpy())
+        gps.set_urdf_enabled(base.get_urdf_enabled())
+        gps.set_launch_enabled(base.get_launch_enabled())
+        gps.set_frame_id(base.get_frame_id())
+        gps.set_ip(base.get_ip())
+        gps.set_port(base.get_port())
+        gps.set_ros_parameters(base.get_ros_parameters())
+        return gps
+
+
 class IMUParser(BaseConfigParser):
     MODEL = "model"
 
@@ -811,6 +861,8 @@ class SensorParser(BaseConfigParser):
             return CameraParser(config)
         elif model == Sensor.IMU:
             return IMUParser(config)
+        elif model == Sensor.GPS:
+            return GPSParser(config)
 
 
 class SensorConfigParser(BaseConfigParser):
@@ -831,6 +883,8 @@ class SensorConfigParser(BaseConfigParser):
         snrconfig.set_all_camera(cls.get_sensors(sensors, Sensor.CAMERA))
         # IMU
         snrconfig.set_all_imu(cls.get_sensors(sensors, Sensor.IMU))
+        # GPS
+        snrconfig.set_all_gps(cls.get_sensors(sensors, Sensor.GPS))
         return snrconfig
 
     @classmethod

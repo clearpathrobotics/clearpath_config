@@ -1,5 +1,12 @@
-from clearpath_config.common import ListConfig, Platform
-from clearpath_config.platform.decorations import BaseDecoration, Bumper, TopPlate
+from clearpath_config.common import (
+    ListConfig,
+    Platform,
+)
+from clearpath_config.platform.decorations import (
+    BaseDecoration,
+    Bumper,
+    TopPlate,
+)
 from typing import List
 
 
