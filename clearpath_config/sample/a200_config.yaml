@@ -27,6 +27,8 @@ platform: # These are are parameters specific to a a platform
             model: default
         top_plate:
             model: pacs
+        structure:
+            model: sensor_arch_510
     extras:
         urdf: /fake/path/empty.urdf.xacro
         control: /fake/path/empty.yaml
