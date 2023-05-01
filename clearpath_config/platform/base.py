@@ -48,9 +48,12 @@ class BaseDecorationsConfig:
             bumper: Bumper = None,
             # By Parameters
             name: str = None,
-            enabled: bool = True,
-            extension: float = 0.0,
+            enabled: bool = Bumper.ENABLED,
             model: str = Bumper.DEFAULT,
+            extension: float = Bumper.EXTENSION,
+            parent: str = Bumper.PARENT,
+            xyz: List[float] = Bumper.XYZ,
+            rpy: List[float] = Bumper.RPY
             ) -> None:
         assert bumper or name, "Bumper object or name must be passed"
         # Create Object
@@ -58,8 +61,11 @@ class BaseDecorationsConfig:
             bumper = Bumper(
                 name=name,
                 enabled=enabled,
+                model=model,
                 extension=extension,
-                model=model
+                parent=parent,
+                xyz=xyz,
+                rpy=rpy,
             )
         self.__bumpers.add(bumper)
 
@@ -107,13 +113,19 @@ class BaseDecorationsConfig:
             name: str = None,
             enabled: bool = True,
             model: str = TopPlate.DEFAULT,
+            parent: str = TopPlate.PARENT,
+            xyz: List[float] = TopPlate.XYZ,
+            rpy: List[float] = TopPlate.RPY
             ) -> None:
         assert top_plate or name, "Top plate object or name must be passed."
         if name and not top_plate:
             top_plate = TopPlate(
                 name=name,
                 enabled=enabled,
-                model=model
+                model=model,
+                parent=parent,
+                xyz=xyz,
+                rpy=rpy
             )
         self.__top_plates.add(top_plate)
 

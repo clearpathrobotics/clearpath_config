@@ -1,30 +1,31 @@
-class BaseDecoration:
+from clearpath_config.common import Accessory
+from typing import List
+
+
+class BaseDecoration(Accessory):
     """
     BaseDecoration
      - enable: whether decoration is enabled or not
      - model: what type of that decoration it is
     """
     DECORATION_MODEL = "base_decoration"
+    ENABLED = False
     DEFAULT = "default"
     MODELS = [DEFAULT]
 
     def __init__(
             self,
             name: str = DECORATION_MODEL,
-            enabled: bool = False,
-            model: str = DEFAULT
+            enabled: bool = ENABLED,
+            model: str = DEFAULT,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
             ) -> None:
+        super().__init__(name, parent, xyz, rpy)
         self.enabled: bool = bool(enabled)
-        self.name: str = BaseDecoration.DECORATION_MODEL
-        self.set_name(name)
         self.model: str = BaseDecoration.DEFAULT
         self.set_model(model)
-
-    def get_name(self) -> str:
-        return self.name
-
-    def set_name(self, name) -> None:
-        self.name = name
 
     def get_enabled(self) -> bool:
         return self.enabled
@@ -57,6 +58,7 @@ class Bumper(BaseDecoration):
      - extension: meters by which it is extended
     """
     DECORATION_MODEL = "bumper"
+    EXTENSION = 0.0
     DEFAULT = "default"
     WIBOTIC = "wibotic"
     MODELS = [DEFAULT, WIBOTIC]
@@ -64,12 +66,22 @@ class Bumper(BaseDecoration):
     def __init__(
             self,
             name: str = DECORATION_MODEL,
-            enabled: bool = False,
+            enabled: bool = BaseDecoration.ENABLED,
             model: str = DEFAULT,
-            extension: float = 0.0,
+            extension: float = EXTENSION,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
             ) -> None:
-        super().__init__(name, enabled, model)
-        self.extension: float = 0.0
+        super().__init__(
+            name,
+            enabled,
+            model,
+            parent,
+            xyz,
+            rpy
+        )
+        self.extension: float = Bumper.EXTENSION
         self.set_extension(extension)
 
     def get_extension(self) -> float:
@@ -105,10 +117,20 @@ class TopPlate(BaseDecoration):
     def __init__(
             self,
             name: str = DECORATION_MODEL,
-            enabled: bool = False,
-            model: str = DEFAULT
+            enabled: bool = BaseDecoration.ENABLED,
+            model: str = DEFAULT,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
             ) -> None:
-        super().__init__(name, enabled, model)
+        super().__init__(
+            name,
+            enabled,
+            model,
+            parent,
+            xyz,
+            rpy
+        )
 
 
 class Decoration():
