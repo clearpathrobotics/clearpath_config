@@ -159,7 +159,7 @@ class Sensor():
         )
 
     def __new__(cls, _type: str, _model: str) -> BaseSensor:
-        cls.assert_sensor_type(_type)
+        cls.assert_type(_type)
         return cls.TYPE[_type](_model)
 
 
