@@ -17,6 +17,16 @@ from clearpath_config.platform.decorations import (
     TopPlate,
     Structure
 )
+from clearpath_config.accessories.accessories import (
+    AccessoryConfig,
+    URDFAccessory,
+    BaseAccessory,
+    Link,
+    Box,
+    Cylinder,
+    Sphere,
+    Mesh
+)
 from clearpath_config.mounts.pacs import PACS
 from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.platform.a200 import A200DecorationsConfig
@@ -350,6 +360,101 @@ class AccessoryParser(BaseConfigParser):
         rpy = cls.get_optional_val(
             AccessoryParser.RPY, config, Accessory.RPY)
         return Accessory(name, parent, xyz, rpy)
+
+
+class URDFAccessoryParser(BaseConfigParser):
+    # Keys
+    OFFSET_XYZ = "offset_xyz"
+    OFFSET_RPY = "offset_rpy"
+    SIZE = "size"
+    RADIUS = "radius"
+    LENGTH = "length"
+    VISUAL = "visual"
+
+    def __new__(cls, model: str, config: dict) -> BaseAccessory:
+        acc = AccessoryParser(config)
+        urdf = URDFAccessory(model, acc.get_name())
+        # Set Common Parameters
+        urdf.set_parent(acc.get_parent())
+        urdf.set_xyz(acc.get_xyz())
+        urdf.set_rpy(acc.get_rpy())
+        # Set Individual Parameters
+        if model == URDFAccessory.LINK:
+            pass
+        elif model == URDFAccessory.BOX:
+            urdf.set_size(
+                cls.get_optional_val(
+                    URDFAccessoryParser.SIZE,
+                    config,
+                    Box.SIZE
+                ))
+        elif model == URDFAccessory.CYLINDER:
+            urdf.set_radius(
+                cls.get_optional_val(
+                    URDFAccessoryParser.RADIUS,
+                    config,
+                    Cylinder.RADIUS
+                ))
+            urdf.set_length(
+                cls.get_optional_val(
+                    URDFAccessoryParser.LENGTH,
+                    config,
+                    Cylinder.LENGTH
+                ))
+        elif model == URDFAccessory.SPHERE:
+            urdf.set_radius(
+                cls.get_optional_val(
+                    URDFAccessoryParser.RADIUS,
+                    config,
+                    Sphere.RADIUS
+                ))
+        elif model == URDFAccessory.MESH:
+            urdf.set_visual(
+                cls.get_optional_val(
+                    URDFAccessoryParser.VISUAL,
+                    config,
+                    Mesh.VISUAL
+                ))
+        return urdf
+
+
+class AccessoryConfigParser(BaseConfigParser):
+    # Key
+    ACCESSORIES = "accessories"
+    ACCESSORIES_CONFIG = {}
+
+    def __new__(cls, config: dict) -> AccessoryConfig:
+        accconfig = AccessoryConfig()
+        # Accessories
+        accessories = cls.get_optional_val(cls.ACCESSORIES, config)
+        if accessories is None:
+            return accconfig
+        accconfig.set_all_links(
+            cls.get_accessories(accessories, URDFAccessory.LINK))
+        accconfig.set_all_boxes(
+            cls.get_accessories(accessories, URDFAccessory.BOX))
+        accconfig.set_all_cylinders(
+            cls.get_accessories(accessories, URDFAccessory.CYLINDER))
+        accconfig.set_all_spheres(
+            cls.get_accessories(accessories, URDFAccessory.SPHERE))
+        accconfig.set_all_meshes(
+            cls.get_accessories(accessories, URDFAccessory.MESH))
+        return accconfig
+
+    @classmethod
+    def get_accessories(cls, config: dict, model: str) -> List[BaseAccessory]:
+        # Assert Dictionary
+        assert isinstance(config, dict), (
+            "Accessories must be a dictionary"
+        )
+        entries = cls.get_optional_val(model, config, [])
+        assert isinstance(entries, list), (
+            "Model entries must be in a list"
+        )
+        models = []
+        for entry in entries:
+            models.append(URDFAccessoryParser(model, entry))
+        return models
 
 
 class MountParser(BaseConfigParser):
@@ -987,6 +1092,8 @@ class ClearpathConfigParser(BaseConfigParser):
         cprconfig = ClearpathConfig()
         # SystemConfig
         cprconfig.system = SystemConfigParser(config)
+        # AccessoryConfig
+        cprconfig.accessories = AccessoryConfigParser(config)
         # PlatformConfig
         cprconfig.platform = PlatformConfigParser(config)
         # MountConfig

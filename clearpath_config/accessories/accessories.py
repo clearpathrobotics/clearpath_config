@@ -32,9 +32,9 @@ class URDFAccessory():
             )
         )
 
-    def __new__(cls, _type: str, _model: str) -> BaseAccessory:
+    def __new__(cls, _type: str, name: str) -> BaseAccessory:
         cls.assert_type(_type)
-        return cls.TYPE[_type](_model)
+        return cls.TYPE[_type](name=name)
 
 
 # Accessory Config
@@ -55,15 +55,15 @@ class AccessoryConfig:
     def get_all_accessories(self) -> List[BaseAccessory]:
         accessories = []
         # Link
-        accessories.append(self.get_all_links())
+        accessories.extend(self.get_all_links())
         # Box
-        accessories.append(self.get_all_boxes())
+        accessories.extend(self.get_all_boxes())
         # Cylinder
-        accessories.append(self.get_all_cylinders())
+        accessories.extend(self.get_all_cylinders())
         # Sphere
-        accessories.append(self.get_all_spheres())
+        accessories.extend(self.get_all_spheres())
         # Mesh
-        accessories.append(self.get_all_meshes())
+        accessories.extend(self.get_all_meshes())
         return accessories
 
     # Link: Add by Object or Parameters
