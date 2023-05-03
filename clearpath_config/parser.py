@@ -11,8 +11,12 @@ from clearpath_config.mounts.mounts import (
     FlirPTU,
     FathPivot
 )
-from clearpath_config.platform.base import BaseDecorationsConfig
+from clearpath_config.platform.base import (
+    BaseDecorationsConfig,
+    BaseDecoration
+)
 from clearpath_config.platform.decorations import (
+    Decoration,
     Bumper,
     TopPlate,
     Structure
@@ -181,70 +185,53 @@ class SystemConfigParser(BaseConfigParser):
         return sysconfig
 
 
-class BumperConfigParser(BaseConfigParser):
-    # Bumper Keys
+class DecorationConfigParser(BaseConfigParser):
+    # Keys
     ENABLED = "enabled"
+    MODEL = "model"
+    PARENT = "parent"
+    XYZ = "xyz"
+    RPY = "rpy"
+    # Bumper
     EXTENSION = "extension"
-    MODEL = "model"
 
-    def __new__(cls, key: str, config: dict) -> Bumper:
-        bmpconfig = Bumper(key)
-        # Bumper
-        bumper = cls.get_optional_val(key, config)
-        if not bumper:
-            return bmpconfig
-        # Bumper.Enable
-        if cls.get_optional_val(cls.ENABLED, bumper, True):
-            bmpconfig.enable()
-        else:
-            bmpconfig.disable()
-        # Bumper.Extension
-        bmpconfig.set_extension(cls.get_required_val(cls.EXTENSION, bumper))
-        # Bumper.Model
-        bmpconfig.set_model(cls.get_required_val(cls.MODEL, bumper))
-        return bmpconfig
-
-
-class TopPlateConfigParser(BaseConfigParser):
-    # Top Plate Keys
-    ENABLED = "enabled"
-    MODEL = "model"
-
-    def __new__(cls, key: str, config: dict) -> TopPlate:
-        topconfig = TopPlate(key)
-        # Top_Plate
-        top_plate = cls.get_optional_val(key, config)
-        if not top_plate:
-            return topconfig
-        # Top_Plate.Enable
-        if cls.get_optional_val(cls.ENABLED, top_plate, True):
-            topconfig.enable()
-        else:
-            topconfig.disable()
-        # Top_Plate.Model
-        topconfig.set_model(cls.get_required_val(cls.MODEL, top_plate))
-        return topconfig
-
-
-class StructureConfigParser(BaseConfigParser):
-    # Structure Keys
-    ENABLED = "enabled"
-    MODEL = "model"
-
-    def __new__(cls, key: str, config: dict) -> Structure:
-        structconfig = Structure(key)
-        # Structure
-        structure = cls.get_optional_val(key, config)
-        if not structure:
-            return None
-        # Structure.Enable
-        if cls.get_optional_val(cls.ENABLED, structure, Structure.ENABLED):
-            structconfig.enable()
-        else:
-            structconfig.disable()
-        # Structure.Model
-        structconfig.set_model(cls.get_optional_val(cls.MODEL, structure))
-        return structconfig
+    def __new__(cls, key: str, model: str, config: dict) -> BaseDecoration:
+        dcrconfig = Decoration(model)
+        dcrtype = Decoration.MODEL[model]
+        # Decoration Name
+        dcrconfig.set_name(key)
+        # Get Keys
+        decoration = cls.get_optional_val(key, config)
+        if not decoration:
+            return decoration
+        # Base.Enable
+        dcrconfig.set_enabled(
+            cls.get_optional_val(cls.ENABLED, decoration, dcrtype.ENABLED)
+        )
+        # Base.Model
+        dcrconfig.set_model(
+            cls.get_optional_val(cls.MODEL, decoration, dcrtype.DEFAULT)
+        )
+        # Base.Parent
+        dcrconfig.set_parent(
+            cls.get_optional_val(cls.PARENT, decoration, dcrtype.PARENT)
+        )
+        # Base.XYZ
+        dcrconfig.set_xyz(
+            cls.get_optional_val(cls.XYZ, decoration, dcrtype.XYZ)
+        )
+        # Base.RPY
+        dcrconfig.set_rpy(
+            cls.get_optional_val(cls.RPY, decoration, dcrtype.RPY)
+        )
+        # Bumper.EXTENSION
+        if model == Decoration.BUMPER:
+            dcrconfig.set_extension(
+                cls.get_optional_val(
+                    cls.EXTENSION, decoration, dcrtype.EXTENSION
+                )
+            )
+        return dcrconfig
 
 
 class DecorationsConfigParser(BaseConfigParser):
@@ -269,16 +256,36 @@ class DecorationsConfigParser(BaseConfigParser):
                 return dcnconfig
             # Decorations.Front_Bumper
             dcnconfig.set_bumper(
-                BumperConfigParser(cls.FRONT_BUMPER, decorations))
+                DecorationConfigParser(
+                    key=cls.FRONT_BUMPER,
+                    model=Decoration.BUMPER,
+                    config=decorations
+                )
+            )
             # Decorations.Rear_Bumper
             dcnconfig.set_bumper(
-                BumperConfigParser(cls.REAR_BUMPER, decorations))
+                DecorationConfigParser(
+                    key=cls.REAR_BUMPER,
+                    model=Decoration.BUMPER,
+                    config=decorations
+                )
+            )
             # Decorations.Top_Plate
             dcnconfig.set_top_plate(
-                TopPlateConfigParser(cls.TOP_PLATE, decorations))
+                DecorationConfigParser(
+                    key=cls.TOP_PLATE,
+                    model=Decoration.TOP_PLATE,
+                    config=decorations,
+                )
+            )
             # Decorations.SensorArch
             dcnconfig.set_structure(
-                StructureConfigParser(cls.STRUCTURE, decorations))
+                DecorationConfigParser(
+                    key=cls.STRUCTURE,
+                    model=Decoration.STRUCTURE,
+                    config=decorations
+                )
+            )
             return dcnconfig
 
     class J100:
@@ -296,10 +303,20 @@ class DecorationsConfigParser(BaseConfigParser):
                 return dcnconfig
             # Decorations.Front_Bumper
             dcnconfig.set_bumper(
-                BumperConfigParser(cls.FRONT_BUMPER, decorations))
+                DecorationConfigParser(
+                    key=cls.FRONT_BUMPER,
+                    model=Decoration.BUMPER,
+                    config=decorations
+                )
+            )
             # Decorations.Rear_Bumper
             dcnconfig.set_bumper(
-                BumperConfigParser(cls.REAR_BUMPER, decorations))
+                DecorationConfigParser(
+                    key=cls.REAR_BUMPER,
+                    model=Decoration.BUMPER,
+                    config=decorations
+                )
+            )
             return dcnconfig
 
     MODEL_CONFIGS = {Platform.A200: A200, Platform.J100: J100}

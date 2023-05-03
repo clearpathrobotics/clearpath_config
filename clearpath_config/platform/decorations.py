@@ -27,6 +27,9 @@ class BaseDecoration(Accessory):
         self.model: str = BaseDecoration.DEFAULT
         self.set_model(model)
 
+    def set_enabled(self, enable: bool) -> None:
+        self.enable = bool(enable)
+
     def get_enabled(self) -> bool:
         return self.enabled
 
