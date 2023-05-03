@@ -18,18 +18,26 @@ system: # These are system level configs
 
 platform: # These are are parameters specific to a a platform
     serial_number: cpr-a200-0001
-    controller: ps4
+    controller: logitech # ps4 or logitech
     decorations: # Platform specific accessories
         front_bumper:
             extension: 0.1
             model: wibotic
+            xyz: [0.0, 0.0, 0.0]
+            rpy: [0.0, 0.0, 0.0]
         rear_bumper:
             extension: 0
             model: default
+            xyz: [0.0, 0.0, 0.0]
+            rpy: [0.0, 0.0, 0.0]
         top_plate:
             model: pacs
+            xyz: [0.0, 0.0, 0.0]
+            rpy: [0.0, 0.0, 0.0]
         structure:
             model: sensor_arch_510
+            xyz: [0.0, 0.0, 0.0]
+            rpy: [0.0, 0.0, 0.0]
     extras:
         urdf: /fake/path/empty.urdf.xacro
         control: /fake/path/empty.yaml
