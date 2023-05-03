@@ -333,7 +333,10 @@ class PlatformConfigParser(BaseConfigParser):
             cls.get_required_val(cls.SERIAL_NUMBER, platform))
         # Platform.Controller
         pfmconfig.set_controller(
-            cls.get_optional_val(cls.CONTROLLER, platform, PlatformConfig.CONTROLLER))
+            cls.get_optional_val(
+                cls.CONTROLLER,
+                platform,
+                PlatformConfig.CONTROLLER))
         # Platform.Decorations
         pfmconfig.decorations = (
             DecorationsConfigParser(pfmconfig.get_model(), platform))
