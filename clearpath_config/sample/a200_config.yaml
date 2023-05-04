@@ -18,6 +18,7 @@ system: # These are system level configs
 
 platform: # These are are parameters specific to a a platform
     serial_number: cpr-a200-0001
+    controller: logitech # ps4 or logitech
     decorations: # Platform specific accessories
         front_bumper:
             extension: 0.1

@@ -61,14 +61,23 @@ class ExtrasConfig:
 # PlatformConfig:
 # - platform level configuration options
 class PlatformConfig:
+    # Controllers
+    PS4 = "ps4"
+    LOGITECH = "logitech"
+    CONTROLLER = PS4
+    CONTROLLERS = [PS4, LOGITECH]
+
     def __init__(
         self,
         serial: str = "generic",
+        controller: str = CONTROLLER,
         decorations: BaseDecorationsConfig = None,
         extras: ExtrasConfig = None,
     ) -> None:
         self.serial = SerialNumber(sn=serial)
         self.model = self.serial.get_model()
+        self.controller: str = PlatformConfig.CONTROLLER
+        self.set_controller(controller)
         self.decorations = DecorationsConfig(model=self.get_model())
         self.extras = ExtrasConfig()
         if decorations:
@@ -101,6 +110,15 @@ class PlatformConfig:
 
     def get_serial_number(self, prefix: bool = False) -> str:
         return self.serial.get_serial(prefix)
+
+    def set_controller(self, controller: str) -> None:
+        assert controller in PlatformConfig.CONTROLLERS, (
+            "Controller must be one of '%s'" % PlatformConfig.CONTROLLERS
+        )
+        self.controller = controller
+
+    def get_controller(self) -> str:
+        return self.controller
 
     def get_unit_number(self) -> str:
         return self.serial.get_unit()

@@ -334,6 +334,7 @@ class PlatformConfigParser(BaseConfigParser):
     PLATFORM = "platform"
     # Platform Keys
     SERIAL_NUMBER = "serial_number"
+    CONTROLLER = "controller"
     DECORATIONS = "decorations"
     EXTRAS = "extras"
     # Platform Extras KEys
@@ -347,6 +348,12 @@ class PlatformConfigParser(BaseConfigParser):
         # Platform.SerialNumber
         pfmconfig.set_serial_number(
             cls.get_required_val(cls.SERIAL_NUMBER, platform))
+        # Platform.Controller
+        pfmconfig.set_controller(
+            cls.get_optional_val(
+                cls.CONTROLLER,
+                platform,
+                PlatformConfig.CONTROLLER))
         # Platform.Decorations
         pfmconfig.decorations = (
             DecorationsConfigParser(pfmconfig.get_model(), platform))
