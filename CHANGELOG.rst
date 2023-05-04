@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.1 (2023-05-04)
+------------------
 * Merge pull request `#17 <https://github.com/clearpathrobotics/clearpath_config/issues/17>`_ from clearpathrobotics/readme
   Updated README with up-to-date configs
 * Merge pull request `#16 <https://github.com/clearpathrobotics/clearpath_config/issues/16>`_ from clearpathrobotics/ros2
