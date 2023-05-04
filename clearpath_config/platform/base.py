@@ -6,6 +6,7 @@ from clearpath_config.platform.decorations import (
     BaseDecoration,
     Bumper,
     TopPlate,
+    Structure,
 )
 from typing import List
 
@@ -33,12 +34,16 @@ class BaseDecorationsConfig:
         self.__top_plates = ListConfig[
             TopPlate, str](
                 uid=ListConfig.uid_name)
+        self.__structures = ListConfig[
+            Structure, str](
+                uid=ListConfig.uid_name)
 
     # Decorations: Get All
     def get_all_decorations(self) -> List[BaseDecoration]:
         decorations = []
         decorations.extend(self.get_bumpers())
         decorations.extend(self.get_top_plates())
+        decorations.extend(self.get_structures())
         return decorations
 
     # Bumper: Add
@@ -48,9 +53,12 @@ class BaseDecorationsConfig:
             bumper: Bumper = None,
             # By Parameters
             name: str = None,
-            enabled: bool = True,
-            extension: float = 0.0,
+            enabled: bool = Bumper.ENABLED,
             model: str = Bumper.DEFAULT,
+            extension: float = Bumper.EXTENSION,
+            parent: str = Bumper.PARENT,
+            xyz: List[float] = Bumper.XYZ,
+            rpy: List[float] = Bumper.RPY
             ) -> None:
         assert bumper or name, "Bumper object or name must be passed"
         # Create Object
@@ -58,8 +66,11 @@ class BaseDecorationsConfig:
             bumper = Bumper(
                 name=name,
                 enabled=enabled,
+                model=model,
                 extension=extension,
-                model=model
+                parent=parent,
+                xyz=xyz,
+                rpy=rpy,
             )
         self.__bumpers.add(bumper)
 
@@ -107,13 +118,19 @@ class BaseDecorationsConfig:
             name: str = None,
             enabled: bool = True,
             model: str = TopPlate.DEFAULT,
+            parent: str = TopPlate.PARENT,
+            xyz: List[float] = TopPlate.XYZ,
+            rpy: List[float] = TopPlate.RPY
             ) -> None:
         assert top_plate or name, "Top plate object or name must be passed."
         if name and not top_plate:
             top_plate = TopPlate(
                 name=name,
                 enabled=enabled,
-                model=model
+                model=model,
+                parent=parent,
+                xyz=xyz,
+                rpy=rpy
             )
         self.__top_plates.add(top_plate)
 
@@ -151,3 +168,65 @@ class BaseDecorationsConfig:
             top_plates: List[TopPlate]
             ) -> None:
         self.__top_plates.set_all(top_plates)
+
+    # Structure: Add
+    def add_structure(
+            self,
+            # By Object
+            structure: Structure = None,
+            # By Parameters
+            name: str = None,
+            enabled: bool = Structure.ENABLED,
+            model: str = Structure.DEFAULT,
+            parent: str = Structure.PARENT,
+            xyz: List[float] = Structure.XYZ,
+            rpy: List[float] = Structure.RPY
+            ) -> None:
+        assert structure or name, (
+            "Structure object or name must be passed")
+        # Create Object
+        if name and not structure:
+            structure = Structure(
+                name=name,
+                enabled=enabled,
+                model=model,
+                parent=parent,
+                xyz=xyz,
+                rpy=rpy
+            )
+        self.__structures.add(structure)
+
+    # Structure: Remove
+    def remove_structure(
+            self,
+            # By Object or Name
+            structure: Structure | str,
+            ) -> None:
+        self.__structures.remove(structure)
+
+    # Structure: Get
+    def get_structure(
+            self,
+            name: str
+            ) -> Structure:
+        return self.__structures.get(name)
+
+    # Structure: Get All
+    def get_structures(
+            self
+            ) -> List[Structure]:
+        return self.__structures.get_all()
+
+    # Structure: Set
+    def set_structure(
+            self,
+            structure: Structure
+            ) -> None:
+        self.__structures.set(structure)
+
+    # Structure: Set All
+    def set_structures(
+            self,
+            structures: List[Structure]
+            ) -> None:
+        self.__structures.set_all(structures)

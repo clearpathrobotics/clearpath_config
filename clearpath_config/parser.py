@@ -11,10 +11,25 @@ from clearpath_config.mounts.mounts import (
     FlirPTU,
     FathPivot
 )
-from clearpath_config.platform.base import BaseDecorationsConfig
+from clearpath_config.platform.base import (
+    BaseDecorationsConfig,
+    BaseDecoration
+)
 from clearpath_config.platform.decorations import (
+    Decoration,
     Bumper,
-    TopPlate
+    TopPlate,
+    Structure
+)
+from clearpath_config.accessories.accessories import (
+    AccessoryConfig,
+    URDFAccessory,
+    BaseAccessory,
+    Link,
+    Box,
+    Cylinder,
+    Sphere,
+    Mesh
 )
 from clearpath_config.mounts.pacs import PACS
 from clearpath_config.platform.platform import PlatformConfig
@@ -170,49 +185,53 @@ class SystemConfigParser(BaseConfigParser):
         return sysconfig
 
 
-class BumperConfigParser(BaseConfigParser):
-    # Bumper Keys
+class DecorationConfigParser(BaseConfigParser):
+    # Keys
     ENABLED = "enabled"
+    MODEL = "model"
+    PARENT = "parent"
+    XYZ = "xyz"
+    RPY = "rpy"
+    # Bumper
     EXTENSION = "extension"
-    MODEL = "model"
 
-    def __new__(cls, key: str, config: dict) -> Bumper:
-        bmpconfig = Bumper(key)
-        # Bumper
-        bumper = cls.get_optional_val(key, config)
-        if not bumper:
-            return bmpconfig
-        # Bumper.Enable
-        if cls.get_optional_val(cls.ENABLED, bumper, True):
-            bmpconfig.enable()
-        else:
-            bmpconfig.disable()
-        # Bumper.Extension
-        bmpconfig.set_extension(cls.get_required_val(cls.EXTENSION, bumper))
-        # Bumper.Model
-        bmpconfig.set_model(cls.get_required_val(cls.MODEL, bumper))
-        return bmpconfig
-
-
-class TopPlateConfigParser(BaseConfigParser):
-    # Top Plate Keys
-    ENABLED = "enabled"
-    MODEL = "model"
-
-    def __new__(cls, key: str, config: dict) -> TopPlate:
-        topconfig = TopPlate(key)
-        # Top_Plate
-        top_plate = cls.get_optional_val(key, config)
-        if not top_plate:
-            return topconfig
-        # Top_Plate.Enable
-        if cls.get_optional_val(cls.ENABLED, top_plate, True):
-            topconfig.enable()
-        else:
-            topconfig.disable()
-        # Top_Plate.Model
-        topconfig.set_model(cls.get_required_val(cls.MODEL, top_plate))
-        return topconfig
+    def __new__(cls, key: str, model: str, config: dict) -> BaseDecoration:
+        dcrconfig = Decoration(model)
+        dcrtype = Decoration.MODEL[model]
+        # Decoration Name
+        dcrconfig.set_name(key)
+        # Get Keys
+        decoration = cls.get_optional_val(key, config)
+        if not decoration:
+            return decoration
+        # Base.Enable
+        dcrconfig.set_enabled(
+            cls.get_optional_val(cls.ENABLED, decoration, dcrtype.ENABLED)
+        )
+        # Base.Model
+        dcrconfig.set_model(
+            cls.get_optional_val(cls.MODEL, decoration, dcrtype.DEFAULT)
+        )
+        # Base.Parent
+        dcrconfig.set_parent(
+            cls.get_optional_val(cls.PARENT, decoration, dcrtype.PARENT)
+        )
+        # Base.XYZ
+        dcrconfig.set_xyz(
+            cls.get_optional_val(cls.XYZ, decoration, dcrtype.XYZ)
+        )
+        # Base.RPY
+        dcrconfig.set_rpy(
+            cls.get_optional_val(cls.RPY, decoration, dcrtype.RPY)
+        )
+        # Bumper.EXTENSION
+        if model == Decoration.BUMPER:
+            dcrconfig.set_extension(
+                cls.get_optional_val(
+                    cls.EXTENSION, decoration, dcrtype.EXTENSION
+                )
+            )
+        return dcrconfig
 
 
 class DecorationsConfigParser(BaseConfigParser):
@@ -224,6 +243,7 @@ class DecorationsConfigParser(BaseConfigParser):
         FRONT_BUMPER = "front_bumper"
         REAR_BUMPER = "rear_bumper"
         TOP_PLATE = "top_plate"
+        STRUCTURE = "structure"
         PACS = "pacs"
 
         def __new__(cls, config: dict) -> A200DecorationsConfig:
@@ -236,13 +256,36 @@ class DecorationsConfigParser(BaseConfigParser):
                 return dcnconfig
             # Decorations.Front_Bumper
             dcnconfig.set_bumper(
-                BumperConfigParser(cls.FRONT_BUMPER, decorations))
+                DecorationConfigParser(
+                    key=cls.FRONT_BUMPER,
+                    model=Decoration.BUMPER,
+                    config=decorations
+                )
+            )
             # Decorations.Rear_Bumper
             dcnconfig.set_bumper(
-                BumperConfigParser(cls.REAR_BUMPER, decorations))
+                DecorationConfigParser(
+                    key=cls.REAR_BUMPER,
+                    model=Decoration.BUMPER,
+                    config=decorations
+                )
+            )
             # Decorations.Top_Plate
             dcnconfig.set_top_plate(
-                TopPlateConfigParser(cls.TOP_PLATE, decorations))
+                DecorationConfigParser(
+                    key=cls.TOP_PLATE,
+                    model=Decoration.TOP_PLATE,
+                    config=decorations,
+                )
+            )
+            # Decorations.SensorArch
+            dcnconfig.set_structure(
+                DecorationConfigParser(
+                    key=cls.STRUCTURE,
+                    model=Decoration.STRUCTURE,
+                    config=decorations
+                )
+            )
             return dcnconfig
 
     class J100:
@@ -260,10 +303,20 @@ class DecorationsConfigParser(BaseConfigParser):
                 return dcnconfig
             # Decorations.Front_Bumper
             dcnconfig.set_bumper(
-                BumperConfigParser(cls.FRONT_BUMPER, decorations))
+                DecorationConfigParser(
+                    key=cls.FRONT_BUMPER,
+                    model=Decoration.BUMPER,
+                    config=decorations
+                )
+            )
             # Decorations.Rear_Bumper
             dcnconfig.set_bumper(
-                BumperConfigParser(cls.REAR_BUMPER, decorations))
+                DecorationConfigParser(
+                    key=cls.REAR_BUMPER,
+                    model=Decoration.BUMPER,
+                    config=decorations
+                )
+            )
             return dcnconfig
 
     MODEL_CONFIGS = {Platform.A200: A200, Platform.J100: J100}
@@ -324,6 +377,101 @@ class AccessoryParser(BaseConfigParser):
         rpy = cls.get_optional_val(
             AccessoryParser.RPY, config, Accessory.RPY)
         return Accessory(name, parent, xyz, rpy)
+
+
+class URDFAccessoryParser(BaseConfigParser):
+    # Keys
+    OFFSET_XYZ = "offset_xyz"
+    OFFSET_RPY = "offset_rpy"
+    SIZE = "size"
+    RADIUS = "radius"
+    LENGTH = "length"
+    VISUAL = "visual"
+
+    def __new__(cls, model: str, config: dict) -> BaseAccessory:
+        acc = AccessoryParser(config)
+        urdf = URDFAccessory(model, acc.get_name())
+        # Set Common Parameters
+        urdf.set_parent(acc.get_parent())
+        urdf.set_xyz(acc.get_xyz())
+        urdf.set_rpy(acc.get_rpy())
+        # Set Individual Parameters
+        if model == URDFAccessory.LINK:
+            pass
+        elif model == URDFAccessory.BOX:
+            urdf.set_size(
+                cls.get_optional_val(
+                    URDFAccessoryParser.SIZE,
+                    config,
+                    Box.SIZE
+                ))
+        elif model == URDFAccessory.CYLINDER:
+            urdf.set_radius(
+                cls.get_optional_val(
+                    URDFAccessoryParser.RADIUS,
+                    config,
+                    Cylinder.RADIUS
+                ))
+            urdf.set_length(
+                cls.get_optional_val(
+                    URDFAccessoryParser.LENGTH,
+                    config,
+                    Cylinder.LENGTH
+                ))
+        elif model == URDFAccessory.SPHERE:
+            urdf.set_radius(
+                cls.get_optional_val(
+                    URDFAccessoryParser.RADIUS,
+                    config,
+                    Sphere.RADIUS
+                ))
+        elif model == URDFAccessory.MESH:
+            urdf.set_visual(
+                cls.get_optional_val(
+                    URDFAccessoryParser.VISUAL,
+                    config,
+                    Mesh.VISUAL
+                ))
+        return urdf
+
+
+class AccessoryConfigParser(BaseConfigParser):
+    # Key
+    ACCESSORIES = "accessories"
+    ACCESSORIES_CONFIG = {}
+
+    def __new__(cls, config: dict) -> AccessoryConfig:
+        accconfig = AccessoryConfig()
+        # Accessories
+        accessories = cls.get_optional_val(cls.ACCESSORIES, config)
+        if accessories is None:
+            return accconfig
+        accconfig.set_all_links(
+            cls.get_accessories(accessories, URDFAccessory.LINK))
+        accconfig.set_all_boxes(
+            cls.get_accessories(accessories, URDFAccessory.BOX))
+        accconfig.set_all_cylinders(
+            cls.get_accessories(accessories, URDFAccessory.CYLINDER))
+        accconfig.set_all_spheres(
+            cls.get_accessories(accessories, URDFAccessory.SPHERE))
+        accconfig.set_all_meshes(
+            cls.get_accessories(accessories, URDFAccessory.MESH))
+        return accconfig
+
+    @classmethod
+    def get_accessories(cls, config: dict, model: str) -> List[BaseAccessory]:
+        # Assert Dictionary
+        assert isinstance(config, dict), (
+            "Accessories must be a dictionary"
+        )
+        entries = cls.get_optional_val(model, config, [])
+        assert isinstance(entries, list), (
+            "Model entries must be in a list"
+        )
+        models = []
+        for entry in entries:
+            models.append(URDFAccessoryParser(model, entry))
+        return models
 
 
 class MountParser(BaseConfigParser):
@@ -961,6 +1109,8 @@ class ClearpathConfigParser(BaseConfigParser):
         cprconfig = ClearpathConfig()
         # SystemConfig
         cprconfig.system = SystemConfigParser(config)
+        # AccessoryConfig
+        cprconfig.accessories = AccessoryConfigParser(config)
         # PlatformConfig
         cprconfig.platform = PlatformConfigParser(config)
         # MountConfig

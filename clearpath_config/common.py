@@ -319,10 +319,8 @@ class Accessory():
         return self.xyz
 
     def set_xyz(self, xyz: List[float]) -> None:
-        assert all(
-            [isinstance(i, float) for i in xyz]
-        ), "XYZ must have all float entries"
-        assert len(xyz) == 3, (
+        self.assert_valid_triplet(
+            xyz,
             "XYZ must be a list of exactly three float values"
         )
         self.xyz = xyz
@@ -331,11 +329,10 @@ class Accessory():
         return self.rpy
 
     def set_rpy(self, rpy: List[float]) -> None:
-        assert all(
-            [isinstance(i, float) for i in rpy]
-        ), "RPY must have all float entries"
-        assert len(rpy) == 3, (
-            "RPY must be a list of exactly three float values")
+        self.assert_valid_triplet(
+            rpy,
+            "RPY must be a list of exactly three float values"
+        )
         self.rpy = rpy
 
     @staticmethod
@@ -350,6 +347,17 @@ class Accessory():
         assert not link[0].isdigit(), (
             "Link name '%s' must not start with a digit" % link
         )
+
+    @staticmethod
+    def assert_valid_triplet(tri: List[float], msg: str = None) -> None:
+        if msg is None:
+            msg = "Triplet must be a list of three float values"
+        # Triplet must be a list
+        assert isinstance(tri, list), msg
+        # Triplet must have a length of 3
+        assert len(tri) == 3, msg
+        # Triplet must be all floats
+        assert all([isinstance(i, float) for i in tri])
 
 
 class IndexedAccessory(Accessory):
@@ -478,6 +486,8 @@ class ListConfig(Generic[T, U]):
             self,
             obj: T
             ) -> None:
+        if obj is None:
+            return
         if self.find(obj) is None:
             self.add(obj)
         else:

@@ -22,14 +22,56 @@ platform: # These are are parameters specific to a a platform
         front_bumper:
             extension: 0.1
             model: wibotic
+            xyz: [0.0, 0.0, 0.0]
+            rpy: [0.0, 0.0, 0.0]
         rear_bumper:
             extension: 0
             model: default
+            xyz: [0.0, 0.0, 0.0]
+            rpy: [0.0, 0.0, 0.0]
         top_plate:
             model: pacs
+            xyz: [0.0, 0.0, 0.0]
+            rpy: [0.0, 0.0, 0.0]
+        structure:
+            model: sensor_arch_510
+            xyz: [0.0, 0.0, 0.0]
+            rpy: [0.0, 0.0, 0.0]
     extras:
         urdf: /fake/path/empty.urdf.xacro
         control: /fake/path/empty.yaml
+
+accessories:
+    link:
+      - name: test_link
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+    box:
+      - name: test_box
+        size: [0.01, 0.01, 0.01]
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+    cylinder:
+      - name: test_cylinder
+        radius: 0.01
+        length: 0.01
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+    sphere:
+      - name: test_sphere
+        radius: 0.01
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
+    mesh:
+      - name: test_mesh
+        visual: fake_mesh.stl
+        parent: base_link
+        xyz: [0.0, 0.0, 0.0]
+        rpy: [0.0, 0.0, 0.0]
 
 mounts:
     fath_pivot:
