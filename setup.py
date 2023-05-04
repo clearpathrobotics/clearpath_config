@@ -5,7 +5,7 @@ package_name = "clearpath_config"
 
 setup(
     name=package_name,
-    version=clearpath_config.__version__,
+    version="0.0.1",
     packages=[
         package_name,
         package_name + ".platform",
