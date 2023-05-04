@@ -1,5 +1,4 @@
 from setuptools import setup
-import clearpath_config
 
 package_name = "clearpath_config"
 
