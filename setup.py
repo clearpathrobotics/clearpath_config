@@ -1,18 +1,27 @@
 from setuptools import setup
 import clearpath_config
 
+package_name = "clearpath_config"
+
 setup(
-    name="clearpath_config",
-    packages=[
-        "clearpath_config",
-        "clearpath_config.platform",
-        "clearpath_config.system",
-        "clearpath_config.mounts",
-        "clearpath_config.sensors"
-    ],
+    name=package_name,
     version=clearpath_config.__version__,
+    packages=[
+        package_name,
+        package_name + ".platform",
+        package_name + ".system",
+        package_name + ".mounts",
+        package_name + ".sensors"
+    ],
     install_requires=[
+        "setuptools",
         "requests",
         'importlib-metadata; python_version == "3.8"',
     ],
+    zip_safe=True,
+    maintainer="Luis Camero",
+    maintainer_email="lcamero@clearpathrobotics.com",
+    description="Clearpath Configuration YAML Parser and Writer",
+    license="BSD-3",
+    tests_require=['pytest']
 )
