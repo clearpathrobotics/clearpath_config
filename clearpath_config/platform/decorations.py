@@ -9,7 +9,7 @@ class BaseDecoration(Accessory):
      - model: what type of that decoration it is
     """
     DECORATION_MODEL = "base_decoration"
-    ENABLED = False
+    ENABLED = True
     DEFAULT = "default"
     MODELS = [DEFAULT]
 
