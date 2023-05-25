@@ -1,4 +1,5 @@
 from setuptools import setup
+import os
 
 package_name = "clearpath_config"
 
@@ -11,6 +12,13 @@ setup(
         package_name + ".system",
         package_name + ".mounts",
         package_name + ".sensors"
+    ],
+    data_files=[
+        # Install marker file in the package index
+        ("share/ament_index/resource_index/packages",
+            ["resource/" + package_name]),
+        # Include the package.xml file
+        (os.path.join("share", package_name), ["package.xml"]),
     ],
     install_requires=[
         "setuptools",
