@@ -11,7 +11,8 @@ setup(
         package_name + ".platform",
         package_name + ".system",
         package_name + ".mounts",
-        package_name + ".sensors"
+        package_name + ".sensors",
+        package_name + ".accessories",
     ],
     data_files=[
         # Install marker file in the package index

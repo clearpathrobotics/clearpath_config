@@ -12,9 +12,11 @@ system: # These are system level configs
             CPR12345: 10.10.10.101
             USERS-PC: 10.10.10.1
     ros2:
-        namespace: HOSTNAME
-        domain_id: 123
+        username: administrator
+        namespace: a200_0001
+        domain_id: 0
         rmw_implementation: rmw_fastrtps_cpp
+        workspaces: []
 
 platform: # These are are parameters specific to a a platform
     serial_number: cpr-a200-0001
