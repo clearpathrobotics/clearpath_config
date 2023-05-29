@@ -57,7 +57,12 @@ from clearpath_config.sensors.sensors import (
     GlobalPositioningSystem,
     BaseGPS,
 )
-from clearpath_config.system.system import SystemConfig, HostsConfig, Host
+from clearpath_config.system.system import (
+    SystemConfig,
+    HostsConfig,
+    Host,
+    RMWImplementation
+)
 from typing import List
 import os
 import yaml
@@ -170,16 +175,57 @@ class HostsConfigParser(BaseConfigParser):
 class SystemConfigParser(BaseConfigParser):
     # Key
     SYSTEM = "system"
+    ROS2 = "ros2"
     # System Keys
     SELF = "self"
     HOSTS = "hosts"
+    USERNAME = "username"
+    NAMESPACE = "namespace"
+    DOMAIN_ID = "domain_id"
+    RMW = "rmw_implementation"
+    WORKSPACES = "workspaces"
 
     def __new__(cls, config: dict) -> SystemConfig:
         sysconfig = SystemConfig()
         # System
         system = cls.get_required_val(cls.SYSTEM, config)
+        ros2 = cls.get_required_val(cls.ROS2, system)
         # System.Self
         sysconfig.set_self(cls.get_required_val(cls.SELF, system))
+        # System.Username
+        sysconfig.set_username(cls.get_required_val(cls.USERNAME, ros2))
+        # System.Namespace
+        sysconfig.set_namespace(
+            cls.get_optional_val(
+                cls.NAMESPACE,
+                ros2,
+                "/"
+            )
+        )
+        # System.DomainID
+        sysconfig.set_domain_id(
+            cls.get_optional_val(
+                cls.DOMAIN_ID,
+                ros2,
+                0
+            )
+        )
+        # System.RMW
+        sysconfig.set_rmw_implementation(
+            cls.get_optional_val(
+                cls.RMW,
+                ros2,
+                RMWImplementation.FAST_RTPS
+            )
+        )
+        # System.Workspaces
+        sysconfig.set_workspaces(
+            cls.get_optional_val(
+                cls.WORKSPACES,
+                ros2,
+                []
+            )
+        )
         # System.Hosts
         sysconfig.set_hosts(HostsConfigParser(system))
         return sysconfig

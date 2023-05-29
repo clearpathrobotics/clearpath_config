@@ -44,7 +44,7 @@ class Hostname:
         return self.hostname
 
     @staticmethod
-    def is_valid(hostname: str):
+    def is_valid(hostname: str) -> bool:
         # Max 253 ASCII Characters
         if len(hostname) > 253:
             return False
@@ -79,6 +79,93 @@ class Hostname:
                 "[A-Z][0-9] and hypens ('-')"
             )
         )
+
+
+# Username
+class Username:
+    def __init__(self, username: str = "administrator") -> None:
+        self.assert_valid(username)
+        self.username = username
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, str):
+            return self.username == other
+        elif isinstance(other, Username):
+            return self.username == other.username
+        return False
+
+    def __str__(self) -> str:
+        return self.username
+
+    @staticmethod
+    def is_valid(username: str):
+        # Check Type
+        if not isinstance(username, str):
+            return False
+        # Max 255 Characters
+        if len(username) > 255:
+            return False
+        # Convention
+        # - [a-z] lowercase characters
+        # - [0-9] numbers
+        # - underscores
+        # - dashes
+        # - may end in $
+        allowed = re.compile(r"[-a-z0-9_]")
+        return all(allowed.match(c) for c in username)
+
+    @staticmethod
+    def assert_valid(username: str):
+        # Check Type
+        assert isinstance(username, str), (
+            "Username '%s' must of type 'str'"
+        )
+        # Max 255 Characters
+        assert len(username) < 256, (
+            "Username '%s' exceeds 255 ASCII character limit." % username
+        )
+        # Regex Convention
+        allowed = re.compile(r"[-a-z0-9_]")
+        assert all(allowed.match(c) for c in username), (
+            "Username '%s' cannot contain characters other than: %s, %s, %s, %s" % (
+                username,
+                "lowercase letters",
+                "digits",
+                "underscores",
+                "dashes"
+            )
+        )
+
+
+class DomainID:
+    def __init__(self, id: int = 0) -> None:
+        self.assert_valid(id)
+        self.id = id
+
+    def __int__(self) -> int:
+        return self.id
+
+    @staticmethod
+    def is_valid(id: int) -> bool:
+        # Check Type
+        if not isinstance(id, int):
+            return False
+        # 0-101 Range
+        if not (0 <= id <= 101):
+            return False
+        return True
+
+    @staticmethod
+    def assert_valid(id: int) -> None:
+        # Check Type
+        assert isinstance(id, int), (
+            "Domain ID must be an integer"
+        )
+        # 0 - 101 Range
+        assert 0 <= id <= 101, (
+            "Domain ID must be in range 0 - 101"
+        )
+        return
 
 
 # IP
