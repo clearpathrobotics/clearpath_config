@@ -107,6 +107,11 @@ class PlatformConfig:
             SensorConfig.IMU_INDEX = 1
         else:
             SensorConfig.IMU_INDEX = 0
+        # Increment GPS Count
+        if self.get_model() == Platform.J100:
+            SensorConfig.GPS_INDEX = 1
+        else:
+            SensorConfig.GPS_INDEX = 0
 
     def get_serial_number(self, prefix: bool = False) -> str:
         return self.serial.get_serial(prefix)
