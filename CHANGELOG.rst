@@ -2,6 +2,14 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed gps indexing
+* Added system ROS2 parameters
+* Decorations enabled by default
+* Added resource and package.xml to install data files
+* Contributors: Luis Camero
+
 0.0.1 (2023-05-04)
 ------------------
 * Merge pull request `#17 <https://github.com/clearpathrobotics/clearpath_config/issues/17>`_ from clearpathrobotics/readme
