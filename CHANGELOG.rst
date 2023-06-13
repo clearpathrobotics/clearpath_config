@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2023-06-12)
+------------------
 * Fixed gps indexing
 * Added system ROS2 parameters
 * Decorations enabled by default
