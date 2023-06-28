@@ -1,3 +1,4 @@
+from clearpath_config.common.types.serial_number import SerialNumber
 from clearpath_config.common.utils.dictionary import (
     flatten_dict,
     get_from_dict,
@@ -8,6 +9,8 @@ from typing import Any, Callable
 
 
 class BaseConfig:
+    _SERIAL_NUMBER = SerialNumber("generic")
+    _VERSION = 0
     DLIM = "."
 
     def __init__(
@@ -48,6 +51,8 @@ class BaseConfig:
 
     @config.setter
     def config(self, value: dict) -> None:
+        if value is None:
+            return
         assert isinstance(value, dict), (
             "config must be of type 'dict'"
         )
@@ -61,4 +66,4 @@ class BaseConfig:
 
     def set_config_param(self, key: str, value: Any) -> None:
         keys = key.split(BaseConfig.DLIM)
-        set_in_dict(d=self.config, map=keys, val=value)
+        set_in_dict(d=self._config, map=keys, val=value)

@@ -6,9 +6,22 @@ from clearpath_config.common.types.platform import Platform
 # - ex. cpr-j100-0100
 # - drop 'cpr' prefix as it is not required
 class SerialNumber:
+    SERIAL_NUMBER = "serial_number"
 
     def __init__(self, sn: str) -> None:
         self.model, self.unit = SerialNumber.parse(sn)
+
+    def __str__(self) -> str:
+        return self.get_serial()
+
+    def from_dict(self, config: dict) -> None:
+        assert isinstance(config, dict), (
+            "Config must be of type 'dict'"
+        )
+        assert self.SERIAL_NUMBER in config, (
+            "Key '%s' must be in config" % self.SERIAL_NUMBER
+        )
+        self.model, self.unit = SerialNumber.parse(config[self.SERIAL_NUMBER])
 
     @staticmethod
     def parse(sn: str) -> tuple:
@@ -54,6 +67,3 @@ class SerialNumber:
             return "-".join(["cpr", self.model, self.unit])
         else:
             return "-".join([self.model, self.unit])
-
-
-SERIAL_NUMBER = SerialNumber("generic")
