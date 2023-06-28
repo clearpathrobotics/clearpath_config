@@ -1,16 +1,14 @@
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.host import Host
 from clearpath_config.common.types.hostname import Hostname
-from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.list import ListConfig
-from clearpath_config.common.types.serial_number import SERIAL_NUMBER
 from clearpath_config.common.utils.dictionary import flip_dict
 from typing import List
 
 
 # HostListConfig
 # - list of hosts
-class HostListConfig(ListConfig[Host, IP]):
+class HostListConfig(ListConfig[Host, str]):
     def __init__(self) -> None:
         super().__init__(
             uid=lambda obj: obj.get_hostname(),
@@ -47,9 +45,9 @@ class HostsConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        KEYS[SELF]: SERIAL_NUMBER.get_serial(),
+        KEYS[SELF]: BaseConfig._SERIAL_NUMBER.get_serial(),
         KEYS[PLATFORM]: {
-            SERIAL_NUMBER.get_serial(): "192.168.131.1"
+            BaseConfig._SERIAL_NUMBER.get_serial(): "192.168.131.1"
         },
         KEYS[ONBOARD]: {},
         KEYS[REMOTE]: {}
@@ -148,6 +146,10 @@ class HostsConfig(BaseConfig):
     # - these are additional on-board computer
     @property
     def onboard(self) -> HostListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.ONBOARD],
+            value=self._onboard.to_dict()
+        )
         return self._onboard
 
     @onboard.setter
@@ -177,7 +179,7 @@ class HostsConfig(BaseConfig):
             )
         self.set_config_param(
             key=self.KEYS[self.ONBOARD],
-            value=self.onboard.to_dict()
+            value=self._onboard.to_dict()
         )
 
     # Remote:
@@ -185,6 +187,10 @@ class HostsConfig(BaseConfig):
     # - ex. laptops or other robots
     @property
     def remote(self) -> HostListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.REMOTE],
+            value=self._remote.to_dict()
+        )
         return self._remote
 
     @remote.setter
@@ -214,5 +220,5 @@ class HostsConfig(BaseConfig):
             )
         self.set_config_param(
             key=self.KEYS[self.REMOTE],
-            value=self.remote.to_dict()
+            value=self._remote.to_dict()
         )
