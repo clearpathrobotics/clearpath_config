@@ -1,5 +1,6 @@
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.serial_number import SerialNumber
+from clearpath_config.common.utils.yaml import read_yaml, write_yaml
 from clearpath_config.system.system import SystemConfig
 from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.accessories.accessories import AccessoryConfig
@@ -41,6 +42,8 @@ class ClearpathConfig(BaseConfig):
     }
 
     def __init__(self, config: dict | str = None) -> None:
+        # Read YAML
+        config = self.read(config)
         # Initialization
         self._config = {}
         self.version = self.DEFAULTS[self.VERSION]
@@ -58,6 +61,16 @@ class ClearpathConfig(BaseConfig):
         }
         # Set from Config
         super().__init__(setters, config)
+
+    def read(self, file: str | dict) -> None:
+        self._file = None
+        if isinstance(file, dict):
+            return file
+        self._file = file
+        return read_yaml(file)
+
+    def write(self, file: str) -> None:
+        write_yaml(file)
 
     @property
     def serial_number(self) -> str:
