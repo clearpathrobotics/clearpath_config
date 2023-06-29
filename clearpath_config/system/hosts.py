@@ -69,10 +69,10 @@ class HostsConfig(BaseConfig):
         self.remote = remote
         # Setter Template
         setters = {
-            self.KEYS[self.SELF]: self.setter(HostsConfig.self),
-            self.KEYS[self.PLATFORM]: self.setter(HostsConfig.platform),
-            self.KEYS[self.ONBOARD]: self.setter(HostsConfig.onboard),
-            self.KEYS[self.REMOTE]: self.setter(HostsConfig.remote)
+            self.KEYS[self.SELF]: HostsConfig.self,
+            self.KEYS[self.PLATFORM]: HostsConfig.platform,
+            self.KEYS[self.ONBOARD]: HostsConfig.onboard,
+            self.KEYS[self.REMOTE]: HostsConfig.remote
         }
         # Set from Config
         super().__init__(setters, config, self.HOSTS)
@@ -101,8 +101,12 @@ class HostsConfig(BaseConfig):
     # Platform:
     # - the main computer for this system (i.e. the robot's computer)
     @property
-    def platform(self) -> dict:
-        return self._platform.to_dict()
+    def platform(self) -> Host:
+        self.set_config_param(
+            key=self.KEYS[self.PLATFORM],
+            value=self._platform.to_dict()
+        )
+        return self._platform
 
     @platform.setter
     def platform(self, value: dict | Host) -> None:
@@ -120,10 +124,6 @@ class HostsConfig(BaseConfig):
             assert isinstance(value, dict) or isinstance(value, Host), (
                 "Platform must be of type 'dict' or 'Host'"
             )
-        self.set_config_param(
-            key=self.KEYS[self.PLATFORM],
-            value=self.platform
-        )
 
     @property
     def platform_ip(self) -> str:
@@ -177,10 +177,6 @@ class HostsConfig(BaseConfig):
                     dict.__name__, list.__name__, HostListConfig.__name__
                 )
             )
-        self.set_config_param(
-            key=self.KEYS[self.ONBOARD],
-            value=self._onboard.to_dict()
-        )
 
     # Remote:
     # - these are remote machines which need to interact with the system
@@ -218,7 +214,3 @@ class HostsConfig(BaseConfig):
                     dict.__name__, list.__name__, HostListConfig.__name__
                 )
             )
-        self.set_config_param(
-            key=self.KEYS[self.REMOTE],
-            value=self._remote.to_dict()
-        )

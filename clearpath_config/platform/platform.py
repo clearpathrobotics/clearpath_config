@@ -47,17 +47,22 @@ class PlatformConfig(BaseConfig):
         self.extras = extras
         # Setter Template
         setters = {
-            self.KEYS[self.CONTROLLER]:
-                self.setter(PlatformConfig.controller),
-            self.KEYS[self.DECORATIONS]:
-                self.setter(PlatformConfig.decorations),
-            self.KEYS[self.EXTRAS]:
-                self.setter(PlatformConfig.extras)
+            self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
+            self.KEYS[self.DECORATIONS]: PlatformConfig.decorations,
+            self.KEYS[self.EXTRAS]: PlatformConfig.extras
         }
         super().__init__(setters, config, self.PLATFORM)
 
+    def update(self, serial_number=False) -> None:
+        if serial_number:
+            self.decorations = None
+
     @property
     def controller(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.CONTROLLER],
+            value=self._controller
+        )
         return self._controller
 
     @controller.setter
@@ -67,26 +72,26 @@ class PlatformConfig(BaseConfig):
                 value.lower(),
                 [self.PS4, self.LOGITECH]))
         self._controller = value.lower()
-        self.set_config_param(
-            key=self.KEYS[self.CONTROLLER],
-            value=self.controller
-        )
 
     @property
     def decorations(self) -> BaseDecorationsConfig:
+        self.set_config_param(
+            key=self.KEYS[self.DECORATIONS],
+            value=self._decorations.config[self.DECORATIONS]
+        )
         return self._decorations
 
     @decorations.setter
     def decorations(self, value: dict) -> None:
         self._decorations = DecorationsConfigMux(
             BaseConfig._SERIAL_NUMBER.get_model(), value)
-        self.set_config_param(
-            key=self.KEYS[self.DECORATIONS],
-            value=self.decorations.config
-        )
 
     @property
     def extras(self) -> ExtrasConfig:
+        self.set_config_param(
+            key=self.KEYS[self.EXTRAS],
+            value=self._extras.config[self.EXTRAS]
+        )
         return self._extras
 
     @extras.setter
@@ -100,7 +105,3 @@ class PlatformConfig(BaseConfig):
                     isinstance(value, ExtrasConfig)), (
                 "Extras must be of type 'dict' or 'ExtrasConfig'"
             )
-        self.set_config_param(
-            key=self.KEYS[self.EXTRAS],
-            value=self.extras.config[self.EXTRAS]
-        )

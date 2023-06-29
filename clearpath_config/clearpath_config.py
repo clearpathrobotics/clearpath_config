@@ -42,29 +42,19 @@ class ClearpathConfig(BaseConfig):
     def __init__(self, config: dict | str = None) -> None:
         # Initialization
         self._config = {}
-        self._system = SystemConfig()
-        self.serial_number = self.DEFAULTS[self.SERIAL_NUMBER]
         self.version = self.DEFAULTS[self.VERSION]
+        self.serial_number = self.DEFAULTS[self.SERIAL_NUMBER]
+        self.system = self.DEFAULTS[self.SYSTEM]
+        self.platform = self.DEFAULTS[self.PLATFORM]
         # Setter Template
         setters = {
-            self.SERIAL_NUMBER: self.setter(ClearpathConfig.serial_number),
-            self.VERSION: self.setter(ClearpathConfig.version),
-            self.SYSTEM: self.setter(ClearpathConfig.system),
+            self.SERIAL_NUMBER: ClearpathConfig.serial_number,
+            self.VERSION: ClearpathConfig.version,
+            self.SYSTEM: ClearpathConfig.system,
+            self.PLATFORM: ClearpathConfig.platform,
         }
         # Set from Config
         super().__init__(setters, config)
-        # self.version = 0
-        # self.serial_number.from_dict(config)
-        # self.system = SystemConfig()
-        # self.platform = PlatformConfig()
-        # # self.accessories = AccessoryConfig()
-        # # self.mounts = MountsConfig()
-        # # self.sensors = SensorConfig()
-
-    @BaseConfig.config.getter
-    def config(self) -> dict:
-        self.set_config_param(self.SYSTEM, self._system.config[self.SYSTEM])
-        return super().config
 
     @property
     def serial_number(self) -> str:
@@ -91,8 +81,17 @@ class ClearpathConfig(BaseConfig):
 
     @property
     def system(self) -> SystemConfig:
+        self.set_config_param(self.SYSTEM, self._system.config[self.SYSTEM])
         return self._system
 
     @system.setter
     def system(self, config: dict) -> None:
         self._system = SystemConfig(config)
+
+    @property
+    def platform(self) -> PlatformConfig:
+        self.set_config_param(self.PLATFORM, self._platform.config[self.PLATFORM])
+
+    @platform.setter
+    def platform(self, config: dict) -> None:
+        self._platform = PlatformConfig(config)

@@ -66,17 +66,21 @@ class SystemConfig(BaseConfig):
         self.rmw_implementation = rmw_implementation
         # Setter Template
         setters = {
-            self.KEYS[self.HOSTS]: self.setter(SystemConfig.hosts),
-            self.KEYS[self.USERNAME]: self.setter(SystemConfig.username),
-            self.KEYS[self.NAMESPACE]: self.setter(SystemConfig.namespace),
-            self.KEYS[self.DOMAIN_ID]: self.setter(SystemConfig.domain_id),
-            self.KEYS[self.RMW]: self.setter(SystemConfig.rmw_implementation),
+            self.KEYS[self.HOSTS]: SystemConfig.hosts,
+            self.KEYS[self.USERNAME]: SystemConfig.username,
+            self.KEYS[self.NAMESPACE]: SystemConfig.namespace,
+            self.KEYS[self.DOMAIN_ID]: SystemConfig.domain_id,
+            self.KEYS[self.RMW]: SystemConfig.rmw_implementation,
         }
         # Set from Config
         super().__init__(setters, config, self.SYSTEM)
 
     @property
     def hosts(self) -> HostsConfig:
+        self.set_config_param(
+            key=self.KEYS[self.HOSTS],
+            value=self._hosts.config[self.HOSTS]
+        )
         return self._hosts
 
     @hosts.setter
@@ -89,13 +93,13 @@ class SystemConfig(BaseConfig):
             assert isinstance(value, dict) or isinstance(value, HostsConfig), (
                 "Hosts must be of type 'dict' or 'HostsConfig'"
             )
-        self.set_config_param(
-            key=self.KEYS[self.HOSTS],
-            value=self.hosts.config[self.HOSTS]
-        )
 
     @property
     def username(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.USERNAME],
+            value=str(self._username)
+        )
         return str(self._username)
 
     @username.setter
@@ -108,13 +112,13 @@ class SystemConfig(BaseConfig):
             assert isinstance(value, str) or isinstance(value, Username), (
                 "Username must be of type 'str' or 'Username'"
             )
-        self.set_config_param(
-            key=self.KEYS[self.USERNAME],
-            value=self.username
-        )
 
     @property
     def namespace(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.NAMESPACE],
+            value=str(self._namespace)
+        )
         return str(self._namespace)
 
     @namespace.setter
@@ -127,13 +131,13 @@ class SystemConfig(BaseConfig):
             assert isinstance(value, str) or isinstance(value, Namespace), (
                 "Namespace must be of type 'str' or 'Namespace'"
             )
-        self.set_config_param(
-            key=self.KEYS[self.NAMESPACE],
-            value=self.namespace
-        )
 
     @property
     def domain_id(self) -> int:
+        self.set_config_param(
+            key=self.KEYS[self.DOMAIN_ID],
+            value=int(self._domain_id)
+        )
         return int(self._domain_id)
 
     @domain_id.setter
@@ -146,13 +150,13 @@ class SystemConfig(BaseConfig):
             assert isinstance(value, int) or isinstance(value, DomainID), (
                 "Domain ID must be of type 'int' or 'DomainID'"
             )
-        self.set_config_param(
-            key=self.KEYS[self.DOMAIN_ID],
-            value=self.domain_id
-        )
 
     @property
     def rmw_implementation(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.RMW],
+            value=str(self._rmw_implementation)
+        )
         return str(self._rmw_implementation)
 
     @rmw_implementation.setter
@@ -167,7 +171,3 @@ class SystemConfig(BaseConfig):
                 isinstance(value, RMWImplementation)), (
                 "RMW must be of type 'str' or 'RMWImplementation'"
             )
-        self.set_config_param(
-            key=self.KEYS[self.RMW],
-            value=self.rmw_implementation
-        )

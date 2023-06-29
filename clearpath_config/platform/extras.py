@@ -38,32 +38,32 @@ class ExtrasConfig(BaseConfig):
         self.control = control
         # Setter Template
         setters = {
-            self.KEYS[self.URDF]: self.setter(ExtrasConfig.urdf),
-            self.KEYS[self.CONTROL]: self.setter(ExtrasConfig.control)
+            self.KEYS[self.URDF]: ExtrasConfig.urdf,
+            self.KEYS[self.CONTROL]: ExtrasConfig.control
         }
         # Set from Config
         super().__init__(setters, config, self.EXTRAS)
 
     @property
     def urdf(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.URDF],
+            value=str(self._urdf)
+        )
         return str(self._urdf)
 
     @urdf.setter
     def urdf(self, value: str) -> None:
         self._urdf = File(path=str(value))
-        self.set_config_param(
-            key=self.KEYS[self.URDF],
-            value=self.urdf
-        )
 
     @property
     def control(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.CONTROL],
+            value=str(self._control)
+        )
         return str(self._control)
 
     @control.setter
     def control(self, value: str) -> None:
         self._control = File(path=str(value))
-        self.set_config_param(
-            key=self.KEYS[self.CONTROL],
-            value=self.control
-        )

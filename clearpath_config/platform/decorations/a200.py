@@ -66,21 +66,22 @@ class A200DecorationsConfig(BaseConfig, BaseDecorationsConfig):
         self.top_plate = self.DEFAULTS[self.TOP_PLATE]
         # Setter Template
         setters = {
-            self.KEYS[self.FRONT_BUMPER]:
-                self.setter(A200DecorationsConfig.front_bumper),
-            self.KEYS[self.REAR_BUMPER]:
-                self.setter(A200DecorationsConfig.rear_bumper),
-            self.KEYS[self.STRUCTURE]:
-                self.setter(A200DecorationsConfig.structure),
-            self.KEYS[self.TOP_PLATE]:
-                self.setter(A200DecorationsConfig.top_plate)
+            self.KEYS[self.FRONT_BUMPER]: A200DecorationsConfig.front_bumper,
+            self.KEYS[self.REAR_BUMPER]: A200DecorationsConfig.rear_bumper,
+            self.KEYS[self.STRUCTURE]: A200DecorationsConfig.structure,
+            self.KEYS[self.TOP_PLATE]: A200DecorationsConfig.top_plate
         }
         # Set from Config
         BaseConfig.__init__(self, setters, config, self.DECORATIONS)
 
     @property
     def front_bumper(self):
-        return self.bumpers.get(self.FRONT_BUMPER)
+        front_bumper = self.bumpers.get(self.FRONT_BUMPER)
+        self.set_config_param(
+            key=self.KEYS[self.FRONT_BUMPER],
+            value=front_bumper.to_dict()[self.FRONT_BUMPER]
+        )
+        return front_bumper
 
     @front_bumper.setter
     def front_bumper(self, value: dict | Bumper):
@@ -97,14 +98,15 @@ class A200DecorationsConfig(BaseConfig, BaseDecorationsConfig):
             assert isinstance(value, dict) or isinstance(value, Bumper), (
                 "Bumper must be of type 'dict' or 'Bumper'"
             )
-        self.set_config_param(
-            key=self.FRONT_BUMPER,
-            value=self.front_bumper.to_dict()
-        )
 
     @property
     def rear_bumper(self):
-        return self.bumpers.get(self.REAR_BUMPER)
+        rear_bumper = self.bumpers.get(self.REAR_BUMPER)
+        self.set_config_param(
+            key=self.KEYS[self.REAR_BUMPER],
+            value=rear_bumper.to_dict()[self.REAR_BUMPER]
+        )
+        return rear_bumper
 
     @rear_bumper.setter
     def rear_bumper(self, value: dict | Bumper):
@@ -121,14 +123,15 @@ class A200DecorationsConfig(BaseConfig, BaseDecorationsConfig):
             assert isinstance(value, dict) or isinstance(value, Bumper), (
                 "Bumper must be of type 'dict' or 'Bumper'"
             )
-        self.set_config_param(
-            key=self.REAR_BUMPER,
-            value=self.rear_bumper.to_dict()
-        )
 
     @property
     def top_plate(self) -> TopPlate:
-        return self.top_plates.get(self.TOP_PLATE)
+        top_plate = self.top_plates.get(self.TOP_PLATE)
+        self.set_config_param(
+            key=self.KEYS[self.TOP_PLATE],
+            value=top_plate.to_dict()[self.TOP_PLATE]
+        )
+        return top_plate
 
     @top_plate.setter
     def top_plate(self, value: dict | TopPlate):
@@ -144,14 +147,15 @@ class A200DecorationsConfig(BaseConfig, BaseDecorationsConfig):
             assert isinstance(value, dict) or isinstance(value, TopPlate), (
                 "Top plate must be of type 'dict' or 'TopPlate'"
             )
-        self.set_config_param(
-            key=self.TOP_PLATE,
-            value=self.top_plate.to_dict()
-        )
 
     @property
     def structure(self) -> Structure:
-        return self.structures.get(self.STRUCTURE)
+        structure = self.structures.get(self.STRUCTURE)
+        self.set_config_param(
+            key=self.KEYS[self.STRUCTURE],
+            value=structure.to_dict()[self.STRUCTURE]
+        )
+        return structure
 
     @structure.setter
     def structure(self, value: dict | Structure) -> None:
@@ -163,7 +167,3 @@ class A200DecorationsConfig(BaseConfig, BaseDecorationsConfig):
             assert value.get_name() == self.STRUCTURE, (
                 "Structure must be Structure with name %s" % self.STRUCTURE
             )
-        self.set_config_param(
-            key=self.STRUCTURE,
-            value=self.structure.to_dict()
-        )
