@@ -1,5 +1,6 @@
-from clearpath_config.common import Accessory, File
-from clearpath_config.accessories.base import BaseAccessory
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.file import File
+from clearpath_config.accessories.types.accessory import BaseAccessory
 from typing import List
 
 
@@ -30,14 +31,15 @@ class Mesh(BaseAccessory):
         self.visual: File = File(Mesh.VISUAL)
         self.set_visual(visual)
 
-    def set_radius(self, radius: float) -> None:
-        msg = "Radius must be a positive float value"
-        assert isinstance(radius, float), msg
-        assert radius >= 0.0, msg
-        self.radius = radius
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['visual'] = self.get_visual()
+        return d
 
-    def get_radius(self) -> float:
-        return self.radius
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if 'visual' in d:
+            self.set_visual(d['visual'])
 
     def set_visual(self, visual: str) -> None:
         self.visual = File(visual)

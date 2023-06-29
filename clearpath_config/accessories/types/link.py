@@ -1,5 +1,5 @@
-from clearpath_config.common import Accessory
-from clearpath_config.accessories.base import BaseAccessory
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.accessories.types.accessory import BaseAccessory
 from typing import List
 
 

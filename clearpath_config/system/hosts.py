@@ -45,24 +45,23 @@ class HostsConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        KEYS[SELF]: BaseConfig._SERIAL_NUMBER.get_serial(),
-        KEYS[PLATFORM]: {
+        SELF: BaseConfig._SERIAL_NUMBER.get_serial(),
+        PLATFORM: {
             BaseConfig._SERIAL_NUMBER.get_serial(): "192.168.131.1"
         },
-        KEYS[ONBOARD]: {},
-        KEYS[REMOTE]: {}
+        ONBOARD: {},
+        REMOTE: {}
     }
 
     def __init__(
             self,
             config: dict = {},
-            selfhost: str | Hostname = DEFAULTS[KEYS[SELF]],
-            platform: dict | Host = DEFAULTS[KEYS[PLATFORM]],
-            onboard: dict | List[Host] = DEFAULTS[KEYS[ONBOARD]],
-            remote: dict | List[Host] = DEFAULTS[KEYS[REMOTE]],
+            selfhost: str | Hostname = DEFAULTS[SELF],
+            platform: dict | Host = DEFAULTS[PLATFORM],
+            onboard: dict | List[Host] = DEFAULTS[ONBOARD],
+            remote: dict | List[Host] = DEFAULTS[REMOTE],
             ) -> None:
         # Initialization
-        self._config = {}
         self.self = selfhost
         self.platform = platform
         self.onboard = onboard
@@ -81,6 +80,10 @@ class HostsConfig(BaseConfig):
     # - the hostname of the computer running this config
     @property
     def self(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.SELF],
+            value=str(self._self)
+        )
         return str(self._self)
 
     @self.setter
@@ -93,10 +96,6 @@ class HostsConfig(BaseConfig):
             assert isinstance(value, str) or isinstance(value, Hostname), (
                 "Self must be of type 'str' or 'Hostname'"
             )
-        self.set_config_param(
-            key=self.KEYS[self.SELF],
-            value=self.self
-        )
 
     # Platform:
     # - the main computer for this system (i.e. the robot's computer)

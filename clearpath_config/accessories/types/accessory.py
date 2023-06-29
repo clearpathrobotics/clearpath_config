@@ -1,4 +1,4 @@
-from clearpath_config.common import Accessory
+from clearpath_config.common.types.accessory import Accessory
 from typing import List
 
 
@@ -35,6 +35,24 @@ class BaseAccessory(Accessory):
         self.set_offset_xyz(offset_xyz)
         self.offset_rpy: List[float] = BaseAccessory.OFFSET_RPY
         self.set_offset_rpy(offset_rpy)
+
+    def to_dict(self) -> dict:
+        d = {}
+        d['name'] = self.get_name()
+        d['parent'] = self.get_parent()
+        d['xyz'] = self.get_xyz()
+        d['rpy'] = self.get_rpy()
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        if 'name' in d:
+            self.set_name(d['name'])
+        if 'parent' in d:
+            self.set_parent(d['parent'])
+        if 'xyz' in d:
+            self.set_xyz(d['xyz'])
+        if 'rpy' in d:
+            self.set_rpy(d['rpy'])
 
     @classmethod
     def get_accessory_type(cls) -> str:

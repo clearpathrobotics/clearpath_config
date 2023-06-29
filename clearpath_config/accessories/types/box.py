@@ -1,5 +1,5 @@
-from clearpath_config.common import Accessory
-from clearpath_config.accessories.base import BaseAccessory
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.accessories.types.accessory import BaseAccessory
 from typing import List
 
 
@@ -27,6 +27,16 @@ class Box(BaseAccessory):
         )
         self.size: List[float] = Box.SIZE
         self.set_size(size)
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['size'] = self.get_size()
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if 'size' in d:
+            self.set_size(d['size'])
 
     def set_size(self, size: List[float]) -> None:
         msg = "Box size must be a list of three positive floats"
