@@ -5,7 +5,7 @@ from clearpath_config.system.system import SystemConfig
 from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.accessories.accessories import AccessoryConfig
 from clearpath_config.mounts.mounts import MountsConfig
-# from clearpath_config.sensors.sensors import SensorConfig
+from clearpath_config.sensors.sensors import SensorConfig
 
 
 # ClearpathConfig:
@@ -34,12 +34,13 @@ class ClearpathConfig(BaseConfig):
     KEYS = TEMPLATE
 
     DEFAULTS = {
-        VERSION: 0,
-        SERIAL_NUMBER: "generic",
         SYSTEM: SystemConfig.DEFAULTS,
         PLATFORM: PlatformConfig.DEFAULTS,
         ACCESSORIES: AccessoryConfig.DEFAULTS,
         MOUNTS: MountsConfig.DEFAULTS,
+        SENSORS: SensorConfig.DEFAULTS,
+        SERIAL_NUMBER: "generic",
+        VERSION: 0,
     }
 
     def __init__(self, config: dict | str = None) -> None:
@@ -49,18 +50,20 @@ class ClearpathConfig(BaseConfig):
         self._config = {}
         self.system = self.DEFAULTS[self.SYSTEM]
         self.platform = self.DEFAULTS[self.PLATFORM]
-        self.mounts = self.DEFAULTS[self.MOUNTS]
         self.accessories = self.DEFAULTS[self.ACCESSORIES]
+        self.mounts = self.DEFAULTS[self.MOUNTS]
+        self.sensors = self.DEFAULTS[self.SENSORS]
         self.serial_number = self.DEFAULTS[self.SERIAL_NUMBER]
         self.version = self.DEFAULTS[self.VERSION]
         # Setter Template
         setters = {
-            self.SERIAL_NUMBER: ClearpathConfig.serial_number,
-            self.VERSION: ClearpathConfig.version,
             self.SYSTEM: ClearpathConfig.system,
             self.PLATFORM: ClearpathConfig.platform,
             self.ACCESSORIES: ClearpathConfig.accessories,
             self.MOUNTS: ClearpathConfig.mounts,
+            self.SENSORS: ClearpathConfig.sensors,
+            self.SERIAL_NUMBER: ClearpathConfig.serial_number,
+            self.VERSION: ClearpathConfig.version,
         }
         # Set from Config
         super().__init__(setters, config)
@@ -89,6 +92,7 @@ class ClearpathConfig(BaseConfig):
         self._platform.update(serial_number=True)
         self._accessories.update(serial_number=True)
         self._mounts.update(serial_number=True)
+        self._sensors.update(serial_number=True)
 
     @property
     def version(self) -> int:
@@ -146,3 +150,14 @@ class ClearpathConfig(BaseConfig):
     @mounts.setter
     def mounts(self, value: dict) -> None:
         self._mounts = MountsConfig(value)
+
+    @property
+    def sensors(self) -> SensorConfig:
+        self.set_config_param(
+            self.SENSORS,
+            self._sensors.config[self.SENSORS])
+        return self._sensors
+
+    @sensors.setter
+    def sensors(self, value: dict) -> None:
+        self._sensors = SensorConfig(value)

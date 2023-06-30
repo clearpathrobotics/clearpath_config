@@ -55,7 +55,9 @@ class PlatformConfig(BaseConfig):
 
     def update(self, serial_number=False) -> None:
         if serial_number:
+            # Reload decorations
             self.decorations = None
+            # TODO: Set PACS Profile
 
     @property
     def controller(self) -> str:

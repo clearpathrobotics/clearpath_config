@@ -152,6 +152,10 @@ class OrderedListConfig(Generic[T]):
         self.__type_T: type = obj_type
         self.__list: List[T] = []
 
+    def set_index_offset(self, offset: int) -> None:
+        self.start_idx = offset
+        self.update()
+
     def find(
             self,
             obj: T | int
