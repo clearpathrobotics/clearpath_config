@@ -1,6 +1,5 @@
-
-from clearpath_config.common import Accessory
-from clearpath_config.mounts.base import BaseMount
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.mounts.types.mount import BaseMount
 from math import pi
 from typing import List
 
@@ -25,6 +24,16 @@ class FathPivot(BaseMount):
         self.angle = 0.0
         if angle:
             self.set_angle(angle)
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['angle'] = self.get_angle()
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if 'angle' in d:
+            self.set_angle(d['angle'])
 
     def get_angle(self) -> float:
         return self.angle

@@ -1,8 +1,11 @@
-from clearpath_config.common import Accessory, OrderedListConfig
-from clearpath_config.mounts.base import BaseMount
-from clearpath_config.mounts.fath_pivot import FathPivot
-from clearpath_config.mounts.flir_ptu import FlirPTU
-from clearpath_config.mounts.pacs import PACS
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.config import BaseConfig
+from clearpath_config.common.types.list import OrderedListConfig
+from clearpath_config.common.utils.dictionary import flip_dict
+from clearpath_config.mounts.types.mount import BaseMount
+from clearpath_config.mounts.types.fath_pivot import FathPivot
+from clearpath_config.mounts.types.flir_ptu import FlirPTU
+from clearpath_config.mounts.types.pacs import PACS
 from typing import List
 
 
@@ -29,22 +32,132 @@ class Mount():
         return Mount.MODEL[model]()
 
 
-class MountsConfig:
+class MountListConfig(OrderedListConfig[BaseMount]):
     def __init__(self) -> None:
-        # Fath Pivot
-        self.__fath_pivots = OrderedListConfig[FathPivot]()
-        # Flir PTU
-        self.__flir_ptus = OrderedListConfig[FlirPTU]()
-        # PACS Riser
-        self.__pacs_risers = OrderedListConfig[PACS.Riser]()
-        # PACS Brackets
-        self.__pacs_brackets = OrderedListConfig[PACS.Bracket]()
+        super().__init__(obj_type=BaseMount)
+
+    def to_dict(self) -> List[dict]:
+        d = []
+        for accessory in self.get_all():
+            d.append(accessory.to_dict())
+        return d
+
+
+class MountsConfig(BaseConfig):
+
+    MOUNTS = "mounts"
+    BRACKET = "bracket"
+    FATH_PIVOT = "fath_pivot"
+    RISER = "riser"
+
+    TEMPLATE = {
+        MOUNTS: {
+            BRACKET: BRACKET,
+            FATH_PIVOT: FATH_PIVOT,
+            RISER: RISER,
+        }
+    }
+
+    KEYS = flip_dict(TEMPLATE)
+
+    DEFAULTS = {
+        BRACKET: [],
+        FATH_PIVOT: [],
+        RISER: [],
+    }
+
+    def __init__(
+            self,
+            config: dict = {},
+            bracket: List[PACS.Bracket] = DEFAULTS[BRACKET],
+            fath_pivot: List[FathPivot] = DEFAULTS[FATH_PIVOT],
+            riser: List[PACS.Riser] = DEFAULTS[RISER]
+            ) -> None:
+        # Initialization
+        self.bracket = bracket
+        self.fath_pivot = fath_pivot
+        self.riser = riser
+        # Template
+        template = {
+            self.KEYS[self.BRACKET]: MountsConfig.bracket,
+            self.KEYS[self.FATH_PIVOT]: MountsConfig.fath_pivot,
+            self.KEYS[self.RISER]: MountsConfig.riser
+        }
+        super().__init__(template, config, self.MOUNTS)
+
+    @property
+    def bracket(self) -> OrderedListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.BRACKET],
+            value=self._bracket.to_dict()
+        )
+        return self._bracket
+
+    @bracket.setter
+    def bracket(self, value: List[dict]) -> None:
+        assert isinstance(value, list), (
+            "Mounts must be list of 'dict'")
+        assert all([isinstance(i, dict) for i in value]), (
+            "Mounts must be list of 'dict'")
+        mounts = MountListConfig()
+        mount_list = []
+        for d in value:
+            mount = PACS.Bracket()
+            mount.from_dict(d)
+            mount_list.append(mount)
+        mounts.set_all(mount_list)
+        self._bracket = mounts
+
+    @property
+    def riser(self) -> OrderedListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.RISER],
+            value=self._riser.to_dict()
+        )
+        return self._riser
+
+    @riser.setter
+    def riser(self, value: List[dict]) -> None:
+        assert isinstance(value, list), (
+            "Mounts must be list of 'dict'")
+        assert all([isinstance(i, dict) for i in value]), (
+            "Mounts must be list of 'dict'")
+        mounts = MountListConfig()
+        mount_list = []
+        for d in value:
+            mount = PACS.Riser(rows=1, columns=1)
+            mount.from_dict(d)
+            mount_list.append(mount)
+        mounts.set_all(mount_list)
+        self._riser = mounts
+
+    @property
+    def fath_pivot(self) -> OrderedListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.FATH_PIVOT],
+            value=self._fath_pivot.to_dict()
+        )
+        return self._fath_pivot
+
+    @fath_pivot.setter
+    def fath_pivot(self, value: List[dict]) -> None:
+        assert isinstance(value, list), (
+            "Mounts must be list of 'dict'")
+        assert all([isinstance(i, dict) for i in value]), (
+            "Mounts must be list of 'dict'")
+        mounts = MountListConfig()
+        mount_list = []
+        for d in value:
+            mount = FathPivot()
+            mount.from_dict(d)
+            mount_list.append(mount)
+        mounts.set_all(mount_list)
+        self._fath_pivot = mounts
 
     # Get All Mounts
     def get_all_mounts(self) -> List[BaseMount]:
         mounts = []
         mounts.extend(self.get_fath_pivots())
-        mounts.extend(self.get_flir_ptus())
         mounts.extend(self.get_risers())
         mounts.extend(self.get_brackets())
         return mounts
@@ -67,7 +180,7 @@ class MountsConfig:
                 xyz,
                 rpy
             )
-        self.__fath_pivots.add(fath_pivot)
+        self._fath_pivot.add(fath_pivot)
 
     # FathPivot: Remove
     def remove_fath_pivot(
@@ -75,97 +188,34 @@ class MountsConfig:
             # By Object or Index
             fath_pivot: FathPivot | int,
             ) -> None:
-        self.__fath_pivots.remove(fath_pivot)
+        self._fath_pivot.remove(fath_pivot)
 
     # FathPivot: Get
     def get_fath_pivot(
             self,
             idx: int
             ) -> FathPivot:
-        return self.__fath_pivots.get(idx)
+        return self._fath_pivot.get(idx)
 
     # FathPivot: Get All
     def get_fath_pivots(
             self,
             ) -> List[FathPivot]:
-        return self.__fath_pivots.get_all()
+        return self._fath_pivot.get_all()
 
     # FathPivot: Set
     def set_fath_pivot(
             self,
             fath_pivot: FathPivot
             ) -> None:
-        self.__fath_pivots.set(fath_pivot)
+        self._fath_pivot.set(fath_pivot)
 
     # FathPivot: Set All
     def set_fath_pivots(
             self,
             fath_pivots: List[FathPivot],
             ) -> None:
-        self.__fath_pivots.set_all(fath_pivots)
-
-    # FlirPTU: Add
-    def add_flir_ptu(
-            self,
-            # By Object
-            flir_ptu: FlirPTU = None,
-            # By Parameters
-            parent: str = Accessory.PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY,
-            tty_port: str = FlirPTU.TTY_PORT,
-            tcp_port: int = FlirPTU.TCP_PORT,
-            ip: str = FlirPTU.IP_ADDRESS,
-            connection_type: str = FlirPTU.CONNECTION_TYPE,
-            limits_enabled: bool = FlirPTU.LIMITS_ENABLED,
-            ) -> None:
-        if not flir_ptu:
-            flir_ptu = FlirPTU(
-                parent,
-                xyz,
-                rpy,
-                tty_port,
-                tcp_port,
-                ip,
-                connection_type,
-                limits_enabled,
-            )
-        self.__flir_ptus.add(flir_ptu)
-
-    # FlirPTU: Remove
-    def remove_flir_ptu(
-            self,
-            # By Object or Index
-            flir_ptu: FlirPTU | int,
-            ) -> None:
-        self.__flir_ptus.remove(flir_ptu)
-
-    # FlirPTU: Get
-    def get_flir_ptu(
-            self,
-            idx: int
-            ) -> FlirPTU:
-        return self.__flir_ptus.get(idx)
-
-    # FlirPTU: Get All
-    def get_flir_ptus(
-            self
-            ) -> List[FlirPTU]:
-        return self.__flir_ptus.get_all()
-
-    # FlirPTU: Set
-    def set_flir_ptu(
-            self,
-            flir_ptu: FlirPTU,
-            ) -> None:
-        self.__flir_ptus.set(flir_ptu)
-
-    # FlirPTU: Set All
-    def set_flir_ptus(
-            self,
-            flir_ptus: List[FlirPTU]
-            ) -> None:
-        self.__flir_ptus.set_all(flir_ptus)
+        self._fath_pivot.set_all(fath_pivots)
 
     # Risers: Add
     def add_riser(
@@ -194,7 +244,7 @@ class MountsConfig:
                 xyz,
                 rpy
             )
-        self.__pacs_risers.add(riser)
+        self._riser.add(riser)
 
     # Risers: Remove
     def remove_riser(
@@ -202,34 +252,34 @@ class MountsConfig:
             # By Object or Index
             riser: PACS.Riser | int,
             ) -> None:
-        self.__pacs_risers.remove(riser)
+        self._riser.remove(riser)
 
     # Risers: Get
     def get_riser(
             self,
             idx: int
             ) -> PACS.Riser:
-        return self.__pacs_risers.get(idx)
+        return self._riser.get(idx)
 
     # Risers: Get All
     def get_risers(
             self
             ) -> List[PACS.Riser]:
-        return self.__pacs_risers.get_all()
+        return self._riser.get_all()
 
     # Risers: Set
     def set_riser(
             self,
             riser: PACS.Riser
             ) -> None:
-        self.__pacs_risers.set(riser)
+        self._riser.set(riser)
 
     # Risers: Set All
     def set_risers(
             self,
             risers: List[PACS.Riser]
             ) -> None:
-        self.__pacs_risers.set_all(risers)
+        self._riser.set_all(risers)
 
     # Brackets: Add
     def add_bracket(
@@ -249,7 +299,7 @@ class MountsConfig:
                 xyz=xyz,
                 rpy=rpy
             )
-        self.__pacs_brackets.add(bracket)
+        self._bracket.add(bracket)
 
     # Brackets: Remove
     def remove_bracket(
@@ -257,31 +307,31 @@ class MountsConfig:
             # By Object or Name
             bracket: PACS.Bracket | int,
             ) -> None:
-        self.__pacs_brackets.remove(bracket)
+        self._bracket.remove(bracket)
 
     # Bracket: Get
     def get_bracket(
             self,
             idx: int,
             ) -> PACS.Bracket:
-        return self.__pacs_brackets.get(idx)
+        return self._bracket.get(idx)
 
     # Brackets: Get All
     def get_brackets(
             self,
             ) -> List[PACS.Bracket]:
-        return self.__pacs_brackets.get_all()
+        return self._bracket.get_all()
 
     # Bracket: Set
     def set_bracket(
             self,
             bracket: PACS.Bracket,
             ) -> None:
-        self.__pacs_brackets.set(bracket)
+        self._bracket.set(bracket)
 
     # Brackets: Set All
     def set_brackets(
             self,
             brackets: List[PACS.Bracket],
             ) -> None:
-        self.__pacs_brackets.set_all(brackets)
+        self._bracket.set_all(brackets)

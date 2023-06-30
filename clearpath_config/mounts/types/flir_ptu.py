@@ -1,5 +1,8 @@
-from clearpath_config.common import Accessory, IP, File
-from clearpath_config.mounts.base import BaseMount
+
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.file import File
+from clearpath_config.common.types.ip import IP
+from clearpath_config.mounts.types.mount import BaseMount
 from typing import List
 
 

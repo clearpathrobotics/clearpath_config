@@ -1,5 +1,5 @@
-from clearpath_config.common import Accessory
-from clearpath_config.mounts.base import BaseMount
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.mounts.types.mount import BaseMount
 from typing import List
 
 
@@ -34,6 +34,22 @@ class PACS:
             self.set_columns(columns)
             self.thickness: float = 0.0
             self.set_thickness(thickness)
+
+        def to_dict(self) -> dict:
+            d = super().to_dict()
+            d['rows'] = self.get_rows()
+            d['columns'] = self.get_columns()
+            d['thickness'] = self.get_thickness()
+            return d
+
+        def from_dict(self, d: dict) -> None:
+            super().from_dict(d)
+            if 'rows' in d:
+                self.set_rows(d['rows'])
+            if 'columns' in d:
+                self.set_columns(d['columns'])
+            if 'thickness' in d:
+                self.set_thickness(d['thickness'])
 
         def get_rows(self) -> int:
             return self.rows
@@ -109,6 +125,16 @@ class PACS:
             self.model = PACS.Bracket.DEFAULT
             if model:
                 self.set_model(model)
+
+        def to_dict(self) -> dict:
+            d = super().to_dict()
+            d['model'] = self.get_model()
+            return d
+
+        def from_dict(self, d: dict) -> None:
+            super().from_dict(d)
+            if 'model' in d:
+                self.set_model(d['model'])
 
         def get_model(self) -> str:
             return self.model
