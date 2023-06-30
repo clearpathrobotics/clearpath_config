@@ -1,5 +1,4 @@
 from clearpath_config.common.types.list import ListConfig
-from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.utils.dictionary import merge_dict
 from clearpath_config.platform.types.decoration import BaseDecoration
 from clearpath_config.platform.types.bumper import Bumper
