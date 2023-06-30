@@ -4,7 +4,7 @@ from clearpath_config.common.utils.yaml import read_yaml, write_yaml
 from clearpath_config.system.system import SystemConfig
 from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.accessories.accessories import AccessoryConfig
-# from clearpath_config.mounts.mounts import MountsConfig
+from clearpath_config.mounts.mounts import MountsConfig
 # from clearpath_config.sensors.sensors import SensorConfig
 
 
@@ -39,6 +39,7 @@ class ClearpathConfig(BaseConfig):
         SYSTEM: SystemConfig.DEFAULTS,
         PLATFORM: PlatformConfig.DEFAULTS,
         ACCESSORIES: AccessoryConfig.DEFAULTS,
+        MOUNTS: MountsConfig.DEFAULTS,
     }
 
     def __init__(self, config: dict | str = None) -> None:
@@ -46,11 +47,12 @@ class ClearpathConfig(BaseConfig):
         config = self.read(config)
         # Initialization
         self._config = {}
-        self.version = self.DEFAULTS[self.VERSION]
-        self.serial_number = self.DEFAULTS[self.SERIAL_NUMBER]
         self.system = self.DEFAULTS[self.SYSTEM]
         self.platform = self.DEFAULTS[self.PLATFORM]
+        self.mounts = self.DEFAULTS[self.MOUNTS]
         self.accessories = self.DEFAULTS[self.ACCESSORIES]
+        self.serial_number = self.DEFAULTS[self.SERIAL_NUMBER]
+        self.version = self.DEFAULTS[self.VERSION]
         # Setter Template
         setters = {
             self.SERIAL_NUMBER: ClearpathConfig.serial_number,
@@ -58,6 +60,7 @@ class ClearpathConfig(BaseConfig):
             self.SYSTEM: ClearpathConfig.system,
             self.PLATFORM: ClearpathConfig.platform,
             self.ACCESSORIES: ClearpathConfig.accessories,
+            self.MOUNTS: ClearpathConfig.mounts,
         }
         # Set from Config
         super().__init__(setters, config)
@@ -74,16 +77,22 @@ class ClearpathConfig(BaseConfig):
 
     @property
     def serial_number(self) -> str:
+        self.set_config_param(
+            self.SERIAL_NUMBER,
+            str(BaseConfig._SERIAL_NUMBER.get_serial()))
         return BaseConfig._SERIAL_NUMBER.get_serial()
 
     @serial_number.setter
     def serial_number(self, sn: str) -> None:
         BaseConfig._SERIAL_NUMBER = SerialNumber(sn)
-        self.set_config_param(self.SERIAL_NUMBER, self.serial_number)
-        # Add propagators here
+        self._system.update(serial_number=True)
+        self._platform.update(serial_number=True)
+        self._accessories.update(serial_number=True)
+        self._mounts.update(serial_number=True)
 
     @property
     def version(self) -> int:
+        self.set_config_param(self.VERSION, self._version)
         return self._version
 
     @version.setter
@@ -92,7 +101,6 @@ class ClearpathConfig(BaseConfig):
             "version must be of type 'int'"
         )
         self._version = v
-        self.set_config_param(self.VERSION, self.version)
         # Add propagators here
 
     @property
@@ -127,3 +135,14 @@ class ClearpathConfig(BaseConfig):
     @accessories.setter
     def accessories(self, value: dict) -> None:
         self._accessories = AccessoryConfig(value)
+
+    @property
+    def mounts(self) -> MountsConfig:
+        self.set_config_param(
+            self.MOUNTS,
+            self._mounts.config[self.MOUNTS])
+        return self._mounts
+
+    @mounts.setter
+    def mounts(self, value: dict) -> None:
+        self._mounts = MountsConfig(value)
