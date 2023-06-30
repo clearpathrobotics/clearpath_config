@@ -1,5 +1,7 @@
-from clearpath_config.sensors.base import BaseSensor, List
-from clearpath_config.common import Accessory, File
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.file import File
+from clearpath_config.sensors.types.sensor import BaseSensor
+from typing import List
 
 
 class BaseIMU(BaseSensor):

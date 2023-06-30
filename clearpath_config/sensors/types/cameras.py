@@ -1,4 +1,6 @@
-from clearpath_config.sensors.base import BaseSensor, Accessory, List
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.sensors.types.sensor import BaseSensor
+from typing import List
 
 
 class BaseCamera(BaseSensor):

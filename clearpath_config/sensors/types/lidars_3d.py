@@ -1,23 +1,25 @@
-from clearpath_config.common import Accessory, IP, Port
-from clearpath_config.sensors.base import BaseSensor
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.ip import IP
+from clearpath_config.common.types.port import Port
+from clearpath_config.sensors.types.sensor import BaseSensor
 from typing import List
 
 
-class BaseGPS(BaseSensor):
+class BaseLidar3D(BaseSensor):
     """
-    Base GPS Class
-        - contains all common gps parameters:
-            - frame_id: to publish Fix
-            - ip_address: to connect to GPS
-            - ip_port: to connect to GPS
+    Base 3D Lidar Class
+        - contains all common 3d lidar parameters:
+            - frame_id: to publish PointCloud data
+            - ip_address: to connect to lidar
+            - ip_port: to connect to lidar
     """
-    SENSOR_TYPE = "gps"
+    SENSOR_TYPE = "lidar3d"
     SENSOR_MODEL = "base"
-    TOPIC = "fix"
+    TOPIC = "points"
 
-    FRAME_ID = "link"
-    IP_ADDRESS = "192.168.131.30"
-    IP_PORT = 55555
+    FRAME_ID = "laser"
+    IP_ADDRESS = "192.168.131.25"
+    IP_PORT = "2368"
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = "frame_id"
@@ -62,23 +64,23 @@ class BaseGPS(BaseSensor):
         # ROS Parameter Keys
         pairs = {
             # Frame ID
-            BaseGPS.ROS_PARAMETER_KEYS.FRAME_ID: (
+            BaseLidar3D.ROS_PARAMETER_KEYS.FRAME_ID: (
                 BaseSensor.ROSParameter(
-                    key=BaseGPS.ROS_PARAMETER_KEYS.FRAME_ID,
+                    key=BaseLidar3D.ROS_PARAMETER_KEYS.FRAME_ID,
                     get=lambda obj: obj.get_frame_id(),
                     set=lambda obj, val: obj.set_frame_id(val)
                 )
             ),
             # IP Address
-            BaseGPS.ROS_PARAMETER_KEYS.IP_ADDRESS: (
+            BaseLidar3D.ROS_PARAMETER_KEYS.IP_ADDRESS: (
                 BaseSensor.ROSParameter(
-                    key=BaseGPS.ROS_PARAMETER_KEYS.IP_ADDRESS,
+                    key=BaseLidar3D.ROS_PARAMETER_KEYS.IP_ADDRESS,
                     get=lambda obj: obj.get_ip(),
                     set=lambda obj, val: obj.set_ip(val))),
             # IP Port
-            BaseGPS.ROS_PARAMETER_KEYS.IP_PORT: (
+            BaseLidar3D.ROS_PARAMETER_KEYS.IP_PORT: (
                 BaseSensor.ROSParameter(
-                    key=BaseGPS.ROS_PARAMETER_KEYS.IP_PORT,
+                    key=BaseLidar3D.ROS_PARAMETER_KEYS.IP_PORT,
                     get=lambda obj: obj.get_port(),
                     set=lambda obj, val: obj.set_port(val))),
         }
@@ -127,30 +129,52 @@ class BaseGPS(BaseSensor):
         self.port = Port(port)
 
 
-class SwiftNavDuro(BaseGPS):
+class VelodyneLidar(BaseLidar3D):
     """
-    Swift Navigation Duro Class:
+    Velodyne Lidar Class
         - extra ros_parameters:
-            - gps_receiver_frame: same as frame_id
-            - imu_frame: same as frame_id
+            - device_type: model of the lidar:
+                - '64E'
+                - '64E_S3'
+                - '32E'
+                - '32C'
+                - 'VLP16'
     """
-    SENSOR_MODEL = "swiftnav_duro"
+    SENSOR_MODEL = "velodyne_lidar"
 
-    FRAME_ID = "link"
-    IP_PORT = 55555
+    FRAME_ID = "laser"
+    IP_PORT = 2368
+
+    HDL_32E = "32E"
+    HDL_64E = "64E"
+    HDL_64E_S2 = "64E_S2"
+    HDL_64E_S3 = "64E_S3"
+    VLP_16 = "VLP16"
+    VLP_32C = "32C"
+    DEVICE_TYPE = VLP_16
+    DEVICE_TYPES = [
+        HDL_32E,
+        HDL_64E,
+        HDL_64E_S2,
+        HDL_64E_S3,
+        VLP_16,
+        VLP_32C
+    ]
 
     class ROS_PARAMETER_KEYS:
-        GPS_FRAME = "gps_receiver_frame_id"
-        IMU_FRAME = "imu_frame_id"
+        DEVICE_TYPE = "model"
+        FIXED_FRAME = "fixed_frame"
+        TARGET_FRAME = "target_frame"
 
     def __init__(
             self,
             idx: int = None,
             name: str = None,
-            topic: str = BaseGPS.TOPIC,
+            topic: str = BaseLidar3D.TOPIC,
             frame_id: str = FRAME_ID,
-            ip: str = BaseGPS.IP_ADDRESS,
+            ip: str = BaseLidar3D.IP_ADDRESS,
             port: int = IP_PORT,
+            device_type: str = DEVICE_TYPE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
@@ -158,6 +182,9 @@ class SwiftNavDuro(BaseGPS):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+        # Device Type:
+        self.device_type: str = self.DEVICE_TYPE
+        self.set_device_type(device_type)
         super().__init__(
             idx,
             name,
@@ -174,18 +201,48 @@ class SwiftNavDuro(BaseGPS):
         )
         # ROS Parameter Keys
         self.ros_parameter_pairs[
-            BaseGPS.ROS_PARAMETER_KEYS.FRAME_ID].key = (
-                SwiftNavDuro.ROS_PARAMETER_KEYS.GPS_FRAME
-            )
+            BaseLidar3D.ROS_PARAMETER_KEYS.FRAME_ID].key = "frame_id"
+        self.ros_parameter_pairs[
+            BaseLidar3D.ROS_PARAMETER_KEYS.IP_ADDRESS].key = "device_ip"
+        self.ros_parameter_pairs[
+            BaseLidar3D.ROS_PARAMETER_KEYS.IP_PORT].key = "port"
         pairs = {
-            # Frame ID
-            SwiftNavDuro.ROS_PARAMETER_KEYS.IMU_FRAME: (
+            # Device Type
+            self.ROS_PARAMETER_KEYS.DEVICE_TYPE: (
                 BaseSensor.ROSParameter(
-                    key=SwiftNavDuro.ROS_PARAMETER_KEYS.IMU_FRAME,
+                    key=self.ROS_PARAMETER_KEYS.DEVICE_TYPE,
+                    get=lambda obj: obj.get_device_type(),
+                    set=lambda obj, val: obj.set_device_type(val)
+                )
+            ),
+            # Fixed Frame
+            self.ROS_PARAMETER_KEYS.FIXED_FRAME: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.FIXED_FRAME,
                     get=lambda obj: obj.get_frame_id(),
-                    set=lambda obj, val: obj.set_frame_id(val)
+                    set=lambda obj, val: obj.set_frame_id(val),
+                )
+            ),
+            # Target Frame
+            self.ROS_PARAMETER_KEYS.TARGET_FRAME: (
+                BaseSensor.ROSParameter(
+                    key=self.ROS_PARAMETER_KEYS.TARGET_FRAME,
+                    get=lambda obj: obj.get_frame_id(),
+                    set=lambda obj, val: obj.set_frame_id(val),
                 )
             ),
         }
         self.ros_parameter_pairs.update(pairs)
         self.set_ros_parameters(ros_parameters)
+
+    def get_device_type(self) -> str:
+        return self.device_type
+
+    def set_device_type(self, device_type: str) -> None:
+        assert device_type in self.DEVICE_TYPES, (
+            "Device type '%s' is not one of '%s'" % (
+                device_type,
+                self.DEVICE_TYPES
+            )
+        )
+        self.device_type = device_type

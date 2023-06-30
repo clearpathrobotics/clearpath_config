@@ -1,4 +1,4 @@
-from clearpath_config.common import Accessory, IndexedAccessory
+from clearpath_config.common.types.accessory import Accessory, IndexedAccessory
 from typing import List, Callable
 
 
@@ -57,6 +57,31 @@ class BaseSensor(IndexedAccessory):
         self.ros_parameter_pairs = {}
         self.set_ros_parameters(ros_parameters)
         super().__init__(idx, name, parent, xyz, rpy)
+
+    def to_dict(self) -> dict:
+        d = {}
+        d['model'] = self.get_sensor_model()
+        d['urdf_enabled'] = self.get_urdf_enabled()
+        d['launch_enabled'] = self.get_launch_enabled()
+        d['parent'] = self.get_parent()
+        d['xyz'] = self.get_xyz()
+        d['rpy'] = self.get_rpy()
+        d['ros_parameters'] = self.get_ros_parameters()
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        if 'urdf_enabled' in d:
+            self.set_urdf_enabled(d['urdf_enabled'])
+        if 'launch_enabled' in d:
+            self.set_launch_enabled(d['launch_enabled'])
+        if 'parent' in d:
+            self.set_parent(d['parent'])
+        if 'xyz' in d:
+            self.set_xyz(d['xyz'])
+        if 'rpy' in d:
+            self.set_rpy(d['rpy'])
+        if 'ros_parameters' in d:
+            self.set_ros_parameters(d['ros_parameters'])
 
     @classmethod
     def get_sensor_type(cls) -> str:

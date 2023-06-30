@@ -1,5 +1,8 @@
-from clearpath_config.common import IP, Port
-from clearpath_config.sensors.base import BaseSensor, Accessory, List
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.ip import IP
+from clearpath_config.common.types.port import Port
+from clearpath_config.sensors.types.sensor import BaseSensor
+from typing import List
 from math import pi
 
 
