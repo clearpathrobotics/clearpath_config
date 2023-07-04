@@ -107,3 +107,12 @@ class PlatformConfig(BaseConfig):
                     isinstance(value, ExtrasConfig)), (
                 "Extras must be of type 'dict' or 'ExtrasConfig'"
             )
+
+    def get_controller(self) -> str:
+        return self.controller
+
+    def get_unit_number(self) -> str:
+        return BaseConfig._SERIAL_NUMBER.get_unit()
+
+    def get_model(self) -> str:
+        return BaseConfig._SERIAL_NUMBER.get_model()

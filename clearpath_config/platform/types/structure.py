@@ -10,9 +10,10 @@ class Structure(BaseDecoration):
      - model: type of structure must be selected
     """
     DECORATION_MODEL = "structure"
-    DEFAULT = ""
     ARCH_300 = "sensor_arch_300"
     ARCH_510 = "sensor_arch_510"
+    DEFAULT = ARCH_300
+    ENABLED = False
     MODELS = [DEFAULT, ARCH_300, ARCH_510]
 
     def __init__(

@@ -46,24 +46,33 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def urdf(self) -> str:
+        urdf = None if self._is_default(self._urdf, self.URDF) else str(self._urdf)
         self.set_config_param(
             key=self.KEYS[self.URDF],
-            value=str(self._urdf)
+            value=urdf
         )
-        return str(self._urdf)
+        return urdf
 
     @urdf.setter
     def urdf(self, value: str) -> None:
+        if value is None or value == "None":
+            return
         self._urdf = File(path=str(value))
 
     @property
     def control(self) -> str:
+        control = None if self._is_default(self._control, self.CONTROL) else str(self._control)
         self.set_config_param(
             key=self.KEYS[self.CONTROL],
-            value=str(self._control)
+            value=control
         )
-        return str(self._control)
+        return control
 
     @control.setter
     def control(self, value: str) -> None:
+        if value is None or value == "None":
+            return
         self._control = File(path=str(value))
+
+    def _is_default(self, curr: str, key: str) -> bool:
+        return curr == str(File(self.DEFAULTS[key]))

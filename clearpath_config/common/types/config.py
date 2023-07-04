@@ -21,10 +21,9 @@ class BaseConfig:
             ) -> None:
         # Dictionaries are Stored Flat
         self.template = template
-        if parent_key is not None:
-            if parent_key not in config:
-                self._config = {parent_key: {}}
-                config = {parent_key: config}
+        self._parent_key = parent_key
+        if self._parent_key is not None and self._parent_key not in config:
+            self._config = {self._parent_key: {}}
         self.config = config
 
     def update(
@@ -67,6 +66,8 @@ class BaseConfig:
         assert isinstance(value, dict), (
             "config must be of type 'dict'"
         )
+        if self._parent_key is not None and self._parent_key not in value:
+            value = {self._parent_key: value}
         for map, prop in flatten_dict(
                 d=self.template, dlim=BaseConfig.DLIM).items():
             keys = map.split(BaseConfig.DLIM)

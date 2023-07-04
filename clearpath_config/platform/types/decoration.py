@@ -40,14 +40,14 @@ class BaseDecoration(Accessory):
         if 'enabled' in d:
             self.set_enabled(d['enabled'])
         if 'model' in d:
-            self.set_enabled(d['model'])
+            self.set_model(d['model'])
         if 'xyz' in d:
             self.set_xyz(d['xyz'])
         if 'rpy' in d:
             self.set_rpy(d['rpy'])
 
     def set_enabled(self, enable: bool) -> None:
-        self.enable = bool(enable)
+        self.enabled = bool(enable)
 
     def get_enabled(self) -> bool:
         return self.enabled

@@ -14,13 +14,11 @@ class J100DecorationsConfig(BaseConfig, BaseDecorationsConfig):
     DECORATIONS = "decorations"
     FRONT_BUMPER = "front_bumper"
     REAR_BUMPER = "rear_bumper"
-    TOP_PLATE = "top_plate"
 
     TEMPLATE = {
         DECORATIONS: {
             FRONT_BUMPER: FRONT_BUMPER,
             REAR_BUMPER: REAR_BUMPER,
-            TOP_PLATE: TOP_PLATE,
         }
     }
 
@@ -38,11 +36,6 @@ class J100DecorationsConfig(BaseConfig, BaseDecorationsConfig):
             'extension': Bumper.EXTENSION,
             'model': Bumper.DEFAULT
             },
-        TOP_PLATE: {
-            'name': TOP_PLATE,
-            'enabled': TopPlate.ENABLED,
-            'model': TopPlate.DEFAULT
-            },
     }
 
     def __init__(
@@ -54,12 +47,10 @@ class J100DecorationsConfig(BaseConfig, BaseDecorationsConfig):
         self._config = {}
         self.front_bumper = self.DEFAULTS[self.FRONT_BUMPER]
         self.rear_bumper = self.DEFAULTS[self.REAR_BUMPER]
-        self.top_plate = self.DEFAULTS[self.TOP_PLATE]
         # Setter Template
         setters = {
             self.KEYS[self.FRONT_BUMPER]: J100DecorationsConfig.front_bumper,
             self.KEYS[self.REAR_BUMPER]: J100DecorationsConfig.rear_bumper,
-            self.KEYS[self.TOP_PLATE]: J100DecorationsConfig.top_plate,
         }
         # Set from Config
         BaseConfig.__init__(self, setters, config, self.DECORATIONS)
@@ -112,28 +103,4 @@ class J100DecorationsConfig(BaseConfig, BaseDecorationsConfig):
         else:
             assert isinstance(value, dict) or isinstance(value, Bumper), (
                 "Bumper must be of type 'dict' or 'Bumper'"
-            )
-
-    @property
-    def top_plate(self) -> TopPlate:
-        top_plate = self.top_plates.get(self.TOP_PLATE)
-        self.set_config_param(
-            key=self.KEYS[self.TOP_PLATE],
-            value=top_plate.to_dict()[self.TOP_PLATE]
-        )
-        return top_plate
-
-    @top_plate.setter
-    def top_plate(self, value: dict | TopPlate):
-        if isinstance(value, dict):
-            new = TopPlate(name=self.TOP_PLATE)
-            new.from_dict(value)
-            self.top_plates.set(new)
-        elif isinstance(value, TopPlate):
-            assert value.get_name() == self.TOP_PLATE, (
-                "Top plate must be TopPlate with name %s" % self.TOP_PLATE
-            )
-        else:
-            assert isinstance(value, dict) or isinstance(value, TopPlate), (
-                "Top plate must be of type 'dict' or 'TopPlate'"
             )

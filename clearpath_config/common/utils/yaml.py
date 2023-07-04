@@ -41,10 +41,11 @@ def read_yaml(path: str) -> dict:
 
 def write_yaml(path: str, config: dict) -> None:
     yaml_file = open(path, "w+")
+    yaml.Dumper.ignore_aliases = lambda *args: True
     yaml.dump(
         config,
         yaml_file,
         sort_keys=False,
-        default_flow_style=None,
+        default_flow_style=False,
         allow_unicode=True,
     )
