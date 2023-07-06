@@ -45,7 +45,9 @@ class SystemConfig(BaseConfig):
         # DOMAIN_ID: 0
         DOMAIN_ID: 0,
         # RMW: "rmw_fastrtps_cpp"
-        RMW: "rmw_fastrtps_cpp"
+        RMW: "rmw_fastrtps_cpp",
+        # Workpaces: empty list
+        WORKSPACES: []
     }
 
     def __init__(
@@ -56,6 +58,7 @@ class SystemConfig(BaseConfig):
             namespace: str = DEFAULTS[NAMESPACE],
             domain_id: int = DEFAULTS[DOMAIN_ID],
             rmw_implementation: str = DEFAULTS[RMW],
+            workspaces: list = DEFAULTS[WORKSPACES]
             ) -> None:
         # Initialization
         self._config = {}
@@ -64,6 +67,7 @@ class SystemConfig(BaseConfig):
         self.namespace = namespace
         self.domain_id = domain_id
         self.rmw_implementation = rmw_implementation
+        self.workspaces = workspaces
         # Setter Template
         setters = {
             self.KEYS[self.HOSTS]: SystemConfig.hosts,
@@ -71,6 +75,7 @@ class SystemConfig(BaseConfig):
             self.KEYS[self.NAMESPACE]: SystemConfig.namespace,
             self.KEYS[self.DOMAIN_ID]: SystemConfig.domain_id,
             self.KEYS[self.RMW]: SystemConfig.rmw_implementation,
+            self.KEYS[self.WORKSPACES]: SystemConfig.workspaces,
         }
         # Set from Config
         super().__init__(setters, config, self.SYSTEM)
@@ -171,3 +176,14 @@ class SystemConfig(BaseConfig):
                 isinstance(value, RMWImplementation)), (
                 "RMW must be of type 'str' or 'RMWImplementation'"
             )
+
+    @property
+    def workspaces(self) -> list:
+        return self._workspaces
+
+    @workspaces.setter
+    def workspaces(self, value: list) -> None:
+        assert isinstance(value, list), (
+            "Workspaces must be 'list' of 'str'")
+        assert all([isinstance(i, str) for i in value]), (
+            "Workspaces must be 'list' of 'str'")
