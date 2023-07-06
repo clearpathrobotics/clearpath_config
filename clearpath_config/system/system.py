@@ -187,3 +187,4 @@ class SystemConfig(BaseConfig):
             "Workspaces must be 'list' of 'str'")
         assert all([isinstance(i, str) for i in value]), (
             "Workspaces must be 'list' of 'str'")
+        self._workspaces = value
