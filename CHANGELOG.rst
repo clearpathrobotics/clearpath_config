@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.3 (2023-07-06)
+------------------
 * Fixed parsing issues
 * Added python3-yaml to dependencies
 * Removed old parser
