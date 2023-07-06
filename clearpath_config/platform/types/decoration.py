@@ -32,7 +32,7 @@ class BaseDecoration(Accessory):
             'enabled': self.get_enabled(),
             'model': self.get_model(),
             'xyz': self.get_xyz(),
-            'ryp': self.get_rpy()
+            'rpy': self.get_rpy()
         }}
         return d
 
