@@ -1,132 +1,118 @@
-from clearpath_config.common import File, Platform, SerialNumber
-from clearpath_config.platform.base import BaseDecorationsConfig
-from clearpath_config.platform.a200 import A200DecorationsConfig
-from clearpath_config.platform.j100 import J100DecorationsConfig
-from clearpath_config.platform.generic import GENERICDecorationsConfig
-from clearpath_config.sensors.sensors import SensorConfig
+from clearpath_config.common.types.config import BaseConfig
+from clearpath_config.common.utils.dictionary import flip_dict
+from clearpath_config.platform.extras import ExtrasConfig
+from clearpath_config.platform.decorations.config import BaseDecorationsConfig
+from clearpath_config.platform.decorations.mux import DecorationsConfigMux
 
 
-# DecorationsConfig:
-# - platform specific structures
-# - each platform should have its own DecorationsConfig
-class DecorationsConfig:
+class PlatformConfig(BaseConfig):
 
-    """
-    DecorationsConfig
-        - top level configuration for all models
-        - returns appropriate config from sub-classes
-    """
-
-    MODEL_CONFIGS = {
-        Platform.DD100: None,
-        Platform.DO100: None,
-        Platform.A200: A200DecorationsConfig(),
-        Platform.J100: J100DecorationsConfig(),
-        Platform.R100: None,
-        Platform.W200: None,
-        Platform.GENERIC: GENERICDecorationsConfig(),
-    }
-
-    def __new__(self, model) -> None:
-        assert (
-            model in Platform.ALL
-        ), " ".join([
-            "Model passed '%s' is not expected." % model,
-            "Must be one of the following: %s" % Platform.ALL
-        ])
-        return self.MODEL_CONFIGS[model]
-
-
-# ExtrasConfig:
-# - URDF extras: urdf.xacro with custom links and joints
-# - Control extras: YAML with overwrites or extra ROS parameters
-class ExtrasConfig:
-    def __init__(self, urdf: str = "", control: str = "") -> None:
-        self.urdf = File(path=urdf)
-        self.control = File(path=control)
-
-    def get_urdf_extras(self) -> str:
-        return str(self.urdf)
-
-    def set_urdf_extras(self, path: str) -> None:
-        self.urdf = File(path=path)
-
-    def get_control_extras(self) -> str:
-        return str(self.control)
-
-    def set_control_extras(self, path: str) -> None:
-        self.control = File(path=path)
-
-
-# PlatformConfig:
-# - platform level configuration options
-class PlatformConfig:
+    PLATFORM = "platform"
     # Controllers
     PS4 = "ps4"
     LOGITECH = "logitech"
-    CONTROLLER = PS4
-    CONTROLLERS = [PS4, LOGITECH]
+    CONTROLLER = "controller"
+    DECORATIONS = "decorations"
+    # Extras
+    EXTRAS = "extras"
+
+    TEMPLATE = {
+        PLATFORM: {
+            CONTROLLER: CONTROLLER,
+            DECORATIONS: DECORATIONS,
+            EXTRAS: EXTRAS
+        }
+    }
+
+    KEYS = flip_dict(TEMPLATE)
+
+    DEFAULTS = {
+        # PLATFORM
+        CONTROLLER: PS4,
+        DECORATIONS: {},
+        EXTRAS: ExtrasConfig.DEFAULTS
+    }
 
     def __init__(
-        self,
-        serial: str = "generic",
-        controller: str = CONTROLLER,
-        decorations: BaseDecorationsConfig = None,
-        extras: ExtrasConfig = None,
-    ) -> None:
-        self.serial = SerialNumber(sn=serial)
-        self.model = self.serial.get_model()
-        self.controller: str = PlatformConfig.CONTROLLER
-        self.set_controller(controller)
-        self.decorations = DecorationsConfig(model=self.get_model())
-        self.extras = ExtrasConfig()
-        if decorations:
-            assert isinstance(decorations, BaseDecorationsConfig), (
-                "Decorations must be of type: %s, unexpected type: '%s'" % (
-                    BaseDecorationsConfig,
-                    type(decorations)
-                )
-            )
-            assert (
-                decorations.model == self.model
-            ), "Decorations do not match the model of the serial number"
-            self.decorations = decorations
-        if extras:
-            assert isinstance(
-                extras, ExtrasConfig
-            ), "Extras must be of type ExtrasConfig, unexpected type: '%s'" % (
-                    type(extras)
-            )
-            self.extras = extras
-
-    def set_serial_number(self, serial_number: str) -> None:
-        self.serial = SerialNumber(serial_number)
-        self.decorations = DecorationsConfig(model=self.get_model())
-        # Increment IMU Count
-        if self.get_model() != Platform.A200:
-            SensorConfig.IMU_INDEX = 1
-        else:
-            SensorConfig.IMU_INDEX = 0
-        # Increment GPS Count
-        if self.get_model() == Platform.J100:
-            SensorConfig.GPS_INDEX = 1
-        else:
-            SensorConfig.GPS_INDEX = 0
-
-    def get_serial_number(self, prefix: bool = False) -> str:
-        return self.serial.get_serial(prefix)
-
-    def set_controller(self, controller: str) -> None:
-        assert controller in PlatformConfig.CONTROLLERS, (
-            "Controller must be one of '%s'" % PlatformConfig.CONTROLLERS
-        )
+            self,
+            config: dict = {},
+            controller: str = DEFAULTS[CONTROLLER],
+            decorations: str = DEFAULTS[DECORATIONS],
+            extras: str = DEFAULTS[EXTRAS]
+            ) -> None:
+        # Initialization
+        self._config = {}
         self.controller = controller
+        self.decorations = decorations
+        self.extras = extras
+        # Setter Template
+        setters = {
+            self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
+            self.KEYS[self.DECORATIONS]: PlatformConfig.decorations,
+            self.KEYS[self.EXTRAS]: PlatformConfig.extras
+        }
+        super().__init__(setters, config, self.PLATFORM)
+
+    def update(self, serial_number=False) -> None:
+        if serial_number:
+            # Reload decorations
+            self.decorations = None
+            # TODO: Set PACS Profile
+
+    @property
+    def controller(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.CONTROLLER],
+            value=self._controller
+        )
+        return self._controller
+
+    @controller.setter
+    def controller(self, value: str) -> None:
+        assert value.lower() in [self.PS4, self.LOGITECH], (
+            "'%s' controller is invalid. Must be one of: '%s'" % (
+                value.lower(),
+                [self.PS4, self.LOGITECH]))
+        self._controller = value.lower()
+
+    @property
+    def decorations(self) -> BaseDecorationsConfig:
+        self.set_config_param(
+            key=self.KEYS[self.DECORATIONS],
+            value=self._decorations.config[self.DECORATIONS]
+        )
+        return self._decorations
+
+    @decorations.setter
+    def decorations(self, value: dict) -> None:
+        self._decorations = DecorationsConfigMux(
+            BaseConfig._SERIAL_NUMBER.get_model(), value)
+
+    @property
+    def extras(self) -> ExtrasConfig:
+        self.set_config_param(
+            key=self.KEYS[self.EXTRAS],
+            value=self._extras.config[self.EXTRAS]
+        )
+        return self._extras
+
+    @extras.setter
+    def extras(self, value: dict | ExtrasConfig) -> None:
+        if isinstance(value, dict):
+            self._extras = ExtrasConfig(config=value)
+        elif isinstance(value, ExtrasConfig):
+            self._extras = value
+        else:
+            assert isinstance(value, dict) or (
+                    isinstance(value, ExtrasConfig)), (
+                "Extras must be of type 'dict' or 'ExtrasConfig'"
+            )
 
     def get_controller(self) -> str:
         return self.controller
 
     def get_unit_number(self) -> str:
-        return self.serial.get_unit()
+        return BaseConfig._SERIAL_NUMBER.get_unit()
 
     def get_model(self) -> str:
-        return self.serial.get_model()
+        return BaseConfig._SERIAL_NUMBER.get_model()

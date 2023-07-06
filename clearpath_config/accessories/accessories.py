@@ -1,10 +1,13 @@
-from clearpath_config.common import Accessory, ListConfig
-from clearpath_config.accessories.base import BaseAccessory
-from clearpath_config.accessories.link import Link
-from clearpath_config.accessories.box import Box
-from clearpath_config.accessories.cylinder import Cylinder
-from clearpath_config.accessories.sphere import Sphere
-from clearpath_config.accessories.mesh import Mesh
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.config import BaseConfig
+from clearpath_config.common.types.list import ListConfig
+from clearpath_config.accessories.types.accessory import BaseAccessory
+from clearpath_config.accessories.types.box import Box
+from clearpath_config.accessories.types.cylinder import Cylinder
+from clearpath_config.accessories.types.link import Link
+from clearpath_config.accessories.types.mesh import Mesh
+from clearpath_config.accessories.types.sphere import Sphere
+from clearpath_config.common.utils.dictionary import flip_dict
 from typing import List
 
 
@@ -37,20 +40,211 @@ class URDFAccessory():
         return cls.TYPE[_type](name=name)
 
 
-# Accessory Config
-class AccessoryConfig:
-
+# AccessoryListConfig
+class AccessoryListConfig(ListConfig[BaseAccessory, str]):
     def __init__(self) -> None:
-        # Link
-        self.__link = ListConfig[Link, str](uid=ListConfig.uid_name)
-        # Box
-        self.__box = ListConfig[Box, str](uid=ListConfig.uid_name)
-        # Cylinder
-        self.__cylinder = ListConfig[Cylinder, str](uid=ListConfig.uid_name)
-        # Sphere
-        self.__sphere = ListConfig[Sphere, str](uid=ListConfig.uid_name)
-        # Mesh
-        self.__mesh = ListConfig[Mesh, str](uid=ListConfig.uid_name)
+        super().__init__(
+            uid=lambda obj: obj.get_name(),
+            obj_type=BaseAccessory,
+            uid_type=str
+        )
+
+    def to_dict(self) -> List[dict]:
+        d = []
+        for accessory in self.get_all():
+            d.append(accessory.to_dict())
+        return d
+
+
+# Accessory Config
+class AccessoryConfig(BaseConfig):
+
+    ACCESSORIES = "accessories"
+    BOX = "box"
+    CYLINDER = "cylinder"
+    LINK = "link"
+    MESH = "mesh"
+    SPHERE = "sphere"
+
+    TEMPLATE = {
+        ACCESSORIES: {
+            BOX: BOX,
+            CYLINDER: CYLINDER,
+            LINK: LINK,
+            MESH: MESH,
+            SPHERE: SPHERE,
+        }
+    }
+
+    KEYS = flip_dict(TEMPLATE)
+
+    DEFAULTS = {
+        BOX: [],
+        CYLINDER: [],
+        LINK: [],
+        MESH: [],
+        SPHERE: []
+    }
+
+    def __init__(
+            self,
+            config: dict = {},
+            box: List[Box] = DEFAULTS[BOX],
+            cylinder: List[Cylinder] = DEFAULTS[CYLINDER],
+            link: List[Link] = DEFAULTS[LINK],
+            mesh: List[Mesh] = DEFAULTS[MESH],
+            sphere: List[Mesh] = DEFAULTS[SPHERE]
+            ) -> None:
+        # Initialization
+        self.box = box
+        self.cylinder = cylinder
+        self.link = link
+        self.mesh = mesh
+        self.sphere = sphere
+        # Template
+        template = {
+            self.KEYS[self.BOX]: AccessoryConfig.box,
+            self.KEYS[self.CYLINDER]: AccessoryConfig.cylinder,
+            self.KEYS[self.LINK]: AccessoryConfig.link,
+            self.KEYS[self.MESH]: AccessoryConfig.mesh,
+            self.KEYS[self.SPHERE]: AccessoryConfig.sphere
+        }
+        super().__init__(template, config, self.ACCESSORIES)
+
+    @property
+    def link(self) -> AccessoryListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.LINK],
+            value=self._link.to_dict()
+        )
+        return self._link
+
+    @link.setter
+    def link(self, value: List[dict] | AccessoryListConfig) -> None:
+        if isinstance(value, list):
+            assert all([isinstance(i, dict) for i in value]), (
+                "Accessories must be list of type 'dict'"
+            )
+            accessories = AccessoryListConfig()
+            accessory_list = []
+            for d in value:
+                accessory = Link(name="link")
+                accessory.from_dict(d)
+                accessory_list.append(accessory)
+            accessories.set_all(accessory_list)
+            self._link = accessories
+        else:
+            assert isinstance(value, list), (
+                "Accessories must be list of type 'dict'"
+            )
+
+    @property
+    def box(self) -> AccessoryListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.BOX],
+            value=self._box.to_dict()
+        )
+        return self._box
+
+    @box.setter
+    def box(self, value: List[dict] | AccessoryListConfig) -> None:
+        if isinstance(value, list):
+            assert all([isinstance(i, dict) for i in value]), (
+                "Accessories must be list of type 'dict'"
+            )
+            accessories = AccessoryListConfig()
+            accessory_list = []
+            for d in value:
+                accessory = Box(name="box")
+                accessory.from_dict(d)
+                accessory_list.append(accessory)
+            accessories.set_all(accessory_list)
+            self._box = accessories
+        else:
+            assert isinstance(value, list), (
+                "Accessories must be list of type 'dict'"
+            )
+
+    @property
+    def cylinder(self) -> AccessoryListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.CYLINDER],
+            value=self._cylinder.to_dict()
+        )
+        return self._cylinder
+
+    @cylinder.setter
+    def cylinder(self, value: List[dict] | AccessoryListConfig) -> None:
+        if isinstance(value, list):
+            assert all([isinstance(i, dict) for i in value]), (
+                "Accessories must be list of type 'dict'"
+            )
+            accessories = AccessoryListConfig()
+            accessory_list = []
+            for d in value:
+                accessory = Cylinder(name="cylinder")
+                accessory.from_dict(d)
+                accessory_list.append(accessory)
+            accessories.set_all(accessory_list)
+            self._cylinder = accessories
+        else:
+            assert isinstance(value, list), (
+                "Accessories must be list of type 'dict'"
+            )
+
+    @property
+    def mesh(self) -> AccessoryListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.MESH],
+            value=self._mesh.to_dict()
+        )
+        return self._mesh
+
+    @mesh.setter
+    def mesh(self, value: List[dict] | AccessoryListConfig) -> None:
+        if isinstance(value, list):
+            assert all([isinstance(i, dict) for i in value]), (
+                "Accessories must be list of type 'dict'"
+            )
+            accessories = AccessoryListConfig()
+            accessory_list = []
+            for d in value:
+                accessory = Mesh(name="mesh")
+                accessory.from_dict(d)
+                accessory_list.append(accessory)
+            accessories.set_all(accessory_list)
+            self._mesh = accessories
+        else:
+            assert isinstance(value, list), (
+                "Accessories must be list of type 'dict'"
+            )
+
+    @property
+    def sphere(self) -> AccessoryListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.SPHERE],
+            value=self._sphere.to_dict()
+        )
+        return self._sphere
+
+    @sphere.setter
+    def sphere(self, value: List[dict] | AccessoryListConfig) -> None:
+        if isinstance(value, list):
+            assert all([isinstance(i, dict) for i in value]), (
+                "Accessories must be list of type 'dict'"
+            )
+            accessories = AccessoryListConfig()
+            accessory_list = []
+            for d in value:
+                accessory = Sphere(name="sphere")
+                accessory.from_dict(d)
+                accessory_list.append(accessory)
+            accessories.set_all(accessory_list)
+            self._sphere = accessories
+        else:
+            assert isinstance(value, list), (
+                "Accessories must be list of type 'dict'"
+            )
 
     def get_all_accessories(self) -> List[BaseAccessory]:
         accessories = []
@@ -91,7 +285,7 @@ class AccessoryConfig:
                 offset_xyz=offset_xyz,
                 offset_rpy=offset_rpy
             )
-        self.__link.add(link)
+        self._link.add(link)
 
     # Link: Remove by Object or Name
     def remove_link(
@@ -99,26 +293,26 @@ class AccessoryConfig:
             # By Object
             link: Link | str
             ) -> None:
-        self.__link.remove(link)
+        self._link.remove(link)
 
     # Link: Get Single Object by Name
     def get_link(
             self,
             link: str
             ) -> Link:
-        return self.__link.get(link)
+        return self._link.get(link)
 
     # Link: Get All Objects
     def get_all_links(self) -> List[Link]:
-        return self.__link.get_all()
+        return self._link.get_all()
 
     # Link: Set Single Object by Name
     def set_link(self, link: Link) -> None:
-        self.__link.set(link)
+        self._link.set(link)
 
     # Link: Set All Objects
     def set_all_links(self, links: List[Link]) -> None:
-        self.__link.set_all(links)
+        self._link.set_all(links)
 
     # Box: Add by Object or Parameters
     def add_box(
@@ -147,27 +341,27 @@ class AccessoryConfig:
                 offset_xyz=offset_xyz,
                 offset_rpy=offset_rpy
             )
-        self.__box.add(box)
+        self._box.add(box)
 
     # Box: Remove by Object or Name
     def remove_box(self, box: Box | str) -> None:
-        self.__box.remove(box)
+        self._box.remove(box)
 
     # Box: Get Single Object by Name
     def get_box(self, box: str) -> Box:
-        return self.__box.get(box)
+        return self._box.get(box)
 
     # Box: Get All Objects
     def get_all_boxes(self) -> List[Box]:
-        return self.__box.get_all()
+        return self._box.get_all()
 
     # Box: Set Single Object by Name
     def set_box(self, box: Box) -> None:
-        self.__box.set(box)
+        self._box.set(box)
 
     # Box: Set All Objects
     def set_all_boxes(self, boxes: List[Box]) -> None:
-        self.__box.set_all(boxes)
+        self._box.set_all(boxes)
 
     # Cylinder: Add by Object or Parameters
     def add_cylinder(
@@ -198,27 +392,27 @@ class AccessoryConfig:
                 offset_xyz=offset_xyz,
                 offset_rpy=offset_rpy
             )
-        self.__cylinder.add(cylinder)
+        self._cylinder.add(cylinder)
 
     # Cylinder: Remove by Object or Name
     def remove_cylinder(self, cylinder: Cylinder | str) -> None:
-        self.__cylinder.remove(cylinder)
+        self._cylinder.remove(cylinder)
 
     # Cylinder: Get Single Object by Name
     def get_cylinder(self, cylinder: str) -> Cylinder:
-        return self.__cylinder.get(cylinder)
+        return self._cylinder.get(cylinder)
 
     # Cylinder: Get All Objects
     def get_all_cylinders(self) -> List[Cylinder]:
-        return self.__cylinder.get_all()
+        return self._cylinder.get_all()
 
     # Cylinder: Set Single Object by Name
     def set_cylinder(self, cylinder: Cylinder) -> None:
-        self.__cylinder.set(cylinder)
+        self._cylinder.set(cylinder)
 
     # Cylinder: Set All Objects
     def set_all_cylinders(self, cylinders: List[Cylinder]) -> None:
-        self.__cylinder.set_all(cylinders)
+        self._cylinder.set_all(cylinders)
 
     # Sphere: Add by Object or Parameters
     def add_sphere(
@@ -247,27 +441,27 @@ class AccessoryConfig:
                 offset_xyz=offset_xyz,
                 offset_rpy=offset_rpy
             )
-        self.__sphere.add(sphere)
+        self._sphere.add(sphere)
 
     # Sphere: Remove by Object or Name
     def remove_sphere(self, sphere: Sphere | str) -> None:
-        self.__sphere.remove(sphere)
+        self._sphere.remove(sphere)
 
     # Sphere: Get Single Object by Name
     def get_sphere(self, sphere: str) -> Sphere:
-        return self.__sphere.get(sphere)
+        return self._sphere.get(sphere)
 
     # Sphere: Get All Objects
     def get_all_spheres(self) -> List[Sphere]:
-        return self.__sphere.get_all()
+        return self._sphere.get_all()
 
     # Sphere: Set Single Object by Name
     def set_sphere(self, sphere: Sphere) -> None:
-        self.__sphere.set(sphere)
+        self._sphere.set(sphere)
 
     # Sphere: Set All Objects
     def set_all_spheres(self, spheres: List[Sphere]) -> None:
-        self.__sphere.set_all(spheres)
+        self._sphere.set_all(spheres)
 
     # Mesh: Add by Object or Parameters
     def add_mesh(
@@ -296,7 +490,7 @@ class AccessoryConfig:
                 offset_xyz=offset_xyz,
                 offset_rpy=offset_rpy
             )
-        self.__mesh.add(mesh)
+        self._mesh.add(mesh)
 
     # Mesh: Remove by Object or Name
     def remove_mesh(
@@ -304,23 +498,23 @@ class AccessoryConfig:
             # By Object
             mesh: Mesh | str
             ) -> None:
-        self.__mesh.remove(mesh)
+        self._mesh.remove(mesh)
 
     # Mesh: Get Single Object by Name
     def get_mesh(
             self,
             mesh: str
             ) -> Mesh:
-        return self.__mesh.get(mesh)
+        return self._mesh.get(mesh)
 
     # Mesh: Get All Objects
     def get_all_meshes(self) -> List[Mesh]:
-        return self.__mesh.get_all()
+        return self._mesh.get_all()
 
     # Mesh: Set Single Object by Name
     def set_mesh(self, mesh: Mesh) -> None:
-        self.__mesh.set(mesh)
+        self._mesh.set(mesh)
 
     # Mesh: Set All Objects
     def set_all_meshes(self, meshes: List[Mesh]) -> None:
-        self.__mesh.set_all(meshes)
+        self._mesh.set_all(meshes)
