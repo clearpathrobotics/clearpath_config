@@ -2,6 +2,28 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed parsing issues
+* Added python3-yaml to dependencies
+* Removed old parser
+* Removed unused code
+* Added updates to change indexing based on serial number
+* Added sensors to property system
+* Added __init_\_ to all subfolders
+* Added mounts to main config
+* Moved mount types to separate folder
+* Added read and write functions to ClearpathConfig
+* Added accessories to property method
+* Updated all configs to use properties instead of setters
+* Updated base config to use properties to update config
+* Updated clearpath config to property setters
+* Removed old common and updated serial number type
+* Updated system to use global serial number
+* Updated platform to property setters
+* Changed System config to property setters
+* Contributors: Luis Camero
+
 0.0.2 (2023-06-12)
 ------------------
 * Fixed gps indexing
