@@ -18,14 +18,8 @@ platform:
     front_bumper:
       enabled: true
       model: default
-      xyz:
-      - 0.0
-      - 0.0
-      - 0.0
-      rpy:
-      - 0.0
-      - 0.0
-      - 0.0
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
       extension: 0.0
     rear_bumper:
       enabled: true
