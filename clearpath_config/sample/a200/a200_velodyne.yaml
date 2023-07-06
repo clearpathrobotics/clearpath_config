@@ -22,7 +22,7 @@ platform:
       - 0.0
       - 0.0
       - 0.0
-      ryp:
+      rpy:
       - 0.0
       - 0.0
       - 0.0
@@ -30,37 +30,19 @@ platform:
     rear_bumper:
       enabled: true
       model: default
-      xyz:
-      - 0.0
-      - 0.0
-      - 0.0
-      ryp:
-      - 0.0
-      - 0.0
-      - 0.0
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
       extension: 0.0
     structure:
       enabled: true
       model: sensor_arch_300
-      xyz:
-      - 0.0
-      - 0.0
-      - 0.0
-      ryp:
-      - 0.0
-      - 0.0
-      - 0.0
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
     top_plate:
       enabled: true
       model: pacs
-      xyz:
-      - 0.0
-      - 0.0
-      - 0.0
-      ryp:
-      - 0.0
-      - 0.0
-      - 0.0
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
   extras:
     urdf: null
     control: null
@@ -82,14 +64,8 @@ sensors:
     urdf_enabled: true
     launch_enabled: true
     parent: base_link
-    xyz:
-    - 0.0
-    - 0.0
-    - 0.0
-    rpy:
-    - 0.0
-    - 0.0
-    - 0.0
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
     ros_parameters:
       imu_frame_id: imu_0_link
       port: /dev/microstrain_main
@@ -100,14 +76,8 @@ sensors:
     urdf_enabled: true
     launch_enabled: true
     parent: sensor_arch_mount
-    xyz:
-    - 0.0
-    - 0.0
-    - 0.0
-    rpy:
-    - 0.0
-    - 0.0
-    - 0.0
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
     ros_parameters:
       frame_id: lidar3d_0_laser
       device_ip: 192.168.131.25
