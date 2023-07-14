@@ -1,13 +1,13 @@
-from clearpath_config.platform.types.decoration import BaseDecoration
+from clearpath_config.platform.types.attachment import BaseAttachment
 from clearpath_config.platform.types.bumper import Bumper
 from clearpath_config.platform.types.structure import Structure
 from clearpath_config.platform.types.top_plate import TopPlate
 
 
-class DecorationMux():
-    BUMPER = Bumper.DECORATION_MODEL
-    TOP_PLATE = TopPlate.DECORATION_MODEL
-    STRUCTURE = Structure.DECORATION_MODEL
+class AttachmentMux():
+    BUMPER = Bumper.ATTACHMENT_MODEL
+    TOP_PLATE = TopPlate.ATTACHMENT_MODEL
+    STRUCTURE = Structure.ATTACHMENT_MODEL
 
     MODEL = {
         BUMPER: Bumper,
@@ -15,11 +15,11 @@ class DecorationMux():
         STRUCTURE: Structure
     }
 
-    def __new__(cls, model: str) -> BaseDecoration:
-        assert model in DecorationMux.MODEL, (
+    def __new__(cls, model: str) -> BaseAttachment:
+        assert model in AttachmentMux.MODEL, (
             "Model '%s' must be one of: '%s'" % (
                 model,
-                DecorationMux.MODEL.keys()
+                AttachmentMux.MODEL.keys()
             )
         )
-        return DecorationMux.MODEL[model]()
+        return AttachmentMux.MODEL[model]()

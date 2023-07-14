@@ -1,24 +1,29 @@
-# J100 Jackal Platform Configuration
+# A200 Husky Platform Configuration
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.utils.dictionary import flip_dict
-from clearpath_config.platform.decorations.config import BaseDecorationsConfig
+from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
 from clearpath_config.platform.types.bumper import Bumper
 from clearpath_config.platform.types.top_plate import TopPlate
+from clearpath_config.platform.types.structure import Structure
 
 
-# J100 Jackal Decorations Configuration
-class J100DecorationsConfig(BaseConfig, BaseDecorationsConfig):
-    PLATFORM = Platform.J100
+# A200 Husky Attachments Configuration
+class A200AttachmentsConfig(BaseConfig, BaseAttachmentsConfig):
+    PLATFORM = Platform.A200
 
-    DECORATIONS = "decorations"
+    ATTACHMENTS = "attachments"
     FRONT_BUMPER = "front_bumper"
     REAR_BUMPER = "rear_bumper"
+    TOP_PLATE = "top_plate"
+    STRUCTURE = "structure"
 
     TEMPLATE = {
-        DECORATIONS: {
+        ATTACHMENTS: {
             FRONT_BUMPER: FRONT_BUMPER,
             REAR_BUMPER: REAR_BUMPER,
+            TOP_PLATE: TOP_PLATE,
+            STRUCTURE: STRUCTURE,
         }
     }
 
@@ -36,24 +41,38 @@ class J100DecorationsConfig(BaseConfig, BaseDecorationsConfig):
             'extension': Bumper.EXTENSION,
             'model': Bumper.DEFAULT
             },
+        TOP_PLATE: {
+            'name': TOP_PLATE,
+            'enabled': TopPlate.ENABLED,
+            'model': TopPlate.DEFAULT
+            },
+        STRUCTURE: {
+            'name': STRUCTURE,
+            'enabled': Structure.ENABLED,
+            'model': Structure.DEFAULT
+            },
     }
 
     def __init__(
             self,
             config: dict = {}
             ) -> None:
-        BaseDecorationsConfig.__init__(self)
+        BaseAttachmentsConfig.__init__(self)
         # Initialization
         self._config = {}
         self.front_bumper = self.DEFAULTS[self.FRONT_BUMPER]
         self.rear_bumper = self.DEFAULTS[self.REAR_BUMPER]
+        self.structure = self.DEFAULTS[self.STRUCTURE]
+        self.top_plate = self.DEFAULTS[self.TOP_PLATE]
         # Setter Template
         setters = {
-            self.KEYS[self.FRONT_BUMPER]: J100DecorationsConfig.front_bumper,
-            self.KEYS[self.REAR_BUMPER]: J100DecorationsConfig.rear_bumper,
+            self.KEYS[self.FRONT_BUMPER]: A200AttachmentsConfig.front_bumper,
+            self.KEYS[self.REAR_BUMPER]: A200AttachmentsConfig.rear_bumper,
+            self.KEYS[self.STRUCTURE]: A200AttachmentsConfig.structure,
+            self.KEYS[self.TOP_PLATE]: A200AttachmentsConfig.top_plate
         }
         # Set from Config
-        BaseConfig.__init__(self, setters, config, self.DECORATIONS)
+        BaseConfig.__init__(self, setters, config, self.ATTACHMENTS)
 
     @property
     def front_bumper(self):
@@ -103,4 +122,48 @@ class J100DecorationsConfig(BaseConfig, BaseDecorationsConfig):
         else:
             assert isinstance(value, dict) or isinstance(value, Bumper), (
                 "Bumper must be of type 'dict' or 'Bumper'"
+            )
+
+    @property
+    def top_plate(self) -> TopPlate:
+        top_plate = self.top_plates.get(self.TOP_PLATE)
+        self.set_config_param(
+            key=self.KEYS[self.TOP_PLATE],
+            value=top_plate.to_dict()[self.TOP_PLATE]
+        )
+        return top_plate
+
+    @top_plate.setter
+    def top_plate(self, value: dict | TopPlate):
+        if isinstance(value, dict):
+            new = TopPlate(name=self.TOP_PLATE)
+            new.from_dict(value)
+            self.top_plates.set(new)
+        elif isinstance(value, TopPlate):
+            assert value.get_name() == self.TOP_PLATE, (
+                "Top plate must be TopPlate with name %s" % self.TOP_PLATE
+            )
+        else:
+            assert isinstance(value, dict) or isinstance(value, TopPlate), (
+                "Top plate must be of type 'dict' or 'TopPlate'"
+            )
+
+    @property
+    def structure(self) -> Structure:
+        structure = self.structures.get(self.STRUCTURE)
+        self.set_config_param(
+            key=self.KEYS[self.STRUCTURE],
+            value=structure.to_dict()[self.STRUCTURE]
+        )
+        return structure
+
+    @structure.setter
+    def structure(self, value: dict | Structure) -> None:
+        if isinstance(value, dict):
+            new = Structure(name=self.STRUCTURE)
+            new.from_dict(value)
+            self.structures.set(new)
+        elif isinstance(value, Structure):
+            assert value.get_name() == self.STRUCTURE, (
+                "Structure must be Structure with name %s" % self.STRUCTURE
             )

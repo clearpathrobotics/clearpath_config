@@ -1,15 +1,15 @@
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.platform.types.decoration import BaseDecoration
+from clearpath_config.platform.types.attachment import BaseAttachment
 from typing import List
 
 
-class TopPlate(BaseDecoration):
+class TopPlate(BaseAttachment):
     """
     TopPlate
      - enabled: can be toggled
      - model: can be swapped to a large or PACS plate
     """
-    DECORATION_MODEL = "top_plate"
+    ATTACHMENT_MODEL = "top_plate"
     DEFAULT = "default"
     LARGE = "large"
     PACS = "pacs"
@@ -17,8 +17,8 @@ class TopPlate(BaseDecoration):
 
     def __init__(
             self,
-            name: str = DECORATION_MODEL,
-            enabled: bool = BaseDecoration.ENABLED,
+            name: str = ATTACHMENT_MODEL,
+            enabled: bool = BaseAttachment.ENABLED,
             model: str = DEFAULT,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,

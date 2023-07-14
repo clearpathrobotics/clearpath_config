@@ -1,10 +1,10 @@
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.accessories.types.accessory import BaseAccessory
+from clearpath_config.links.types.link import BaseLink
 from typing import List
 
 
-class Sphere(BaseAccessory):
-    ACCESSORY_TYPE = "sphere"
+class Sphere(BaseLink):
+    LINK_TYPE = "sphere"
     RADIUS = 0.01
 
     def __init__(
@@ -14,8 +14,8 @@ class Sphere(BaseAccessory):
             radius: float = RADIUS,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
-            offset_xyz: List[float] = BaseAccessory.OFFSET_XYZ,
-            offset_rpy: List[float] = BaseAccessory.OFFSET_RPY
+            offset_xyz: List[float] = BaseLink.OFFSET_XYZ,
+            offset_rpy: List[float] = BaseLink.OFFSET_RPY
             ) -> None:
         super().__init__(
             name,

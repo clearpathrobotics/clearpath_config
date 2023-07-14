@@ -2,20 +2,20 @@ from clearpath_config.common.types.accessory import Accessory
 from typing import List
 
 
-class BaseDecoration(Accessory):
+class BaseAttachment(Accessory):
     """
-    BaseDecoration
-     - enable: whether decoration is enabled or not
-     - model: what type of that decoration it is
+    BaseAttachment
+     - enable: whether attachment is enabled or not
+     - model: what type of that attachment it is
     """
-    DECORATION_MODEL = "base_decoration"
+    ATTACHMENT_MODEL = "base_attachment"
     ENABLED = True
     DEFAULT = "default"
     MODELS = [DEFAULT]
 
     def __init__(
             self,
-            name: str = DECORATION_MODEL,
+            name: str = ATTACHMENT_MODEL,
             enabled: bool = ENABLED,
             model: str = DEFAULT,
             parent: str = Accessory.PARENT,
@@ -24,7 +24,7 @@ class BaseDecoration(Accessory):
             ) -> None:
         super().__init__(name, parent, xyz, rpy)
         self.enabled: bool = bool(enabled)
-        self.model: str = BaseDecoration.DEFAULT
+        self.model: str = BaseAttachment.DEFAULT
         self.set_model(model)
 
     def to_dict(self) -> dict:
@@ -64,7 +64,7 @@ class BaseDecoration(Accessory):
     def set_model(self, model: str) -> None:
         assert model in self.MODELS, (
             "%s model '%s' is not one of: '%s'" % (
-                self.DECORATION_MODEL.title(),
+                self.ATTACHMENT_MODEL.title(),
                 model,
                 self.MODELS,
             )

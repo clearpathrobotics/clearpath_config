@@ -2,22 +2,22 @@ from clearpath_config.common.types.accessory import Accessory
 from typing import List
 
 
-class BaseAccessory(Accessory):
+class BaseLink(Accessory):
     """
-    Base Accessory Class
+    Base Link Class
       - inherits from Accessory
-      - contains all common parameters shared by all accessories
-      - accessories have no mounting points
-      - accessories have no drivers
-      - accessories can be of the following types:
+      - contains all common parameters shared by all links
+      - links have no mounting points
+      - links have no drivers
+      - links can be of the following types:
         - link: just a frame without any visual component
         - box:
         - cylinder:
         - sphere:
         - mesh:
-      - accessories `name` MUST be specified
+      - links `name` MUST be specified
     """
-    ACCESSORY_TYPE = "base"
+    LINK_TYPE = "base"
     OFFSET_XYZ = [0.0, 0.0, 0.0]
     OFFSET_RPY = [0.0, 0.0, 0.0]
 
@@ -31,9 +31,9 @@ class BaseAccessory(Accessory):
             offset_rpy: List[float] = OFFSET_RPY
             ) -> None:
         super().__init__(name, parent, xyz, rpy)
-        self.offset_xyz: List[float] = BaseAccessory.OFFSET_XYZ
+        self.offset_xyz: List[float] = BaseLink.OFFSET_XYZ
         self.set_offset_xyz(offset_xyz)
-        self.offset_rpy: List[float] = BaseAccessory.OFFSET_RPY
+        self.offset_rpy: List[float] = BaseLink.OFFSET_RPY
         self.set_offset_rpy(offset_rpy)
 
     def to_dict(self) -> dict:
@@ -55,8 +55,8 @@ class BaseAccessory(Accessory):
             self.set_rpy(d['rpy'])
 
     @classmethod
-    def get_accessory_type(cls) -> str:
-        return cls.ACCESSORY_TYPE
+    def get_link_type(cls) -> str:
+        return cls.LINK_TYPE
 
     def set_offset_xyz(self, xyz: List[float]) -> None:
         Accessory.assert_valid_triplet(

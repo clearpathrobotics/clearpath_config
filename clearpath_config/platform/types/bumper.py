@@ -1,16 +1,16 @@
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.platform.types.decoration import BaseDecoration
+from clearpath_config.platform.types.attachment import BaseAttachment
 from typing import List
 
 
-class Bumper(BaseDecoration):
+class Bumper(BaseAttachment):
     """
     Bumper
      - enabled: can be toggled
      - model: can be swapped to a Wibotic charger bumper
      - extension: meters by which it is extended
     """
-    DECORATION_MODEL = "bumper"
+    ATTACHMENT_MODEL = "bumper"
     EXTENSION = 0.0
     DEFAULT = "default"
     WIBOTIC = "wibotic"
@@ -18,8 +18,8 @@ class Bumper(BaseDecoration):
 
     def __init__(
             self,
-            name: str = DECORATION_MODEL,
-            enabled: bool = BaseDecoration.ENABLED,
+            name: str = ATTACHMENT_MODEL,
+            enabled: bool = BaseAttachment.ENABLED,
             model: str = DEFAULT,
             extension: float = EXTENSION,
             parent: str = Accessory.PARENT,

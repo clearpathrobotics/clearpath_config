@@ -1,23 +1,22 @@
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.decorations.a200 import A200DecorationsConfig
-from clearpath_config.platform.decorations.config import BaseDecorationsConfig
-from clearpath_config.platform.decorations.generic import (
-    GENERICDecorationsConfig)
-from clearpath_config.platform.decorations.j100 import J100DecorationsConfig
+from clearpath_config.platform.attachments.a200 import A200AttachmentsConfig
+from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
+from clearpath_config.platform.attachments.generic import GENERICAttachmentsConfig
+from clearpath_config.platform.attachments.j100 import J100AttachmentsConfig
 
 
-class DecorationsConfigMux:
+class AttachmentsConfigMux:
     PLATFORM = {
-        Platform.A200: A200DecorationsConfig(),
-        Platform.J100: J100DecorationsConfig(),
-        Platform.GENERIC: GENERICDecorationsConfig()
+        Platform.A200: A200AttachmentsConfig(),
+        Platform.J100: J100AttachmentsConfig(),
+        Platform.GENERIC: GENERICAttachmentsConfig()
     }
 
     def __new__(
             cls,
             platform: str,
             config: dict = None
-            ) -> BaseDecorationsConfig:
+            ) -> BaseAttachmentsConfig:
         assert platform in cls.PLATFORM, (
             "Platform '%s' must be one of: '%s'" % (
                 platform,

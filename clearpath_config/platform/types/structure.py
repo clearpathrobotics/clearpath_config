@@ -1,15 +1,15 @@
-from clearpath_config.platform.types.decoration import BaseDecoration
+from clearpath_config.platform.types.attachment import BaseAttachment
 from clearpath_config.common.types.accessory import Accessory
 from typing import List
 
 
-class Structure(BaseDecoration):
+class Structure(BaseAttachment):
     """
     Structure:
      - enabled: can be toggled
      - model: type of structure must be selected
     """
-    DECORATION_MODEL = "structure"
+    ATTACHMENT_MODEL = "structure"
     ARCH_300 = "sensor_arch_300"
     ARCH_510 = "sensor_arch_510"
     DEFAULT = ARCH_300
@@ -18,8 +18,8 @@ class Structure(BaseDecoration):
 
     def __init__(
             self,
-            name: str = DECORATION_MODEL,
-            enabled: bool = BaseDecoration.ENABLED,
+            name: str = ATTACHMENT_MODEL,
+            enabled: bool = BaseAttachment.ENABLED,
             model: str = DEFAULT,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,

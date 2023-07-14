@@ -1,10 +1,10 @@
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.accessories.types.accessory import BaseAccessory
+from clearpath_config.links.types.link import BaseLink
 from typing import List
 
 
-class Link(BaseAccessory):
-    ACCESSORY_TYPE = "link"
+class Frame(BaseLink):
+    LINK_TYPE = "frame"
 
     def __init__(
             self,
@@ -12,8 +12,8 @@ class Link(BaseAccessory):
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
-            offset_xyz: List[float] = BaseAccessory.XYZ,
-            offset_rpy: List[float] = BaseAccessory.RPY
+            offset_xyz: List[float] = BaseLink.XYZ,
+            offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
         super().__init__(
             name,

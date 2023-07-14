@@ -1,17 +1,17 @@
 from clearpath_config.common.types.list import ListConfig
 from clearpath_config.common.utils.dictionary import merge_dict
-from clearpath_config.platform.types.decoration import BaseDecoration
+from clearpath_config.platform.types.attachment import BaseAttachment
 from clearpath_config.platform.types.bumper import Bumper
 from clearpath_config.platform.types.structure import Structure
 from clearpath_config.platform.types.top_plate import TopPlate
 from typing import List
 
 
-class DecorationListConfig(ListConfig[BaseDecoration, str]):
+class AttachmentListConfig(ListConfig[BaseAttachment, str]):
     def __init__(self) -> None:
         super().__init__(
             uid=lambda obj: obj.get_name(),
-            obj_type=BaseDecoration,
+            obj_type=BaseAttachment,
             uid_type=str
         )
 
@@ -22,12 +22,12 @@ class DecorationListConfig(ListConfig[BaseDecoration, str]):
         return d
 
 
-# Base Decorations Config
+# Base Attachments Config
 # - to be used by all other configurations.
-class BaseDecorationsConfig:
+class BaseAttachmentsConfig:
 
     def __init__(self) -> None:
-        # Standard Platform Decorations
+        # Standard Platform Attachments
         self.__bumpers = ListConfig[Bumper, str](
             uid=ListConfig.uid_name,
             obj_type=Bumper,
@@ -43,8 +43,8 @@ class BaseDecorationsConfig:
 
     def to_dict(self):
         d = {}
-        for decoration in self.get_all():
-            merge_dict(d, decoration)
+        for attachment in self.get_all():
+            merge_dict(d, attachment)
         return d
 
     @property
@@ -92,9 +92,9 @@ class BaseDecorationsConfig:
                 "Structures must be list of 'Structure' or 'ListConfig'"
             )
 
-    def get_all(self) -> List[BaseDecoration]:
-        decorations = []
-        decorations.extend(self.bumpers.get_all())
-        decorations.extend(self.top_plates.get_all())
-        decorations.extend(self.structures.get_all())
-        return decorations
+    def get_all(self) -> List[BaseAttachment]:
+        attachments = []
+        attachments.extend(self.bumpers.get_all())
+        attachments.extend(self.top_plates.get_all())
+        attachments.extend(self.structures.get_all())
+        return attachments
