@@ -56,8 +56,8 @@ class LinkListConfig(ListConfig[BaseLink, str]):
         return d
 
 
-# Link Config
-class LinkConfig(BaseConfig):
+# Links Config
+class LinksConfig(BaseConfig):
 
     LINKS = "links"
     BOX = "box"
@@ -103,11 +103,11 @@ class LinkConfig(BaseConfig):
         self.sphere = sphere
         # Template
         template = {
-            self.KEYS[self.BOX]: LinkConfig.box,
-            self.KEYS[self.CYLINDER]: LinkConfig.cylinder,
-            self.KEYS[self.FRAME]: LinkConfig.frame,
-            self.KEYS[self.MESH]: LinkConfig.mesh,
-            self.KEYS[self.SPHERE]: LinkConfig.sphere
+            self.KEYS[self.BOX]: LinksConfig.box,
+            self.KEYS[self.CYLINDER]: LinksConfig.cylinder,
+            self.KEYS[self.FRAME]: LinksConfig.frame,
+            self.KEYS[self.MESH]: LinksConfig.mesh,
+            self.KEYS[self.SPHERE]: LinksConfig.sphere
         }
         super().__init__(template, config, self.LINKS)
 
