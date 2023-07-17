@@ -30,11 +30,6 @@ from typing import List, Callable
 
 
 class BaseSensor(IndexedAccessory):
-    """
-    Base Sensor Class
-     - inherits from Accessory.
-     - contains all common parameters shared by all sensors.
-    """
     SENSOR_TYPE = "generic"
     SENSOR_MODEL = "base"
     TOPIC = "base"

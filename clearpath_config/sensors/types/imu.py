@@ -32,14 +32,6 @@ from typing import List
 
 
 class BaseIMU(BaseSensor):
-    """
-    Common IMU Class.
-      - contains all common imu parameters:
-        - port: device file path
-        - frame_id: to publish IMU data
-        - use_enu: transform data to ENU frame
-      - all IMUs must be of type BaseIMU
-    """
     SENSOR_TYPE = "imu"
     SENSOR_MODEL = "base"
     TOPIC = "imu"

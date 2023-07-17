@@ -31,12 +31,6 @@ from typing import List
 
 
 class Bumper(BaseAttachment):
-    """
-    Bumper
-     - enabled: can be toggled
-     - model: can be swapped to a Wibotic charger bumper
-     - extension: meters by which it is extended
-    """
     ATTACHMENT_MODEL = "bumper"
     EXTENSION = 0.0
     DEFAULT = "default"

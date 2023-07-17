@@ -44,7 +44,7 @@ def flatten_dict(d: MutableMapping, parent_key: str = '', dlim: str = '.'):
 
 
 def merge_dict(a, b, path=None):
-    "merges b into a"
+    """Merge dict b into dict a."""
     if path is None:
         path = []
     for key in b:

@@ -121,12 +121,6 @@ class PACS:
             self.thickness = thickness
 
     class Bracket(BaseMount):
-        """
-        Bracket:
-            - small apapter plate
-            - allows multiple sensors to be mounted
-            - should be added to any
-        """
         MOUNT_MODEL = "bracket"
         HORIZONTAL = "horizontal"
         HORIZONTAL_LARGE = "large"

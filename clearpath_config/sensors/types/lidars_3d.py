@@ -33,13 +33,6 @@ from typing import List
 
 
 class BaseLidar3D(BaseSensor):
-    """
-    Base 3D Lidar Class
-        - contains all common 3d lidar parameters:
-            - frame_id: to publish PointCloud data
-            - ip_address: to connect to lidar
-            - ip_port: to connect to lidar
-    """
     SENSOR_TYPE = "lidar3d"
     SENSOR_MODEL = "base"
     TOPIC = "points"
@@ -157,16 +150,6 @@ class BaseLidar3D(BaseSensor):
 
 
 class VelodyneLidar(BaseLidar3D):
-    """
-    Velodyne Lidar Class
-        - extra ros_parameters:
-            - device_type: model of the lidar:
-                - '64E'
-                - '64E_S3'
-                - '32E'
-                - '32C'
-                - 'VLP16'
-    """
     SENSOR_MODEL = "velodyne_lidar"
 
     FRAME_ID = "laser"

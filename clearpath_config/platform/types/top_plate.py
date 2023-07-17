@@ -31,11 +31,6 @@ from typing import List
 
 
 class TopPlate(BaseAttachment):
-    """
-    TopPlate
-     - enabled: can be toggled
-     - model: can be swapped to a large or PACS plate
-    """
     ATTACHMENT_MODEL = "top_plate"
     DEFAULT = "default"
     LARGE = "large"

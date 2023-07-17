@@ -30,11 +30,6 @@ from typing import List
 
 
 class BaseAttachment(Accessory):
-    """
-    BaseAttachment
-     - enable: whether attachment is enabled or not
-     - model: what type of that attachment it is
-    """
     ATTACHMENT_MODEL = "base_attachment"
     ENABLED = True
     DEFAULT = "default"

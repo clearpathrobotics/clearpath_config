@@ -57,12 +57,12 @@ class BaseConfig:
             self,
             serial_number=False,
             ) -> None:
-        """Update any variables based on inputs"""
+        """Update any variables based on inputs."""
         return
 
     @property
     def template(self) -> dict:
-        """Return template configuration dictionary"""
+        """Return template configuration dictionary."""
         return self._template
 
     @template.setter
@@ -80,7 +80,7 @@ class BaseConfig:
 
     @property
     def config(self) -> dict:
-        """Return configuration dictionary"""
+        """Return configuration dictionary."""
         for _, prop in flatten_dict(
                 d=self.template, dlim=BaseConfig.DLIM).items():
             self.getter(prop)()

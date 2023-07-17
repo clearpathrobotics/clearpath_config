@@ -33,13 +33,6 @@ from typing import List
 
 
 class BaseGPS(BaseSensor):
-    """
-    Base GPS Class
-        - contains all common gps parameters:
-            - frame_id: to publish Fix
-            - ip_address: to connect to GPS
-            - ip_port: to connect to GPS
-    """
     SENSOR_TYPE = "gps"
     SENSOR_MODEL = "base"
     TOPIC = "fix"
@@ -157,12 +150,6 @@ class BaseGPS(BaseSensor):
 
 
 class SwiftNavDuro(BaseGPS):
-    """
-    Swift Navigation Duro Class:
-        - extra ros_parameters:
-            - gps_receiver_frame: same as frame_id
-            - imu_frame: same as frame_id
-    """
     SENSOR_MODEL = "swiftnav_duro"
 
     FRAME_ID = "link"

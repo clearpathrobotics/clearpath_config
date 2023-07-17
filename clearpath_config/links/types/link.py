@@ -31,19 +31,30 @@ from typing import List
 
 class BaseLink(Accessory):
     """
-    Base Link Class
-      - inherits from Accessory
-      - contains all common parameters shared by all links
-      - links have no mounting points
-      - links have no drivers
-      - links can be of the following types:
-        - link: just a frame without any visual component
-        - box:
-        - cylinder:
-        - sphere:
-        - mesh:
-      - links `name` MUST be specified
+    Base Link object contains all common methods for links.
+
+    Parameters
+    ----------
+    name : str
+        Required. Results in "{name}_link" in URDF.
+    parent : str
+        Parent link in URDF.
+    xyz: List[float]
+        Translational offset from parent link.
+    rpy: List[float]
+        Rotational offset from parent link.
+    offset_xyz: List[float]
+        Translational offset of visual w.r.t. link.
+    offset_rpy: List[float]
+        Rotational offset of visual w.r.t. link.
+
+    Attributes
+    ----------
+    LINK_TYPE : str
+        Type of string used to generate URDF link.
+
     """
+
     LINK_TYPE = "base"
     OFFSET_XYZ = [0.0, 0.0, 0.0]
     OFFSET_RPY = [0.0, 0.0, 0.0]

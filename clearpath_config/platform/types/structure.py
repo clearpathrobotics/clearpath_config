@@ -31,11 +31,6 @@ from typing import List
 
 
 class Structure(BaseAttachment):
-    """
-    Structure:
-     - enabled: can be toggled
-     - model: type of structure must be selected
-    """
     ATTACHMENT_MODEL = "structure"
     ARCH_300 = "sensor_arch_300"
     ARCH_510 = "sensor_arch_510"

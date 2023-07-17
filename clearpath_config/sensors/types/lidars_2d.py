@@ -34,16 +34,6 @@ from math import pi
 
 
 class BaseLidar2D(BaseSensor):
-    """
-    Base 2D Lidar Class
-        - contains all common laser scan parameters:
-            - frame_id: to publish LaserScan data
-            - ip_address: to connect to lidar
-            - ip_port: to connect to lidar
-            - min_angle: starting angle
-            - max_angle: end angle
-        - all 2d lidars must be of type BaseLidar2d
-    """
     SENSOR_TYPE = "lidar2d"
     SENSOR_MODEL = "base"
     TOPIC = "scan"

@@ -31,11 +31,6 @@ from typing import List
 
 
 class BaseCamera(BaseSensor):
-    """
-    Common Camera Class.
-        - contains all common camera parameters
-        - all cameras must be of type BaseCamera
-    """
     SENSOR_TYPE = "camera"
     SENSOR_MODEL = "base"
     TOPIC = "image"
@@ -108,15 +103,6 @@ class BaseCamera(BaseSensor):
 
 
 class IntelRealsense(BaseCamera):
-    """
-    IntelRealsense Camera Class.
-    - Width: [640] : Width of image image
-    - Height: [480] : Height of color image
-    - Depth Enable : [True] : Toggle for depth data acquisition.
-        - Depth FPS: [30] : Framerate of depth camera.
-        - Depth Width: [640] : Width of depth image.
-        - Depth Height: [480] : Height of depth image.
-    """
     SENSOR_MODEL = "intel_realsense"
 
     D415 = "d415"
@@ -429,13 +415,6 @@ class IntelRealsense(BaseCamera):
 
 
 class FlirBlackfly(BaseCamera):
-    """
-    Flir FlirBlackfly Camera Class
-    Parameters:
-    - Device: [USB3 or GigE] : Device connection type.
-    - Encoding: [BayerRG8] : Image encoding.
-                    Must use BayerRG8 encoding to get more than 15 FPS.
-    """
     SENSOR_MODEL = "flir_blackfly"
 
     USB3_CONNECTION = "USB3"
