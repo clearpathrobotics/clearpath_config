@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.4 (2023-07-17)
+------------------
 * Added __init_\_ to common
 * Only run pytest on clearpath_config
 * Linting errors
