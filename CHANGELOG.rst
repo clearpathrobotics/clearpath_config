@@ -2,6 +2,28 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added __init_\_ to common
+* Only run pytest on clearpath_config
+* Linting errors
+* Added samples to installed share
+* Removed parser
+* Updated pytests
+* Renamed configs
+* Added license file
+* Added license headers
+* Renamed accessories to links in top level config
+* Replaced accessories module with links
+* Renamed decorations and accessories
+* Standard lists
+* Removed all old samples
+* Added workspace setter
+* Added workspaces
+* Fixed rpy type
+* Removed copy
+* Contributors: Luis Camero
+
 0.0.3 (2023-07-06)
 ------------------
 * Fixed parsing issues
