@@ -1,8 +1,35 @@
+# Software License Agreement (BSD)
+#
+# @author    Luis Camero <lcamero@clearpathrobotics.com>
+# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.platform.extras import ExtrasConfig
-from clearpath_config.platform.decorations.config import BaseDecorationsConfig
-from clearpath_config.platform.decorations.mux import DecorationsConfigMux
+from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
+from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
 
 
 class PlatformConfig(BaseConfig):
@@ -12,14 +39,14 @@ class PlatformConfig(BaseConfig):
     PS4 = "ps4"
     LOGITECH = "logitech"
     CONTROLLER = "controller"
-    DECORATIONS = "decorations"
+    ATTACHMENTS = "attachments"
     # Extras
     EXTRAS = "extras"
 
     TEMPLATE = {
         PLATFORM: {
             CONTROLLER: CONTROLLER,
-            DECORATIONS: DECORATIONS,
+            ATTACHMENTS: ATTACHMENTS,
             EXTRAS: EXTRAS
         }
     }
@@ -29,7 +56,7 @@ class PlatformConfig(BaseConfig):
     DEFAULTS = {
         # PLATFORM
         CONTROLLER: PS4,
-        DECORATIONS: {},
+        ATTACHMENTS: {},
         EXTRAS: ExtrasConfig.DEFAULTS
     }
 
@@ -37,26 +64,26 @@ class PlatformConfig(BaseConfig):
             self,
             config: dict = {},
             controller: str = DEFAULTS[CONTROLLER],
-            decorations: str = DEFAULTS[DECORATIONS],
+            attachments: str = DEFAULTS[ATTACHMENTS],
             extras: str = DEFAULTS[EXTRAS]
             ) -> None:
         # Initialization
         self._config = {}
         self.controller = controller
-        self.decorations = decorations
+        self.attachments = attachments
         self.extras = extras
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
-            self.KEYS[self.DECORATIONS]: PlatformConfig.decorations,
+            self.KEYS[self.ATTACHMENTS]: PlatformConfig.attachments,
             self.KEYS[self.EXTRAS]: PlatformConfig.extras
         }
         super().__init__(setters, config, self.PLATFORM)
 
     def update(self, serial_number=False) -> None:
         if serial_number:
-            # Reload decorations
-            self.decorations = None
+            # Reload attachments
+            self.attachments = None
             # TODO: Set PACS Profile
 
     @property
@@ -76,16 +103,16 @@ class PlatformConfig(BaseConfig):
         self._controller = value.lower()
 
     @property
-    def decorations(self) -> BaseDecorationsConfig:
+    def attachments(self) -> BaseAttachmentsConfig:
         self.set_config_param(
-            key=self.KEYS[self.DECORATIONS],
-            value=self._decorations.config[self.DECORATIONS]
+            key=self.KEYS[self.ATTACHMENTS],
+            value=self._attachments.config[self.ATTACHMENTS]
         )
-        return self._decorations
+        return self._attachments
 
-    @decorations.setter
-    def decorations(self, value: dict) -> None:
-        self._decorations = DecorationsConfigMux(
+    @attachments.setter
+    def attachments(self, value: dict) -> None:
+        self._attachments = AttachmentsConfigMux(
             BaseConfig._SERIAL_NUMBER.get_model(), value)
 
     @property

@@ -14,36 +14,36 @@ system:
     rmw_implementation: rmw_fastrtps_cpp
 platform:
   controller: ps4
-  decorations:
+  attachments:
     front_bumper:
       enabled: true
       model: default
       xyz: [0.0, 0.0, 0.0]
-      ryp: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
       extension: 0.0
     rear_bumper:
       enabled: true
       model: default
       xyz: [0.0, 0.0, 0.0]
-      ryp: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
       extension: 0.0
     structure:
-      enabled: true
+      enabled: false
       model: sensor_arch_300
       xyz: [0.0, 0.0, 0.0]
-      ryp: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
     top_plate:
       enabled: true
       model: pacs
       xyz: [0.0, 0.0, 0.0]
-      ryp: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
   extras:
     urdf: null
     control: null
-accessories:
+links:
   box: []
   cylinder: []
-  link: []
+  frame: []
   mesh: []
   sphere: []
 mounts:
@@ -59,23 +59,34 @@ sensors:
     launch_enabled: true
     parent: base_link
     xyz: [0.0, 0.0, 0.0]
-    ryp: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
     ros_parameters:
       imu_frame_id: imu_0_link
       port: /dev/microstrain_main
       use_enu_frame: true
-  lidar2d: []
-  lidar3d:
-  - model: velodyne_lidar
+  lidar2d:
+  - model: sick_lms1xx
     urdf_enabled: true
     launch_enabled: true
-    parent: sensor_arch_mount
+    parent: base_link
     xyz: [0.0, 0.0, 0.0]
-    ryp: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
     ros_parameters:
-      frame_id: lidar3d_0_laser
-      device_ip: 192.168.131.25
-      port: 2368
-      model: VLP16
-      fixed_frame: lidar3d_0_laser
-      target_frame: lidar3d_0_laser
+      frame_id: lidar2d_0_laser
+      hostname: 192.168.131.20
+      port: 2112
+      min_ang: -2.391
+      max_ang: 2.391
+  - model: sick_lms1xx
+    urdf_enabled: true
+    launch_enabled: true
+    parent: base_link
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+    ros_parameters:
+      frame_id: lidar2d_1_laser
+      hostname: 192.168.131.21
+      port: 2112
+      min_ang: -2.391
+      max_ang: 2.391
+  lidar3d: []

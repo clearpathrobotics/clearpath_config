@@ -1,9 +1,36 @@
+# Software License Agreement (BSD)
+#
+# @author    Luis Camero <lcamero@clearpathrobotics.com>
+# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.serial_number import SerialNumber
 from clearpath_config.common.utils.yaml import read_yaml, write_yaml
 from clearpath_config.system.system import SystemConfig
 from clearpath_config.platform.platform import PlatformConfig
-from clearpath_config.accessories.accessories import AccessoryConfig
+from clearpath_config.links.links import LinksConfig
 from clearpath_config.mounts.mounts import MountsConfig
 from clearpath_config.sensors.sensors import SensorConfig
 
@@ -17,7 +44,7 @@ class ClearpathConfig(BaseConfig):
     SERIAL_NUMBER = "serial_number"
     SYSTEM = "system"
     PLATFORM = "platform"
-    ACCESSORIES = "accessories"
+    LINKS = "links"
     MOUNTS = "mounts"
     SENSORS = "sensors"
 
@@ -26,7 +53,7 @@ class ClearpathConfig(BaseConfig):
         VERSION: VERSION,
         SYSTEM: SYSTEM,
         PLATFORM: PLATFORM,
-        ACCESSORIES: ACCESSORIES,
+        LINKS: LINKS,
         MOUNTS: MOUNTS,
         SENSORS: SENSORS
     }
@@ -38,7 +65,7 @@ class ClearpathConfig(BaseConfig):
         VERSION: 0,
         SYSTEM: SystemConfig.DEFAULTS,
         PLATFORM: PlatformConfig.DEFAULTS,
-        ACCESSORIES: AccessoryConfig.DEFAULTS,
+        LINKS: LinksConfig.DEFAULTS,
         MOUNTS: MountsConfig.DEFAULTS,
         SENSORS: SensorConfig.DEFAULTS,
     }
@@ -51,7 +78,7 @@ class ClearpathConfig(BaseConfig):
         self._config = {}
         self._system = SystemConfig(self.DEFAULTS[self.SYSTEM])
         self._platform = PlatformConfig(self.DEFAULTS[self.PLATFORM])
-        self._accessories = AccessoryConfig(self.DEFAULTS[self.ACCESSORIES])
+        self._links = LinksConfig(self.DEFAULTS[self.LINKS])
         self._mounts = MountsConfig(self.DEFAULTS[self.MOUNTS])
         self._sensors = SensorConfig(self.DEFAULTS[self.SENSORS])
         # Initialization
@@ -63,7 +90,7 @@ class ClearpathConfig(BaseConfig):
             self.VERSION: ClearpathConfig.version,
             self.SYSTEM: ClearpathConfig.system,
             self.PLATFORM: ClearpathConfig.platform,
-            self.ACCESSORIES: ClearpathConfig.accessories,
+            self.LINKS: ClearpathConfig.links,
             self.MOUNTS: ClearpathConfig.mounts,
             self.SENSORS: ClearpathConfig.sensors,
         }
@@ -92,7 +119,7 @@ class ClearpathConfig(BaseConfig):
         BaseConfig._SERIAL_NUMBER = SerialNumber(sn)
         self._system.update(serial_number=True)
         self._platform.update(serial_number=True)
-        self._accessories.update(serial_number=True)
+        self._links.update(serial_number=True)
         self._mounts.update(serial_number=True)
         self._sensors.update(serial_number=True)
 
@@ -141,15 +168,15 @@ class ClearpathConfig(BaseConfig):
         self._platform = PlatformConfig(config)
 
     @property
-    def accessories(self) -> AccessoryConfig:
+    def links(self) -> LinksConfig:
         self.set_config_param(
-            self.ACCESSORIES,
-            self._accessories.config[self.ACCESSORIES])
-        return self._accessories
+            self.LINKS,
+            self._links.config[self.LINKS])
+        return self._links
 
-    @accessories.setter
-    def accessories(self, value: dict) -> None:
-        self._accessories = AccessoryConfig(value)
+    @links.setter
+    def links(self, value: dict) -> None:
+        self._links = LinksConfig(value)
 
     @property
     def mounts(self) -> MountsConfig:

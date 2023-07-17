@@ -1,25 +1,52 @@
+# Software License Agreement (BSD)
+#
+# @author    Luis Camero <lcamero@clearpathrobotics.com>
+# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.list import ListConfig
-from clearpath_config.accessories.types.accessory import BaseAccessory
-from clearpath_config.accessories.types.box import Box
-from clearpath_config.accessories.types.cylinder import Cylinder
-from clearpath_config.accessories.types.link import Link
-from clearpath_config.accessories.types.mesh import Mesh
-from clearpath_config.accessories.types.sphere import Sphere
 from clearpath_config.common.utils.dictionary import flip_dict
+from clearpath_config.links.types.link import BaseLink
+from clearpath_config.links.types.box import Box
+from clearpath_config.links.types.cylinder import Cylinder
+from clearpath_config.links.types.frame import Frame
+from clearpath_config.links.types.mesh import Mesh
+from clearpath_config.links.types.sphere import Sphere
 from typing import List
 
 
-class URDFAccessory():
-    LINK = Link.ACCESSORY_TYPE
-    BOX = Box.ACCESSORY_TYPE
-    CYLINDER = Cylinder.ACCESSORY_TYPE
-    SPHERE = Sphere.ACCESSORY_TYPE
-    MESH = Mesh.ACCESSORY_TYPE
+class Link():
+    FRAME = Frame.LINK_TYPE
+    BOX = Box.LINK_TYPE
+    CYLINDER = Cylinder.LINK_TYPE
+    SPHERE = Sphere.LINK_TYPE
+    MESH = Mesh.LINK_TYPE
 
     TYPE = {
-        LINK: Link,
+        FRAME: Frame,
         BOX: Box,
         CYLINDER: Cylinder,
         SPHERE: Sphere,
@@ -35,42 +62,42 @@ class URDFAccessory():
             )
         )
 
-    def __new__(cls, _type: str, name: str) -> BaseAccessory:
+    def __new__(cls, _type: str, name: str) -> BaseLink:
         cls.assert_type(_type)
         return cls.TYPE[_type](name=name)
 
 
-# AccessoryListConfig
-class AccessoryListConfig(ListConfig[BaseAccessory, str]):
+# LinkListConfig
+class LinkListConfig(ListConfig[BaseLink, str]):
     def __init__(self) -> None:
         super().__init__(
             uid=lambda obj: obj.get_name(),
-            obj_type=BaseAccessory,
+            obj_type=BaseLink,
             uid_type=str
         )
 
     def to_dict(self) -> List[dict]:
         d = []
-        for accessory in self.get_all():
-            d.append(accessory.to_dict())
+        for link in self.get_all():
+            d.append(link.to_dict())
         return d
 
 
-# Accessory Config
-class AccessoryConfig(BaseConfig):
+# Links Config
+class LinksConfig(BaseConfig):
 
-    ACCESSORIES = "accessories"
+    LINKS = "links"
     BOX = "box"
     CYLINDER = "cylinder"
-    LINK = "link"
+    FRAME = "frame"
     MESH = "mesh"
     SPHERE = "sphere"
 
     TEMPLATE = {
-        ACCESSORIES: {
+        LINKS: {
             BOX: BOX,
             CYLINDER: CYLINDER,
-            LINK: LINK,
+            FRAME: FRAME,
             MESH: MESH,
             SPHERE: SPHERE,
         }
@@ -81,7 +108,7 @@ class AccessoryConfig(BaseConfig):
     DEFAULTS = {
         BOX: [],
         CYLINDER: [],
-        LINK: [],
+        FRAME: [],
         MESH: [],
         SPHERE: []
     }
@@ -91,55 +118,55 @@ class AccessoryConfig(BaseConfig):
             config: dict = {},
             box: List[Box] = DEFAULTS[BOX],
             cylinder: List[Cylinder] = DEFAULTS[CYLINDER],
-            link: List[Link] = DEFAULTS[LINK],
+            frame: List[Frame] = DEFAULTS[FRAME],
             mesh: List[Mesh] = DEFAULTS[MESH],
             sphere: List[Mesh] = DEFAULTS[SPHERE]
             ) -> None:
         # Initialization
         self.box = box
         self.cylinder = cylinder
-        self.link = link
+        self.frame = frame
         self.mesh = mesh
         self.sphere = sphere
         # Template
         template = {
-            self.KEYS[self.BOX]: AccessoryConfig.box,
-            self.KEYS[self.CYLINDER]: AccessoryConfig.cylinder,
-            self.KEYS[self.LINK]: AccessoryConfig.link,
-            self.KEYS[self.MESH]: AccessoryConfig.mesh,
-            self.KEYS[self.SPHERE]: AccessoryConfig.sphere
+            self.KEYS[self.BOX]: LinksConfig.box,
+            self.KEYS[self.CYLINDER]: LinksConfig.cylinder,
+            self.KEYS[self.FRAME]: LinksConfig.frame,
+            self.KEYS[self.MESH]: LinksConfig.mesh,
+            self.KEYS[self.SPHERE]: LinksConfig.sphere
         }
-        super().__init__(template, config, self.ACCESSORIES)
+        super().__init__(template, config, self.LINKS)
 
     @property
-    def link(self) -> AccessoryListConfig:
+    def frame(self) -> LinkListConfig:
         self.set_config_param(
-            key=self.KEYS[self.LINK],
-            value=self._link.to_dict()
+            key=self.KEYS[self.FRAME],
+            value=self._frame.to_dict()
         )
-        return self._link
+        return self._frame
 
-    @link.setter
-    def link(self, value: List[dict] | AccessoryListConfig) -> None:
+    @frame.setter
+    def frame(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
             assert all([isinstance(i, dict) for i in value]), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
-            accessories = AccessoryListConfig()
-            accessory_list = []
+            links = LinkListConfig()
+            link_list = []
             for d in value:
-                accessory = Link(name="link")
-                accessory.from_dict(d)
-                accessory_list.append(accessory)
-            accessories.set_all(accessory_list)
-            self._link = accessories
+                link = Frame(name="frame")
+                link.from_dict(d)
+                link_list.append(link)
+            links.set_all(link_list)
+            self._frame = links
         else:
             assert isinstance(value, list), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
 
     @property
-    def box(self) -> AccessoryListConfig:
+    def box(self) -> LinkListConfig:
         self.set_config_param(
             key=self.KEYS[self.BOX],
             value=self._box.to_dict()
@@ -147,26 +174,26 @@ class AccessoryConfig(BaseConfig):
         return self._box
 
     @box.setter
-    def box(self, value: List[dict] | AccessoryListConfig) -> None:
+    def box(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
             assert all([isinstance(i, dict) for i in value]), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
-            accessories = AccessoryListConfig()
-            accessory_list = []
+            links = LinkListConfig()
+            link_list = []
             for d in value:
-                accessory = Box(name="box")
-                accessory.from_dict(d)
-                accessory_list.append(accessory)
-            accessories.set_all(accessory_list)
-            self._box = accessories
+                link = Box(name="box")
+                link.from_dict(d)
+                link_list.append(link)
+            links.set_all(link_list)
+            self._box = links
         else:
             assert isinstance(value, list), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
 
     @property
-    def cylinder(self) -> AccessoryListConfig:
+    def cylinder(self) -> LinkListConfig:
         self.set_config_param(
             key=self.KEYS[self.CYLINDER],
             value=self._cylinder.to_dict()
@@ -174,26 +201,26 @@ class AccessoryConfig(BaseConfig):
         return self._cylinder
 
     @cylinder.setter
-    def cylinder(self, value: List[dict] | AccessoryListConfig) -> None:
+    def cylinder(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
             assert all([isinstance(i, dict) for i in value]), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
-            accessories = AccessoryListConfig()
-            accessory_list = []
+            links = LinkListConfig()
+            link_list = []
             for d in value:
-                accessory = Cylinder(name="cylinder")
-                accessory.from_dict(d)
-                accessory_list.append(accessory)
-            accessories.set_all(accessory_list)
-            self._cylinder = accessories
+                link = Cylinder(name="cylinder")
+                link.from_dict(d)
+                link_list.append(link)
+            links.set_all(link_list)
+            self._cylinder = links
         else:
             assert isinstance(value, list), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
 
     @property
-    def mesh(self) -> AccessoryListConfig:
+    def mesh(self) -> LinkListConfig:
         self.set_config_param(
             key=self.KEYS[self.MESH],
             value=self._mesh.to_dict()
@@ -201,26 +228,26 @@ class AccessoryConfig(BaseConfig):
         return self._mesh
 
     @mesh.setter
-    def mesh(self, value: List[dict] | AccessoryListConfig) -> None:
+    def mesh(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
             assert all([isinstance(i, dict) for i in value]), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
-            accessories = AccessoryListConfig()
-            accessory_list = []
+            links = LinkListConfig()
+            link_list = []
             for d in value:
-                accessory = Mesh(name="mesh")
-                accessory.from_dict(d)
-                accessory_list.append(accessory)
-            accessories.set_all(accessory_list)
-            self._mesh = accessories
+                link = Mesh(name="mesh")
+                link.from_dict(d)
+                link_list.append(link)
+            links.set_all(link_list)
+            self._mesh = links
         else:
             assert isinstance(value, list), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
 
     @property
-    def sphere(self) -> AccessoryListConfig:
+    def sphere(self) -> LinkListConfig:
         self.set_config_param(
             key=self.KEYS[self.SPHERE],
             value=self._sphere.to_dict()
@@ -228,56 +255,56 @@ class AccessoryConfig(BaseConfig):
         return self._sphere
 
     @sphere.setter
-    def sphere(self, value: List[dict] | AccessoryListConfig) -> None:
+    def sphere(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
             assert all([isinstance(i, dict) for i in value]), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
-            accessories = AccessoryListConfig()
-            accessory_list = []
+            links = LinkListConfig()
+            link_list = []
             for d in value:
-                accessory = Sphere(name="sphere")
-                accessory.from_dict(d)
-                accessory_list.append(accessory)
-            accessories.set_all(accessory_list)
-            self._sphere = accessories
+                link = Sphere(name="sphere")
+                link.from_dict(d)
+                link_list.append(link)
+            links.set_all(link_list)
+            self._sphere = links
         else:
             assert isinstance(value, list), (
-                "Accessories must be list of type 'dict'"
+                "Links must be list of type 'dict'"
             )
 
-    def get_all_accessories(self) -> List[BaseAccessory]:
-        accessories = []
-        # Link
-        accessories.extend(self.get_all_links())
+    def get_all_links(self) -> List[BaseLink]:
+        links = []
+        # Frame
+        links.extend(self.get_all_frames())
         # Box
-        accessories.extend(self.get_all_boxes())
+        links.extend(self.get_all_boxes())
         # Cylinder
-        accessories.extend(self.get_all_cylinders())
+        links.extend(self.get_all_cylinders())
         # Sphere
-        accessories.extend(self.get_all_spheres())
+        links.extend(self.get_all_spheres())
         # Mesh
-        accessories.extend(self.get_all_meshes())
-        return accessories
+        links.extend(self.get_all_meshes())
+        return links
 
-    # Link: Add by Object or Parameters
-    def add_link(
+    # Frame: Add by Object or Parameters
+    def add_frame(
             self,
             # By Object
-            link: Link = None,
+            frame: Frame = None,
             # By Parameters
             name: str = None,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
-            offset_xyz: List[float] = BaseAccessory.XYZ,
-            offset_rpy: List[float] = BaseAccessory.RPY
+            offset_xyz: List[float] = BaseLink.XYZ,
+            offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
-        assert link or name, (
-            "Link object or name must be passed"
+        assert frame or name, (
+            "Frame object or name must be passed"
         )
-        if not link and name:
-            link = Link(
+        if not frame and name:
+            frame = Frame(
                 name=name,
                 parent=parent,
                 xyz=xyz,
@@ -285,34 +312,34 @@ class AccessoryConfig(BaseConfig):
                 offset_xyz=offset_xyz,
                 offset_rpy=offset_rpy
             )
-        self._link.add(link)
+        self._frame.add(frame)
 
-    # Link: Remove by Object or Name
-    def remove_link(
+    # Frame: Remove by Object or Name
+    def remove_frame(
             self,
             # By Object
-            link: Link | str
+            frame: Frame | str
             ) -> None:
-        self._link.remove(link)
+        self._frame.remove(frame)
 
-    # Link: Get Single Object by Name
-    def get_link(
+    # Frame: Get Single Object by Name
+    def get_frame(
             self,
-            link: str
-            ) -> Link:
-        return self._link.get(link)
+            frame: str
+            ) -> Frame:
+        return self._frame.get(frame)
 
-    # Link: Get All Objects
-    def get_all_links(self) -> List[Link]:
-        return self._link.get_all()
+    # Frame: Get All Objects
+    def get_all_frames(self) -> List[Frame]:
+        return self._frame.get_all()
 
-    # Link: Set Single Object by Name
-    def set_link(self, link: Link) -> None:
-        self._link.set(link)
+    # Frame: Set Single Object by Name
+    def set_frame(self, frame: Frame) -> None:
+        self._frame.set(frame)
 
-    # Link: Set All Objects
-    def set_all_links(self, links: List[Link]) -> None:
-        self._link.set_all(links)
+    # Frame: Set All Objects
+    def set_all_frames(self, frames: List[Frame]) -> None:
+        self._frame.set_all(frames)
 
     # Box: Add by Object or Parameters
     def add_box(
@@ -325,8 +352,8 @@ class AccessoryConfig(BaseConfig):
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
-            offset_xyz: List[float] = BaseAccessory.XYZ,
-            offset_rpy: List[float] = BaseAccessory.RPY
+            offset_xyz: List[float] = BaseLink.XYZ,
+            offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
         assert box or name, (
             "Box object or name must be passed"
@@ -375,8 +402,8 @@ class AccessoryConfig(BaseConfig):
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
-            offset_xyz: List[float] = BaseAccessory.XYZ,
-            offset_rpy: List[float] = BaseAccessory.RPY
+            offset_xyz: List[float] = BaseLink.XYZ,
+            offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
         assert cylinder or name, (
             "Cylinder object or name must be passed"
@@ -425,8 +452,8 @@ class AccessoryConfig(BaseConfig):
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
-            offset_xyz: List[float] = BaseAccessory.XYZ,
-            offset_rpy: List[float] = BaseAccessory.RPY
+            offset_xyz: List[float] = BaseLink.XYZ,
+            offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
         assert sphere or name, (
             "Sphere object or name must be passed"
@@ -474,8 +501,8 @@ class AccessoryConfig(BaseConfig):
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
-            offset_xyz: List[float] = BaseAccessory.XYZ,
-            offset_rpy: List[float] = BaseAccessory.RPY
+            offset_xyz: List[float] = BaseLink.XYZ,
+            offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
         assert mesh or name, (
             "Mesh object or name must be passed"

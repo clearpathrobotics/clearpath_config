@@ -1,3 +1,30 @@
+# Software License Agreement (BSD)
+#
+# @author    Luis Camero <lcamero@clearpathrobotics.com>
+# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.port import Port
@@ -6,13 +33,6 @@ from typing import List
 
 
 class BaseGPS(BaseSensor):
-    """
-    Base GPS Class
-        - contains all common gps parameters:
-            - frame_id: to publish Fix
-            - ip_address: to connect to GPS
-            - ip_port: to connect to GPS
-    """
     SENSOR_TYPE = "gps"
     SENSOR_MODEL = "base"
     TOPIC = "fix"
@@ -130,12 +150,6 @@ class BaseGPS(BaseSensor):
 
 
 class SwiftNavDuro(BaseGPS):
-    """
-    Swift Navigation Duro Class:
-        - extra ros_parameters:
-            - gps_receiver_frame: same as frame_id
-            - imu_frame: same as frame_id
-    """
     SENSOR_MODEL = "swiftnav_duro"
 
     FRAME_ID = "link"

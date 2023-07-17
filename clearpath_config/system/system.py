@@ -1,3 +1,30 @@
+# Software License Agreement (BSD)
+#
+# @author    Luis Camero <lcamero@clearpathrobotics.com>
+# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.domain_id import DomainID
 from clearpath_config.common.types.namespace import Namespace
@@ -45,7 +72,9 @@ class SystemConfig(BaseConfig):
         # DOMAIN_ID: 0
         DOMAIN_ID: 0,
         # RMW: "rmw_fastrtps_cpp"
-        RMW: "rmw_fastrtps_cpp"
+        RMW: "rmw_fastrtps_cpp",
+        # Workpaces: empty list
+        WORKSPACES: []
     }
 
     def __init__(
@@ -56,6 +85,7 @@ class SystemConfig(BaseConfig):
             namespace: str = DEFAULTS[NAMESPACE],
             domain_id: int = DEFAULTS[DOMAIN_ID],
             rmw_implementation: str = DEFAULTS[RMW],
+            workspaces: list = DEFAULTS[WORKSPACES]
             ) -> None:
         # Initialization
         self._config = {}
@@ -64,6 +94,7 @@ class SystemConfig(BaseConfig):
         self.namespace = namespace
         self.domain_id = domain_id
         self.rmw_implementation = rmw_implementation
+        self.workspaces = workspaces
         # Setter Template
         setters = {
             self.KEYS[self.HOSTS]: SystemConfig.hosts,
@@ -71,6 +102,7 @@ class SystemConfig(BaseConfig):
             self.KEYS[self.NAMESPACE]: SystemConfig.namespace,
             self.KEYS[self.DOMAIN_ID]: SystemConfig.domain_id,
             self.KEYS[self.RMW]: SystemConfig.rmw_implementation,
+            self.KEYS[self.WORKSPACES]: SystemConfig.workspaces,
         }
         # Set from Config
         super().__init__(setters, config, self.SYSTEM)
@@ -171,3 +203,15 @@ class SystemConfig(BaseConfig):
                 isinstance(value, RMWImplementation)), (
                 "RMW must be of type 'str' or 'RMWImplementation'"
             )
+
+    @property
+    def workspaces(self) -> list:
+        return self._workspaces
+
+    @workspaces.setter
+    def workspaces(self, value: list) -> None:
+        assert isinstance(value, list), (
+            "Workspaces must be 'list' of 'str'")
+        assert all([isinstance(i, str) for i in value]), (
+            "Workspaces must be 'list' of 'str'")
+        self._workspaces = value

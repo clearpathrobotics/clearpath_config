@@ -1,14 +1,36 @@
+# Software License Agreement (BSD)
+#
+# @author    Luis Camero <lcamero@clearpathrobotics.com>
+# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.sensors.types.sensor import BaseSensor
 from typing import List
 
 
 class BaseCamera(BaseSensor):
-    """
-    Common Camera Class.
-        - contains all common camera parameters
-        - all cameras must be of type BaseCamera
-    """
     SENSOR_TYPE = "camera"
     SENSOR_MODEL = "base"
     TOPIC = "image"
@@ -81,15 +103,6 @@ class BaseCamera(BaseSensor):
 
 
 class IntelRealsense(BaseCamera):
-    """
-    IntelRealsense Camera Class.
-    - Width: [640] : Width of image image
-    - Height: [480] : Height of color image
-    - Depth Enable : [True] : Toggle for depth data acquisition.
-        - Depth FPS: [30] : Framerate of depth camera.
-        - Depth Width: [640] : Width of depth image.
-        - Depth Height: [480] : Height of depth image.
-    """
     SENSOR_MODEL = "intel_realsense"
 
     D415 = "d415"
@@ -402,13 +415,6 @@ class IntelRealsense(BaseCamera):
 
 
 class FlirBlackfly(BaseCamera):
-    """
-    Flir FlirBlackfly Camera Class
-    Parameters:
-    - Device: [USB3 or GigE] : Device connection type.
-    - Encoding: [BayerRG8] : Image encoding.
-                    Must use BayerRG8 encoding to get more than 15 FPS.
-    """
     SENSOR_MODEL = "flir_blackfly"
 
     USB3_CONNECTION = "USB3"
