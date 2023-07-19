@@ -154,7 +154,7 @@ class ClearpathConfig(BaseConfig):
 
     @system.setter
     def system(self, config: dict) -> None:
-        self._system = SystemConfig(config)
+        self._system.config = config
 
     @property
     def platform(self) -> PlatformConfig:
@@ -165,7 +165,7 @@ class ClearpathConfig(BaseConfig):
 
     @platform.setter
     def platform(self, config: dict) -> None:
-        self._platform = PlatformConfig(config)
+        self._platform.config = config
 
     @property
     def links(self) -> LinksConfig:
@@ -175,8 +175,8 @@ class ClearpathConfig(BaseConfig):
         return self._links
 
     @links.setter
-    def links(self, value: dict) -> None:
-        self._links = LinksConfig(value)
+    def links(self, config: dict) -> None:
+        self._links.config = config
 
     @property
     def mounts(self) -> MountsConfig:
@@ -186,8 +186,8 @@ class ClearpathConfig(BaseConfig):
         return self._mounts
 
     @mounts.setter
-    def mounts(self, value: dict) -> None:
-        self._mounts = MountsConfig(value)
+    def mounts(self, config: dict) -> None:
+        self._sensors.config = config
 
     @property
     def sensors(self) -> SensorConfig:
@@ -197,5 +197,5 @@ class ClearpathConfig(BaseConfig):
         return self._sensors
 
     @sensors.setter
-    def sensors(self, value: dict) -> None:
-        self._sensors = SensorConfig(value)
+    def sensors(self, config: dict) -> None:
+        self._sensors.config = config
