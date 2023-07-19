@@ -27,6 +27,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.sensors.types.sensor import BaseSensor
+from clearpath_config.common.utils.dictionary import extend_flat_dict
 from typing import List
 
 
@@ -39,8 +40,8 @@ class BaseCamera(BaseSensor):
     SERIAL = "0"
 
     class ROS_PARAMETER_KEYS:
-        FPS = "fps"
-        SERIAL = "serial"
+        FPS = "node_name.fps"
+        SERIAL = "node_name.serial"
 
     def __init__(
             self,
@@ -52,21 +53,11 @@ class BaseCamera(BaseSensor):
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        super().__init__(
-            idx,
-            name,
-            topic,
-            urdf_enabled,
-            launch_enabled,
-            ros_parameters,
-            parent,
-            xyz,
-            rpy,
-            )
         # FPS:
         # - camera frame rate
         # - default to 30
@@ -78,12 +69,38 @@ class BaseCamera(BaseSensor):
         # - usually an integer value
         self.serial = str()
         self.set_serial(serial)
+        # ROS Parameter Template
+        template = {
+            self.ROS_PARAMETER_KEYS.FPS: BaseCamera.fps,
+            self.ROS_PARAMETER_KEYS.SERIAL: BaseCamera.serial,
+        }
+        ros_parameters_template = extend_flat_dict(template, ros_parameters_template)
+        super().__init__(
+            idx,
+            name,
+            topic,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy,
+            )
+
+    @property
+    def fps(self) -> int:
+        return self._fps
+
+    @fps.setter
+    def fps(self, fps: int) -> None:
+        BaseCamera.assert_valid_fps(fps)
+        self._fps = fps
 
     def get_fps(self) -> int:
         return self.fps
 
     def set_fps(self, fps: int) -> None:
-        BaseCamera.assert_valid_fps(fps)
         self.fps = fps
 
     @staticmethod
@@ -95,11 +112,19 @@ class BaseCamera(BaseSensor):
             "FPS '%s' must be a positive integer." % fps
         )
 
+    @property
+    def serial(self) -> str:
+        return self._serial
+
+    @serial.setter
+    def serial(self, serial: str) -> None:
+        self._serial = str(serial)
+
     def get_serial(self) -> str:
         return self.serial
 
     def set_serial(self, serial: str) -> None:
-        self.serial = str(serial)
+        self.serial = serial
 
 
 class IntelRealsense(BaseCamera):
@@ -124,14 +149,14 @@ class IntelRealsense(BaseCamera):
     POINTCLOUD_ENABLED = True
 
     class ROS_PARAMETER_KEYS:
-        CAMERA_NAME = "camera_name"
-        SERIAL = "serial_no"
-        DEVICE_TYPE = "device_type"
-        DEPTH_PROFILE = "depth_module.profile"
-        DEPTH_ENABLE = "enable_depth"
-        COLOR_PROFILE = "rgb_camera.profile"
-        COLOR_ENABLE = "enable_color"
-        POINTCLOUD_ENABLE = "pointcloud.enable"
+        FPS = "camera.rgb_camera.profile"
+        SERIAL = "camera.serial_no"
+        CAMERA_NAME = "camera.camera_name"
+        DEVICE_TYPE = "camera.device_type"
+        DEPTH_PROFILE = "camera.depth_module.profile"
+        DEPTH_ENABLE = "camera.enable_depth"
+        COLOR_ENABLE = "camera.enable_color"
+        POINTCLOUD_ENABLE = "camera.pointcloud.enable"
 
     def __init__(
             self,
@@ -156,19 +181,6 @@ class IntelRealsense(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        super().__init__(
-            idx,
-            name,
-            topic,
-            color_fps,
-            serial,
-            urdf_enabled,
-            launch_enabled,
-            ros_parameters,
-            parent,
-            xyz,
-            rpy
-        )
         self.device_type: str = IntelRealsense.DEVICE_TYPE
         self.set_device_type(device_type)
         # Color Image
@@ -190,75 +202,31 @@ class IntelRealsense(BaseCamera):
         # Pointcloud
         self.pointcloud_enabled: bool = IntelRealsense.POINTCLOUD_ENABLED
         self.set_pointcloud_enabled(pointcloud_enabled)
-        # ROS Parameter Keys
-        pairs = {
-            # Camera Name
-            self.ROS_PARAMETER_KEYS.CAMERA_NAME: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.CAMERA_NAME,
-                    get=lambda obj: obj.get_name(),
-                    set=lambda obj, val: obj.set_name(val)
-                )
-            ),
-            # Device Type
-            self.ROS_PARAMETER_KEYS.DEVICE_TYPE: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.DEVICE_TYPE,
-                    get=lambda obj: obj.get_device_type(),
-                    set=lambda obj, val: obj.set_device_type(val)
-                )
-            ),
-            # Device Serial
-            self.ROS_PARAMETER_KEYS.SERIAL: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.SERIAL,
-                    get=lambda obj: obj.get_serial(),
-                    set=lambda obj, val: obj.set_serial(val)
-                )
-            ),
-            # Color Enable
-            self.ROS_PARAMETER_KEYS.COLOR_ENABLE: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.COLOR_ENABLE,
-                    get=lambda obj: obj.get_color_enabled(),
-                    set=lambda obj, val: obj.set_color_enabled(val)
-                )
-            ),
-            # Color Profile
-            self.ROS_PARAMETER_KEYS.COLOR_PROFILE: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.COLOR_PROFILE,
-                    get=lambda obj: obj.get_color_profile(),
-                    set=lambda obj, val: obj.set_color_profile(val)
-                )
-            ),
-            # Depth Enable
-            self.ROS_PARAMETER_KEYS.DEPTH_ENABLE: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.DEPTH_ENABLE,
-                    get=lambda obj: obj.get_depth_enabled(),
-                    set=lambda obj, val: obj.set_depth_enabled(val)
-                )
-            ),
-            # Depth Profile
-            self.ROS_PARAMETER_KEYS.DEPTH_PROFILE: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.DEPTH_PROFILE,
-                    get=lambda obj: obj.get_depth_profile(),
-                    set=lambda obj, val: obj.set_depth_profile(val)
-                )
-            ),
-            # Pointcloud Enable
-            self.ROS_PARAMETER_KEYS.POINTCLOUD_ENABLE: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.POINTCLOUD_ENABLE,
-                    get=lambda obj: obj.get_pointcloud_enabled(),
-                    set=lambda obj, val: obj.set_pointcloud_enabled(val)
-                )
-            ),
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FPS: IntelRealsense.color_profile,
+            self.ROS_PARAMETER_KEYS.SERIAL: IntelRealsense.serial,
+            self.ROS_PARAMETER_KEYS.CAMERA_NAME: IntelRealsense.camera_name,
+            self.ROS_PARAMETER_KEYS.DEVICE_TYPE: IntelRealsense.device_type,
+            self.ROS_PARAMETER_KEYS.DEPTH_PROFILE: IntelRealsense.depth_profile,
+            self.ROS_PARAMETER_KEYS.DEPTH_ENABLE: IntelRealsense.depth_enabled,
+            self.ROS_PARAMETER_KEYS.COLOR_ENABLE: IntelRealsense.color_enabled,
+            self.ROS_PARAMETER_KEYS.POINTCLOUD_ENABLE: IntelRealsense.pointcloud_enabled,
         }
-        self.ros_parameter_pairs.update(pairs)
-        self.set_ros_parameters(ros_parameters)
+        super().__init__(
+            idx,
+            name,
+            topic,
+            color_fps,
+            serial,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
 
     @staticmethod
     def clean_profile(profile: str | list) -> list:
@@ -285,21 +253,45 @@ class IntelRealsense(BaseCamera):
         assert isinstance(length, int), (
             "Pixel value must be integer"
         )
-        assert length > 0, (
+        assert length >= 0, (
             "Pixel length must be positive"
         )
 
-    def get_device_type(self) -> str:
-        return self.device_type
+    @property
+    def camera_name(self) -> str:
+        return self.get_name()
 
-    def set_device_type(self, device_type: str) -> None:
+    @camera_name.setter
+    def camera_name(self, name: str) -> None:
+        self._camera_name = name
+
+    @property
+    def device_type(self) -> str:
+        return self._device_type
+
+    @device_type.setter
+    def device_type(self, device_type: str) -> None:
         assert device_type in self.DEVICE_TYPES, (
             "Device type '%s' is not one of '%s'" % (
                 device_type,
                 self.DEVICE_TYPES
             )
         )
+        self._device_type = device_type
+
+    def get_device_type(self) -> str:
+        return self.device_type
+
+    def set_device_type(self, device_type: str) -> None:
         self.device_type = device_type
+
+    @property
+    def color_enabled(self) -> bool:
+        return self._color_enabled
+
+    @color_enabled.setter
+    def color_enabled(self, enabled: bool) -> None:
+        self._color_enabled = bool(enabled)
 
     def enable_color(self) -> None:
         self.color_enabled = True
@@ -322,32 +314,64 @@ class IntelRealsense(BaseCamera):
     def get_color_fps(self) -> int:
         return self.get_fps()
 
-    def set_color_height(self, height: int) -> None:
+    @property
+    def color_height(self) -> int:
+        return self._color_height
+
+    @color_height.setter
+    def color_height(self, height: int) -> None:
         self.assert_pixel_length(height)
-        self.height = height
+        self._color_height = height
+
+    def set_color_height(self, height: int) -> None:
+        self.color_height = height
 
     def get_color_height(self) -> int:
         return self.color_height
 
-    def set_color_width(self, width: int) -> None:
+    @property
+    def color_width(self) -> int:
+        return self._color_width
+
+    @color_width.setter
+    def color_width(self, width: int) -> None:
         self.assert_pixel_length(width)
-        self.width = width
+        self._color_width = width
+
+    def set_color_width(self, width: int) -> None:
+        self.color_width = width
 
     def get_color_width(self) -> int:
         return self.color_width
 
-    def set_color_profile(self, profile: str | list) -> None:
+    @property
+    def color_profile(self) -> str:
+        return "%s,%s,%s" % (
+            self.color_width,
+            self.color_height,
+            self.fps
+        )
+
+    @color_profile.setter
+    def color_profile(self, profile: str | list) -> None:
         profile = self.clean_profile(profile)
-        self.set_color_width(profile[0])
-        self.set_color_height(profile[1])
-        self.set_color_fps(profile[2])
+        self.color_width = profile[0]
+        self.color_height = profile[1]
+        self.fps = profile[2]
+
+    def set_color_profile(self, profile: str | list) -> None:
+        self.color_profile = profile
 
     def get_color_profile(self) -> str:
-        return "%s,%s,%s" % (
-            self.get_color_width(),
-            self.get_color_height(),
-            self.get_color_fps()
-        )
+        return self.color_profile
+
+    @property
+    def depth_enabled(self) -> bool:
+        return self._depth_enabled
+
+    @depth_enabled.setter
+    def depth_enabled(self, enabled: bool) -> None:
+        self._depth_enabled = bool(enabled)
 
     def enable_depth(self) -> None:
         self.depth_enabled = True
@@ -364,39 +388,79 @@ class IntelRealsense(BaseCamera):
     def set_depth_enabled(self, enable: bool) -> None:
         self.depth_enabled = bool(enable)
 
-    def set_depth_fps(self, fps: int) -> None:
+    @property
+    def depth_fps(self) -> int:
+        return self._depth_fps
+
+    @depth_fps.setter
+    def depth_fps(self, fps: int) -> None:
         self.assert_valid_fps(fps)
+        self._depth_fps = fps
+
+    def set_depth_fps(self, fps: int) -> None:
         self.depth_fps = fps
 
     def get_depth_fps(self) -> int:
         return self.depth_fps
 
-    def set_depth_width(self, width: int) -> None:
+    @property
+    def depth_width(self) -> int:
+        return self._depth_width
+
+    @depth_width.setter
+    def depth_width(self, width: int) -> None:
         self.assert_pixel_length(width)
+        self._depth_width = width
+
+    def set_depth_width(self, width: int) -> None:
         self.depth_width = width
 
     def get_depth_width(self) -> int:
         return self.depth_width
 
-    def set_depth_height(self, height: int) -> None:
+    @property
+    def depth_height(self) -> int:
+        return self._depth_height
+
+    @depth_height.setter
+    def depth_height(self, height: int) -> None:
         self.assert_pixel_length(height)
+        self._depth_height = height
+
+    def set_depth_height(self, height: int) -> None:
         self.depth_height = height
 
     def get_depth_height(self) -> int:
         return self.depth_height
 
-    def set_depth_profile(self, profile: str | list) -> None:
+    @property
+    def depth_profile(self) -> str:
+        return "%s,%s,%s" % (
+            self.depth_width,
+            self.depth_height,
+            self.depth_fps
+        )
+
+    @depth_profile.setter
+    def depth_profile(self, profile: str | list) -> None:
         profile = self.clean_profile(profile)
-        self.set_depth_width(profile[0])
-        self.set_depth_height(profile[1])
-        self.set_depth_fps(profile[2])
+        self.depth_width = profile[0]
+        self.depth_height = profile[1]
+        self.depth_fps = profile[2]
+
+    def set_depth_profile(self, profile: str | list) -> None:
+        self.depth_profile = profile
 
     def get_depth_profile(self) -> str:
-        return "%s,%s,%s" % (
-            self.get_depth_width(),
-            self.get_depth_height(),
-            self.get_depth_fps()
-        )
+        return self.depth_profile
+
+    @property
+    def pointcloud_enabled(self) -> bool:
+        return self._pointcloud_enabled
+
+    @pointcloud_enabled.setter
+    def pointcloud_enabled(self, enabled: bool) -> None:
+        self._pointcloud_enabled = bool(enabled)
 
     def enable_pointcloud(self) -> None:
         self.pointcloud_enabled = True
@@ -518,19 +582,35 @@ class FlirBlackfly(BaseCamera):
         self.encoding: str = FlirBlackfly.BAYER_RG8
         self.set_encoding(encoding)
 
+    @property
+    def connection_type(self) -> str:
+        return self._connection_type
+
+    @connection_type.setter
+    def connection_type(self, type: str) -> None:
+        assert type in FlirBlackfly.CONNECTION_TYPES
+        self._connection_type = type
+
     def set_connection_type(self, connection_type: str) -> None:
-        assert connection_type in FlirBlackfly.CONNECTION_TYPES
         self.connection_type = connection_type
 
     def get_connection_type(self) -> str:
         return self.connection_type
 
-    def set_encoding(self, encoding: str) -> None:
+    @property
+    def encoding(self) -> str:
+        return self._encoding
+
+    @encoding.setter
+    def encoding(self, encoding: str) -> None:
         assert encoding in FlirBlackfly.ENCODINGS, (
             "Encoding '%s' not found in support encodings: '%s'" % (
                 encoding, FlirBlackfly.ENCODINGS
             )
         )
+        self._encoding = encoding
+
+    def set_encoding(self, encoding: str) -> None:
         self.encoding = encoding
 
     def get_encoding(self) -> str:

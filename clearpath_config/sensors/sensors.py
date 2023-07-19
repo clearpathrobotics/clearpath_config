@@ -904,8 +904,6 @@ class SensorConfig(BaseConfig):
             # By Model and Paramters
             model: str = None,
             frame_id: str = BaseGPS.FRAME_ID,
-            ip: str = BaseGPS.IP_ADDRESS,
-            port: int = BaseGPS.IP_PORT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
