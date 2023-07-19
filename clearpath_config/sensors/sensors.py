@@ -38,7 +38,9 @@ from clearpath_config.sensors.types.cameras import (
 )
 from clearpath_config.sensors.types.gps import (
     BaseGPS,
-    SwiftNavDuro
+    SwiftNavDuro,
+    Garmin18x,
+    NovatelSmart,
 )
 from clearpath_config.sensors.types.imu import (
     BaseIMU,
@@ -102,9 +104,13 @@ class Camera():
 
 class GlobalPositioningSystem():
     SWIFTNAV_DURO = SwiftNavDuro.SENSOR_MODEL
+    GARMIN_18X = Garmin18x.SENSOR_MODEL
+    NOVATEL_SMART = NovatelSmart.SENSOR_MODEL
 
     MODEL = {
         SWIFTNAV_DURO: SwiftNavDuro,
+        GARMIN_18X: Garmin18x,
+        NOVATEL_SMART: NovatelSmart
     }
 
     @classmethod

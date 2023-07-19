@@ -28,6 +28,7 @@
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.port import Port
+from clearpath_config.common.types.file import File
 from clearpath_config.common.utils.dictionary import extend_flat_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
 from typing import List
@@ -196,3 +197,146 @@ class SwiftNavDuro(BaseGPS):
 
     def set_port(self, port: int) -> None:
         self.port = port
+
+
+class NMEA(BaseGPS):
+    SENSOR_MODEL = "nmea_gps"
+
+    FRAME_ID = "link"
+    PORT = "/dev/ttyACM0"
+    BAUD = 115200
+
+    class ROS_PARAMETER_KEYS:
+        FRAME_ID = "nmea_navsat_driver.frame_id"
+        PORT = "nmea_navsat_driver.port"
+        BAUD = "nmea_navsat_driver.baud"
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseGPS.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            baud: int = BAUD,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        # Port
+        self.port = port
+        # Baud
+        self.baud = baud
+        # ROS Paramater Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.PORT: NMEA.port,
+            self.ROS_PARAMETER_KEYS.BAUD: NMEA.baud
+        }
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+
+    @property
+    def port(self) -> str:
+        return str(self._port)
+
+    @port.setter
+    def port(self, file: str) -> str:
+        self._port = File(str(file))
+
+    @property
+    def baud(self) -> int:
+        return self._baud
+
+    @baud.setter
+    def baud(self, baud: int) -> None:
+        assert isinstance(baud, int), ("Baud must be of type 'int'.")
+        assert baud >= 0, ("Baud must be positive integer.")
+        self._baud = baud
+
+
+class Garmin18x(NMEA):
+    SENSOR_MODEL = "garmin_18x"
+
+    FRAME_ID = "link"
+    PORT = "/dev/ttyACM0"
+    BAUD = 115200
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseGPS.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            baud: int = BAUD,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY) -> None:
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            port,
+            baud,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            parent,
+            xyz,
+            rpy
+        )
+
+
+class NovatelSmart(NMEA):
+    SENSOR_MODEL = "novatel_smart"
+
+    FRAME_ID = "link"
+    PORT = "/dev/ttyACM0"
+    BAUD = 115200
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseGPS.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            baud: int = BAUD,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY) -> None:
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            port,
+            baud,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            parent,
+            xyz,
+            rpy
+        )
