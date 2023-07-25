@@ -26,7 +26,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
-from clearpath_config.common.types.serial_number import SerialNumber
 from clearpath_config.common.utils.yaml import read_yaml, write_yaml
 from clearpath_config.system.system import SystemConfig
 from clearpath_config.platform.platform import PlatformConfig
@@ -111,26 +110,18 @@ class ClearpathConfig(BaseConfig):
     def serial_number(self) -> str:
         self.set_config_param(
             self.SERIAL_NUMBER,
-            str(BaseConfig._SERIAL_NUMBER.get_serial()))
-        return BaseConfig._SERIAL_NUMBER.get_serial()
+            str(self.get_serial_number())
+        )
+        return self.get_serial_number()
 
     @serial_number.setter
     def serial_number(self, sn: str) -> None:
-        BaseConfig._SERIAL_NUMBER = SerialNumber(sn)
+        self.set_serial_number(sn)
         self._system.update(serial_number=True)
         self._platform.update(serial_number=True)
         self._links.update(serial_number=True)
         self._mounts.update(serial_number=True)
         self._sensors.update(serial_number=True)
-
-    def get_serial_number(self) -> str:
-        return BaseConfig._SERIAL_NUMBER.get_serial()
-
-    def get_unit_number(self) -> str:
-        return BaseConfig._SERIAL_NUMBER.get_unit()
-
-    def get_model(self) -> str:
-        return BaseConfig._SERIAL_NUMBER.get_model()
 
     @property
     def version(self) -> int:

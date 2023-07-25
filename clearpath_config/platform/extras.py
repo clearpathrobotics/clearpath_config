@@ -27,7 +27,62 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.file import File
-from clearpath_config.common.utils.dictionary import flip_dict
+from clearpath_config.common.types.platform import Platform
+from clearpath_config.common.utils.dictionary import (
+    flatten_dict,
+    flip_dict,
+    get_from_dict,
+    set_in_dict,
+)
+
+
+class ROSParamaterDefaults:
+
+    GENERIC = {
+        "platform_velocity_controller.wheel_radius": 0.1,
+        "platform_velocity_controller.linear.x.max_velocity": 1.0,
+        "platform_velocity_controller.linear.x.min_velocity": -1.0,
+        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
+        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
+        "platform_velocity_controller.angular.z.max_velocity": 1.0,
+        "platform_velocity_controller.angular.z.min_velocity": -1.0,
+        "platform_velocity_controller.angular.z.max_acceleration": 1.0,
+        "platform_velocity_controller.angular.z.min_acceleration": -1.0,
+    }
+
+    J100 = {
+        "platform_velocity_controller.wheel_radius": 0.098,
+        "platform_velocity_controller.linear.x.max_velocity": 2.0,
+        "platform_velocity_controller.linear.x.min_velocity": -2.0,
+        "platform_velocity_controller.linear.x.max_acceleration": 20.0,
+        "platform_velocity_controller.linear.x.min_acceleration": -20.0,
+        "platform_velocity_controller.angular.z.max_velocity": 4.0,
+        "platform_velocity_controller.angular.z.min_velocity": -4.0,
+        "platform_velocity_controller.angular.z.max_acceleration": 25.0,
+        "platform_velocity_controller.angular.z.min_acceleration": -25.0,
+    }
+
+    A200 = {
+        "platform_velocity_controller.wheel_radius": 0.1651,
+        "platform_velocity_controller.linear.x.max_velocity": 1.0,
+        "platform_velocity_controller.linear.x.min_velocity": -1.0,
+        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
+        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
+        "platform_velocity_controller.angular.z.max_velocity": 1.0,
+        "platform_velocity_controller.angular.z.min_velocity": -1.0,
+        "platform_velocity_controller.angular.z.max_acceleration": 1.0,
+        "platform_velocity_controller.angular.z.min_acceleration": -1.0,
+    }
+
+    DEFAULTS = {
+        Platform.A200: A200,
+        Platform.J100: J100,
+        Platform.GENERIC: GENERIC
+    }
+
+    def __new__(cls, platform: str) -> dict:
+        assert platform in Platform.ALL
+        return cls.DEFAULTS[platform]
 
 
 # ExtrasConfig:
@@ -38,38 +93,91 @@ class ExtrasConfig(BaseConfig):
     EXTRAS = "extras"
     URDF = "urdf"
     CONTROL = "control"
+    ROS_PARAMETERS = "ros_parameters"
+
+    PLATFORM_VELOCITY_CONTROLLER = "platform_velocity_controller"
+    WHEEL_RADIUS = "wheel_radius"
+    LIN_MAX_VEL = "linear.x.max_velocity"
+    LIN_MIN_VEL = "linear.x.min_velocity"
+    LIN_MAX_ACC = "linear.x.max_acceleration"
+    LIN_MIN_ACC = "linear.x.min_acceleration"
+    ANG_MAX_VEL = "angular.z.max_velocity"
+    ANG_MIN_VEL = "angular.z.min_velocity"
+    ANG_MAX_ACC = "angular.z.max_acceleration"
+    ANG_MIN_ACC = "angular.z.min_acceleration"
 
     TEMPLATE = {
         EXTRAS: {
             URDF: URDF,
-            CONTROL: CONTROL
+            CONTROL: CONTROL,
+            ROS_PARAMETERS: {
+                PLATFORM_VELOCITY_CONTROLLER: {
+                    WHEEL_RADIUS: WHEEL_RADIUS,
+                    LIN_MAX_VEL: LIN_MAX_VEL,
+                    LIN_MIN_VEL: LIN_MIN_VEL,
+                    LIN_MAX_ACC: LIN_MAX_ACC,
+                    LIN_MIN_ACC: LIN_MIN_ACC,
+                    ANG_MAX_VEL: ANG_MAX_VEL,
+                    ANG_MIN_VEL: ANG_MIN_VEL,
+                    ANG_MAX_ACC: ANG_MAX_ACC,
+                    ANG_MIN_ACC: ANG_MIN_ACC,
+                }
+            }
         }
     }
 
     KEYS = flip_dict(TEMPLATE)
+    KEYS[ROS_PARAMETERS] = ".".join([EXTRAS, ROS_PARAMETERS])
 
     DEFAULTS = {
         URDF: "empty.urdf.xacro",
-        CONTROL: "empty.yaml"
+        CONTROL: "empty.yaml",
+        ROS_PARAMETERS: ROSParamaterDefaults(BaseConfig.get_platform_model()),
     }
 
     def __init__(
             self,
             config: dict = {},
             urdf: str = DEFAULTS[URDF],
-            control: str = DEFAULTS[CONTROL]
+            control: str = DEFAULTS[CONTROL],
+            ros_parameters: dict = DEFAULTS[ROS_PARAMETERS],
             ) -> None:
+        # Setter Template
+        self.setters = {
+            self.KEYS[self.URDF]: ExtrasConfig.urdf,
+            self.KEYS[self.CONTROL]: ExtrasConfig.control,
+            self.KEYS[self.WHEEL_RADIUS]: ExtrasConfig.wheel_radius,
+            self.KEYS[self.LIN_MAX_VEL]: ExtrasConfig.linear_max_velocity,
+            self.KEYS[self.LIN_MIN_VEL]: ExtrasConfig.linear_min_velocity,
+            self.KEYS[self.LIN_MAX_ACC]: ExtrasConfig.linear_max_acceleration,
+            self.KEYS[self.LIN_MIN_ACC]: ExtrasConfig.linear_min_acceleration,
+            self.KEYS[self.ANG_MAX_VEL]: ExtrasConfig.angular_max_velocity,
+            self.KEYS[self.ANG_MIN_VEL]: ExtrasConfig.angular_min_velocity,
+            self.KEYS[self.ANG_MAX_ACC]: ExtrasConfig.angular_max_acceleration,
+            self.KEYS[self.ANG_MIN_ACC]: ExtrasConfig.angular_min_acceleration,
+            self.KEYS[self.ROS_PARAMETERS]: ExtrasConfig.ros_parameters,
+        }
         # Initialization
         self._config = {}
         self.urdf = urdf
         self.control = control
-        # Setter Template
-        setters = {
-            self.KEYS[self.URDF]: ExtrasConfig.urdf,
-            self.KEYS[self.CONTROL]: ExtrasConfig.control
-        }
+        self.ros_parameters = self.DEFAULTS[self.ROS_PARAMETERS]
+        self.ros_parameters = ros_parameters
         # Set from Config
-        super().__init__(setters, config, self.EXTRAS)
+        super().__init__(self.setters, config, self.EXTRAS)
+
+    def update(self, serial_number: bool = False) -> None:
+        if serial_number:
+            defaults = flatten_dict(ROSParamaterDefaults(self.get_platform_model()))
+            previous = flatten_dict(self.DEFAULTS[self.ROS_PARAMETERS])
+            rosparam = flatten_dict(self.ros_parameters)
+            for key, val in rosparam.items():
+                if key in previous:
+                    if rosparam[key] == previous[key] and (
+                            key in defaults):
+                        rosparam[key] = defaults[key]
+            self.DEFAULTS[self.ROS_PARAMETERS] = ROSParamaterDefaults(self.get_platform_model())
+            self.ros_parameters = rosparam
 
     @property
     def urdf(self) -> str:
@@ -103,3 +211,133 @@ class ExtrasConfig(BaseConfig):
 
     def _is_default(self, curr: str, key: str) -> bool:
         return curr == str(File(self.DEFAULTS[key]))
+
+    @property
+    def ros_parameters(self) -> dict:
+        return get_from_dict(self._config, [self.EXTRAS, self.ROS_PARAMETERS])
+
+    @ros_parameters.setter
+    def ros_parameters(self, d: dict) -> None:
+        # Pass all Parameters
+        for flatkey, value in flatten_dict(d).items():
+            keys = [self.EXTRAS, self.ROS_PARAMETERS]
+            keys.extend(flatkey.split(BaseConfig.DLIM))
+            set_in_dict(self._config, keys, value)
+        # Store Relevant Parameters
+        for flatkey, value in flatten_dict(d).items():
+            keys = flatkey.split(".")
+            keys = ".".join(keys[1:])
+            if keys not in self.KEYS:
+                continue
+            key = self.KEYS[keys]
+            if key not in self.setters:
+                continue
+            self.setter(self.setters[key])(value)
+
+    @property
+    def wheel_radius(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.WHEEL_RADIUS],
+            value=self._wheel_radius
+        )
+        return self._wheel_radius
+
+    @wheel_radius.setter
+    def wheel_radius(self, r: float) -> None:
+        self._wheel_radius = r
+
+    @property
+    def linear_max_velocity(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.LIN_MAX_VEL],
+            value=self._lin_max_vel
+        )
+        return self._lin_max_vel
+
+    @linear_max_velocity.setter
+    def linear_max_velocity(self, vel: float) -> None:
+        self._lin_max_vel = vel
+
+    @property
+    def linear_min_velocity(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.LIN_MIN_VEL],
+            value=self._lin_min_vel
+        )
+        return self._lin_min_vel
+
+    @linear_min_velocity.setter
+    def linear_min_velocity(self, vel: float) -> None:
+        self._lin_min_vel = vel
+
+    @property
+    def linear_max_acceleration(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.LIN_MAX_ACC],
+            value=self._lin_max_acc
+        )
+        return self._lin_max_acc
+
+    @linear_max_acceleration.setter
+    def linear_max_acceleration(self, acc: float) -> None:
+        self._lin_max_acc = acc
+
+    @property
+    def linear_min_acceleration(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.LIN_MIN_ACC],
+            value=self._lin_min_acc
+        )
+        return self._lin_min_acc
+
+    @linear_min_acceleration.setter
+    def linear_min_acceleration(self, acc: float) -> None:
+        self._lin_min_acc = acc
+
+    @property
+    def angular_max_velocity(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.ANG_MAX_VEL],
+            value=self._ang_max_vel
+        )
+        return self._ang_max_vel
+
+    @angular_max_velocity.setter
+    def angular_max_velocity(self, vel: float) -> None:
+        self._ang_max_vel = vel
+
+    @property
+    def angular_min_velocity(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.ANG_MIN_VEL],
+            value=self._ang_min_vel
+        )
+        return self._ang_min_vel
+
+    @angular_min_velocity.setter
+    def angular_min_velocity(self, vel: float) -> None:
+        self._ang_min_vel = vel
+
+    @property
+    def angular_max_acceleration(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.ANG_MAX_ACC],
+            value=self._ang_max_acc
+        )
+        return self._ang_max_acc
+
+    @angular_max_acceleration.setter
+    def angular_max_acceleration(self, acc: float) -> None:
+        self._ang_max_acc = acc
+
+    @property
+    def angular_min_acceleration(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.ANG_MIN_ACC],
+            value=self._ang_min_acc
+        )
+        return self._ang_min_acc
+
+    @angular_min_acceleration.setter
+    def angular_min_acceleration(self, acc: float) -> None:
+        self._ang_min_acc = acc

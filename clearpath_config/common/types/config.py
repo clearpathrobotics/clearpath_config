@@ -30,7 +30,8 @@ from clearpath_config.common.utils.dictionary import (
     flatten_dict,
     get_from_dict,
     is_in_dict,
-    set_in_dict
+    set_in_dict,
+    unflatten_dict
 )
 from typing import Any
 
@@ -95,6 +96,7 @@ class BaseConfig:
         )
         if self._parent_key is not None and self._parent_key not in value:
             value = {self._parent_key: value}
+        value = unflatten_dict(value)
         for map, prop in flatten_dict(
                 d=self.template, dlim=BaseConfig.DLIM).items():
             keys = map.split(BaseConfig.DLIM)
@@ -110,3 +112,19 @@ class BaseConfig:
     def set_config_param(self, key: str, value: Any) -> None:
         keys = key.split(BaseConfig.DLIM)
         set_in_dict(d=self._config, map=keys, val=value)
+
+    @classmethod
+    def get_serial_number(cls, prefix: bool = False) -> str:
+        return BaseConfig._SERIAL_NUMBER.get_serial(prefix=prefix)
+
+    @classmethod
+    def set_serial_number(cls, sn: str) -> None:
+        BaseConfig._SERIAL_NUMBER = SerialNumber(sn)
+
+    @classmethod
+    def get_unit_number(cls) -> str:
+        return BaseConfig._SERIAL_NUMBER.get_unit()
+
+    @classmethod
+    def get_platform_model(cls) -> str:
+        return BaseConfig._SERIAL_NUMBER.get_model()

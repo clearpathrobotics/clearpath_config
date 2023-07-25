@@ -72,9 +72,9 @@ class HostsConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        SELF: BaseConfig._SERIAL_NUMBER.get_serial(),
+        SELF: BaseConfig.get_serial_number(),
         PLATFORM: {
-            BaseConfig._SERIAL_NUMBER.get_serial(): "192.168.131.1"
+            BaseConfig.get_serial_number(): "192.168.131.1"
         },
         ONBOARD: {},
         REMOTE: {}
@@ -105,7 +105,7 @@ class HostsConfig(BaseConfig):
 
     def update(self, serial_number=False) -> None:
         if serial_number:
-            sn = BaseConfig._SERIAL_NUMBER.get_serial()
+            sn = BaseConfig.get_serial_number()
             # Update if still defaults
             if self.self == self.DEFAULTS[self.SELF]:
                 self.self = sn

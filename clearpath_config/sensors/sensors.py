@@ -279,7 +279,7 @@ class SensorConfig(BaseConfig):
 
     def update(self, serial_number=False) -> None:
         if serial_number:
-            platform = BaseConfig._SERIAL_NUMBER.get_model()
+            platform = self.get_platform_model()
             index = Platform.INDEX[platform]
             self._camera.set_index_offset(index.camera)
             self._gps.set_index_offset(index.gps)
@@ -922,8 +922,6 @@ class SensorConfig(BaseConfig):
         if not gps and model:
             gps = GlobalPositioningSystem(model)
             gps.set_frame_id(frame_id)
-            gps.set_ip(ip)
-            gps.set_port(port)
             gps.set_urdf_enabled(urdf_enabled)
             gps.set_launch_enabled(launch_enabled)
             gps.set_parent(parent)
