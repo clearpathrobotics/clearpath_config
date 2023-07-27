@@ -26,7 +26,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
-from clearpath_config.common.types.serial_number import SerialNumber
 from clearpath_config.common.utils.yaml import read_yaml, write_yaml
 from clearpath_config.system.system import SystemConfig
 from clearpath_config.platform.platform import PlatformConfig
@@ -111,26 +110,18 @@ class ClearpathConfig(BaseConfig):
     def serial_number(self) -> str:
         self.set_config_param(
             self.SERIAL_NUMBER,
-            str(BaseConfig._SERIAL_NUMBER.get_serial()))
-        return BaseConfig._SERIAL_NUMBER.get_serial()
+            str(self.get_serial_number())
+        )
+        return self.get_serial_number()
 
     @serial_number.setter
     def serial_number(self, sn: str) -> None:
-        BaseConfig._SERIAL_NUMBER = SerialNumber(sn)
+        self.set_serial_number(sn)
         self._system.update(serial_number=True)
         self._platform.update(serial_number=True)
         self._links.update(serial_number=True)
         self._mounts.update(serial_number=True)
         self._sensors.update(serial_number=True)
-
-    def get_serial_number(self) -> str:
-        return BaseConfig._SERIAL_NUMBER.get_serial()
-
-    def get_unit_number(self) -> str:
-        return BaseConfig._SERIAL_NUMBER.get_unit()
-
-    def get_model(self) -> str:
-        return BaseConfig._SERIAL_NUMBER.get_model()
 
     @property
     def version(self) -> int:
@@ -154,7 +145,7 @@ class ClearpathConfig(BaseConfig):
 
     @system.setter
     def system(self, config: dict) -> None:
-        self._system = SystemConfig(config)
+        self._system.config = config
 
     @property
     def platform(self) -> PlatformConfig:
@@ -165,7 +156,7 @@ class ClearpathConfig(BaseConfig):
 
     @platform.setter
     def platform(self, config: dict) -> None:
-        self._platform = PlatformConfig(config)
+        self._platform.config = config
 
     @property
     def links(self) -> LinksConfig:
@@ -175,8 +166,8 @@ class ClearpathConfig(BaseConfig):
         return self._links
 
     @links.setter
-    def links(self, value: dict) -> None:
-        self._links = LinksConfig(value)
+    def links(self, config: dict) -> None:
+        self._links.config = config
 
     @property
     def mounts(self) -> MountsConfig:
@@ -186,8 +177,8 @@ class ClearpathConfig(BaseConfig):
         return self._mounts
 
     @mounts.setter
-    def mounts(self, value: dict) -> None:
-        self._mounts = MountsConfig(value)
+    def mounts(self, config: dict) -> None:
+        self._sensors.config = config
 
     @property
     def sensors(self) -> SensorConfig:
@@ -197,5 +188,5 @@ class ClearpathConfig(BaseConfig):
         return self._sensors
 
     @sensors.setter
-    def sensors(self, value: dict) -> None:
-        self._sensors = SensorConfig(value)
+    def sensors(self, config: dict) -> None:
+        self._sensors.config = config

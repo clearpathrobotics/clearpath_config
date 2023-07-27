@@ -68,7 +68,7 @@ class SystemConfig(BaseConfig):
         # USERNAME: administrator
         USERNAME: "administrator",
         # NAMESPACE: serial number
-        NAMESPACE: Namespace.clean(str(BaseConfig._SERIAL_NUMBER)),
+        NAMESPACE: Namespace.clean(BaseConfig.get_serial_number(prefix=True)),
         # DOMAIN_ID: 0
         DOMAIN_ID: 0,
         # RMW: "rmw_fastrtps_cpp"
@@ -106,6 +106,16 @@ class SystemConfig(BaseConfig):
         }
         # Set from Config
         super().__init__(setters, config, self.SYSTEM)
+
+    def update(self, serial_number=False) -> None:
+        if serial_number:
+            self.hosts.update(serial_number=serial_number)
+            # Update if still defaults
+            namespace = Namespace.clean(self.get_serial_number(prefix=True))
+            if self.namespace == self.DEFAULTS[self.NAMESPACE]:
+                self.namespace = namespace
+            # Update defaults
+            self.DEFAULTS[self.NAMESPACE] = namespace
 
     @property
     def hosts(self) -> HostsConfig:

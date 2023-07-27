@@ -28,6 +28,7 @@
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.port import Port
+from clearpath_config.common.utils.dictionary import extend_flat_dict, is_in_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
 from typing import List
 
@@ -42,9 +43,9 @@ class BaseLidar3D(BaseSensor):
     IP_PORT = "2368"
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "frame_id"
-        IP_ADDRESS = "ip_address"
-        IP_PORT = "ip_port"
+        FRAME_ID = "node_name.frame_id"
+        IP_ADDRESS = "node_name.ip_address"
+        IP_PORT = "node_name.ip_port"
 
     def __init__(
             self,
@@ -56,7 +57,8 @@ class BaseLidar3D(BaseSensor):
             port: int = IP_PORT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
-            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
@@ -70,6 +72,13 @@ class BaseLidar3D(BaseSensor):
         # IP Port
         self.port: Port = Port(self.IP_PORT)
         self.set_port(port)
+        # ROS Parameter Template
+        template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: BaseLidar3D.frame_id,
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: BaseLidar3D.ip,
+            self.ROS_PARAMETER_KEYS.IP_PORT: BaseLidar3D.port,
+        }
+        ros_parameters_template = extend_flat_dict(template, ros_parameters_template)
         super().__init__(
             idx,
             name,
@@ -77,35 +86,11 @@ class BaseLidar3D(BaseSensor):
             urdf_enabled,
             launch_enabled,
             ros_parameters,
+            ros_parameters_template,
             parent,
             xyz,
             rpy
         )
-        # ROS Parameter Keys
-        pairs = {
-            # Frame ID
-            BaseLidar3D.ROS_PARAMETER_KEYS.FRAME_ID: (
-                BaseSensor.ROSParameter(
-                    key=BaseLidar3D.ROS_PARAMETER_KEYS.FRAME_ID,
-                    get=lambda obj: obj.get_frame_id(),
-                    set=lambda obj, val: obj.set_frame_id(val)
-                )
-            ),
-            # IP Address
-            BaseLidar3D.ROS_PARAMETER_KEYS.IP_ADDRESS: (
-                BaseSensor.ROSParameter(
-                    key=BaseLidar3D.ROS_PARAMETER_KEYS.IP_ADDRESS,
-                    get=lambda obj: obj.get_ip(),
-                    set=lambda obj, val: obj.set_ip(val))),
-            # IP Port
-            BaseLidar3D.ROS_PARAMETER_KEYS.IP_PORT: (
-                BaseSensor.ROSParameter(
-                    key=BaseLidar3D.ROS_PARAMETER_KEYS.IP_PORT,
-                    get=lambda obj: obj.get_port(),
-                    set=lambda obj, val: obj.set_port(val))),
-        }
-        self.ros_parameter_pairs.update(pairs)
-        self.set_ros_parameters(ros_parameters)
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
@@ -127,26 +112,53 @@ class BaseLidar3D(BaseSensor):
         # Set Frame ID
         self.set_frame_id(self.get_frame_id_from_idx(idx))
         # Set IP
-        self.set_ip(self.get_ip_from_idx(idx))
+        if not is_in_dict(
+                self._ros_parameters,
+                self.ROS_PARAMETER_KEYS.IP_ADDRESS.split(".")):
+            self.set_ip(self.get_ip_from_idx(idx))
+
+    @property
+    def frame_id(self) -> str:
+        return self._frame_id
+
+    @frame_id.setter
+    def frame_id(self, link: str) -> None:
+        Accessory.assert_valid_link(link)
+        self._frame_id = link
 
     def get_frame_id(self) -> str:
         return self.frame_id
 
     def set_frame_id(self, link: str) -> None:
-        Accessory.assert_valid_link(link)
         self.frame_id = link
+
+    @property
+    def ip(self) -> str:
+        return str(self._ip)
+
+    @ip.setter
+    def ip(self, ip: str) -> None:
+        self._ip = IP(str(ip))
 
     def get_ip(self) -> str:
         return str(self.ip)
 
     def set_ip(self, ip: str) -> None:
-        self.ip = IP(ip)
+        self.ip = ip
+
+    @property
+    def port(self) -> int:
+        return int(self._port)
+
+    @port.setter
+    def port(self, port: int) -> None:
+        self._port = Port(int(port))
 
     def get_port(self) -> int:
         return int(self.port)
 
     def set_port(self, port: int) -> None:
-        self.port = Port(port)
+        self.port = port
 
 
 class VelodyneLidar(BaseLidar3D):
@@ -172,9 +184,13 @@ class VelodyneLidar(BaseLidar3D):
     ]
 
     class ROS_PARAMETER_KEYS:
-        DEVICE_TYPE = "model"
-        FIXED_FRAME = "fixed_frame"
-        TARGET_FRAME = "target_frame"
+        FRAME_ID = "velodyne_driver_node.frame_id"
+        IP_ADDRESS = "velodyne_driver_node.device_ip"
+        IP_PORT = "velodyne_driver_node.port"
+        DRIVER_NODE_MODEL = "velodyne_driver_node.model"
+        CONVERT_NODE_MODEL = "velodyne_convert_node.model"
+        FIXED_FRAME = "velodyne_convert_node.fixed_frame"
+        TARGET_FRAME = "velodyne_convert_node.target_frame"
 
     def __init__(
             self,
@@ -193,8 +209,14 @@ class VelodyneLidar(BaseLidar3D):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         # Device Type:
-        self.device_type: str = self.DEVICE_TYPE
         self.set_device_type(device_type)
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.DRIVER_NODE_MODEL: VelodyneLidar.device_type,
+            self.ROS_PARAMETER_KEYS.CONVERT_NODE_MODEL: VelodyneLidar.device_type,
+            self.ROS_PARAMETER_KEYS.FIXED_FRAME: VelodyneLidar.frame_id,
+            self.ROS_PARAMETER_KEYS.TARGET_FRAME: VelodyneLidar.frame_id,
+        }
         super().__init__(
             idx,
             name,
@@ -205,54 +227,28 @@ class VelodyneLidar(BaseLidar3D):
             urdf_enabled,
             launch_enabled,
             ros_parameters,
+            ros_parameters_template,
             parent,
             xyz,
             rpy
         )
-        # ROS Parameter Keys
-        self.ros_parameter_pairs[
-            BaseLidar3D.ROS_PARAMETER_KEYS.FRAME_ID].key = "frame_id"
-        self.ros_parameter_pairs[
-            BaseLidar3D.ROS_PARAMETER_KEYS.IP_ADDRESS].key = "device_ip"
-        self.ros_parameter_pairs[
-            BaseLidar3D.ROS_PARAMETER_KEYS.IP_PORT].key = "port"
-        pairs = {
-            # Device Type
-            self.ROS_PARAMETER_KEYS.DEVICE_TYPE: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.DEVICE_TYPE,
-                    get=lambda obj: obj.get_device_type(),
-                    set=lambda obj, val: obj.set_device_type(val)
-                )
-            ),
-            # Fixed Frame
-            self.ROS_PARAMETER_KEYS.FIXED_FRAME: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.FIXED_FRAME,
-                    get=lambda obj: obj.get_frame_id(),
-                    set=lambda obj, val: obj.set_frame_id(val),
-                )
-            ),
-            # Target Frame
-            self.ROS_PARAMETER_KEYS.TARGET_FRAME: (
-                BaseSensor.ROSParameter(
-                    key=self.ROS_PARAMETER_KEYS.TARGET_FRAME,
-                    get=lambda obj: obj.get_frame_id(),
-                    set=lambda obj, val: obj.set_frame_id(val),
-                )
-            ),
-        }
-        self.ros_parameter_pairs.update(pairs)
-        self.set_ros_parameters(ros_parameters)
 
-    def get_device_type(self) -> str:
-        return self.device_type
+    @property
+    def device_type(self) -> str:
+        return self._device_type
 
-    def set_device_type(self, device_type: str) -> None:
+    @device_type.setter
+    def device_type(self, device_type) -> None:
         assert device_type in self.DEVICE_TYPES, (
             "Device type '%s' is not one of '%s'" % (
                 device_type,
                 self.DEVICE_TYPES
             )
         )
+        self._device_type = device_type
+
+    def get_device_type(self) -> str:
+        return self.device_type
+
+    def set_device_type(self, device_type: str) -> None:
         self.device_type = device_type

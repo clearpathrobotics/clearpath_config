@@ -71,7 +71,7 @@ class PlatformConfig(BaseConfig):
         self._config = {}
         self.controller = controller
         self.attachments = attachments
-        self.extras = extras
+        self._extras = ExtrasConfig(extras)
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
@@ -85,6 +85,8 @@ class PlatformConfig(BaseConfig):
             # Reload attachments
             self.attachments = None
             # TODO: Set PACS Profile
+            # Reload extras
+            self.extras.update(serial_number=serial_number)
 
     @property
     def controller(self) -> str:
@@ -113,7 +115,7 @@ class PlatformConfig(BaseConfig):
     @attachments.setter
     def attachments(self, value: dict) -> None:
         self._attachments = AttachmentsConfigMux(
-            BaseConfig._SERIAL_NUMBER.get_model(), value)
+            self.get_platform_model(), value)
 
     @property
     def extras(self) -> ExtrasConfig:
@@ -126,7 +128,7 @@ class PlatformConfig(BaseConfig):
     @extras.setter
     def extras(self, value: dict | ExtrasConfig) -> None:
         if isinstance(value, dict):
-            self._extras = ExtrasConfig(config=value)
+            self._extras.config = value
         elif isinstance(value, ExtrasConfig):
             self._extras = value
         else:
@@ -138,8 +140,3 @@ class PlatformConfig(BaseConfig):
     def get_controller(self) -> str:
         return self.controller
 
-    def get_unit_number(self) -> str:
-        return BaseConfig._SERIAL_NUMBER.get_unit()
-
-    def get_model(self) -> str:
-        return BaseConfig._SERIAL_NUMBER.get_model()

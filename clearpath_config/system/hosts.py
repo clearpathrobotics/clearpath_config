@@ -72,9 +72,9 @@ class HostsConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        SELF: BaseConfig._SERIAL_NUMBER.get_serial(),
+        SELF: BaseConfig.get_serial_number(),
         PLATFORM: {
-            BaseConfig._SERIAL_NUMBER.get_serial(): "192.168.131.1"
+            BaseConfig.get_serial_number(): "192.168.131.1"
         },
         ONBOARD: {},
         REMOTE: {}
@@ -102,6 +102,18 @@ class HostsConfig(BaseConfig):
         }
         # Set from Config
         super().__init__(setters, config, self.HOSTS)
+
+    def update(self, serial_number=False) -> None:
+        if serial_number:
+            sn = BaseConfig.get_serial_number()
+            # Update if still defaults
+            if self.self == self.DEFAULTS[self.SELF]:
+                self.self = sn
+            if self.platform.get_hostname() == sn:
+                self.platform.set_hostname(sn)
+            # Update Defaults
+            self.DEFAULTS[self.SELF] = sn
+            self.DEFAULTS[self.PLATFORM] = {sn: "192.168.131.1"}
 
     # Self:
     # - the hostname of the computer running this config

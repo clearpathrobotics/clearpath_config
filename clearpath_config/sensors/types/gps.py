@@ -28,6 +28,8 @@
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.port import Port
+from clearpath_config.common.types.file import File
+from clearpath_config.common.utils.dictionary import extend_flat_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
 from typing import List
 
@@ -38,13 +40,9 @@ class BaseGPS(BaseSensor):
     TOPIC = "fix"
 
     FRAME_ID = "link"
-    IP_ADDRESS = "192.168.131.30"
-    IP_PORT = 55555
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "frame_id"
-        IP_ADDRESS = "ip_address"
-        IP_PORT = "ip_port"
+        FRAME_ID = "node_name.frame_id"
 
     def __init__(
             self,
@@ -52,11 +50,10 @@ class BaseGPS(BaseSensor):
             name: str = None,
             topic: str = TOPIC,
             frame_id: str = FRAME_ID,
-            ip: str = IP_ADDRESS,
-            port: int = IP_PORT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
@@ -64,12 +61,11 @@ class BaseGPS(BaseSensor):
         # Frame ID
         self.frame_id: str = self.FRAME_ID
         self.set_frame_id(frame_id)
-        # IP Address
-        self.ip: IP = IP(self.IP_ADDRESS)
-        self.set_ip(ip)
-        # IP Port
-        self.port: Port = Port(self.IP_PORT)
-        self.set_port(port)
+        # ROS Parameters Template
+        template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: BaseGPS.frame_id,
+        }
+        ros_parameters_template = extend_flat_dict(template, ros_parameters_template)
         super().__init__(
             idx,
             name,
@@ -77,35 +73,11 @@ class BaseGPS(BaseSensor):
             urdf_enabled,
             launch_enabled,
             ros_parameters,
+            ros_parameters_template,
             parent,
             xyz,
             rpy
         )
-        # ROS Parameter Keys
-        pairs = {
-            # Frame ID
-            BaseGPS.ROS_PARAMETER_KEYS.FRAME_ID: (
-                BaseSensor.ROSParameter(
-                    key=BaseGPS.ROS_PARAMETER_KEYS.FRAME_ID,
-                    get=lambda obj: obj.get_frame_id(),
-                    set=lambda obj, val: obj.set_frame_id(val)
-                )
-            ),
-            # IP Address
-            BaseGPS.ROS_PARAMETER_KEYS.IP_ADDRESS: (
-                BaseSensor.ROSParameter(
-                    key=BaseGPS.ROS_PARAMETER_KEYS.IP_ADDRESS,
-                    get=lambda obj: obj.get_ip(),
-                    set=lambda obj, val: obj.set_ip(val))),
-            # IP Port
-            BaseGPS.ROS_PARAMETER_KEYS.IP_PORT: (
-                BaseSensor.ROSParameter(
-                    key=BaseGPS.ROS_PARAMETER_KEYS.IP_PORT,
-                    get=lambda obj: obj.get_port(),
-                    set=lambda obj, val: obj.set_port(val))),
-        }
-        self.ros_parameter_pairs.update(pairs)
-        self.set_ros_parameters(ros_parameters)
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
@@ -126,38 +98,35 @@ class BaseGPS(BaseSensor):
         super().set_idx(idx)
         # Set Frame ID
         self.set_frame_id(self.get_frame_id_from_idx(idx))
-        # Set IP
-        self.set_ip(self.get_ip_from_idx(idx))
+
+    @property
+    def frame_id(self) -> str:
+        return self._frame_id
+
+    @frame_id.setter
+    def frame_id(self, link: str) -> None:
+        Accessory.assert_valid_link(link)
+        self._frame_id = link
 
     def get_frame_id(self) -> str:
         return self.frame_id
 
     def set_frame_id(self, link: str) -> None:
-        Accessory.assert_valid_link(link)
         self.frame_id = link
-
-    def get_ip(self) -> str:
-        return str(self.ip)
-
-    def set_ip(self, ip: str) -> None:
-        self.ip = IP(ip)
-
-    def get_port(self) -> int:
-        return int(self.port)
-
-    def set_port(self, port: int) -> None:
-        self.port = Port(port)
 
 
 class SwiftNavDuro(BaseGPS):
     SENSOR_MODEL = "swiftnav_duro"
 
     FRAME_ID = "link"
+    IP_ADDRESS = "192.168.131.30"
     IP_PORT = 55555
 
     class ROS_PARAMETER_KEYS:
-        GPS_FRAME = "gps_receiver_frame_id"
-        IMU_FRAME = "imu_frame_id"
+        FRAME_ID = "duro_node.imu_frame_id"
+        GPS_FRAME = "duro_node.gps_receiver_frame_id"
+        IP_ADDRESS = "duro_node.ip_address"
+        IP_PORT = "duro_node.port"
 
     def __init__(
             self,
@@ -165,7 +134,7 @@ class SwiftNavDuro(BaseGPS):
             name: str = None,
             topic: str = BaseGPS.TOPIC,
             frame_id: str = FRAME_ID,
-            ip: str = BaseGPS.IP_ADDRESS,
+            ip: str = IP_ADDRESS,
             port: int = IP_PORT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
@@ -174,13 +143,159 @@ class SwiftNavDuro(BaseGPS):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+        # IP Address
+        self.ip: IP = IP(self.IP_ADDRESS)
+        self.set_ip(ip)
+        # IP Port
+        self.port: Port = Port(self.IP_PORT)
+        self.set_port(port)
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: SwiftNavDuro.ip,
+            self.ROS_PARAMETER_KEYS.IP_PORT: SwiftNavDuro.port,
+            self.ROS_PARAMETER_KEYS.FRAME_ID: SwiftNavDuro.frame_id,
+            self.ROS_PARAMETER_KEYS.GPS_FRAME: SwiftNavDuro.frame_id,
+        }
         super().__init__(
             idx,
             name,
             topic,
             frame_id,
-            ip,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+
+    @property
+    def ip(self) -> str:
+        return str(self._ip)
+
+    @ip.setter
+    def ip(self, ip: str) -> None:
+        self._ip = IP(str(ip))
+
+    def get_ip(self) -> str:
+        return str(self.ip)
+
+    def set_ip(self, ip: str) -> None:
+        self.ip = ip
+
+    @property
+    def port(self) -> int:
+        return int(self._port)
+
+    @port.setter
+    def port(self, port: int) -> None:
+        self._port = Port(int(port))
+
+    def get_port(self) -> int:
+        return int(self.port)
+
+    def set_port(self, port: int) -> None:
+        self.port = port
+
+
+class NMEA(BaseGPS):
+    SENSOR_MODEL = "nmea_gps"
+
+    FRAME_ID = "link"
+    PORT = "/dev/ttyACM0"
+    BAUD = 115200
+
+    class ROS_PARAMETER_KEYS:
+        FRAME_ID = "nmea_navsat_driver.frame_id"
+        PORT = "nmea_navsat_driver.port"
+        BAUD = "nmea_navsat_driver.baud"
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseGPS.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            baud: int = BAUD,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        # Port
+        self.port = port
+        # Baud
+        self.baud = baud
+        # ROS Paramater Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.PORT: NMEA.port,
+            self.ROS_PARAMETER_KEYS.BAUD: NMEA.baud
+        }
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+
+    @property
+    def port(self) -> str:
+        return str(self._port)
+
+    @port.setter
+    def port(self, file: str) -> str:
+        self._port = File(str(file))
+
+    @property
+    def baud(self) -> int:
+        return self._baud
+
+    @baud.setter
+    def baud(self, baud: int) -> None:
+        assert isinstance(baud, int), ("Baud must be of type 'int'.")
+        assert baud >= 0, ("Baud must be positive integer.")
+        self._baud = baud
+
+
+class Garmin18x(NMEA):
+    SENSOR_MODEL = "garmin_18x"
+
+    FRAME_ID = "link"
+    PORT = "/dev/ttyACM0"
+    BAUD = 115200
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseGPS.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            baud: int = BAUD,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY) -> None:
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
             port,
+            baud,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -188,20 +303,77 @@ class SwiftNavDuro(BaseGPS):
             xyz,
             rpy
         )
-        # ROS Parameter Keys
-        self.ros_parameter_pairs[
-            BaseGPS.ROS_PARAMETER_KEYS.FRAME_ID].key = (
-                SwiftNavDuro.ROS_PARAMETER_KEYS.GPS_FRAME
-            )
-        pairs = {
-            # Frame ID
-            SwiftNavDuro.ROS_PARAMETER_KEYS.IMU_FRAME: (
-                BaseSensor.ROSParameter(
-                    key=SwiftNavDuro.ROS_PARAMETER_KEYS.IMU_FRAME,
-                    get=lambda obj: obj.get_frame_id(),
-                    set=lambda obj, val: obj.set_frame_id(val)
-                )
-            ),
-        }
-        self.ros_parameter_pairs.update(pairs)
-        self.set_ros_parameters(ros_parameters)
+
+
+class NovatelSmart6(NMEA):
+    SENSOR_MODEL = "novatel_smart6"
+
+    FRAME_ID = "link"
+    PORT = "/dev/ttyACM0"
+    BAUD = 115200
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseGPS.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            baud: int = BAUD,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY) -> None:
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            port,
+            baud,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            parent,
+            xyz,
+            rpy
+        )
+
+
+class NovatelSmart7(NMEA):
+    SENSOR_MODEL = "novatel_smart7"
+
+    FRAME_ID = "link"
+    PORT = "/dev/ttyACM0"
+    BAUD = 115200
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseGPS.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            baud: int = BAUD,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY) -> None:
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            port,
+            baud,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            parent,
+            xyz,
+            rpy
+        )

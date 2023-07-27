@@ -26,7 +26,12 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.accessory import Accessory, IndexedAccessory
+from clearpath_config.common.utils.dictionary import (
+    flatten_dict,
+    unflatten_dict
+)
 from typing import List, Callable
+import copy
 
 
 class BaseSensor(IndexedAccessory):
@@ -36,6 +41,7 @@ class BaseSensor(IndexedAccessory):
     URDF_ENABLED = True
     LAUNCH_ENABLED = True
     ROS_PARAMETERS = {}
+    ROS_PARAMETERS_TEMPLATE = {}
 
     class ROSParameter:
         def __init__(
@@ -55,7 +61,8 @@ class BaseSensor(IndexedAccessory):
             topic: str = TOPIC,
             urdf_enabled: bool = URDF_ENABLED,
             launch_enabled: bool = LAUNCH_ENABLED,
-            ros_parameters: str = ROS_PARAMETERS,
+            ros_parameters: dict = ROS_PARAMETERS,
+            ros_parameters_template: dict = ROS_PARAMETERS_TEMPLATE,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
@@ -75,9 +82,8 @@ class BaseSensor(IndexedAccessory):
         self.enable_launch if launch_enabled else self.disable_launch()
         # ROS Parameters
         # - dictionary with parameters for launch file
-        self.ros_parameters = {}
-        self.ros_parameter_pairs = {}
-        self.set_ros_parameters(ros_parameters)
+        self.ros_parameters_template = ros_parameters_template
+        self.ros_parameters = ros_parameters
         super().__init__(idx, name, parent, xyz, rpy)
 
     def to_dict(self) -> dict:
@@ -167,16 +173,48 @@ class BaseSensor(IndexedAccessory):
     def get_launch_enabled(self) -> bool:
         return self.launch_enabled
 
-    def set_ros_parameters(self, ros_parameters: dict) -> None:
-        assert isinstance(ros_parameters, dict), (
-            "ROS paramaters must be a dictionary")
-        for key, val in ros_parameters.items():
-            for _, param in self.ros_parameter_pairs.items():
-                if key == param.key:
-                    param.set(self, val)
-        self.ros_parameters = ros_parameters
+    @property
+    def ros_parameters_template(self) -> dict:
+        return self._ros_parameters_template
+
+    @ros_parameters_template.setter
+    def ros_parameters_template(self, d: dict) -> None:
+        assert isinstance(d, dict), ("Template must be of type 'dict'")
+        # Check that template has all properties
+        flat = flatten_dict(d)
+        for _, val in flat.items():
+            assert isinstance(val, property), (
+                "All entries in template must be properties."
+            )
+        self._ros_parameters_template = d
+
+    @property
+    def ros_parameters(self) -> dict:
+        d = flatten_dict(copy.deepcopy(self._ros_parameters))
+        for key, prop in flatten_dict(self.ros_parameters_template).items():
+            d[key] = self.getter(prop)()
+        d = unflatten_dict(d)
+        for node_name in d:
+            d[node_name] = flatten_dict(d[node_name])
+        return d
+
+    @ros_parameters.setter
+    def ros_parameters(self, d: dict) -> None:
+        assert isinstance(d, dict), ("ROS paramaters must be a dictionary")
+        for d_k, d_v in flatten_dict(d).items():
+            for key, prop in flatten_dict(self.ros_parameters_template).items():
+                if d_k == key:
+                    self.setter(prop)(d_v)
+        self._ros_parameters = d
+
+    def set_ros_parameters(self, d: dict) -> None:
+        self.ros_parameters = d
 
     def get_ros_parameters(self) -> dict:
-        for _, param in self.ros_parameter_pairs.items():
-            self.ros_parameters[param.key] = param.get(self)
         return self.ros_parameters
+
+    def setter(self, prop: property):
+        return prop.fset.__get__(self)
+
+    def getter(self, prop: property):
+        return prop.fget.__get__(self)

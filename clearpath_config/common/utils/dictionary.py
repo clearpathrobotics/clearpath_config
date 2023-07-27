@@ -69,6 +69,8 @@ def _unflatten_dict_gen(d: dict, k: str, v: object, dlim: str = '.'):
 def unflatten_dict(d: MutableMapping, parent_key: str = '', dlim: str = '.'):
     _d = {}
     for k, v in d.items():
+        if isinstance(v, dict):
+            v = unflatten_dict(v, parent_key, dlim)
         _d_curr = {}
         _d_next = {}
         keys = k.split(dlim)
@@ -105,7 +107,19 @@ def is_in_dict(d, map):
 
 
 def set_in_dict(d, map, val):
-    # get_from_dict(d, map[:-1])[map[-1]] = val
     for key in map[:-1]:
         d = d.setdefault(key, {})
     d[map[-1]] = val
+
+
+def extend_dict(a: dict, b: dict):
+    for key, value in flatten_dict(b).items():
+        keys = key.split(".")
+        set_in_dict(a, keys, value)
+    return a
+
+
+def extend_flat_dict(a: dict, b: dict):
+    for key, value in flatten_dict(b).items():
+        a[key] = value
+    return a

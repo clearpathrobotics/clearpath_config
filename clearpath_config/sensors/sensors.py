@@ -38,7 +38,10 @@ from clearpath_config.sensors.types.cameras import (
 )
 from clearpath_config.sensors.types.gps import (
     BaseGPS,
-    SwiftNavDuro
+    SwiftNavDuro,
+    Garmin18x,
+    NovatelSmart6,
+    NovatelSmart7,
 )
 from clearpath_config.sensors.types.imu import (
     BaseIMU,
@@ -102,9 +105,15 @@ class Camera():
 
 class GlobalPositioningSystem():
     SWIFTNAV_DURO = SwiftNavDuro.SENSOR_MODEL
+    GARMIN_18X = Garmin18x.SENSOR_MODEL
+    NOVATEL_SMART6 = NovatelSmart6.SENSOR_MODEL
+    NOVATEL_SMART7 = NovatelSmart7.SENSOR_MODEL
 
     MODEL = {
         SWIFTNAV_DURO: SwiftNavDuro,
+        GARMIN_18X: Garmin18x,
+        NOVATEL_SMART6: NovatelSmart6,
+        NOVATEL_SMART7: NovatelSmart7,
     }
 
     @classmethod
@@ -273,7 +282,7 @@ class SensorConfig(BaseConfig):
 
     def update(self, serial_number=False) -> None:
         if serial_number:
-            platform = BaseConfig._SERIAL_NUMBER.get_model()
+            platform = self.get_platform_model()
             index = Platform.INDEX[platform]
             self._camera.set_index_offset(index.camera)
             self._gps.set_index_offset(index.gps)
@@ -904,8 +913,6 @@ class SensorConfig(BaseConfig):
             # By Model and Paramters
             model: str = None,
             frame_id: str = BaseGPS.FRAME_ID,
-            ip: str = BaseGPS.IP_ADDRESS,
-            port: int = BaseGPS.IP_PORT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
@@ -918,8 +925,6 @@ class SensorConfig(BaseConfig):
         if not gps and model:
             gps = GlobalPositioningSystem(model)
             gps.set_frame_id(frame_id)
-            gps.set_ip(ip)
-            gps.set_port(port)
             gps.set_urdf_enabled(urdf_enabled)
             gps.set_launch_enabled(launch_enabled)
             gps.set_parent(parent)

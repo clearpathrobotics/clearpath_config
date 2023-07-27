@@ -64,9 +64,9 @@ class TestPlatformSamples:
             except AssertionError as ae:
                 errors.append("A200 sample failed to load: %s" % ae.args[0])
             else:
-                if cc.get_model() != Platform.A200:
+                if cc.get_platform_model() != Platform.A200:
                     errors.append("Platform model does not match. %s =/= %s" % (
-                        cc.get_model(),
+                        cc.get_platform_model(),
                         Platform.A200
                     ))
         assert_not_errors(errors)
@@ -79,7 +79,7 @@ class TestPlatformSamples:
             except AssertionError as ae:
                 errors.append("J100 sample failed to load: %s" % ae.args[0])
             else:
-                if cc.get_model() != Platform.J100:
+                if cc.get_platform_model() != Platform.J100:
                     errors.append("Platform model does not match. %s =/= %s" % (
                         cc.get_model(),
                         Platform.J100
