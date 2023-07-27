@@ -305,8 +305,45 @@ class Garmin18x(NMEA):
         )
 
 
-class NovatelSmart(NMEA):
-    SENSOR_MODEL = "novatel_smart"
+class NovatelSmart6(NMEA):
+    SENSOR_MODEL = "novatel_smart6"
+
+    FRAME_ID = "link"
+    PORT = "/dev/ttyACM0"
+    BAUD = 115200
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseGPS.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            baud: int = BAUD,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY) -> None:
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            port,
+            baud,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            parent,
+            xyz,
+            rpy
+        )
+
+
+class NovatelSmart7(NMEA):
+    SENSOR_MODEL = "novatel_smart7"
 
     FRAME_ID = "link"
     PORT = "/dev/ttyACM0"
