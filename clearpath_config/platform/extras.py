@@ -33,6 +33,7 @@ from clearpath_config.common.utils.dictionary import (
     flip_dict,
     get_from_dict,
     set_in_dict,
+    unflatten_dict,
 )
 
 
@@ -140,12 +141,10 @@ class ExtrasConfig(BaseConfig):
             config: dict = {},
             urdf: str = DEFAULTS[URDF],
             control: str = DEFAULTS[CONTROL],
-            ros_parameters: dict = DEFAULTS[ROS_PARAMETERS],
+            ros_parameters: dict = {},
             ) -> None:
-        # Setter Template
-        self.setters = {
-            self.KEYS[self.URDF]: ExtrasConfig.urdf,
-            self.KEYS[self.CONTROL]: ExtrasConfig.control,
+        # ROS Parameter Setter Template
+        self._ros_parameters_setters = {
             self.KEYS[self.WHEEL_RADIUS]: ExtrasConfig.wheel_radius,
             self.KEYS[self.LIN_MAX_VEL]: ExtrasConfig.linear_max_velocity,
             self.KEYS[self.LIN_MIN_VEL]: ExtrasConfig.linear_min_velocity,
@@ -155,13 +154,18 @@ class ExtrasConfig(BaseConfig):
             self.KEYS[self.ANG_MIN_VEL]: ExtrasConfig.angular_min_velocity,
             self.KEYS[self.ANG_MAX_ACC]: ExtrasConfig.angular_max_acceleration,
             self.KEYS[self.ANG_MIN_ACC]: ExtrasConfig.angular_min_acceleration,
+        }
+        # Setter Template
+        self.setters = {
+            self.KEYS[self.URDF]: ExtrasConfig.urdf,
+            self.KEYS[self.CONTROL]: ExtrasConfig.control,
             self.KEYS[self.ROS_PARAMETERS]: ExtrasConfig.ros_parameters,
         }
         # Initialization
+        self.init_ros_parameter()
         self._config = {}
         self.urdf = urdf
         self.control = control
-        self.ros_parameters = self.DEFAULTS[self.ROS_PARAMETERS]
         self.ros_parameters = ros_parameters
         # Set from Config
         super().__init__(self.setters, config, self.EXTRAS)
@@ -197,10 +201,6 @@ class ExtrasConfig(BaseConfig):
     @property
     def control(self) -> str:
         control = None if self._is_default(self._control, self.CONTROL) else str(self._control)
-        self.set_config_param(
-            key=self.KEYS[self.CONTROL],
-            value=control
-        )
         return control
 
     @control.setter
@@ -212,17 +212,55 @@ class ExtrasConfig(BaseConfig):
     def _is_default(self, curr: str, key: str) -> bool:
         return curr == str(File(self.DEFAULTS[key]))
 
+    def is_ros_parameter_default(self, key) -> bool:
+        default_parameters = self.DEFAULTS[self.ROS_PARAMETERS]
+        current_val = self.getter(self._ros_parameters_setters[key])()
+        default_val = flatten_dict(default_parameters)[".".join(key.split(".")[2:])]
+        return current_val == default_val
+
+    def init_ros_parameter(self) -> None:
+        default_parameters = self.DEFAULTS[self.ROS_PARAMETERS]
+        for _, extended_key in self.KEYS.items():
+            if extended_key in self._ros_parameters_setters:
+                default_parameters_key = ".".join(extended_key.split(".")[2:])
+                setter = self.setter(self._ros_parameters_setters[extended_key])
+                setter(default_parameters[default_parameters_key])
+
+    def update_ros_parameter(self) -> None:
+        default_parameters = ROSParamaterDefaults(self.get_platform_model())
+        for _, extended_key in self.KEYS.items():
+            if extended_key in self._ros_parameters_setters:
+                default_parameters_key = ".".join(extended_key.split(".")[2:])
+                if not self.is_ros_parameter_default(extended_key):
+                    continue
+                setter = self.setter(self._ros_parameters_setters[extended_key])
+                setter(default_parameters[default_parameters_key])
+        self.DEFAULTS[self.ROS_PARAMETERS] = ROSParamaterDefaults(self.get_platform_model())
+
+    """ROS parameters with node names and flattened dictionaries"""
     @property
     def ros_parameters(self) -> dict:
-        return get_from_dict(self._config, [self.EXTRAS, self.ROS_PARAMETERS])
+        # Add all user values
+        d = flatten_dict(self._ros_parameters)
+        # Add non-default values
+        for key, prop in self._ros_parameters_setters.items():
+            if not self.is_ros_parameter_default(key):
+                d[".".join(key.split(".")[2:])] = self.getter(prop)()
+        # Return flat
+        d = unflatten_dict(d)
+        for node_name in d:
+            d[node_name] = flatten_dict(d[node_name])
+        # Add to config
+        self.set_config_param(
+            key=self.KEYS[self.ROS_PARAMETERS],
+            value=d
+        )
+        return d
 
     @ros_parameters.setter
     def ros_parameters(self, d: dict) -> None:
-        # Pass all Parameters
-        for flatkey, value in flatten_dict(d).items():
-            keys = [self.EXTRAS, self.ROS_PARAMETERS]
-            keys.extend(flatkey.split(BaseConfig.DLIM))
-            set_in_dict(self._config, keys, value)
+        # Keep a copy of exactly what the user passed in
+        self._ros_parameters = d
         # Store Relevant Parameters
         for flatkey, value in flatten_dict(d).items():
             keys = flatkey.split(".")
@@ -230,16 +268,12 @@ class ExtrasConfig(BaseConfig):
             if keys not in self.KEYS:
                 continue
             key = self.KEYS[keys]
-            if key not in self.setters:
+            if key not in self._ros_parameters_setters:
                 continue
-            self.setter(self.setters[key])(value)
+            self.setter(self._ros_parameters_setters[key])(value)
 
     @property
     def wheel_radius(self) -> float:
-        self.set_config_param(
-            key=self.KEYS[self.WHEEL_RADIUS],
-            value=self._wheel_radius
-        )
         return self._wheel_radius
 
     @wheel_radius.setter
@@ -248,10 +282,6 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def linear_max_velocity(self) -> float:
-        self.set_config_param(
-            key=self.KEYS[self.LIN_MAX_VEL],
-            value=self._lin_max_vel
-        )
         return self._lin_max_vel
 
     @linear_max_velocity.setter
@@ -260,10 +290,6 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def linear_min_velocity(self) -> float:
-        self.set_config_param(
-            key=self.KEYS[self.LIN_MIN_VEL],
-            value=self._lin_min_vel
-        )
         return self._lin_min_vel
 
     @linear_min_velocity.setter
@@ -272,10 +298,6 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def linear_max_acceleration(self) -> float:
-        self.set_config_param(
-            key=self.KEYS[self.LIN_MAX_ACC],
-            value=self._lin_max_acc
-        )
         return self._lin_max_acc
 
     @linear_max_acceleration.setter
@@ -284,10 +306,6 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def linear_min_acceleration(self) -> float:
-        self.set_config_param(
-            key=self.KEYS[self.LIN_MIN_ACC],
-            value=self._lin_min_acc
-        )
         return self._lin_min_acc
 
     @linear_min_acceleration.setter
@@ -296,10 +314,6 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def angular_max_velocity(self) -> float:
-        self.set_config_param(
-            key=self.KEYS[self.ANG_MAX_VEL],
-            value=self._ang_max_vel
-        )
         return self._ang_max_vel
 
     @angular_max_velocity.setter
@@ -308,10 +322,6 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def angular_min_velocity(self) -> float:
-        self.set_config_param(
-            key=self.KEYS[self.ANG_MIN_VEL],
-            value=self._ang_min_vel
-        )
         return self._ang_min_vel
 
     @angular_min_velocity.setter
@@ -320,10 +330,6 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def angular_max_acceleration(self) -> float:
-        self.set_config_param(
-            key=self.KEYS[self.ANG_MAX_ACC],
-            value=self._ang_max_acc
-        )
         return self._ang_max_acc
 
     @angular_max_acceleration.setter
@@ -332,10 +338,6 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def angular_min_acceleration(self) -> float:
-        self.set_config_param(
-            key=self.KEYS[self.ANG_MIN_ACC],
-            value=self._ang_min_acc
-        )
         return self._ang_min_acc
 
     @angular_min_acceleration.setter
