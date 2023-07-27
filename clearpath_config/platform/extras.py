@@ -31,8 +31,6 @@ from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.utils.dictionary import (
     flatten_dict,
     flip_dict,
-    get_from_dict,
-    set_in_dict,
     unflatten_dict,
 )
 
