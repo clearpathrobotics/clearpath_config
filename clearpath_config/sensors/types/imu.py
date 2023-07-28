@@ -193,3 +193,94 @@ class Microstrain(BaseIMU):
             xyz,
             rpy
         )
+
+
+class CHRoboticsUM6(BaseIMU):
+    SENSOR_MODEL = "chrobotics_um6"
+
+    PORT = "/dev/ttyUSB0"
+    FRAME_ID = "link"
+    USE_ENU = True
+
+    class ROS_PARAMETERS_KEYS:
+        PORT = "um6_driver.port"
+        FRAME_ID = "um6_driver.frame_id"
+        USE_ENU = "um6_driver.tf_ned_to_enu"
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseIMU.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            use_enu: bool = USE_ENU,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        ros_parameters_template = BaseSensor.ROS_PARAMETERS_TEMPLATE
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            port,
+            use_enu,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+
+
+class RedshiftUM7(BaseIMU):
+    SENSOR_MODEL = "redshift_um7"
+
+    PORT = "/dev/ttyUSB0"
+    FRAME_ID = "link"
+    USE_ENU = True
+
+    class ROS_PARAMETERS_KEYS:
+        PORT = "um7_driver.port"
+        FRAME_ID = "um7_driver.frame_id"
+        USE_ENU = "um7_driver.tf_ned_to_enu"
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseIMU.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            use_enu: bool = USE_ENU,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        ros_parameters_template = BaseSensor.ROS_PARAMETERS_TEMPLATE
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            port,
+            use_enu,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+

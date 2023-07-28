@@ -139,4 +139,3 @@ class PlatformConfig(BaseConfig):
 
     def get_controller(self) -> str:
         return self.controller
-
