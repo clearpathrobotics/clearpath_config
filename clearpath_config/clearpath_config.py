@@ -178,7 +178,7 @@ class ClearpathConfig(BaseConfig):
 
     @mounts.setter
     def mounts(self, config: dict) -> None:
-        self._sensors.config = config
+        self._mounts.config = config
 
     @property
     def sensors(self) -> SensorConfig:

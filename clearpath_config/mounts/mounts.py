@@ -32,6 +32,8 @@ from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.mounts.types.mount import BaseMount
 from clearpath_config.mounts.types.fath_pivot import FathPivot
 from clearpath_config.mounts.types.flir_ptu import FlirPTU
+from clearpath_config.mounts.types.sick import SICKStand
+from clearpath_config.mounts.types.tower import Tower
 from clearpath_config.mounts.types.pacs import PACS
 from typing import List
 
@@ -73,15 +75,19 @@ class MountListConfig(OrderedListConfig[BaseMount]):
 class MountsConfig(BaseConfig):
 
     MOUNTS = "mounts"
-    BRACKET = "bracket"
-    FATH_PIVOT = "fath_pivot"
-    RISER = "riser"
+    BRACKET = PACS.Bracket.MOUNT_MODEL
+    FATH_PIVOT = FathPivot.MOUNT_MODEL
+    RISER = PACS.Riser.MOUNT_MODEL
+    SICK = SICKStand.MOUNT_MODEL
+    TOWER = Tower.MOUNT_MODEL
 
     TEMPLATE = {
         MOUNTS: {
             BRACKET: BRACKET,
             FATH_PIVOT: FATH_PIVOT,
             RISER: RISER,
+            SICK: SICK,
+            TOWER: TOWER,
         }
     }
 
@@ -91,6 +97,8 @@ class MountsConfig(BaseConfig):
         BRACKET: [],
         FATH_PIVOT: [],
         RISER: [],
+        SICK: [],
+        TOWER: [],
     }
 
     def __init__(
@@ -98,17 +106,23 @@ class MountsConfig(BaseConfig):
             config: dict = {},
             bracket: List[PACS.Bracket] = DEFAULTS[BRACKET],
             fath_pivot: List[FathPivot] = DEFAULTS[FATH_PIVOT],
-            riser: List[PACS.Riser] = DEFAULTS[RISER]
+            riser: List[PACS.Riser] = DEFAULTS[RISER],
+            sick_stand: List[SICKStand] = DEFAULTS[SICK],
+            tower: List[Tower] = DEFAULTS[TOWER],
             ) -> None:
         # Initialization
         self.bracket = bracket
         self.fath_pivot = fath_pivot
         self.riser = riser
+        self.sick_stand = sick_stand
+        self.tower = tower
         # Template
         template = {
             self.KEYS[self.BRACKET]: MountsConfig.bracket,
             self.KEYS[self.FATH_PIVOT]: MountsConfig.fath_pivot,
-            self.KEYS[self.RISER]: MountsConfig.riser
+            self.KEYS[self.RISER]: MountsConfig.riser,
+            self.KEYS[self.SICK]: MountsConfig.sick_stand,
+            self.KEYS[self.TOWER]: MountsConfig.tower,
         }
         super().__init__(template, config, self.MOUNTS)
 
@@ -181,12 +195,60 @@ class MountsConfig(BaseConfig):
         mounts.set_all(mount_list)
         self._fath_pivot = mounts
 
+    @property
+    def sick_stand(self) -> OrderedListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.SICK],
+            value=self._sick.to_dict()
+        )
+        return self._sick
+
+    @sick_stand.setter
+    def sick_stand(self, value: List[dict]) -> None:
+        assert isinstance(value, list), (
+            "Mounts must be list of 'dict'")
+        assert all([isinstance(i, dict) for i in value]), (
+            "Mounts must be list of 'dict'")
+        mounts = MountListConfig()
+        mount_list = []
+        for d in value:
+            mount = SICKStand()
+            mount.from_dict(d)
+            mount_list.append(mount)
+        mounts.set_all(mount_list)
+        self._sick = mounts
+
+    @property
+    def tower(self) -> OrderedListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.TOWER],
+            value=self._tower.to_dict()
+        )
+        return self._tower
+
+    @tower.setter
+    def tower(self, value: List[dict]) -> None:
+        assert isinstance(value, list), (
+            "Mounts must be list of 'dict'")
+        assert all([isinstance(i, dict) for i in value]), (
+            "Mounts must be list of 'dict'")
+        mounts = MountListConfig()
+        mount_list = []
+        for d in value:
+            mount = Tower()
+            mount.from_dict(d)
+            mount_list.append(mount)
+        mounts.set_all(mount_list)
+        self._tower = mounts
+
     # Get All Mounts
     def get_all_mounts(self) -> List[BaseMount]:
         mounts = []
         mounts.extend(self.get_fath_pivots())
         mounts.extend(self.get_risers())
         mounts.extend(self.get_brackets())
+        mounts.extend(self.get_sick_stands())
+        mounts.extend(self.get_towers())
         return mounts
 
     # FathPivot: Add
@@ -362,3 +424,113 @@ class MountsConfig(BaseConfig):
             brackets: List[PACS.Bracket],
             ) -> None:
         self._bracket.set_all(brackets)
+
+    # Sick Stand: Add
+    def add_sick_stand(
+            self,
+            # By Object
+            sick_stand: SICKStand = None,
+            # By Parameters
+            parent: str = "base_link",
+            model: str = SICKStand.INVERTED,
+            xyz: List[float] = [0.0, 0.0, 0.0],
+            rpy: List[float] = [0.0, 0.0, 0.0]
+            ) -> None:
+        if not sick_stand:
+            sick_stand = SICKStand(
+                parent=parent,
+                model=model,
+                xyz=xyz,
+                rpy=rpy
+            )
+        self._sick.add(sick_stand)
+
+    # Sick Stand: Remove
+    def remove_sick_stand(
+            self,
+            # By Object or Name
+            sick_stand: SICKStand | int,
+            ) -> None:
+        self._sick.remove(sick_stand)
+
+    # Sick Stand: Get
+    def get_sick_stand(
+            self,
+            idx: int,
+            ) -> SICKStand:
+        return self._sick.get(idx)
+
+    # Sick Stand: Get All
+    def get_sick_stands(
+            self,
+            ) -> List[SICKStand]:
+        return self._sick.get_all()
+
+    # Sick Stand: Set
+    def set_sick_stand(
+            self,
+            sick_stand: SICKStand,
+            ) -> None:
+        self._sick.set(sick_stand)
+
+    # Sick Stand: Set All
+    def set_sick_stands(
+            self,
+            sick_stands: List[SICKStand],
+            ) -> None:
+        self._sick.set_all(sick_stands)
+
+    # Tower: Add
+    def add_tower(
+            self,
+            # By Object
+            tower: Tower = None,
+            # By Parameters
+            parent: str = "base_link",
+            model: str = Tower.SINGLE,
+            xyz: List[float] = [0.0, 0.0, 0.0],
+            rpy: List[float] = [0.0, 0.0, 0.0]
+            ) -> None:
+        if not tower:
+            tower = Tower(
+                parent=parent,
+                model=model,
+                xyz=xyz,
+                rpy=rpy
+            )
+        self._tower.add(tower)
+
+    # Tower: Remove
+    def remove_tower(
+            self,
+            # By Object or Name
+            tower: Tower | int,
+            ) -> None:
+        self._tower.remove(tower)
+
+    # Tower: Get
+    def get_tower(
+            self,
+            idx: int,
+            ) -> Tower:
+        return self._tower.get(idx)
+
+    # Tower: Get All
+    def get_towers(
+            self,
+            ) -> List[Tower]:
+        return self._tower.get_all()
+
+    # Tower: Set
+    def set_tower(
+            self,
+            tower: Tower,
+            ) -> None:
+        self._tower.set(tower)
+
+    # Tower: Set All
+    def set_towers(
+            self,
+            towers: List[Tower],
+            ) -> None:
+        self._tower.set_all(towers)

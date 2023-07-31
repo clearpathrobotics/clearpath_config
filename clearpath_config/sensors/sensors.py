@@ -46,6 +46,8 @@ from clearpath_config.sensors.types.gps import (
 from clearpath_config.sensors.types.imu import (
     BaseIMU,
     Microstrain,
+    CHRoboticsUM6,
+    RedshiftUM7,
 )
 from clearpath_config.sensors.types.lidars_2d import (
     BaseLidar2D,
@@ -62,8 +64,12 @@ from typing import List
 
 class InertialMeasurementUnit():
     MICROSTRAIN_IMU = Microstrain.SENSOR_MODEL
+    CHROBOTICS_UM6 = CHRoboticsUM6.SENSOR_MODEL
+    REDSHIFT_UM7 = RedshiftUM7.SENSOR_MODEL
     MODEL = {
-        MICROSTRAIN_IMU: Microstrain
+        MICROSTRAIN_IMU: Microstrain,
+        CHROBOTICS_UM6: CHRoboticsUM6,
+        REDSHIFT_UM7: RedshiftUM7,
     }
 
     @classmethod

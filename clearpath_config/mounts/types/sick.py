@@ -25,32 +25,45 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.platform.types.attachment import BaseAttachment
 from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.mounts.types.mount import BaseMount
 from typing import List
 
 
-class Structure(BaseAttachment):
-    ATTACHMENT_MODEL = "structure"
-    ARCH_300 = "sensor_arch_300"
-    ARCH_510 = "sensor_arch_510"
-    DEFAULT = ARCH_300
-    MODELS = [DEFAULT, ARCH_300, ARCH_510]
+class SICKStand(BaseMount):
+    MOUNT_MODEL = "sick"
+    UPRIGHT = "upright"
+    INVERTED = "inverted"
+    MODELS = [UPRIGHT, INVERTED]
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
-            enabled: bool = BaseAttachment.ENABLED,
-            model: str = DEFAULT,
+            idx: int = None,
+            name: str = None,
+            model: str = INVERTED,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        super().__init__(
-            name,
-            enabled,
-            model,
-            parent,
-            xyz,
-            rpy
-        )
+        self.model = model
+        super().__init__(idx, name, parent, xyz, rpy)
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['model'] = self.get_model()
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if 'model' in d:
+            self.set_model(d['model'])
+
+    def get_model(self) -> str:
+        return self.model
+
+    def set_model(self, model: str) -> None:
+        assert model in self.MODELS, " ".join([
+            "Unexpected SICK Stand model '%s'," % model,
+            "it must be one of the following: %s" % self.MODELS
+        ])
+        self.model = model
