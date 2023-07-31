@@ -2,6 +2,19 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Split novatel GPS
+* PyTest issues
+* Linter issues
+* Node names and flatten dictionaries
+* Added ros_parameters to extras
+* Added Garmin and Novatel gps
+* Added node names to rosparameters in sensors
+* Update hostname and namespace to match serial
+* Resolved indexing issue
+* Contributors: Luis Camero
+
 0.0.4 (2023-07-17)
 ------------------
 * Added __init_\_ to common
