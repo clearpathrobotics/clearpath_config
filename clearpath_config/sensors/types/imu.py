@@ -283,4 +283,3 @@ class RedshiftUM7(BaseIMU):
             xyz,
             rpy
         )
-
