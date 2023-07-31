@@ -31,7 +31,7 @@ from typing import List
 
 class BaseAttachment(Accessory):
     ATTACHMENT_MODEL = "base_attachment"
-    ENABLED = True
+    ENABLED = False
     DEFAULT = "default"
     MODELS = [DEFAULT]
 
