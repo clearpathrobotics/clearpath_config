@@ -31,6 +31,7 @@ from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
 from clearpath_config.platform.types.bumper import Bumper
+from clearpath_config.platform.types.fender import Fender
 
 
 # J100 Jackal Attachments Configuration
@@ -40,11 +41,15 @@ class J100AttachmentsConfig(BaseConfig, BaseAttachmentsConfig):
     ATTACHMENTS = "attachments"
     FRONT_BUMPER = "front_bumper"
     REAR_BUMPER = "rear_bumper"
+    FRONT_FENDER = "front_fender"
+    REAR_FENDER = "rear_fender"
 
     TEMPLATE = {
         ATTACHMENTS: {
             FRONT_BUMPER: FRONT_BUMPER,
             REAR_BUMPER: REAR_BUMPER,
+            FRONT_FENDER: FRONT_FENDER,
+            REAR_FENDER: REAR_FENDER
         }
     }
 
@@ -62,6 +67,16 @@ class J100AttachmentsConfig(BaseConfig, BaseAttachmentsConfig):
             'extension': Bumper.EXTENSION,
             'model': Bumper.DEFAULT
             },
+        FRONT_FENDER: {
+            'name': FRONT_FENDER,
+            'enabled': Fender.ENABLED,
+            'model': Fender.DEFAULT
+        },
+        REAR_FENDER: {
+            'name': REAR_FENDER,
+            'enabled': Fender.ENABLED,
+            'model': Fender.DEFAULT
+        },
     }
 
     def __init__(
@@ -73,10 +88,14 @@ class J100AttachmentsConfig(BaseConfig, BaseAttachmentsConfig):
         self._config = {}
         self.front_bumper = self.DEFAULTS[self.FRONT_BUMPER]
         self.rear_bumper = self.DEFAULTS[self.REAR_BUMPER]
+        self.front_fender = self.DEFAULTS[self.FRONT_FENDER]
+        self.rear_fender = self.DEFAULTS[self.REAR_FENDER]
         # Setter Template
         setters = {
             self.KEYS[self.FRONT_BUMPER]: J100AttachmentsConfig.front_bumper,
             self.KEYS[self.REAR_BUMPER]: J100AttachmentsConfig.rear_bumper,
+            self.KEYS[self.FRONT_FENDER]: J100AttachmentsConfig.front_fender,
+            self.KEYS[self.REAR_FENDER]: J100AttachmentsConfig.rear_fender,
         }
         # Set from Config
         BaseConfig.__init__(self, setters, config, self.ATTACHMENTS)
@@ -129,4 +148,54 @@ class J100AttachmentsConfig(BaseConfig, BaseAttachmentsConfig):
         else:
             assert isinstance(value, dict) or isinstance(value, Bumper), (
                 "Bumper must be of type 'dict' or 'Bumper'"
+            )
+
+    @property
+    def front_fender(self):
+        front_fender = self.fenders.get(self.FRONT_FENDER)
+        self.set_config_param(
+            key=self.KEYS[self.FRONT_FENDER],
+            value=front_fender.to_dict()[self.FRONT_FENDER]
+        )
+        return front_fender
+
+    @front_fender.setter
+    def front_fender(self, value: dict | Fender):
+        if isinstance(value, dict):
+            new = Fender(name=self.FRONT_FENDER)
+            new.from_dict(value)
+            self.fenders.set(new)
+        elif isinstance(value, Fender):
+            assert value.get_name() == self.FRONT_FENDER, (
+                "Front fender must be Fender with name %s" % self.FRONT_FENDER
+            )
+            self.fenders.set(new)
+        else:
+            assert isinstance(value, dict) or isinstance(value, Fender), (
+                "Fender must be of type 'dict' or 'Fender'"
+            )
+
+    @property
+    def rear_fender(self):
+        rear_fender = self.fenders.get(self.REAR_FENDER)
+        self.set_config_param(
+            key=self.KEYS[self.REAR_FENDER],
+            value=rear_fender.to_dict()[self.REAR_FENDER]
+        )
+        return rear_fender
+
+    @rear_fender.setter
+    def rear_fender(self, value: dict | Fender):
+        if isinstance(value, dict):
+            new = Fender(name=self.REAR_FENDER)
+            new.from_dict(value)
+            self.fenders.set(new)
+        elif isinstance(value, Fender):
+            assert value.get_name() == self.REAR_FENDER, (
+                "Rear fender must be Fender with name %s" % self.FRONT_FENDER
+            )
+            self.fenders.set(new)
+        else:
+            assert isinstance(value, dict) or isinstance(value, Fender), (
+                "Fender must be of type 'dict' or 'Fender'"
             )

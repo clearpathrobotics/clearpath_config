@@ -25,17 +25,16 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.platform.types.attachment import BaseAttachment
 from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.platform.types.attachment import BaseAttachment
 from typing import List
 
 
-class Structure(BaseAttachment):
-    ATTACHMENT_MODEL = "structure"
-    ARCH_300 = "sensor_arch_300"
-    ARCH_510 = "sensor_arch_510"
-    DEFAULT = ARCH_300
-    MODELS = [DEFAULT, ARCH_300, ARCH_510]
+class Fender(BaseAttachment):
+    ATTACHMENT_MODEL = "fender"
+    DEFAULT = "default"
+    SENSOR = "sensor"
+    MODELS = [DEFAULT, SENSOR]
 
     def __init__(
             self,

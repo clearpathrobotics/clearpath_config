@@ -39,7 +39,7 @@ class AttachmentMux():
     MODEL = {
         BUMPER: Bumper,
         TOP_PLATE: TopPlate,
-        STRUCTURE: Structure
+        STRUCTURE: Structure,
     }
 
     def __new__(cls, model: str) -> BaseAttachment:
