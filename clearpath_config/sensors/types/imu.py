@@ -198,7 +198,7 @@ class Microstrain(BaseIMU):
 class CHRoboticsUM6(BaseIMU):
     SENSOR_MODEL = "chrobotics_um6"
 
-    PORT = "/dev/ttyUSB0"
+    PORT = "/dev/clearpath/imu"
     FRAME_ID = "link"
     USE_ENU = True
 
@@ -243,7 +243,7 @@ class CHRoboticsUM6(BaseIMU):
 class RedshiftUM7(BaseIMU):
     SENSOR_MODEL = "redshift_um7"
 
-    PORT = "/dev/ttyUSB0"
+    PORT = "/dev/clearpath/um7"
     FRAME_ID = "link"
     USE_ENU = True
 
