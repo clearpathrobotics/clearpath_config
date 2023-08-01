@@ -51,7 +51,7 @@ from clearpath_config.sensors.types.imu import (
 )
 from clearpath_config.sensors.types.lidars_2d import (
     BaseLidar2D,
-    HokuyoUST10,
+    HokuyoUST,
     SickLMS1XX,
 )
 from clearpath_config.sensors.types.lidars_3d import (
@@ -137,11 +137,11 @@ class GlobalPositioningSystem():
 
 
 class Lidar2D():
-    HOKUYO_UST10 = HokuyoUST10.SENSOR_MODEL
+    HOKUYO_UST = HokuyoUST.SENSOR_MODEL
     SICK_LMS1XX = SickLMS1XX.SENSOR_MODEL
 
     MODEL = {
-        HOKUYO_UST10: HokuyoUST10,
+        HOKUYO_UST: HokuyoUST,
         SICK_LMS1XX: SickLMS1XX
     }
 
@@ -461,25 +461,25 @@ class SensorConfig(BaseConfig):
             lidar2d.set_rpy(rpy)
         self._lidar2d.add(lidar2d)
 
-    # Lidar2D: Add UST10
-    def add_ust10(
+    # Lidar2D: Add UST
+    def add_ust(
             self,
             # By Object
-            ust10: HokuyoUST10 = None,
+            ust: HokuyoUST = None,
             # By Parameters
-            frame_id: str = HokuyoUST10.FRAME_ID,
-            ip: str = HokuyoUST10.IP_ADDRESS,
-            port: int = HokuyoUST10.IP_PORT,
-            min_angle: float = HokuyoUST10.MIN_ANGLE,
-            max_angle: float = HokuyoUST10.MAX_ANGLE,
-            urdf_enabled: bool = HokuyoUST10.URDF_ENABLED,
-            launch_enabled: bool = HokuyoUST10.LAUNCH_ENABLED,
+            frame_id: str = HokuyoUST.FRAME_ID,
+            ip: str = HokuyoUST.IP_ADDRESS,
+            port: int = HokuyoUST.IP_PORT,
+            min_angle: float = HokuyoUST.MIN_ANGLE,
+            max_angle: float = HokuyoUST.MAX_ANGLE,
+            urdf_enabled: bool = HokuyoUST.URDF_ENABLED,
+            launch_enabled: bool = HokuyoUST.LAUNCH_ENABLED,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        if ust10 is None:
-            ust10 = HokuyoUST10(
+        if ust is None:
+            ust = HokuyoUST(
                 frame_id=frame_id,
                 ip=ip,
                 port=port,
@@ -491,10 +491,10 @@ class SensorConfig(BaseConfig):
                 xyz=xyz,
                 rpy=rpy
             )
-        assert isinstance(ust10, HokuyoUST10), (
-            "Lidar2D object must be of type UST10"
+        assert isinstance(ust, HokuyoUST), (
+            "Lidar2D object must be of type UST"
         )
-        self._lidar2d.add(ust10)
+        self._lidar2d.add(ust)
 
     # Lidar2D: Add LMS1xx
     def add_lms1xx(
@@ -552,9 +552,9 @@ class SensorConfig(BaseConfig):
                 all_model_lidar_2d.append(lidar_2d)
         return all_model_lidar_2d
 
-    # Lidar2D: Get All Objects of Model UST10
-    def get_all_ust10(self) -> List[HokuyoUST10]:
-        return self.get_all_lidar_2d_by_model(Lidar2D.UST10)
+    # Lidar2D: Get All Objects of Model UST
+    def get_all_ust(self) -> List[HokuyoUST]:
+        return self.get_all_lidar_2d_by_model(Lidar2D.UST)
 
     # Lidar2D: Get All Objects of Model LMS1XX
     def get_all_lms1xx(self) -> List[SickLMS1XX]:
@@ -653,7 +653,7 @@ class SensorConfig(BaseConfig):
                 all_model_lidar_3d.append(lidar_3d)
         return all_model_lidar_3d
 
-    # Lidar3D: Get All Objects of Model UST10
+    # Lidar3D: Get All Objects of Model UST
     def get_all_velodyne(self) -> List[VelodyneLidar]:
         return self.get_all_lidar_3d_by_model(Lidar3D.VELODYNE_LIDAR)
 
@@ -807,7 +807,7 @@ class SensorConfig(BaseConfig):
                 all_model_camera.append(camera)
         return all_model_camera
 
-    # Camera: Get All Objects of Model UST10
+    # Camera: Get All Objects of Model UST
     def get_all_realsense(self) -> List[IntelRealsense]:
         return self.get_all_cameras_by_model(Camera.INTEL_REALSENSE)
 
@@ -965,7 +965,7 @@ class SensorConfig(BaseConfig):
                 rpy=rpy
             )
         assert isinstance(duro, SwiftNavDuro), (
-            "GPS object must be of type UST10"
+            "GPS object must be of type UST"
         )
         self._gps.add(duro)
 
@@ -990,7 +990,7 @@ class SensorConfig(BaseConfig):
                 all_model_gps.append(gps)
         return all_model_gps
 
-    # GPS: Get All Objects of Model UST10
+    # GPS: Get All Objects of Model UST
     def get_all_duro(self) -> List[SwiftNavDuro]:
         return self.get_all_gps_by_model(
             GlobalPositioningSystem.SWIFTNAV_DURO)
