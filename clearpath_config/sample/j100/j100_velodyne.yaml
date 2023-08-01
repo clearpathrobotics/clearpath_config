@@ -40,6 +40,8 @@ mounts:
   bracket: []
   fath_pivot: []
   riser: []
+  disk: []
+  post: []
 sensors:
   camera: []
   gps: []
