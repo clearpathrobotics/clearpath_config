@@ -39,7 +39,7 @@ platform:
       rpy: [0.0, 0.0, 0.0]
   extras:
     urdf: null
-    control: null
+    ros_parameters: {}
 links:
   box: []
   cylinder: []
@@ -61,32 +61,35 @@ sensors:
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:
-      imu_frame_id: imu_0_link
-      port: /dev/microstrain_main
-      use_enu_frame: true
+      microstrain_inertial_driver:
+        imu_frame_id: imu_0_link
+        port: /dev/microstrain_main
+        use_enu_frame: true
   lidar2d:
-  - model: sick_lms1xx
+  - model: hokuyo_ust10
     urdf_enabled: true
     launch_enabled: true
-    parent: base_link
+    parent: top_plate_mount_d1
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:
-      frame_id: lidar2d_0_laser
-      hostname: 192.168.131.20
-      port: 2112
-      min_ang: -2.391
-      max_ang: 2.391
-  - model: sick_lms1xx
+      urg_node:
+        laser_frame_id: lidar2d_0_laser
+        ip_address: 192.168.131.20
+        ip_port: 10940
+        angle_min: -3.141592653589793
+        angle_max: 3.141592653589793
+  - model: hokuyo_ust10
     urdf_enabled: true
     launch_enabled: true
-    parent: base_link
+    parent: top_plate_mount_d8
     xyz: [0.0, 0.0, 0.0]
-    rpy: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 3.1415]
     ros_parameters:
-      frame_id: lidar2d_1_laser
-      hostname: 192.168.131.21
-      port: 2112
-      min_ang: -2.391
-      max_ang: 2.391
+      urg_node:
+        laser_frame_id: lidar2d_1_laser
+        ip_address: 192.168.131.21
+        ip_port: 10940
+        angle_min: -3.141592653589793
+        angle_max: 3.141592653589793
   lidar3d: []
