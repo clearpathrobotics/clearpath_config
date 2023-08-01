@@ -25,7 +25,6 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.list import OrderedListConfig
 from clearpath_config.common.utils.dictionary import flip_dict
