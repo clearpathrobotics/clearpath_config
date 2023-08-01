@@ -54,6 +54,8 @@ mounts:
     model: horizontal
   fath_pivot: []
   riser: []
+  disk: []
+  post: []
 sensors:
   camera: []
   gps: []
