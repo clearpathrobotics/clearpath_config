@@ -61,7 +61,7 @@ sensors:
   gps: []
   imu: []
   lidar2d:
-  - model: hokuyo_ust10
+  - model: hokuyo_ust
     urdf_enabled: true
     launch_enabled: true
     parent: bracket_0_mount
@@ -74,7 +74,7 @@ sensors:
         ip_port: 10940
         angle_min: -3.141592653589793
         angle_max: 3.141592653589793
-  - model: hokuyo_ust10
+  - model: hokuyo_ust
     urdf_enabled: true
     launch_enabled: true
     parent: bracket_1_mount

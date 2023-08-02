@@ -209,8 +209,8 @@ class BaseLidar2D(BaseSensor):
         self.max_angle = angle
 
 
-class HokuyoUST10(BaseLidar2D):
-    SENSOR_MODEL = "hokuyo_ust10"
+class HokuyoUST(BaseLidar2D):
+    SENSOR_MODEL = "hokuyo_ust"
 
     FRAME_ID = "laser"
     IP_PORT = 10940
