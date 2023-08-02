@@ -86,7 +86,7 @@ sensors:
   gps: []
   imu: []
   lidar2d:
-  - model: hokuyo_ust10
+  - model: hokuyo_ust
     urdf_enabled: true
     launch_enabled: true
     parent: bracket_0_mount
