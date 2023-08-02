@@ -86,12 +86,10 @@ class ROSParamaterDefaults:
 
 # ExtrasConfig:
 # - URDF extras: urdf.xacro with custom links and joints
-# - Control extras: YAML with overwrites or extra ROS parameters
 class ExtrasConfig(BaseConfig):
 
     EXTRAS = "extras"
     URDF = "urdf"
-    CONTROL = "control"
     ROS_PARAMETERS = "ros_parameters"
 
     PLATFORM_VELOCITY_CONTROLLER = "platform_velocity_controller"
@@ -108,7 +106,6 @@ class ExtrasConfig(BaseConfig):
     TEMPLATE = {
         EXTRAS: {
             URDF: URDF,
-            CONTROL: CONTROL,
             ROS_PARAMETERS: {
                 PLATFORM_VELOCITY_CONTROLLER: {
                     WHEEL_RADIUS: WHEEL_RADIUS,
@@ -130,7 +127,6 @@ class ExtrasConfig(BaseConfig):
 
     DEFAULTS = {
         URDF: "empty.urdf.xacro",
-        CONTROL: "empty.yaml",
         ROS_PARAMETERS: ROSParamaterDefaults(BaseConfig.get_platform_model()),
     }
 
@@ -138,7 +134,6 @@ class ExtrasConfig(BaseConfig):
             self,
             config: dict = {},
             urdf: str = DEFAULTS[URDF],
-            control: str = DEFAULTS[CONTROL],
             ros_parameters: dict = {},
             ) -> None:
         # ROS Parameter Setter Template
@@ -156,30 +151,19 @@ class ExtrasConfig(BaseConfig):
         # Setter Template
         self.setters = {
             self.KEYS[self.URDF]: ExtrasConfig.urdf,
-            self.KEYS[self.CONTROL]: ExtrasConfig.control,
             self.KEYS[self.ROS_PARAMETERS]: ExtrasConfig.ros_parameters,
         }
         # Initialization
-        self.init_ros_parameter()
+        self._init_ros_parameter()
         self._config = {}
         self.urdf = urdf
-        self.control = control
         self.ros_parameters = ros_parameters
         # Set from Config
         super().__init__(self.setters, config, self.EXTRAS)
 
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
-            defaults = flatten_dict(ROSParamaterDefaults(self.get_platform_model()))
-            previous = flatten_dict(self.DEFAULTS[self.ROS_PARAMETERS])
-            rosparam = flatten_dict(self.ros_parameters)
-            for key, val in rosparam.items():
-                if key in previous:
-                    if rosparam[key] == previous[key] and (
-                            key in defaults):
-                        rosparam[key] = defaults[key]
-            self.DEFAULTS[self.ROS_PARAMETERS] = ROSParamaterDefaults(self.get_platform_model())
-            self.ros_parameters = rosparam
+            self._update_ros_parameter()
 
     @property
     def urdf(self) -> str:
@@ -196,27 +180,19 @@ class ExtrasConfig(BaseConfig):
             return
         self._urdf = File(path=str(value))
 
-    @property
-    def control(self) -> str:
-        control = None if self._is_default(self._control, self.CONTROL) else str(self._control)
-        return control
-
-    @control.setter
-    def control(self, value: str) -> None:
-        if value is None or value == "None":
-            return
-        self._control = File(path=str(value))
-
     def _is_default(self, curr: str, key: str) -> bool:
         return curr == str(File(self.DEFAULTS[key]))
 
-    def is_ros_parameter_default(self, key) -> bool:
+    def _is_ros_parameter(self, key) -> bool:
+        return any([key in i for i in self._ros_parameters_setters])
+
+    def _is_ros_parameter_default(self, key) -> bool:
         default_parameters = self.DEFAULTS[self.ROS_PARAMETERS]
         current_val = self.getter(self._ros_parameters_setters[key])()
         default_val = flatten_dict(default_parameters)[".".join(key.split(".")[2:])]
         return current_val == default_val
 
-    def init_ros_parameter(self) -> None:
+    def _init_ros_parameter(self) -> None:
         default_parameters = self.DEFAULTS[self.ROS_PARAMETERS]
         for _, extended_key in self.KEYS.items():
             if extended_key in self._ros_parameters_setters:
@@ -224,12 +200,12 @@ class ExtrasConfig(BaseConfig):
                 setter = self.setter(self._ros_parameters_setters[extended_key])
                 setter(default_parameters[default_parameters_key])
 
-    def update_ros_parameter(self) -> None:
+    def _update_ros_parameter(self) -> None:
         default_parameters = ROSParamaterDefaults(self.get_platform_model())
         for _, extended_key in self.KEYS.items():
             if extended_key in self._ros_parameters_setters:
                 default_parameters_key = ".".join(extended_key.split(".")[2:])
-                if not self.is_ros_parameter_default(extended_key):
+                if not self._is_ros_parameter_default(extended_key):
                     continue
                 setter = self.setter(self._ros_parameters_setters[extended_key])
                 setter(default_parameters[default_parameters_key])
@@ -238,12 +214,15 @@ class ExtrasConfig(BaseConfig):
     """ROS parameters with node names and flattened dictionaries"""
     @property
     def ros_parameters(self) -> dict:
-        # Add all user values
-        d = flatten_dict(self._ros_parameters)
+        d = {}
         # Add non-default values
         for key, prop in self._ros_parameters_setters.items():
-            if not self.is_ros_parameter_default(key):
+            if not self._is_ros_parameter_default(key):
                 d[".".join(key.split(".")[2:])] = self.getter(prop)()
+        # User parameters
+        for key, val, in self._ros_parameters.items():
+            if not self._is_ros_parameter(key):
+                d[key] = val
         # Return flat
         d = unflatten_dict(d)
         for node_name in d:

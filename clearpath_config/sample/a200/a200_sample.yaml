@@ -63,6 +63,8 @@ mounts:
     rpy: [3.1415, 0.0, 0.0]
     angle: 0.0
   riser: []
+  disk: []
+  post: []
 sensors:
   camera:
   - model: intel_realsense
@@ -72,14 +74,15 @@ sensors:
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:
-      camera_name: camera_0
-      device_type: d435
-      serial_no: '0'
-      enable_color: true
-      rgb_camera.profile: 640,480,30
-      enable_depth: true
-      depth_module.profile: 640,480,30
-      pointcloud.enable: true
+      camera:
+        camera_name: camera_0
+        device_type: d435
+        serial_no: '0'
+        enable_color: true
+        rgb_camera.profile: 640,480,30
+        enable_depth: true
+        depth_module.profile: 640,480,30
+        pointcloud.enable: true
   gps: []
   imu: []
   lidar2d:
@@ -90,11 +93,12 @@ sensors:
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:
-      laser_frame_id: lidar2d_0_laser
-      ip_address: 192.168.131.20
-      ip_port: 10940
-      angle_min: -3.141592653589793
-      angle_max: 3.141592653589793
+      urg_node:
+        laser_frame_id: lidar2d_0_laser
+        ip_address: 192.168.131.20
+        ip_port: 10940
+        angle_min: -3.141592653589793
+        angle_max: 3.141592653589793
   lidar3d:
   - model: velodyne_lidar
     urdf_enabled: true
@@ -103,9 +107,12 @@ sensors:
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:
-      frame_id: lidar3d_0_laser
-      device_ip: 192.168.131.25
-      port: 2368
-      model: VLP16
-      fixed_frame: lidar3d_0_laser
-      target_frame: lidar3d_0_laser
+      velodyne_driver_node:
+        frame_id: lidar3d_0_laser
+        device_ip: 192.168.131.25
+        port: 2368
+        model: VLP16
+      velodyne_convert_node:
+        model: VLP16
+        fixed_frame: lidar3d_0_laser
+        target_frame: lidar3d_0_laser

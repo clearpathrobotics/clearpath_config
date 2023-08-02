@@ -34,7 +34,7 @@ platform:
       rpy: [0.0, 0.0, 0.0]
   extras:
     urdf: null
-    control: null
+    ros_parameters: {}
 links:
   box: []
   cylinder: []
@@ -45,6 +45,8 @@ mounts:
   bracket: []
   fath_pivot: []
   riser: []
+  disk: []
+  post: []
 sensors:
   camera: []
   gps: []

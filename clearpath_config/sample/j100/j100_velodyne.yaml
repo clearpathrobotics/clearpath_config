@@ -29,7 +29,7 @@ platform:
       extension: 0.0
   extras:
     urdf: null
-    control: null
+    ros_parameters: {}
 links:
   box: []
   cylinder: []
@@ -40,6 +40,8 @@ mounts:
   bracket: []
   fath_pivot: []
   riser: []
+  disk: []
+  post: []
 sensors:
   camera: []
   gps: []
@@ -53,9 +55,12 @@ sensors:
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:
-      frame_id: lidar3d_0_laser
-      device_ip: 192.168.131.25
-      port: 2368
-      model: VLP16
-      fixed_frame: lidar3d_0_laser
-      target_frame: lidar3d_0_laser
+      velodyne_driver_node:
+        frame_id: lidar3d_0_laser
+        device_ip: 192.168.131.25
+        port: 2368
+        model: VLP16
+      velodyne_convert_node:
+        model: VLP16
+        fixed_frame: lidar3d_0_laser
+        target_frame: lidar3d_0_laser

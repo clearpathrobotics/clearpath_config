@@ -30,41 +30,15 @@ from clearpath_config.mounts.types.mount import BaseMount
 from typing import List
 
 
-class Tower(BaseMount):
-    MOUNT_MODEL = "tower"
-    SINGLE = "single"
-    DUAL = "dual"
-    QUAD = "quad"
-    MODELS = [SINGLE, DUAL, QUAD]
+class Disk(BaseMount):
+    MOUNT_MODEL = "disk"
 
     def __init__(
             self,
             idx: int = None,
             name: str = None,
-            model: str = SINGLE,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        self.model = model
         super().__init__(idx, name, parent, xyz, rpy)
-
-    def to_dict(self) -> dict:
-        d = super().to_dict()
-        d['model'] = self.get_model()
-        return d
-
-    def from_dict(self, d: dict) -> None:
-        super().from_dict(d)
-        if 'model' in d:
-            self.set_model(d['model'])
-
-    def get_model(self) -> str:
-        return self.model
-
-    def set_model(self, model: str) -> None:
-        assert model in self.MODELS, " ".join([
-            "Unexpected Tower model '%s'," % model,
-            "it must be one of the following: %s" % self.MODELS
-        ])
-        self.model = model
