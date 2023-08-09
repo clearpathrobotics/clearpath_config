@@ -35,6 +35,7 @@ setup(
     version="0.0.5",
     packages=[
         package_name,
+        package_name + ".common",
         package_name + ".platform",
         package_name + ".system",
         package_name + ".mounts",
