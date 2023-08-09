@@ -15,18 +15,12 @@ system:
 platform:
   controller: ps4
   attachments:
-    front_bumper:
+    front_fender:
       enabled: true
       model: default
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
-      extension: 0.0
-    rear_bumper:
+    rear_fender:
       enabled: true
       model: default
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
-      extension: 0.0
   extras:
     urdf: null
     ros_parameters: {}
