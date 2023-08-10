@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.6 (2023-08-10)
+------------------
 * Added all modules to setup.py
 * Removed J100 bumpers from samples
 * Updated sample configs
