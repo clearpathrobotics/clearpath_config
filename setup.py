@@ -36,11 +36,18 @@ setup(
     packages=[
         package_name,
         package_name + ".common",
-        package_name + ".platform",
-        package_name + ".system",
-        package_name + ".mounts",
-        package_name + ".sensors",
+        package_name + ".common.types",
+        package_name + ".common.utils",
         package_name + ".links",
+        package_name + ".links.types",
+        package_name + ".mounts",
+        package_name + ".mounts.types",
+        package_name + ".platform",
+        package_name + ".platform.attachments",
+        package_name + ".platform.types",
+        package_name + ".sensors",
+        package_name + ".sensors.types",
+        package_name + ".system",
     ],
     data_files=[
         # Install marker file in the package index
