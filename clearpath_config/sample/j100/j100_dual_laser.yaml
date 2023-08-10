@@ -17,9 +17,9 @@ platform:
   attachments:
     front_fender:
       enabled: true
-      model: sensor
+      model: default
     rear_fender:
-      enabled: false
+      enabled: true
       model: default
   extras:
     urdf: null

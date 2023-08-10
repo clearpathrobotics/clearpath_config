@@ -25,35 +25,20 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.attachments.a200 import A200AttachmentsConfig
 from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
-from clearpath_config.platform.attachments.generic import GENERICAttachmentsConfig
-from clearpath_config.platform.attachments.j100 import J100AttachmentsConfig
-from clearpath_config.platform.attachments.w200 import W200AttachmentsConfig
 
 
-class AttachmentsConfigMux:
-    PLATFORM = {
-        Platform.A200: A200AttachmentsConfig(),
-        Platform.J100: J100AttachmentsConfig(),
-        Platform.GENERIC: GENERICAttachmentsConfig(),
-        Platform.W200: W200AttachmentsConfig(),
-    }
+# W200 Warthog Attachments Configuration
+class W200AttachmentsConfig(BaseAttachmentsConfig, BaseConfig):
+    PLATFORM = Platform.W200
+    ATTACHMENTS = "attachments"
 
-    def __new__(
-            cls,
-            platform: str,
-            config: dict = None
-            ) -> BaseAttachmentsConfig:
-        assert platform in cls.PLATFORM, (
-            "Platform '%s' must be one of: '%s'" % (
-                platform,
-                cls.PLATFORM.keys()
-            )
-        )
-        if config is not None:
-            cls.PLATFORM[platform].config = config
-            return cls.PLATFORM[platform]
-        else:
-            return cls.PLATFORM[platform]
+    def __init__(
+            self,
+            config: dict = {}
+            ) -> None:
+        self._config = {}
+        BaseAttachmentsConfig.__init__(self)
+        BaseConfig.__init__(self, {}, config, self.ATTACHMENTS)
