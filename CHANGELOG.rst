@@ -2,6 +2,25 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added all modules to setup.py
+* Removed J100 bumpers from samples
+* Updated sample configs
+* Added posts and disks to samples
+* Removed unused include
+* Split tower into post and disk
+* Renamed ust10 to ust
+* Updated README
+* Updated samples
+* Removed eof line
+* Fixed port paths
+* Added fenders, default disabled
+* Added ROS CI, issue templates and codeowners.
+* Added sick stand and variable-leg tower
+* Added UM7/UM6
+* Contributors: Luis Camero, Tony Baltovski
+
 0.0.5 (2023-07-31)
 ------------------
 * Split novatel GPS
