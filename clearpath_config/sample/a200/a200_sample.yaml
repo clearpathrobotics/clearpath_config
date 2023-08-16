@@ -12,6 +12,8 @@ system:
     namespace: a200_0000
     domain_id: 0
     rmw_implementation: rmw_fastrtps_cpp
+    workspaces:
+      - /home/administrator/micro_ros_ws/install/setup.bash
 platform:
   controller: ps4
   attachments:
@@ -39,7 +41,16 @@ platform:
       rpy: [0.0, 0.0, 0.0]
   extras:
     urdf: null
-    control: null
+    ros_parameters:
+      platform_velocity_controller:
+        linear.x.max_velocity": 1.0
+        linear.x.min_velocity": -1.0
+        linear.x.max_acceleration": 3.0
+        linear.x.min_acceleration": -3.0
+        angular.z.max_velocity": 2.0
+        angular.z.min_velocity": -2.0
+        angular.z.max_acceleration": 6.0
+        angular.z.min_acceleration": -6.0
 links:
   box:
   - name: user_bay_cover
