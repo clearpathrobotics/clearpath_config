@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Updated samples to include workspace
+* Contributors: Luis Camero
+
 0.0.6 (2023-08-10)
 ------------------
 * Added all modules to setup.py
