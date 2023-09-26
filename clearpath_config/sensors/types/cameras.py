@@ -558,7 +558,7 @@ class FlirBlackfly(BaseCamera):
             idx: int = None,
             name: str = None,
             topic: str = BaseCamera.TOPIC,
-            fps: int = BaseCamera.FPS,
+            fps: float = BaseCamera.FPS,
             serial: str = BaseCamera.SERIAL,
             connection_type: str = CONNECTION_TYPE,
             encoding: str = BAYER_RG8,
