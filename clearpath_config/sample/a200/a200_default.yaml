@@ -12,8 +12,7 @@ system:
     namespace: a200_0000
     domain_id: 0
     rmw_implementation: rmw_fastrtps_cpp
-    workspaces:
-      - /home/administrator/micro_ros_ws/install/setup.bash
+    workspaces: []
 platform:
   controller: ps4
   attachments:
