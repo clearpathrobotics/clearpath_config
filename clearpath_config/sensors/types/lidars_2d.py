@@ -265,16 +265,16 @@ class SickLMS1XX(BaseLidar2D):
     SENSOR_MODEL = "sick_lms1xx"
 
     FRAME_ID = "laser"
-    IP_PORT = 2112
+    IP_PORT = 2111
     MIN_ANGLE = -2.391
     MAX_ANGLE = 2.391
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "sick_scan.frame_id"
-        IP_ADDRESS = "sick_scan.hostname"
-        IP_PORT = "sick_scan.port"
-        MIN_ANGLE = "sick_scan.min_ang"
-        MAX_ANGLE = "sick_scan.max_ang"
+        FRAME_ID = "lms1xx.frame_id"
+        IP_ADDRESS = "lms1xx.host"
+        IP_PORT = "lms1xx.port"
+        MIN_ANGLE = "lms1xx.min_ang"
+        MAX_ANGLE = "lms1xx.max_ang"
 
     def __init__(
             self,
