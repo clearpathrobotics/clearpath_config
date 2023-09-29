@@ -12,8 +12,7 @@ system:
     namespace: a200_0000
     domain_id: 0
     rmw_implementation: rmw_fastrtps_cpp
-    workspaces:
-      - /home/administrator/micro_ros_ws/install/setup.bash
+    workspaces: []
 platform:
   controller: ps4
   attachments:
@@ -123,7 +122,7 @@ sensors:
         device_ip: 192.168.131.25
         port: 2368
         model: VLP16
-      velodyne_convert_node:
+      velodyne_transform_node:
         model: VLP16
         fixed_frame: lidar3d_0_laser
         target_frame: lidar3d_0_laser
