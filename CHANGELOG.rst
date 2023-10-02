@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.1 (2023-10-02)
+------------------
 * Removed micro_ros_ws
 * Velodyne changes
 * clearpath_config/sensors/types/lidars_2d.py
