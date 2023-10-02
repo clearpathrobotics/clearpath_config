@@ -548,15 +548,20 @@ class FlirBlackfly(BaseCamera):
         BAYER_BG12_PACKED,
     ]
 
+    class ROS_PARAMETER_KEYS:
+        FPS = "flir_blackfly.frame_rate"
+        SERIAL = "flir_blackfly.serial_number"
+        ENCODING = "flir_blackfly.pixel_format"
+
     def __init__(
             self,
             idx: int = None,
             name: str = None,
             topic: str = BaseCamera.TOPIC,
+            fps: float = BaseCamera.FPS,
+            serial: str = BaseCamera.SERIAL,
             connection_type: str = CONNECTION_TYPE,
             encoding: str = BAYER_RG8,
-            fps: int = BaseCamera.FPS,
-            serial: str = BaseCamera.SERIAL,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
@@ -564,6 +569,12 @@ class FlirBlackfly(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FPS: FlirBlackfly.fps,
+            self.ROS_PARAMETER_KEYS.SERIAL: FlirBlackfly.serial,
+            self.ROS_PARAMETER_KEYS.ENCODING: FlirBlackfly.encoding,
+        }
         super().__init__(
             idx,
             name,
@@ -573,6 +584,7 @@ class FlirBlackfly(BaseCamera):
             urdf_enabled,
             launch_enabled,
             ros_parameters,
+            ros_parameters_template,
             parent,
             xyz,
             rpy
