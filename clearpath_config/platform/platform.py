@@ -25,11 +25,53 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.platform.extras import ExtrasConfig
 from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
 from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
+
+
+class PackagePath:
+    PACKAGE = "package"
+    PATH = "path"
+
+    def __init__(
+            self,
+            package: str = "",
+            path: str = "",
+            ) -> None:
+        self.package = package
+        self.path = path
+
+    def from_dict(self, config: dict) -> None:
+        if self.PACKAGE in config:
+            self.package = config[self.PACKAGE]
+        if self.PATH in config:
+            self.path = config[self.PATH]
+
+    def to_dict(self) -> dict:
+        return {
+            self.PACKAGE: self.package,
+            self.PATH: self.path
+        }
+
+    @property
+    def package(self) -> str:
+        return self._package
+
+    @package.setter
+    def package(self, value: str) -> None:
+        self._package = value
+
+    @property
+    def path(self) -> str:
+        return self._path
+
+    @path.setter
+    def path(self, value: str) -> None:
+        self._path = value
 
 
 class PlatformConfig(BaseConfig):
@@ -42,12 +84,17 @@ class PlatformConfig(BaseConfig):
     ATTACHMENTS = "attachments"
     # Extras
     EXTRAS = "extras"
+    # Generic Robot
+    DESCRIPTION = "description"
+    LAUNCH = "launch"
 
     TEMPLATE = {
         PLATFORM: {
             CONTROLLER: CONTROLLER,
             ATTACHMENTS: ATTACHMENTS,
-            EXTRAS: EXTRAS
+            EXTRAS: EXTRAS,
+            DESCRIPTION: DESCRIPTION,
+            LAUNCH: LAUNCH,
         }
     }
 
@@ -57,7 +104,9 @@ class PlatformConfig(BaseConfig):
         # PLATFORM
         CONTROLLER: PS4,
         ATTACHMENTS: {},
-        EXTRAS: ExtrasConfig.DEFAULTS
+        EXTRAS: ExtrasConfig.DEFAULTS,
+        DESCRIPTION: "",
+        LAUNCH: "",
     }
 
     def __init__(
@@ -72,6 +121,8 @@ class PlatformConfig(BaseConfig):
         self.controller = controller
         self.attachments = attachments
         self._extras = ExtrasConfig(extras)
+        self.description = self.DEFAULTS[self.DESCRIPTION]
+        self.launch = self.DEFAULTS[self.LAUNCH]
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
@@ -87,6 +138,22 @@ class PlatformConfig(BaseConfig):
             # TODO: Set PACS Profile
             # Reload extras
             self.extras.update(serial_number=serial_number)
+            # Generic Robot Launch and URDF
+            if BaseConfig.get_platform_model() == Platform.GENERIC:
+                # Add to Template
+                template = self.template
+                if self.KEYS[self.DESCRIPTION] not in template:
+                    template[self.KEYS[self.DESCRIPTION]] = PlatformConfig.description
+                if self.KEYS[self.LAUNCH] not in template:
+                    template[self.KEYS[self.LAUNCH]] = PlatformConfig.launch
+                self.template = template
+            else:
+                template = self.template
+                if self.KEYS[self.DESCRIPTION] in template:
+                    del template[self.KEYS[self.DESCRIPTION]]
+                if self.KEYS[self.LAUNCH] in template:
+                    del template[self.KEYS[self.LAUNCH]]
+                self.template = template
 
     @property
     def controller(self) -> str:
@@ -139,3 +206,33 @@ class PlatformConfig(BaseConfig):
 
     def get_controller(self) -> str:
         return self.controller
+
+    @property
+    def description(self) -> dict:
+        if self.KEYS[self.DESCRIPTION] not in self.template:
+            return self._description.to_dict()
+        self.set_config_param(
+            key=self.KEYS[self.DESCRIPTION],
+            value=self._description.to_dict()
+        )
+        return self._description.to_dict()
+
+    @description.setter
+    def description(self, value: dict) -> None:
+        self._description = PackagePath()
+        self._description.from_dict(value)
+
+    @property
+    def launch(self) -> dict:
+        if self.KEYS[self.LAUNCH] not in self.template:
+            return self._launch.to_dict()
+        self.set_config_param(
+            key=self.KEYS[self.LAUNCH],
+            value=self._launch.to_dict()
+        )
+        return self._launch.to_dict()
+
+    @launch.setter
+    def launch(self, value: dict) -> None:
+        self._launch = PackagePath()
+        self._launch.from_dict(value)
