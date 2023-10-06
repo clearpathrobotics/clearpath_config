@@ -26,12 +26,14 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.accessory import Accessory, IndexedAccessory
+from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.utils.dictionary import (
     flatten_dict,
     unflatten_dict
 )
 from typing import List, Callable
 import copy
+import os
 
 
 class BaseSensor(IndexedAccessory):
@@ -42,6 +44,9 @@ class BaseSensor(IndexedAccessory):
     LAUNCH_ENABLED = True
     ROS_PARAMETERS = {}
     ROS_PARAMETERS_TEMPLATE = {}
+
+    class TOPICS:
+        MAP = {}
 
     class ROSParameter:
         def __init__(
@@ -137,8 +142,12 @@ class BaseSensor(IndexedAccessory):
         super().set_idx(idx)
         self.topic = self.get_topic_from_idx(idx)
 
-    def get_topic(self) -> str:
-        return self.topic
+    def get_topic(self, topic: str) -> str:
+        assert topic in self.TOPICS.MAP, (
+            "Topic must be one of %s" % [i for i in self.TOPICS.MAP]
+        )
+        ns = BaseConfig.get_namespace()
+        return os.path.join(ns, self.name, self.TOPICS.MAP[topic])
 
     def set_topic(self, topic: str) -> None:
         assert isinstance(topic, str), (

@@ -158,6 +158,22 @@ class IntelRealsense(BaseCamera):
         COLOR_ENABLE = "camera.enable_color"
         POINTCLOUD_ENABLE = "camera.pointcloud.enable"
 
+    class TOPICS:
+        COLOR_IMAGE = "color_image"
+        COLOR_CAMERA_INFO = "color_camera_info"
+        DEPTH_IMAGE = "depth_image"
+        DEPTH_CAMERA_INFO = "depth_camera_info"
+        POINTCLOUD = "points"
+        IMU = "imu"
+        MAP = {
+            COLOR_IMAGE: "color/image",
+            COLOR_CAMERA_INFO: "color/camera_info",
+            DEPTH_IMAGE: "depth/image",
+            DEPTH_CAMERA_INFO: "depth/camera_info",
+            POINTCLOUD: "points",
+            IMU: "imu"
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -552,6 +568,14 @@ class FlirBlackfly(BaseCamera):
         FPS = "flir_blackfly.frame_rate"
         SERIAL = "flir_blackfly.serial_number"
         ENCODING = "flir_blackfly.pixel_format"
+
+    class TOPICS:
+        COLOR_IMAGE = "color_image"
+        COLOR_CAMERA_INFO = "color_camera_info"
+        MAP = {
+            COLOR_IMAGE: "color/image",
+            COLOR_CAMERA_INFO: "color/camera_info"
+        }
 
     def __init__(
             self,

@@ -162,6 +162,16 @@ class Microstrain(BaseIMU):
         FRAME_ID = "microstrain_inertial_driver.imu_frame_id"
         USE_ENU = "microstrain_inertial_driver.use_enu_frame"
 
+    class TOPICS:
+        RAW_DATA = "raw"
+        DATA = "data"
+        MAG = "mag"
+        MAP = {
+            RAW_DATA: "data_raw",
+            DATA: "data",
+            MAG: "mag"
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -207,6 +217,16 @@ class CHRoboticsUM6(BaseIMU):
         FRAME_ID = "um6_driver.frame_id"
         USE_ENU = "um6_driver.tf_ned_to_enu"
 
+    class TOPICS:
+        RAW_DATA = "raw"
+        DATA = "data"
+        MAG = "mag"
+        MAP = {
+            RAW_DATA: "data_raw",
+            DATA: "data",
+            MAG: "mag"
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -251,6 +271,16 @@ class RedshiftUM7(BaseIMU):
         PORT = "um7_driver.port"
         FRAME_ID = "um7_driver.frame_id"
         USE_ENU = "um7_driver.tf_ned_to_enu"
+
+    class TOPICS:
+        RAW_DATA = "raw"
+        DATA = "data"
+        MAG = "mag"
+        MAP = {
+            RAW_DATA: "data_raw",
+            DATA: "data",
+            MAG: "mag"
+        }
 
     def __init__(
             self,

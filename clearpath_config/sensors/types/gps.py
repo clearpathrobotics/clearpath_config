@@ -128,6 +128,12 @@ class SwiftNavDuro(BaseGPS):
         IP_ADDRESS = "duro_node.ip_address"
         IP_PORT = "duro_node.port"
 
+    class TOPICS:
+        FIX = "fix"
+        MAP = {
+            FIX: "fix",
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -210,6 +216,12 @@ class NMEA(BaseGPS):
         FRAME_ID = "nmea_navsat_driver.frame_id"
         PORT = "nmea_navsat_driver.port"
         BAUD = "nmea_navsat_driver.baud"
+
+    class TOPICS:
+        FIX = "fix"
+        MAP = {
+            FIX: "fix",
+        }
 
     def __init__(
             self,

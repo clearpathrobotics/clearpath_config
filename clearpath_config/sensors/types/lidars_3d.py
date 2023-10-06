@@ -192,6 +192,13 @@ class VelodyneLidar(BaseLidar3D):
         FIXED_FRAME = "velodyne_transform_node.fixed_frame"
         TARGET_FRAME = "velodyne_transform_node.target_frame"
 
+    class TOPICS:
+        SCAN = "scan"
+        POINTS = "points"
+        MAP = {
+            SCAN: "scan",
+        }
+
     def __init__(
             self,
             idx: int = None,
