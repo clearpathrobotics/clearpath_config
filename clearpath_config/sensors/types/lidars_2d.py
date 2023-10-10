@@ -234,7 +234,7 @@ class HokuyoUST(BaseLidar2D):
         MAX_ANGLE = "urg_node.angle_max"
 
     class TOPICS:
-        SCAN = "SCAN"
+        SCAN = "scan"
         NAME = {
             SCAN: "scan",
         }
