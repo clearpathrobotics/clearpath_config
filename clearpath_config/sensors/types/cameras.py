@@ -43,6 +43,18 @@ class BaseCamera(BaseSensor):
         FPS = "node_name.fps"
         SERIAL = "node_name.serial"
 
+    class TOPICS:
+        COLOR_IMAGE = "color_image"
+        COLOR_CAMERA_INFO = "color_camera_info"
+        NAME = {
+            COLOR_IMAGE: "color/image",
+            COLOR_CAMERA_INFO: "color/camera_info"
+        }
+        RATE = {
+            COLOR_IMAGE: 30,
+            COLOR_CAMERA_INFO: 30,
+        }
+
     def __init__(
             self,
             idx: int = None,

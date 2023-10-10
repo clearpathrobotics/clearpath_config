@@ -46,6 +46,21 @@ class BaseIMU(BaseSensor):
         FRAME_ID = "node_name.frame_id"
         USE_ENU = "node_name.use_enu"
 
+    class TOPICS:
+        RAW_DATA = "raw"
+        DATA = "data"
+        MAG = "mag"
+        NAME = {
+            RAW_DATA: "data_raw",
+            DATA: "data",
+            MAG: "mag"
+        }
+        RATE = {
+            RAW_DATA: 60,
+            DATA: 60,
+            MAG: 60
+        }
+
     def __init__(
             self,
             idx: int = None,

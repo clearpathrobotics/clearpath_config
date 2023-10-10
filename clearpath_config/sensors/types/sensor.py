@@ -148,9 +148,9 @@ class BaseSensor(IndexedAccessory):
             "Topic must be one of %s" % [i for i in self.TOPICS.NAME]
         )
         ns = BaseConfig.get_namespace()
-        return os.path.join(ns, self.name, self.TOPICS.NAME[topic])
+        return os.path.join(ns, "sensors", self.name, self.TOPICS.NAME[topic])
 
-    def get_topic_rate(self, topic: str) -> str:
+    def get_topic_rate(self, topic: str) -> float:
         assert topic in self.TOPICS.RATE, (
             "Topic must be one of %s" % [i for i in self.TOPICS.RATE]
         )

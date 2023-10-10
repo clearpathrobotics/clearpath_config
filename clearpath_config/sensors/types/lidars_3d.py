@@ -47,6 +47,18 @@ class BaseLidar3D(BaseSensor):
         IP_ADDRESS = "node_name.ip_address"
         IP_PORT = "node_name.ip_port"
 
+    class TOPICS:
+        SCAN = "scan"
+        POINTS = "points"
+        NAME = {
+            SCAN: "scan",
+            POINTS: "points",
+        }
+        RATE = {
+            SCAN: 10,
+            POINTS: 10
+        }
+
     def __init__(
             self,
             idx: int = None,

@@ -52,6 +52,15 @@ class BaseLidar2D(BaseSensor):
         MIN_ANGLE = "node_name.min_angle"
         MAX_ANGLE = "node_name.max_angle"
 
+    class TOPICS:
+        SCAN = "scan"
+        NAME = {
+            SCAN: "scan",
+        }
+        RATE = {
+            SCAN: 10,
+        }
+
     def __init__(
             self,
             idx: int = None,

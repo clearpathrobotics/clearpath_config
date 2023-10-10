@@ -44,6 +44,15 @@ class BaseGPS(BaseSensor):
     class ROS_PARAMETER_KEYS:
         FRAME_ID = "node_name.frame_id"
 
+    class TOPICS:
+        FIX = "fix"
+        NAME = {
+            FIX: "fix",
+        }
+        RATE = {
+            FIX: 60,
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -134,7 +143,7 @@ class SwiftNavDuro(BaseGPS):
             FIX: "fix",
         }
         RATE = {
-            FIX: "60",
+            FIX: 60,
         }
 
     def __init__(
@@ -226,7 +235,7 @@ class NMEA(BaseGPS):
             FIX: "fix",
         }
         RATE = {
-            FIX: "60",
+            FIX: 60,
         }
 
     def __init__(
