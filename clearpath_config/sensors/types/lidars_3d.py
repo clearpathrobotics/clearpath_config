@@ -195,8 +195,13 @@ class VelodyneLidar(BaseLidar3D):
     class TOPICS:
         SCAN = "scan"
         POINTS = "points"
-        MAP = {
+        NAME = {
             SCAN: "scan",
+            POINTS: "points",
+        }
+        RATE = {
+            SCAN: 10,
+            POINTS: 10
         }
 
     def __init__(

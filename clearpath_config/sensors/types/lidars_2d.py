@@ -226,8 +226,11 @@ class HokuyoUST(BaseLidar2D):
 
     class TOPICS:
         SCAN = "SCAN"
-        MAP = {
+        NAME = {
             SCAN: "scan",
+        }
+        RATE = {
+            SCAN: 10,
         }
 
     def __init__(
@@ -284,8 +287,11 @@ class SickLMS1XX(BaseLidar2D):
 
     class TOPICS:
         SCAN = "scan"
-        MAP = {
+        NAME = {
             SCAN: "scan",
+        }
+        RATE = {
+            SCAN: 10,
         }
 
     def __init__(

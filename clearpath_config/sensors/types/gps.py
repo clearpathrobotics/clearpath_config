@@ -130,8 +130,11 @@ class SwiftNavDuro(BaseGPS):
 
     class TOPICS:
         FIX = "fix"
-        MAP = {
+        NAME = {
             FIX: "fix",
+        }
+        RATE = {
+            FIX: "60",
         }
 
     def __init__(
@@ -219,8 +222,11 @@ class NMEA(BaseGPS):
 
     class TOPICS:
         FIX = "fix"
-        MAP = {
+        NAME = {
             FIX: "fix",
+        }
+        RATE = {
+            FIX: "60",
         }
 
     def __init__(

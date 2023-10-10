@@ -166,10 +166,15 @@ class Microstrain(BaseIMU):
         RAW_DATA = "raw"
         DATA = "data"
         MAG = "mag"
-        MAP = {
+        NAME = {
             RAW_DATA: "data_raw",
             DATA: "data",
             MAG: "mag"
+        }
+        RATE = {
+            RAW_DATA: 60,
+            DATA: 60,
+            MAG: 60
         }
 
     def __init__(
@@ -221,10 +226,15 @@ class CHRoboticsUM6(BaseIMU):
         RAW_DATA = "raw"
         DATA = "data"
         MAG = "mag"
-        MAP = {
+        NAME = {
             RAW_DATA: "data_raw",
             DATA: "data",
             MAG: "mag"
+        }
+        RATE = {
+            RAW_DATA: 60,
+            DATA: 60,
+            MAG: 60
         }
 
     def __init__(
@@ -276,10 +286,15 @@ class RedshiftUM7(BaseIMU):
         RAW_DATA = "raw"
         DATA = "data"
         MAG = "mag"
-        MAP = {
+        NAME = {
             RAW_DATA: "data_raw",
             DATA: "data",
             MAG: "mag"
+        }
+        RATE = {
+            RAW_DATA: 60,
+            DATA: 60,
+            MAG: 60
         }
 
     def __init__(

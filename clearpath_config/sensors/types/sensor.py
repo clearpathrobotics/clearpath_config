@@ -46,7 +46,8 @@ class BaseSensor(IndexedAccessory):
     ROS_PARAMETERS_TEMPLATE = {}
 
     class TOPICS:
-        MAP = {}
+        NAME = {}
+        RATE = {}
 
     class ROSParameter:
         def __init__(
@@ -143,11 +144,20 @@ class BaseSensor(IndexedAccessory):
         self.topic = self.get_topic_from_idx(idx)
 
     def get_topic(self, topic: str) -> str:
-        assert topic in self.TOPICS.MAP, (
-            "Topic must be one of %s" % [i for i in self.TOPICS.MAP]
+        assert topic in self.TOPICS.NAME, (
+            "Topic must be one of %s" % [i for i in self.TOPICS.NAME]
         )
         ns = BaseConfig.get_namespace()
-        return os.path.join(ns, self.name, self.TOPICS.MAP[topic])
+        return os.path.join(ns, self.name, self.TOPICS.NAME[topic])
+
+    def get_topic_rate(self, topic: str) -> str:
+        assert topic in self.TOPICS.RATE, (
+            "Topic must be one of %s" % [i for i in self.TOPICS.RATE]
+        )
+        if isinstance(self.TOPICS.RATE[topic], property):
+            return self.TOPICS.RATE[topic].fget.__get__(self)
+        else:
+            return self.TOPICS.RATE[topic]
 
     def set_topic(self, topic: str) -> None:
         assert isinstance(topic, str), (
