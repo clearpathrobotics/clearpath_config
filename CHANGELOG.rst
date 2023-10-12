@@ -2,6 +2,20 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.1.1 (2023-10-02)
+------------------
+* Removed micro_ros_ws
+* Velodyne changes
+* clearpath_config/sensors/types/lidars_2d.py
+* FPS expected as float
+* Added ros_parameter_template
+* Contributors: Hilary Luo, Luis Camero
+
+0.1.0 (2023-08-31)
+------------------
+* Updated samples to include workspace
+* Contributors: Luis Camero
+
 0.0.6 (2023-08-10)
 ------------------
 * Added all modules to setup.py

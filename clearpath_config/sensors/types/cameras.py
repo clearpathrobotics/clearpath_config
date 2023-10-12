@@ -43,6 +43,18 @@ class BaseCamera(BaseSensor):
         FPS = "node_name.fps"
         SERIAL = "node_name.serial"
 
+    class TOPICS:
+        COLOR_IMAGE = "color_image"
+        COLOR_CAMERA_INFO = "color_camera_info"
+        NAME = {
+            COLOR_IMAGE: "color/image",
+            COLOR_CAMERA_INFO: "color/camera_info"
+        }
+        RATE = {
+            COLOR_IMAGE: 30,
+            COLOR_CAMERA_INFO: 30,
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -158,6 +170,30 @@ class IntelRealsense(BaseCamera):
         COLOR_ENABLE = "camera.enable_color"
         POINTCLOUD_ENABLE = "camera.pointcloud.enable"
 
+    class TOPICS:
+        COLOR_IMAGE = "color_image"
+        COLOR_CAMERA_INFO = "color_camera_info"
+        DEPTH_IMAGE = "depth_image"
+        DEPTH_CAMERA_INFO = "depth_camera_info"
+        POINTCLOUD = "points"
+        IMU = "imu"
+        NAME = {
+            COLOR_IMAGE: "color/image",
+            COLOR_CAMERA_INFO: "color/camera_info",
+            DEPTH_IMAGE: "depth/image",
+            DEPTH_CAMERA_INFO: "depth/camera_info",
+            POINTCLOUD: "points",
+            IMU: "imu"
+        }
+        RATE = {
+            COLOR_IMAGE: BaseCamera.FPS,
+            COLOR_CAMERA_INFO: BaseCamera.FPS,
+            DEPTH_IMAGE: BaseCamera.FPS,
+            DEPTH_CAMERA_INFO: BaseCamera.FPS,
+            POINTCLOUD: BaseCamera.FPS,
+            IMU: BaseCamera.FPS
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -181,27 +217,6 @@ class IntelRealsense(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        self.device_type: str = IntelRealsense.DEVICE_TYPE
-        self.set_device_type(device_type)
-        # Color Image
-        self.color_enabled: bool = IntelRealsense.COLOR_ENABLED
-        self.color_width: int = IntelRealsense.COLOR_WIDTH
-        self.color_height: int = IntelRealsense.COLOR_HEIGHT
-        self.set_color_enabled(color_enabled)
-        self.set_color_width(color_width)
-        self.set_color_height(color_height)
-        # Depth Image
-        self.depth_enabled: bool = IntelRealsense.DEPTH_ENABLED
-        self.depth_width: int = IntelRealsense.DEPTH_WIDTH
-        self.depth_height: int = IntelRealsense.DEPTH_HEIGHT
-        self.depth_fps: int = IntelRealsense.DEPTH_FPS
-        self.set_depth_enabled(depth_enabled)
-        self.set_depth_width(depth_width)
-        self.set_depth_height(depth_height)
-        self.set_depth_fps(depth_fps)
-        # Pointcloud
-        self.pointcloud_enabled: bool = IntelRealsense.POINTCLOUD_ENABLED
-        self.set_pointcloud_enabled(pointcloud_enabled)
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FPS: IntelRealsense.color_profile,
@@ -227,6 +242,35 @@ class IntelRealsense(BaseCamera):
             xyz,
             rpy
         )
+        # Topic Rates
+        self.TOPICS.RATE[self.TOPICS.COLOR_IMAGE] = self.fps
+        self.TOPICS.RATE[self.TOPICS.COLOR_CAMERA_INFO] = self.fps
+        self.TOPICS.RATE[self.TOPICS.DEPTH_IMAGE] = self.fps
+        self.TOPICS.RATE[self.TOPICS.DEPTH_CAMERA_INFO] = self.fps
+        self.TOPICS.RATE[self.TOPICS.POINTCLOUD] = self.fps
+        self.TOPICS.RATE[self.TOPICS.IMU] = self.fps
+        # Initialization
+        self.device_type: str = IntelRealsense.DEVICE_TYPE
+        self.set_device_type(device_type)
+        # Color Image
+        self.color_enabled: bool = IntelRealsense.COLOR_ENABLED
+        self.color_width: int = IntelRealsense.COLOR_WIDTH
+        self.color_height: int = IntelRealsense.COLOR_HEIGHT
+        self.set_color_enabled(color_enabled)
+        self.set_color_width(color_width)
+        self.set_color_height(color_height)
+        # Depth Image
+        self.depth_enabled: bool = IntelRealsense.DEPTH_ENABLED
+        self.depth_width: int = IntelRealsense.DEPTH_WIDTH
+        self.depth_height: int = IntelRealsense.DEPTH_HEIGHT
+        self.depth_fps: int = IntelRealsense.DEPTH_FPS
+        self.set_depth_enabled(depth_enabled)
+        self.set_depth_width(depth_width)
+        self.set_depth_height(depth_height)
+        self.set_depth_fps(depth_fps)
+        # Pointcloud
+        self.pointcloud_enabled: bool = IntelRealsense.POINTCLOUD_ENABLED
+        self.set_pointcloud_enabled(pointcloud_enabled)
 
     @staticmethod
     def clean_profile(profile: str | list) -> list:
@@ -548,15 +592,32 @@ class FlirBlackfly(BaseCamera):
         BAYER_BG12_PACKED,
     ]
 
+    class ROS_PARAMETER_KEYS:
+        FPS = "flir_blackfly.frame_rate"
+        SERIAL = "flir_blackfly.serial_number"
+        ENCODING = "flir_blackfly.pixel_format"
+
+    class TOPICS:
+        COLOR_IMAGE = "color_image"
+        COLOR_CAMERA_INFO = "color_camera_info"
+        NAME = {
+            COLOR_IMAGE: "color/image",
+            COLOR_CAMERA_INFO: "color/camera_info"
+        }
+        RATE = {
+            COLOR_IMAGE: BaseCamera.FPS,
+            COLOR_CAMERA_INFO: BaseCamera.FPS,
+        }
+
     def __init__(
             self,
             idx: int = None,
             name: str = None,
             topic: str = BaseCamera.TOPIC,
+            fps: float = BaseCamera.FPS,
+            serial: str = BaseCamera.SERIAL,
             connection_type: str = CONNECTION_TYPE,
             encoding: str = BAYER_RG8,
-            fps: int = BaseCamera.FPS,
-            serial: str = BaseCamera.SERIAL,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
@@ -564,6 +625,12 @@ class FlirBlackfly(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FPS: FlirBlackfly.fps,
+            self.ROS_PARAMETER_KEYS.SERIAL: FlirBlackfly.serial,
+            self.ROS_PARAMETER_KEYS.ENCODING: FlirBlackfly.encoding,
+        }
         super().__init__(
             idx,
             name,
@@ -573,10 +640,15 @@ class FlirBlackfly(BaseCamera):
             urdf_enabled,
             launch_enabled,
             ros_parameters,
+            ros_parameters_template,
             parent,
             xyz,
             rpy
         )
+        # Topic Rates
+        self.TOPICS.RATE[self.TOPICS.COLOR_IMAGE] = self.fps
+        self.TOPICS.RATE[self.TOPICS.COLOR_CAMERA_INFO] = self.fps
+        # Initialization
         self.connection_type: str = FlirBlackfly.CONNECTION_TYPE
         self.set_connection_type(connection_type)
         self.encoding: str = FlirBlackfly.BAYER_RG8

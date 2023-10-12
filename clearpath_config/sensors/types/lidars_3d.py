@@ -47,6 +47,18 @@ class BaseLidar3D(BaseSensor):
         IP_ADDRESS = "node_name.ip_address"
         IP_PORT = "node_name.ip_port"
 
+    class TOPICS:
+        SCAN = "scan"
+        POINTS = "points"
+        NAME = {
+            SCAN: "scan",
+            POINTS: "points",
+        }
+        RATE = {
+            SCAN: 10,
+            POINTS: 10
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -188,9 +200,21 @@ class VelodyneLidar(BaseLidar3D):
         IP_ADDRESS = "velodyne_driver_node.device_ip"
         IP_PORT = "velodyne_driver_node.port"
         DRIVER_NODE_MODEL = "velodyne_driver_node.model"
-        CONVERT_NODE_MODEL = "velodyne_convert_node.model"
-        FIXED_FRAME = "velodyne_convert_node.fixed_frame"
-        TARGET_FRAME = "velodyne_convert_node.target_frame"
+        TRANSFORM_NODE_MODEL = "velodyne_transform_node.model"
+        FIXED_FRAME = "velodyne_transform_node.fixed_frame"
+        TARGET_FRAME = "velodyne_transform_node.target_frame"
+
+    class TOPICS:
+        SCAN = "scan"
+        POINTS = "points"
+        NAME = {
+            SCAN: "scan",
+            POINTS: "points",
+        }
+        RATE = {
+            SCAN: 10,
+            POINTS: 10
+        }
 
     def __init__(
             self,
@@ -213,7 +237,7 @@ class VelodyneLidar(BaseLidar3D):
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.DRIVER_NODE_MODEL: VelodyneLidar.device_type,
-            self.ROS_PARAMETER_KEYS.CONVERT_NODE_MODEL: VelodyneLidar.device_type,
+            self.ROS_PARAMETER_KEYS.TRANSFORM_NODE_MODEL: VelodyneLidar.device_type,
             self.ROS_PARAMETER_KEYS.FIXED_FRAME: VelodyneLidar.frame_id,
             self.ROS_PARAMETER_KEYS.TARGET_FRAME: VelodyneLidar.frame_id,
         }
