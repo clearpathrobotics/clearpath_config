@@ -39,8 +39,8 @@ class PackagePath:
 
     def __init__(
             self,
-            package: str = "",
-            path: str = "",
+            package: str = None,
+            path: str = None,
             ) -> None:
         self.package = package
         self.path = path
@@ -54,7 +54,7 @@ class PackagePath:
     def to_dict(self) -> dict:
         return {
             self.PACKAGE: self.package,
-            self.PATH: self.path
+            self.PATH: self.path,
         }
 
     @property
@@ -74,6 +74,51 @@ class PackagePath:
         self._path = value
 
 
+class DescriptionPackagePath(PackagePath):
+    MACRO = "macro"
+    PARAMETERS = "parameters"
+
+    def __init__(
+            self,
+            package: str = None,
+            path: str = None,
+            macro: str = None,
+            parameters: dict = None
+            ) -> None:
+        super().__init__(package, path)
+        self.macro = macro
+        self.parameters = parameters
+
+    def from_dict(self, config: dict) -> None:
+        super().from_dict(config)
+        if self.MACRO in config:
+            self.macro = config[self.MACRO]
+        if self.PARAMETERS in config:
+            self.parameters = config[self.PARAMETERS]
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d[self.MACRO] = self.macro
+        d[self.PARAMETERS] = self.parameters
+        return d
+
+    @property
+    def macro(self) -> str:
+        return self._macro
+
+    @macro.setter
+    def macro(self, value: str) -> None:
+        self._macro = value
+
+    @property
+    def parameters(self) -> dict:
+        return self._parameters
+
+    @parameters.setter
+    def parameters(self, value: dict) -> None:
+        self._parameters = value
+
+
 class PlatformConfig(BaseConfig):
 
     PLATFORM = "platform"
@@ -87,6 +132,7 @@ class PlatformConfig(BaseConfig):
     # Generic Robot
     DESCRIPTION = "description"
     LAUNCH = "launch"
+    CONTROL = "control"
 
     TEMPLATE = {
         PLATFORM: {
@@ -95,6 +141,7 @@ class PlatformConfig(BaseConfig):
             EXTRAS: EXTRAS,
             DESCRIPTION: DESCRIPTION,
             LAUNCH: LAUNCH,
+            CONTROL: CONTROL,
         }
     }
 
@@ -107,6 +154,7 @@ class PlatformConfig(BaseConfig):
         EXTRAS: ExtrasConfig.DEFAULTS,
         DESCRIPTION: "",
         LAUNCH: "",
+        CONTROL: "",
     }
 
     def __init__(
@@ -123,6 +171,7 @@ class PlatformConfig(BaseConfig):
         self._extras = ExtrasConfig(extras)
         self.description = self.DEFAULTS[self.DESCRIPTION]
         self.launch = self.DEFAULTS[self.LAUNCH]
+        self.control = self.DEFAULTS[self.CONTROL]
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
@@ -146,6 +195,8 @@ class PlatformConfig(BaseConfig):
                     template[self.KEYS[self.DESCRIPTION]] = PlatformConfig.description
                 if self.KEYS[self.LAUNCH] not in template:
                     template[self.KEYS[self.LAUNCH]] = PlatformConfig.launch
+                if self.KEYS[self.CONTROL] not in template:
+                    template[self.KEYS[self.CONTROL]] = PlatformConfig.control
                 self.template = template
             else:
                 template = self.template
@@ -153,6 +204,8 @@ class PlatformConfig(BaseConfig):
                     del template[self.KEYS[self.DESCRIPTION]]
                 if self.KEYS[self.LAUNCH] in template:
                     del template[self.KEYS[self.LAUNCH]]
+                if self.KEYS[self.CONTROL] in template:
+                    del template[self.KEYS[self.CONTROL]]
                 self.template = template
 
     @property
@@ -219,7 +272,7 @@ class PlatformConfig(BaseConfig):
 
     @description.setter
     def description(self, value: dict) -> None:
-        self._description = PackagePath()
+        self._description = DescriptionPackagePath()
         self._description.from_dict(value)
 
     @property
@@ -236,3 +289,18 @@ class PlatformConfig(BaseConfig):
     def launch(self, value: dict) -> None:
         self._launch = PackagePath()
         self._launch.from_dict(value)
+
+    @property
+    def control(self) -> dict:
+        if self.KEYS[self.CONTROL] not in self.template:
+            return self._control.to_dict()
+        self.set_config_param(
+            key=self.KEYS[self.CONTROL],
+            value=self._control.to_dict(),
+        )
+        return self._control.to_dict()
+
+    @control.setter
+    def control(self, value: dict) -> None:
+        self._control = PackagePath()
+        self._control.from_dict(value)
