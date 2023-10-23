@@ -123,13 +123,15 @@ class BatteryConfig(BaseConfig):
     @model.setter
     def model(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID, (
+        assert platform in self.VALID, ((
+            "Platform %s is invalid. " % platform +
             "Platform must be one of: %s" % list(self.VALID)
-        )
-        assert value in self.VALID[platform], (
+        ))
+        assert value in self.VALID[platform], ((
+            "Battery model %s is invalid. " % value +
             "Battery model for platform '%s' must be one of: %s" % (
                 platform, list(self.VALID[platform]))
-        )
+        ))
         self._model = value
 
     @property
@@ -143,15 +145,18 @@ class BatteryConfig(BaseConfig):
     @configuration.setter
     def configuration(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID, (
+        assert platform in self.VALID, ((
+            "Platform %s is invalid. " % platform +
             "Platform must be one of: %s" % list(self.VALID)
-        )
-        assert self.model in self.VALID[platform], (
+        ))
+        assert self.model in self.VALID[platform], ((
+            "Battery model %s in invalid. " % self.model +
             "Battery model for platform '%s' must be one of: %s" % (
                 platform, list(self.VALID[platform]))
-        )
-        assert value in self.VALID[platform][self.model], (
-            "Battery configuration for platform '%s', and battery model '%s' must be one of: %s" % (
+        ))
+        assert value in self.VALID[platform][self.model], ((
+            "Battery configuration %s invalid. " % value +
+            "For platform '%s' and battery model '%s', it must be one of: %s" % (
                 platform, self.model, list(self.VALID[platform][self.model]))
-        )
+        ))
         self._configuration = value
