@@ -17,7 +17,7 @@ platform:
   controller: ps4
   battery:
     model: ES20_12C
-    configuration: S21P
+    configuration: S2P1
   attachments:
     front_bumper:
       enabled: true
