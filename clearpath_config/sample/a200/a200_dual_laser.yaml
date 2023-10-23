@@ -15,6 +15,9 @@ system:
     workspaces: []
 platform:
   controller: ps4
+  battery:
+    model: ES20-12C
+    configuration: 2S1P
   attachments:
     front_bumper:
       enabled: true
