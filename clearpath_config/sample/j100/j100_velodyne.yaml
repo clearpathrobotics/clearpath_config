@@ -15,9 +15,6 @@ system:
     workspaces: []
 platform:
   controller: ps4
-  battery:
-    model: HE2613
-    configuration: 1S1P
   attachments:
     front_fender:
       enabled: true
