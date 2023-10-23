@@ -37,15 +37,15 @@ class BatteryConfig(BaseConfig):
     MODEL = "model"
     UNKNOWN = "unknown"
     # Husky Lead Acid
-    ES20_12C = "ES20-12C"
+    ES20_12C = "ES20_12C"
     # Husky/Jackal Li_ION
     HE2613 = "HE2613"
     # Warthog Lead Acid
-    U1_35 = "U1-35"
+    U1_35 = "U1_35"
     # Warthog LiFEPO4
-    ALM12V35 = "ALM12V35"
-    U24_12XP = "U24-12XP"
-    U27_12XP = "U27-12XP"
+    NEC_ALM12V35 = "NEC_ALM12V35"
+    VALENCE_U24_12XP = "VALENCE_U24_12XP"
+    VALENCE_U27_12XP = "VALENCE_U27_12XP"
 
     # Configurations
     CONFIGURATION = "configuration"
@@ -69,9 +69,9 @@ class BatteryConfig(BaseConfig):
         },
         Platform.W200: {
             U1_35: [S4P3],
-            ALM12V35: [S4P3],
-            U24_12XP: [S4P1],
-            U27_12XP: [S4P1],
+            NEC_ALM12V35: [S4P3],
+            VALENCE_U24_12XP: [S4P1],
+            VALENCE_U27_12XP: [S4P1],
         },
     }
 
