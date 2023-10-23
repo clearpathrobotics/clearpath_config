@@ -17,7 +17,7 @@ platform:
   controller: ps4
   battery:
     model: HE2613
-    configuration: 1S1P
+    configuration: S1P1
   attachments:
     front_fender:
       enabled: true

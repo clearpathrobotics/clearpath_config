@@ -49,29 +49,29 @@ class BatteryConfig(BaseConfig):
 
     # Configurations
     CONFIGURATION = "configuration"
-    _2S1P = "2S1P"
-    _1S3P = "1S3P"
-    _1S4P = "1S4P"
-    _1S1P = "1S1P"
-    _4S3P = "4S3P"
-    _4S1P = "4S1P"
+    S2P1 = "S2P1"
+    S1P3 = "S1P3"
+    S1P4 = "S1P4"
+    S1P1 = "S1P1"
+    S4P3 = "S4P3"
+    S4P1 = "S4P1"
 
     VALID = {
         Platform.GENERIC: {
             UNKNOWN: [UNKNOWN]
         },
         Platform.A200: {
-            ES20_12C: [_2S1P],
-            HE2613: [_1S3P, _1S4P],
+            ES20_12C: [S2P1],
+            HE2613: [S1P3, S1P4],
         },
         Platform.J100: {
-            HE2613: [_1S1P],
+            HE2613: [S1P1],
         },
         Platform.W200: {
-            U1_35: [_4S3P],
-            ALM12V35: [_4S3P],
-            U24_12XP: [_4S1P],
-            U27_12XP: [_4S1P],
+            U1_35: [S4P3],
+            ALM12V35: [S4P3],
+            U24_12XP: [S4P1],
+            U27_12XP: [S4P1],
         },
     }
 
@@ -124,10 +124,11 @@ class BatteryConfig(BaseConfig):
     def model(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
         assert platform in self.VALID, (
-            "Platform must be one of: %s" % self.VALID
+            "Platform must be one of: %s" % list(self.VALID)
         )
         assert value in self.VALID[platform], (
-            "Battery model for platform '%s' must be one of: %s" % (platform, self.VALID[platform])
+            "Battery model for platform '%s' must be one of: %s" % (
+                platform, list(self.VALID[platform]))
         )
         self._model = value
 
@@ -143,13 +144,14 @@ class BatteryConfig(BaseConfig):
     def configuration(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
         assert platform in self.VALID, (
-            "Platform must be one of: %s" % self.VALID
+            "Platform must be one of: %s" % list(self.VALID)
         )
         assert self.model in self.VALID[platform], (
-            "Battery model for platform '%s' must be one of: %s" % (platform, self.VALID[platform])
+            "Battery model for platform '%s' must be one of: %s" % (
+                platform, list(self.VALID[platform]))
         )
         assert value in self.VALID[platform][self.model], (
             "Battery configuration for platform '%s', and battery model '%s' must be one of: %s" % (
-                platform, self.model, self.VALID[platform][self.model])
+                platform, self.model, list(self.VALID[platform][self.model]))
         )
         self._configuration = value
