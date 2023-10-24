@@ -97,8 +97,16 @@ class BatteryConfig(BaseConfig):
             ) -> None:
         # Initialization
         self._config = {}
-        self.model = model
-        self.configuration = configuration
+        if model == self.DEFAULTS[self.MODEL] or model == self.UNKNOWN:
+            self.update_defaults()
+            self.model = self.DEFAULTS[self.MODEL]
+        else:
+            self.model = model
+        if configuration == self.DEFAULTS[self.CONFIGURATION] or model == self.UNKNOWN:
+            self.update_defaults()
+            self.configuration = self.DEFAULTS[self.CONFIGURATION]
+        else:
+            self.configuration = configuration
         # Setter Template
         setters = {
             self.KEYS[self.MODEL]: BatteryConfig.model,
@@ -106,11 +114,16 @@ class BatteryConfig(BaseConfig):
         }
         super().__init__(setters, config, self.BATTERY)
 
+    def update_defaults(self) -> None:
+        platform = BaseConfig.get_platform_model()
+        self.DEFAULTS[self.MODEL] = list(self.VALID[platform])[0]
+        self.DEFAULTS[self.CONFIGURATION] = list(self.VALID[platform][self.DEFAULTS[self.MODEL]])[0]
+
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
-            platform = BaseConfig.get_platform_model()
-            self.model = list(self.VALID[platform])[0]
-            self.configuration = list(self.VALID[platform][self.model])[0]
+            self.update_defaults()
+            self.model = self.DEFAULTS[self.MODEL]
+            self.configuration = self.DEFAULTS[self.CONFIGURATION]
 
     @property
     def model(self) -> str:
