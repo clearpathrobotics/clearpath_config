@@ -117,7 +117,8 @@ class BatteryConfig(BaseConfig):
     def update_defaults(self) -> None:
         platform = BaseConfig.get_platform_model()
         self.DEFAULTS[self.MODEL] = list(self.VALID[platform])[0]
-        self.DEFAULTS[self.CONFIGURATION] = list(self.VALID[platform][self.DEFAULTS[self.MODEL]])[0]
+        self.DEFAULTS[self.CONFIGURATION] = list(
+            self.VALID[platform][self.DEFAULTS[self.MODEL]])[0]
 
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
