@@ -27,6 +27,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.utils.dictionary import flip_dict
+from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.extras import ExtrasConfig
 from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
 from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
@@ -38,15 +39,19 @@ class PlatformConfig(BaseConfig):
     # Controllers
     PS4 = "ps4"
     LOGITECH = "logitech"
+
     CONTROLLER = "controller"
     ATTACHMENTS = "attachments"
     # Extras
     EXTRAS = "extras"
+    # Battery
+    BATTERY = "battery"
 
     TEMPLATE = {
         PLATFORM: {
             CONTROLLER: CONTROLLER,
             ATTACHMENTS: ATTACHMENTS,
+            BATTERY: BATTERY,
             EXTRAS: EXTRAS
         }
     }
@@ -57,7 +62,8 @@ class PlatformConfig(BaseConfig):
         # PLATFORM
         CONTROLLER: PS4,
         ATTACHMENTS: {},
-        EXTRAS: ExtrasConfig.DEFAULTS
+        BATTERY: BatteryConfig.DEFAULTS,
+        EXTRAS: ExtrasConfig.DEFAULTS,
     }
 
     def __init__(
@@ -65,17 +71,20 @@ class PlatformConfig(BaseConfig):
             config: dict = {},
             controller: str = DEFAULTS[CONTROLLER],
             attachments: str = DEFAULTS[ATTACHMENTS],
-            extras: str = DEFAULTS[EXTRAS]
+            battery: dict = DEFAULTS[BATTERY],
+            extras: dict = DEFAULTS[EXTRAS],
             ) -> None:
         # Initialization
         self._config = {}
         self.controller = controller
         self.attachments = attachments
+        self._battery = BatteryConfig(battery)
         self._extras = ExtrasConfig(extras)
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
             self.KEYS[self.ATTACHMENTS]: PlatformConfig.attachments,
+            self.KEYS[self.BATTERY]: PlatformConfig.battery,
             self.KEYS[self.EXTRAS]: PlatformConfig.extras
         }
         super().__init__(setters, config, self.PLATFORM)
@@ -87,6 +96,8 @@ class PlatformConfig(BaseConfig):
             # TODO: Set PACS Profile
             # Reload extras
             self.extras.update(serial_number=serial_number)
+            # Reload battery
+            self.battery.update(serial_number=serial_number)
 
     @property
     def controller(self) -> str:
@@ -139,3 +150,23 @@ class PlatformConfig(BaseConfig):
 
     def get_controller(self) -> str:
         return self.controller
+
+    @property
+    def battery(self) -> BatteryConfig:
+        self.set_config_param(
+            key=self.KEYS[self.BATTERY],
+            value=self._battery.config[self.BATTERY]
+        )
+        return self._battery
+
+    @battery.setter
+    def battery(self, value: dict | BatteryConfig) -> None:
+        if isinstance(value, dict):
+            self._battery.config = value
+        elif isinstance(value, BatteryConfig):
+            self._battery = value
+        else:
+            assert isinstance(value, dict) or (
+                isinstance(value, BatteryConfig)), (
+                "Battery configuration must be of type 'dict' or 'BatteryConfig'"
+            )
