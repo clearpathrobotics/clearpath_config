@@ -50,8 +50,8 @@ class SystemConfig(BaseConfig):
         SYSTEM: {
             SELF: SELF,
             HOSTS: HOSTS,
+            USERNAME: USERNAME,
             ROS2: {
-                USERNAME: USERNAME,
                 NAMESPACE: NAMESPACE,
                 DOMAIN_ID: DOMAIN_ID,
                 RMW: RMW,
