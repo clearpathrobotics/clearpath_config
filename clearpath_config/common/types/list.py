@@ -116,6 +116,9 @@ class ListConfig(Generic[T, U]):
         if idx is not None:
             self.__list.remove(self.__list[idx])
 
+    def remove_all(self) -> None:
+        self.__list.clear()
+
     def get(
             self,
             _obj: T | U,
@@ -236,6 +239,9 @@ class OrderedListConfig(Generic[T]):
         if idx is not None:
             self.__list.remove(self.__list[idx - self.start_idx])
         self.update()
+
+    def remove_all(self) -> None:
+        self.__list.clear()
 
     def get(
             self,
