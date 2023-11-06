@@ -25,21 +25,19 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-# Generic Robot Platform Configuration
-from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
+from clearpath_config.platform.types.attachment import BaseAttachment
 
 
-# Generic Attachments Configuration
-class GENERICAttachmentsConfig(BaseAttachmentsConfig, BaseConfig):
+# Generic Attachments
+class GENERICAttachment:
     PLATFORM = Platform.GENERIC
-    ATTACHMENTS = "attachments"
+    TYPES = {}
 
-    def __init__(
-            self,
-            config: dict = {}
-            ) -> None:
-        self._config = {}
-        BaseAttachmentsConfig.__init__(self)
-        BaseConfig.__init__(self, {}, config, self.ATTACHMENTS)
+    def __new__(cls, type: str) -> BaseAttachment:
+        assert type in cls.TYPES, "%s does not have attachment: '%s'. Must be one of '%s'" % (
+            cls.PLATFORM,
+            type,
+            cls.TYPES
+        )
+        return cls.TYPES[type]

@@ -26,26 +26,26 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.attachments.a200 import A200AttachmentsConfig
-from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
-from clearpath_config.platform.attachments.generic import GENERICAttachmentsConfig
-from clearpath_config.platform.attachments.j100 import J100AttachmentsConfig
-from clearpath_config.platform.attachments.w200 import W200AttachmentsConfig
+from clearpath_config.platform.attachments.a200 import A200Attachment
+from clearpath_config.platform.attachments.j100 import J100Attachment
+from clearpath_config.platform.attachments.config import AttachmentsConfig
+from clearpath_config.platform.attachments.generic import GENERICAttachment
+from clearpath_config.platform.attachments.w200 import W200Attachment
 
 
 class AttachmentsConfigMux:
     PLATFORM = {
-        Platform.A200: A200AttachmentsConfig(),
-        Platform.J100: J100AttachmentsConfig(),
-        Platform.GENERIC: GENERICAttachmentsConfig(),
-        Platform.W200: W200AttachmentsConfig(),
+        Platform.A200: AttachmentsConfig(A200Attachment),
+        Platform.J100: AttachmentsConfig(J100Attachment),
+        Platform.GENERIC: AttachmentsConfig(GENERICAttachment),
+        Platform.W200: AttachmentsConfig(W200Attachment),
     }
 
     def __new__(
             cls,
             platform: str,
             config: dict = None
-            ) -> BaseAttachmentsConfig:
+            ) -> AttachmentsConfig:
         assert platform in cls.PLATFORM, (
             "Platform '%s' must be one of: '%s'" % (
                 platform,
