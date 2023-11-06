@@ -34,8 +34,7 @@ class Bumper(BaseAttachment):
     ATTACHMENT_MODEL = "bumper"
     EXTENSION = 0.0
     DEFAULT = "default"
-    WIBOTIC = "wibotic"
-    MODELS = [DEFAULT, WIBOTIC]
+    MODELS = [DEFAULT]
 
     def __init__(
             self,
@@ -60,7 +59,7 @@ class Bumper(BaseAttachment):
 
     def to_dict(self) -> dict:
         d = super().to_dict()
-        d[self.name]['extension'] = self.extension
+        d['extension'] = self.extension
         return d
 
     def from_dict(self, d: dict) -> None:

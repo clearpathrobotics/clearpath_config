@@ -26,59 +26,53 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.platform import Platform
 from typing import List
 
 
 class BaseAttachment(Accessory):
-    ATTACHMENT_MODEL = "base_attachment"
-    ENABLED = False
+    PLATFORM = Platform.GENERIC
+    ATTACHMENT_MODEL = "%s.attachment" % PLATFORM
+    ENABLED = True
+    # Models
     DEFAULT = "default"
     MODELS = [DEFAULT]
 
     def __init__(
             self,
             name: str = ATTACHMENT_MODEL,
-            enabled: bool = ENABLED,
             model: str = DEFAULT,
-            parent: str = Accessory.PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
+            enabled: bool = ENABLED,
+            parent: str = ...,
+            xyz: List[float] = ...,
+            rpy: List[float] = ...
             ) -> None:
         super().__init__(name, parent, xyz, rpy)
-        self.enabled: bool = bool(enabled)
-        self.model: str = BaseAttachment.DEFAULT
+        self.platform = self.ATTACHMENT_MODEL.split(".")[0]
+        self.file = self.ATTACHMENT_MODEL.split(".")[-1]
+        self.model = self.DEFAULT
+        self.enabled = self.ENABLED
         self.set_model(model)
+        self.set_enabled(enabled)
 
     def to_dict(self) -> dict:
-        d = {self.name: {
-            'enabled': self.get_enabled(),
-            'model': self.get_model(),
-            'xyz': self.get_xyz(),
-            'rpy': self.get_rpy()
-        }}
+        d = super().to_dict()
+        d['model'] = self.get_model()
+        d['enabled'] = self.get_enabled()
         return d
 
     def from_dict(self, d: dict) -> None:
-        if 'enabled' in d:
-            self.set_enabled(d['enabled'])
+        super().from_dict(d)
         if 'model' in d:
             self.set_model(d['model'])
-        if 'xyz' in d:
-            self.set_xyz(d['xyz'])
-        if 'rpy' in d:
-            self.set_rpy(d['rpy'])
+        if 'enabled' in d:
+            self.set_enabled(d['enabled'])
 
     def set_enabled(self, enable: bool) -> None:
         self.enabled = bool(enable)
 
     def get_enabled(self) -> bool:
         return self.enabled
-
-    def enable(self) -> None:
-        self.enabled = True
-
-    def disable(self) -> None:
-        self.enabled = False
 
     def get_model(self) -> str:
         return self.model
