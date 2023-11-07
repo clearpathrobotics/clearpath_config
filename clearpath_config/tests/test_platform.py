@@ -27,7 +27,6 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.types.bumper import Bumper
-from clearpath_config.platform.types.top_plate import TopPlate
 
 
 SERIAL_NUMBER = "serial_number"
@@ -54,5 +53,4 @@ VALID = {
         "%s-0001" % robot for robot in Platform.ALL],
     BUMPER_MODEL: Bumper.MODELS,
     BUMPER_EXTENSION:  [0, "12.3", 12.3],
-    TOP_PLATE_MODEL: TopPlate.MODELS
 }
