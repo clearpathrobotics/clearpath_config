@@ -33,4 +33,3 @@ from clearpath_config.platform.types.attachment import PlatformAttachment
 class W200Attachment(PlatformAttachment):
     PLATFORM = Platform.W200
     TYPES = {}
-
