@@ -19,28 +19,18 @@ platform:
     model: ES20_12C
     configuration: S2P1
   attachments:
-    front_bumper:
-      enabled: true
-      model: default
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
-      extension: 0.0
-    rear_bumper:
-      enabled: true
-      model: default
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
-      extension: 0.0
-    structure:
-      enabled: false
-      model: sensor_arch_300
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
-    top_plate:
-      enabled: true
-      model: default
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
+    - name: front_bumper
+      type: bumper
+      parent: front_bumper_mount
+    - name: rear_bumper
+      type: bumper
+      parent: rear_bumper_mount
+    - name: top_plate
+      type: top_plate
+    - name: sensor_arch
+      type: sensor_arch
+      parent: top_plate_link
+      enabled: False
   extras:
     urdf: null
     ros_parameters:
