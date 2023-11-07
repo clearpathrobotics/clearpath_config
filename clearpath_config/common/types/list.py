@@ -55,6 +55,10 @@ class ListConfig(Generic[T, U]):
         self.__type_T: type = obj_type
         self.__type_U: type = uid_type
 
+    def extend(self, other: list):
+        self.__list.extend(other)
+        return self
+
     def find(
             self,
             _obj: T | U,
