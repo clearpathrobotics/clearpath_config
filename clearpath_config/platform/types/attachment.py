@@ -57,6 +57,7 @@ class BaseAttachment(Accessory):
 
     def to_dict(self) -> dict:
         d = super().to_dict()
+        d['type'] = self.ATTACHMENT_MODEL
         d['model'] = self.get_model()
         d['enabled'] = self.get_enabled()
         return d
@@ -86,3 +87,20 @@ class BaseAttachment(Accessory):
             )
         )
         self.model = model
+
+
+class PlatformAttachment(BaseAttachment):
+    PLATFORM = Platform.GENERIC
+    TYPES = {}
+
+    @classmethod
+    def is_valid(cls, type: str) -> bool:
+        return type in cls.TYPES
+
+    def __new__(cls, type: str) -> BaseAttachment:
+        assert cls.is_valid(type), "%s does not have attachment: '%s'. Must be one of '%s'" % (
+            cls.PLATFORM,
+            type,
+            cls.TYPES
+        )
+        return cls.TYPES[type]

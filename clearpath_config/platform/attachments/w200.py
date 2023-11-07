@@ -26,19 +26,11 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.types.attachment import BaseAttachment
+from clearpath_config.platform.types.attachment import PlatformAttachment
 
 
 # W200 Attachments
-class W200Attachment:
+class W200Attachment(PlatformAttachment):
     PLATFORM = Platform.W200
     TYPES = {}
-
-    def __new__(cls, type: str) -> BaseAttachment:
-        assert type in cls.TYPES, "%s does not have attachment: '%s'. Must be one of '%s'" % (
-            cls.PLATFORM,
-            type,
-            cls.TYPES
-        )
-        return cls.TYPES[type]
 

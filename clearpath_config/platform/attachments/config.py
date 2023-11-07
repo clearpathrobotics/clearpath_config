@@ -58,6 +58,10 @@ class AttachmentsConfig:
         self._attachments = AttachmentListConfig()
         self.config = config
 
+    def __add__(self, other):
+        self._attachments.extend(other.get_all())
+        return self
+
     def get_all(self) -> List[BaseAttachment]:
         return self._attachments.get_all()
 
@@ -71,11 +75,7 @@ class AttachmentsConfig:
         self._attachments.remove_all()
         # Load New
         for a in attachments:
-            # Check
-            assert 'name' in a, "Attachment missing 'name'."
-            assert 'type' in a, "Attachment missing 'type'."
-            if '.' not in a['type']:
-                a['type'] = "%s.%s" % (self._attach_type.PLATFORM, a['type'])
-            attachment = self._attach_type(a['type'])()
-            attachment.from_dict(a)
-            self._attachments.add(attachment)
+            if self._attach_type.is_valid(a['type']):
+                attachment = self._attach_type(a['type'])()
+                attachment.from_dict(a)
+                self._attachments.add(attachment)

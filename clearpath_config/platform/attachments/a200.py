@@ -28,7 +28,7 @@
 # A200 Husky Platform Configuration
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.types.attachment import BaseAttachment
+from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 from clearpath_config.platform.types.bumper import Bumper
 from typing import List
 
@@ -94,7 +94,7 @@ class A200SensorArch(BaseAttachment):
         super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
-class A200Attachment:
+class A200Attachment(PlatformAttachment):
     PLATFORM = Platform.A200
     # Top Plates
     TOP_PLATE = A200TopPlate.ATTACHMENT_MODEL
@@ -108,11 +108,3 @@ class A200Attachment:
         BUMPER: A200Bumper,
         SENSOR_ARCH: A200SensorArch,
     }
-
-    def __new__(cls, type: str) -> BaseAttachment:
-        assert type in cls.TYPES, "%s does not have attachment: '%s'. Must be one of '%s'" % (
-            cls.PLATFORM,
-            type,
-            cls.TYPES
-        )
-        return cls.TYPES[type]

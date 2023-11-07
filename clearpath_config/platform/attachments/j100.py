@@ -28,7 +28,7 @@
 # J100 Jackal Platform Configuration
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.types.attachment import BaseAttachment
+from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 from typing import List
 
 
@@ -71,7 +71,7 @@ class J100TopPlate(BaseAttachment):
 
 
 # J100 Jackal Attachments
-class J100Attachment:
+class J100Attachment(PlatformAttachment):
     PLATFORM = Platform.J100
     TOP_PLATE = J100TopPlate.ATTACHMENT_MODEL
     FENDER = J100Fender.ATTACHMENT_MODEL
@@ -79,11 +79,3 @@ class J100Attachment:
         TOP_PLATE: J100TopPlate,
         FENDER: J100Fender,
     }
-
-    def __new__(cls, type: str) -> BaseAttachment:
-        assert type in cls.TYPES, "%s does not have attachment: '%s'. Must be one of '%s'" % (
-            cls.PLATFORM,
-            type,
-            cls.TYPES
-        )
-        return cls.TYPES[type]
