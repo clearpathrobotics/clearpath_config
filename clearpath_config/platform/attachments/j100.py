@@ -57,6 +57,7 @@ class J100TopPlate(BaseAttachment):
     ARK_ENCLOSURE = "ark_enclosure"
     DEFAULT = ARK_ENCLOSURE
     MODELS = [DEFAULT]
+    PARENT = "mid_mount"
 
     def __init__(
             self,

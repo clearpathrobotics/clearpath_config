@@ -40,13 +40,14 @@ class A200TopPlate(BaseAttachment):
     LARGE = "large"
     PACS = "pacs"
     MODELS = [DEFAULT, LARGE, PACS]
+    PARENT = "mid_mount"
 
     def __init__(
             self,
             name: str = ATTACHMENT_MODEL,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
-            parent: str = Accessory.PARENT,
+            parent: str = PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
@@ -60,6 +61,7 @@ class A200Bumper(Bumper):
     EXTENSION = 0.0
     DEFAULT = "default"
     MODELS = [DEFAULT]
+    PARENT = "front_bumper_mount"
 
     def __init__(
             self,
@@ -67,7 +69,7 @@ class A200Bumper(Bumper):
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             extension: float = EXTENSION,
-            parent: str = Accessory.PARENT,
+            parent: str = PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
@@ -81,13 +83,14 @@ class A200SensorArch(BaseAttachment):
     ARCH_510 = "sensor_arch_510"
     DEFAULT = ARCH_300
     MODELS = [ARCH_300, ARCH_510]
+    PARENT = "mid_mount"
 
     def __init__(
             self,
             name: str = ATTACHMENT_MODEL,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
-            parent: str = Accessory.PARENT,
+            parent: str = PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
