@@ -30,7 +30,7 @@ from typing import List
 
 class Accessory():
     # Defaults
-    PARENT = "base_link"
+    PARENT = "default_mount"
     XYZ = [0.0, 0.0, 0.0]
     RPY = [0.0, 0.0, 0.0]
 
