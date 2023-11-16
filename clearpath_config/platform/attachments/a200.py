@@ -40,7 +40,7 @@ class A200TopPlate(BaseAttachment):
     LARGE = "large"
     PACS = "pacs"
     MODELS = [DEFAULT, LARGE, PACS]
-    PARENT = "mid_mount"
+    PARENT = "default_mount"
 
     def __init__(
             self,
@@ -83,7 +83,7 @@ class A200SensorArch(BaseAttachment):
     ARCH_510 = "sensor_arch_510"
     DEFAULT = ARCH_300
     MODELS = [ARCH_300, ARCH_510]
-    PARENT = "mid_mount"
+    PARENT = "default_mount"
 
     def __init__(
             self,
