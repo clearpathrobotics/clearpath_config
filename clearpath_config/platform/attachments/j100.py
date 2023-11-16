@@ -38,13 +38,14 @@ class J100Fender(BaseAttachment):
     DEFAULT = "default"
     SENSOR = "sensor"
     MODELS = [DEFAULT, SENSOR]
+    PARENT = "base_link"
 
     def __init__(
             self,
             name: str = ATTACHMENT_MODEL,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
-            parent: str = Accessory.PARENT,
+            parent: str = PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
             ) -> None:
@@ -57,7 +58,7 @@ class J100TopPlate(BaseAttachment):
     ARK_ENCLOSURE = "ark_enclosure"
     DEFAULT = ARK_ENCLOSURE
     MODELS = [DEFAULT]
-    PARENT = "mid_mount"
+    PARENT = "default_mount"
 
     def __init__(
             self,
