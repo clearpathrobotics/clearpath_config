@@ -55,6 +55,10 @@ class ListConfig(Generic[T, U]):
         self.__type_T: type = obj_type
         self.__type_U: type = uid_type
 
+    def extend(self, other: list):
+        self.__list.extend(other)
+        return self
+
     def find(
             self,
             _obj: T | U,
@@ -115,6 +119,9 @@ class ListConfig(Generic[T, U]):
         idx = self.find(_obj)
         if idx is not None:
             self.__list.remove(self.__list[idx])
+
+    def remove_all(self) -> None:
+        self.__list.clear()
 
     def get(
             self,
@@ -236,6 +243,9 @@ class OrderedListConfig(Generic[T]):
         if idx is not None:
             self.__list.remove(self.__list[idx - self.start_idx])
         self.update()
+
+    def remove_all(self) -> None:
+        self.__list.clear()
 
     def get(
             self,

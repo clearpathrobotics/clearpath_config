@@ -19,12 +19,11 @@ platform:
     model: HE2613
     configuration: S1P1
   attachments:
-    front_fender:
-      enabled: true
-      model: default
-    rear_fender:
-      enabled: true
-      model: default
+    - name: front_fender
+      type: fender
+    - name: rear_fender
+      type: fender
+      rpy: [0.0, 0.0, 3.1415]
   extras:
     urdf: null
     ros_parameters:
@@ -40,7 +39,7 @@ links:
   box: []
   cylinder:
   - name: cylinder
-    parent: mid_mount
+    parent: default_mount
     xyz: [0.0, 0.0, 0.05]
     rpy: [0.0, 0.0, 0.0]
     radius: 0.05
@@ -97,7 +96,7 @@ sensors:
   - model: velodyne_lidar
     urdf_enabled: true
     launch_enabled: true
-    parent: mid_mount
+    parent: default_mount
     xyz: [0.0, 0.0, 0.1]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:

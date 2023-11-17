@@ -25,20 +25,87 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.common.types.config import BaseConfig
+from typing import List
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
+from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 
 
-# W200 Warthog Attachments Configuration
-class W200AttachmentsConfig(BaseAttachmentsConfig, BaseConfig):
+class W200Generator(BaseAttachment):
     PLATFORM = Platform.W200
-    ATTACHMENTS = "attachments"
+    ATTACHMENT_MODEL = "%s.generator" % PLATFORM
+    DEFAULT = "default"
+    MODELS = [DEFAULT]
+    PARENT = "default_mount"
+    XYZ = [-0.42506, 0.0, 0.0017]
+    RPY = [0.0, 0.0, 0.0]
 
     def __init__(
             self,
-            config: dict = {}
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = XYZ,
+            rpy: List[float] = RPY
             ) -> None:
-        self._config = {}
-        BaseAttachmentsConfig.__init__(self)
-        BaseConfig.__init__(self, {}, config, self.ATTACHMENTS)
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+class W200Bulkhead(BaseAttachment):
+    PLATFORM = Platform.W200
+    ATTACHMENT_MODEL = "%s.bulkhead" % PLATFORM
+    DEFAULT = "default"
+    ARM_MOUNT = "arm_mount"
+    MODELS = [DEFAULT, ARM_MOUNT]
+    PARENT = "default_mount"
+    XYZ = [0.00705, 0.0, 0.24184]
+    RPY = [0.0, 0.0, 0.0]
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = XYZ,
+            rpy: List[float] = RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+class W200ArmMount(BaseAttachment):
+    PLATFORM = Platform.W200
+    ATTACHMENT_MODEL = "%s.arm_mount" % PLATFORM
+    DEFAULT = "default"
+    MODELS = [DEFAULT]
+    PARENT = "default_mount"
+    XYZ = [0.0, 0.0, 0.0]
+    RPY = [0.0, 0.0, 0.0]
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = XYZ,
+            rpy: List[float] = RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+# W200 Attachments
+class W200Attachment(PlatformAttachment):
+    PLATFORM = Platform.W200
+    # Generator
+    GENERATOR = W200Generator.ATTACHMENT_MODEL
+    # Bulkhead
+    BULKHEAD = W200Bulkhead.ATTACHMENT_MODEL
+    # ArmMount
+    ARM_MOUNT = W200ArmMount.ATTACHMENT_MODEL
+
+    TYPES = {
+        GENERATOR: W200Generator,
+        BULKHEAD: W200Bulkhead,
+        ARM_MOUNT: W200ArmMount
+    }

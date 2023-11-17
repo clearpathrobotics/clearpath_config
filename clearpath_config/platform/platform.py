@@ -29,7 +29,7 @@ from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.extras import ExtrasConfig
-from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
+from clearpath_config.platform.attachments.config import AttachmentsConfig
 from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
 
 
@@ -61,7 +61,7 @@ class PlatformConfig(BaseConfig):
     DEFAULTS = {
         # PLATFORM
         CONTROLLER: PS4,
-        ATTACHMENTS: {},
+        ATTACHMENTS: [],
         BATTERY: BatteryConfig.DEFAULTS,
         EXTRAS: ExtrasConfig.DEFAULTS,
     }
@@ -116,10 +116,10 @@ class PlatformConfig(BaseConfig):
         self._controller = value.lower()
 
     @property
-    def attachments(self) -> BaseAttachmentsConfig:
+    def attachments(self) -> AttachmentsConfig:
         self.set_config_param(
             key=self.KEYS[self.ATTACHMENTS],
-            value=self._attachments.config[self.ATTACHMENTS]
+            value=self._attachments.config
         )
         return self._attachments
 
