@@ -30,7 +30,7 @@ platform:
       model: pacs
     - name: sensor_arch
       type: sensor_arch
-      parent: top_plate_link
+      parent: default_mount
       model: sensor_arch_300
       enabled: true
   extras:
@@ -48,7 +48,7 @@ platform:
 links:
   box:
   - name: user_bay_cover
-    parent: top_plate_link
+    parent: default_mount
     xyz: [0.0, 0.0, 0.0075]
     rpy: [0.0, 0.0, 0.0]
     size: [0.4, 0.4, 0.002]

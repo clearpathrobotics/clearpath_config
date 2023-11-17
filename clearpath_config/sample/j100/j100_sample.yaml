@@ -39,7 +39,7 @@ links:
   box: []
   cylinder:
   - name: cylinder
-    parent: mid_mount
+    parent: default_mount
     xyz: [0.0, 0.0, 0.05]
     rpy: [0.0, 0.0, 0.0]
     radius: 0.05
@@ -96,7 +96,7 @@ sensors:
   - model: velodyne_lidar
     urdf_enabled: true
     launch_enabled: true
-    parent: mid_mount
+    parent: default_mount
     xyz: [0.0, 0.0, 0.1]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:

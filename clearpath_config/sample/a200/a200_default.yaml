@@ -29,7 +29,7 @@ platform:
       type: top_plate
     - name: sensor_arch
       type: sensor_arch
-      parent: top_plate_link
+      parent: default_mount
       enabled: False
   extras:
     urdf: null

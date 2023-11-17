@@ -30,7 +30,7 @@ platform:
       model: pacs
     - name: sensor_arch
       type: sensor_arch
-      parent: top_plate_link
+      parent: default_mount
       model: sensor_arch_300
       enabled: true
   extras:
