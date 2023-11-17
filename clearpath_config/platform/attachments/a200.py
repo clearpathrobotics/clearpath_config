@@ -57,7 +57,6 @@ class A200TopPlate(BaseAttachment):
 class A200Bumper(Bumper):
     PLATFORM = Platform.A200
     ATTACHMENT_MODEL = "%s.bumper" % PLATFORM
-    PLATFORM = Platform.A200
     EXTENSION = 0.0
     DEFAULT = "default"
     MODELS = [DEFAULT]
