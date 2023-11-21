@@ -271,6 +271,7 @@ class PlatformConfig(BaseConfig):
     def get_controller(self) -> str:
         return self.controller
 
+    @property
     def description(self) -> dict:
         if self.KEYS[self.DESCRIPTION] not in self.template:
             return self._description.to_dict()
@@ -315,6 +316,7 @@ class PlatformConfig(BaseConfig):
         self._control = PackagePath()
         self._control.from_dict(value)
 
+    @property
     def battery(self) -> BatteryConfig:
         self.set_config_param(
             key=self.KEYS[self.BATTERY],
