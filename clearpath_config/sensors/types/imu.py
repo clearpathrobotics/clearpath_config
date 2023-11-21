@@ -46,6 +46,21 @@ class BaseIMU(BaseSensor):
         FRAME_ID = "node_name.frame_id"
         USE_ENU = "node_name.use_enu"
 
+    class TOPICS:
+        RAW_DATA = "raw"
+        DATA = "data"
+        MAG = "mag"
+        NAME = {
+            RAW_DATA: "data_raw",
+            DATA: "data",
+            MAG: "mag"
+        }
+        RATE = {
+            RAW_DATA: 60,
+            DATA: 60,
+            MAG: 60
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -162,6 +177,21 @@ class Microstrain(BaseIMU):
         FRAME_ID = "microstrain_inertial_driver.imu_frame_id"
         USE_ENU = "microstrain_inertial_driver.use_enu_frame"
 
+    class TOPICS:
+        RAW_DATA = "raw"
+        DATA = "data"
+        MAG = "mag"
+        NAME = {
+            RAW_DATA: "data_raw",
+            DATA: "data",
+            MAG: "mag"
+        }
+        RATE = {
+            RAW_DATA: 60,
+            DATA: 60,
+            MAG: 60
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -207,6 +237,21 @@ class CHRoboticsUM6(BaseIMU):
         FRAME_ID = "um6_driver.frame_id"
         USE_ENU = "um6_driver.tf_ned_to_enu"
 
+    class TOPICS:
+        RAW_DATA = "raw"
+        DATA = "data"
+        MAG = "mag"
+        NAME = {
+            RAW_DATA: "data_raw",
+            DATA: "data",
+            MAG: "mag"
+        }
+        RATE = {
+            RAW_DATA: 60,
+            DATA: 60,
+            MAG: 60
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -251,6 +296,21 @@ class RedshiftUM7(BaseIMU):
         PORT = "um7_driver.port"
         FRAME_ID = "um7_driver.frame_id"
         USE_ENU = "um7_driver.tf_ned_to_enu"
+
+    class TOPICS:
+        RAW_DATA = "raw"
+        DATA = "data"
+        MAG = "mag"
+        NAME = {
+            RAW_DATA: "data_raw",
+            DATA: "data",
+            MAG: "mag"
+        }
+        RATE = {
+            RAW_DATA: 60,
+            DATA: 60,
+            MAG: 60
+        }
 
     def __init__(
             self,

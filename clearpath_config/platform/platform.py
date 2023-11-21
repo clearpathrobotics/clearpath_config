@@ -28,8 +28,9 @@
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.utils.dictionary import flip_dict
+from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.extras import ExtrasConfig
-from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
+from clearpath_config.platform.attachments.config import AttachmentsConfig
 from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
 
 
@@ -125,6 +126,7 @@ class PlatformConfig(BaseConfig):
     # Controllers
     PS4 = "ps4"
     LOGITECH = "logitech"
+
     CONTROLLER = "controller"
     ATTACHMENTS = "attachments"
     # Extras
@@ -133,6 +135,8 @@ class PlatformConfig(BaseConfig):
     DESCRIPTION = "description"
     LAUNCH = "launch"
     CONTROL = "control"
+    # Battery
+    BATTERY = "battery"
 
     TEMPLATE = {
         PLATFORM: {
@@ -142,6 +146,7 @@ class PlatformConfig(BaseConfig):
             DESCRIPTION: DESCRIPTION,
             LAUNCH: LAUNCH,
             CONTROL: CONTROL,
+            BATTERY: BATTERY,
         }
     }
 
@@ -155,6 +160,7 @@ class PlatformConfig(BaseConfig):
         DESCRIPTION: "",
         LAUNCH: "",
         CONTROL: "",
+        BATTERY: BatteryConfig.DEFAULTS,
     }
 
     def __init__(
@@ -162,12 +168,14 @@ class PlatformConfig(BaseConfig):
             config: dict = {},
             controller: str = DEFAULTS[CONTROLLER],
             attachments: str = DEFAULTS[ATTACHMENTS],
-            extras: str = DEFAULTS[EXTRAS]
+            battery: dict = DEFAULTS[BATTERY],
+            extras: dict = DEFAULTS[EXTRAS],
             ) -> None:
         # Initialization
         self._config = {}
         self.controller = controller
         self.attachments = attachments
+        self._battery = BatteryConfig(battery)
         self._extras = ExtrasConfig(extras)
         self.description = self.DEFAULTS[self.DESCRIPTION]
         self.launch = self.DEFAULTS[self.LAUNCH]
@@ -176,6 +184,7 @@ class PlatformConfig(BaseConfig):
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
             self.KEYS[self.ATTACHMENTS]: PlatformConfig.attachments,
+            self.KEYS[self.BATTERY]: PlatformConfig.battery,
             self.KEYS[self.EXTRAS]: PlatformConfig.extras
         }
         super().__init__(setters, config, self.PLATFORM)
@@ -207,6 +216,8 @@ class PlatformConfig(BaseConfig):
                 if self.KEYS[self.CONTROL] in template:
                     del template[self.KEYS[self.CONTROL]]
                 self.template = template
+            # Reload battery
+            self.battery.update(serial_number=serial_number)
 
     @property
     def controller(self) -> str:
@@ -225,10 +236,10 @@ class PlatformConfig(BaseConfig):
         self._controller = value.lower()
 
     @property
-    def attachments(self) -> BaseAttachmentsConfig:
+    def attachments(self) -> AttachmentsConfig:
         self.set_config_param(
             key=self.KEYS[self.ATTACHMENTS],
-            value=self._attachments.config[self.ATTACHMENTS]
+            value=self._attachments.config
         )
         return self._attachments
 
@@ -260,7 +271,6 @@ class PlatformConfig(BaseConfig):
     def get_controller(self) -> str:
         return self.controller
 
-    @property
     def description(self) -> dict:
         if self.KEYS[self.DESCRIPTION] not in self.template:
             return self._description.to_dict()
@@ -304,3 +314,22 @@ class PlatformConfig(BaseConfig):
     def control(self, value: dict) -> None:
         self._control = PackagePath()
         self._control.from_dict(value)
+
+    def battery(self) -> BatteryConfig:
+        self.set_config_param(
+            key=self.KEYS[self.BATTERY],
+            value=self._battery.config[self.BATTERY]
+        )
+        return self._battery
+
+    @battery.setter
+    def battery(self, value: dict | BatteryConfig) -> None:
+        if isinstance(value, dict):
+            self._battery.config = value
+        elif isinstance(value, BatteryConfig):
+            self._battery = value
+        else:
+            assert isinstance(value, dict) or (
+                isinstance(value, BatteryConfig)), (
+                "Battery configuration must be of type 'dict' or 'BatteryConfig'"
+            )

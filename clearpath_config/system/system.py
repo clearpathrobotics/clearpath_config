@@ -50,8 +50,8 @@ class SystemConfig(BaseConfig):
         SYSTEM: {
             SELF: SELF,
             HOSTS: HOSTS,
+            USERNAME: USERNAME,
             ROS2: {
-                USERNAME: USERNAME,
                 NAMESPACE: NAMESPACE,
                 DOMAIN_ID: DOMAIN_ID,
                 RMW: RMW,
@@ -159,20 +159,13 @@ class SystemConfig(BaseConfig):
     def namespace(self) -> str:
         self.set_config_param(
             key=self.KEYS[self.NAMESPACE],
-            value=str(self._namespace)
+            value=BaseConfig.get_namespace()
         )
-        return str(self._namespace)
+        return BaseConfig.get_namespace()
 
     @namespace.setter
     def namespace(self, value: str | Namespace) -> None:
-        if isinstance(value, str):
-            self._namespace = Namespace(value)
-        elif isinstance(value, Namespace):
-            self._namespace = value
-        else:
-            assert isinstance(value, str) or isinstance(value, Namespace), (
-                "Namespace must be of type 'str' or 'Namespace'"
-            )
+        BaseConfig.set_namespace(value)
 
     @property
     def domain_id(self) -> int:

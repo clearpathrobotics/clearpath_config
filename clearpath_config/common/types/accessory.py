@@ -30,7 +30,7 @@ from typing import List
 
 class Accessory():
     # Defaults
-    PARENT = "base_link"
+    PARENT = "default_mount"
     XYZ = [0.0, 0.0, 0.0]
     RPY = [0.0, 0.0, 0.0]
 
@@ -49,6 +49,24 @@ class Accessory():
         self.set_parent(parent)
         self.set_xyz(xyz)
         self.set_rpy(rpy)
+
+    def to_dict(self) -> dict:
+        return {
+            'name': self.get_name(),
+            'parent': self.get_parent(),
+            'xyz': self.get_xyz(),
+            'rpy': self.get_rpy(),
+        }
+
+    def from_dict(self, d: dict) -> None:
+        if 'name' in d:
+            self.set_name(d['name'])
+        if 'parent' in d:
+            self.set_parent(d['parent'])
+        if 'xyz' in d:
+            self.set_xyz(d['xyz'])
+        if 'rpy' in d:
+            self.set_rpy(d['rpy'])
 
     def get_name(self) -> str:
         return self.name

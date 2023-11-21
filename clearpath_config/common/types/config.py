@@ -26,6 +26,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.serial_number import SerialNumber
+from clearpath_config.common.types.namespace import Namespace
 from clearpath_config.common.utils.dictionary import (
     flatten_dict,
     get_from_dict,
@@ -38,6 +39,7 @@ from typing import Any
 
 class BaseConfig:
     _SERIAL_NUMBER = SerialNumber("generic")
+    _NAMESPACE = Namespace()
     _VERSION = 0
     DLIM = "."
 
@@ -128,3 +130,18 @@ class BaseConfig:
     @classmethod
     def get_platform_model(cls) -> str:
         return BaseConfig._SERIAL_NUMBER.get_model()
+
+    @classmethod
+    def get_namespace(cls) -> str:
+        return str(BaseConfig._NAMESPACE)
+
+    @classmethod
+    def set_namespace(cls, namespace: str | Namespace) -> None:
+        if isinstance(namespace, Namespace):
+            BaseConfig._NAMESPACE = namespace
+        elif isinstance(namespace, str):
+            BaseConfig._NAMESPACE = Namespace(namespace)
+        else:
+            assert isinstance(namespace, str) or isinstance(namespace, Namespace), (
+                "Namespace must be of type 'str' or 'Namespace'"
+            )

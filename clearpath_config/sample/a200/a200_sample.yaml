@@ -1,6 +1,7 @@
 serial_number: a200-0000
 version: 0
 system:
+  username: administrator
   hosts:
     self: cpr-a200-0000
     platform:
@@ -8,36 +9,30 @@ system:
     onboard: {}
     remote: {}
   ros2:
-    username: administrator
     namespace: a200_0000
     domain_id: 0
     rmw_implementation: rmw_fastrtps_cpp
     workspaces: []
 platform:
   controller: ps4
+  battery:
+    model: ES20_12C
+    configuration: S2P1
   attachments:
-    front_bumper:
-      enabled: true
-      model: default
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
-      extension: 0.0
-    rear_bumper:
-      enabled: true
-      model: default
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
-      extension: 0.0
-    structure:
-      enabled: true
-      model: sensor_arch_300
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
-    top_plate:
-      enabled: true
+    - name: front_bumper
+      type: bumper
+      parent: front_bumper_mount
+    - name: rear_bumper
+      type: bumper
+      parent: rear_bumper_mount
+    - name: top_plate
+      type: top_plate
       model: pacs
-      xyz: [0.0, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
+    - name: sensor_arch
+      type: sensor_arch
+      parent: default_mount
+      model: sensor_arch_300
+      enabled: true
   extras:
     urdf: null
     ros_parameters:
@@ -53,7 +48,7 @@ platform:
 links:
   box:
   - name: user_bay_cover
-    parent: top_plate_link
+    parent: default_mount
     xyz: [0.0, 0.0, 0.0075]
     rpy: [0.0, 0.0, 0.0]
     size: [0.4, 0.4, 0.002]
