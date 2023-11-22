@@ -49,11 +49,11 @@ links:
   sphere: []
 mounts:
   bracket:
-  - parent: front_mount
+  - parent: front_0_mount
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     model: horizontal
-  - parent: rear_mount
+  - parent: rear_0_mount
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     model: horizontal
