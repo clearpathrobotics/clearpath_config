@@ -36,25 +36,32 @@ class BatteryConfig(BaseConfig):
     # Models
     MODEL = "model"
     UNKNOWN = "unknown"
-    # Husky Lead Acid
+    # D100 Lead Acid
+    TLV12220M5DC = "TLV12220M5DC"
+    # D100 LiION
+    PH3054 = "PH3054"
+    # D150 LiION
+    RB20 = "RB20"
+    # A200 Lead Acid
     ES20_12C = "ES20_12C"
-    # Husky/Jackal Li_ION
+    # A200/J100 LiION
     HE2613 = "HE2613"
-    # Warthog Lead Acid
+    # W200 Lead Acid
     U1_35 = "U1_35"
-    # Warthog LiFEPO4
+    # W200 LiFEPO4
     NEC_ALM12V35 = "NEC_ALM12V35"
     VALENCE_U24_12XP = "VALENCE_U24_12XP"
     VALENCE_U27_12XP = "VALENCE_U27_12XP"
 
     # Configurations
     CONFIGURATION = "configuration"
-    S2P1 = "S2P1"
+    S1P1 = "S1P1"
+    S1P2 = "S1P2"
     S1P3 = "S1P3"
     S1P4 = "S1P4"
-    S1P1 = "S1P1"
-    S4P3 = "S4P3"
+    S2P1 = "S2P1"
     S4P1 = "S4P1"
+    S4P3 = "S4P3"
 
     VALID = {
         Platform.GENERIC: {
@@ -63,6 +70,22 @@ class BatteryConfig(BaseConfig):
         Platform.A200: {
             ES20_12C: [S2P1],
             HE2613: [S1P3, S1P4],
+        },
+        Platform.DD100: {
+            TLV12220M5DC: [S1P1],
+            PH3054: [S1P1],
+        },
+        Platform.DO100: {
+            TLV12220M5DC: [S1P1, S1P2, S1P3],
+            PH3054: [S1P1, S1P2, S1P3],
+        },
+        Platform.DD150: {
+            TLV12220M5DC: [S1P1],
+            RB20: [S1P1],
+        },
+        Platform.DO150: {
+            TLV12220M5DC: [S1P1, S1P2, S1P3],
+            RB20: [S1P1, S1P2, S1P3],
         },
         Platform.J100: {
             HE2613: [S1P1],
