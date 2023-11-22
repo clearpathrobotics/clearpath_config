@@ -25,12 +25,99 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.extras import ExtrasConfig
 from clearpath_config.platform.attachments.config import AttachmentsConfig
 from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
+
+
+class PackagePath:
+    PACKAGE = "package"
+    PATH = "path"
+
+    def __init__(
+            self,
+            package: str = None,
+            path: str = None,
+            ) -> None:
+        self.package = package
+        self.path = path
+
+    def from_dict(self, config: dict) -> None:
+        if self.PACKAGE in config:
+            self.package = config[self.PACKAGE]
+        if self.PATH in config:
+            self.path = config[self.PATH]
+
+    def to_dict(self) -> dict:
+        return {
+            self.PACKAGE: self.package,
+            self.PATH: self.path,
+        }
+
+    @property
+    def package(self) -> str:
+        return self._package
+
+    @package.setter
+    def package(self, value: str) -> None:
+        self._package = value
+
+    @property
+    def path(self) -> str:
+        return self._path
+
+    @path.setter
+    def path(self, value: str) -> None:
+        self._path = value
+
+
+class DescriptionPackagePath(PackagePath):
+    MACRO = "macro"
+    PARAMETERS = "parameters"
+
+    def __init__(
+            self,
+            package: str = None,
+            path: str = None,
+            macro: str = None,
+            parameters: dict = None
+            ) -> None:
+        super().__init__(package, path)
+        self.macro = macro
+        self.parameters = parameters
+
+    def from_dict(self, config: dict) -> None:
+        super().from_dict(config)
+        if self.MACRO in config:
+            self.macro = config[self.MACRO]
+        if self.PARAMETERS in config:
+            self.parameters = config[self.PARAMETERS]
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d[self.MACRO] = self.macro
+        d[self.PARAMETERS] = self.parameters
+        return d
+
+    @property
+    def macro(self) -> str:
+        return self._macro
+
+    @macro.setter
+    def macro(self, value: str) -> None:
+        self._macro = value
+
+    @property
+    def parameters(self) -> dict:
+        return self._parameters
+
+    @parameters.setter
+    def parameters(self, value: dict) -> None:
+        self._parameters = value
 
 
 class PlatformConfig(BaseConfig):
@@ -44,6 +131,10 @@ class PlatformConfig(BaseConfig):
     ATTACHMENTS = "attachments"
     # Extras
     EXTRAS = "extras"
+    # Generic Robot
+    DESCRIPTION = "description"
+    LAUNCH = "launch"
+    CONTROL = "control"
     # Battery
     BATTERY = "battery"
 
@@ -51,8 +142,11 @@ class PlatformConfig(BaseConfig):
         PLATFORM: {
             CONTROLLER: CONTROLLER,
             ATTACHMENTS: ATTACHMENTS,
+            EXTRAS: EXTRAS,
+            DESCRIPTION: DESCRIPTION,
+            LAUNCH: LAUNCH,
+            CONTROL: CONTROL,
             BATTERY: BATTERY,
-            EXTRAS: EXTRAS
         }
     }
 
@@ -61,9 +155,12 @@ class PlatformConfig(BaseConfig):
     DEFAULTS = {
         # PLATFORM
         CONTROLLER: PS4,
-        ATTACHMENTS: [],
-        BATTERY: BatteryConfig.DEFAULTS,
+        ATTACHMENTS: {},
         EXTRAS: ExtrasConfig.DEFAULTS,
+        DESCRIPTION: "",
+        LAUNCH: "",
+        CONTROL: "",
+        BATTERY: BatteryConfig.DEFAULTS,
     }
 
     def __init__(
@@ -80,6 +177,9 @@ class PlatformConfig(BaseConfig):
         self.attachments = attachments
         self._battery = BatteryConfig(battery)
         self._extras = ExtrasConfig(extras)
+        self.description = self.DEFAULTS[self.DESCRIPTION]
+        self.launch = self.DEFAULTS[self.LAUNCH]
+        self.control = self.DEFAULTS[self.CONTROL]
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
@@ -96,6 +196,26 @@ class PlatformConfig(BaseConfig):
             # TODO: Set PACS Profile
             # Reload extras
             self.extras.update(serial_number=serial_number)
+            # Generic Robot Launch and URDF
+            if BaseConfig.get_platform_model() == Platform.GENERIC:
+                # Add to Template
+                template = self.template
+                if self.KEYS[self.DESCRIPTION] not in template:
+                    template[self.KEYS[self.DESCRIPTION]] = PlatformConfig.description
+                if self.KEYS[self.LAUNCH] not in template:
+                    template[self.KEYS[self.LAUNCH]] = PlatformConfig.launch
+                if self.KEYS[self.CONTROL] not in template:
+                    template[self.KEYS[self.CONTROL]] = PlatformConfig.control
+                self.template = template
+            else:
+                template = self.template
+                if self.KEYS[self.DESCRIPTION] in template:
+                    del template[self.KEYS[self.DESCRIPTION]]
+                if self.KEYS[self.LAUNCH] in template:
+                    del template[self.KEYS[self.LAUNCH]]
+                if self.KEYS[self.CONTROL] in template:
+                    del template[self.KEYS[self.CONTROL]]
+                self.template = template
             # Reload battery
             self.battery.update(serial_number=serial_number)
 
@@ -150,6 +270,51 @@ class PlatformConfig(BaseConfig):
 
     def get_controller(self) -> str:
         return self.controller
+
+    @property
+    def description(self) -> dict:
+        if self.KEYS[self.DESCRIPTION] not in self.template:
+            return self._description.to_dict()
+        self.set_config_param(
+            key=self.KEYS[self.DESCRIPTION],
+            value=self._description.to_dict()
+        )
+        return self._description.to_dict()
+
+    @description.setter
+    def description(self, value: dict) -> None:
+        self._description = DescriptionPackagePath()
+        self._description.from_dict(value)
+
+    @property
+    def launch(self) -> dict:
+        if self.KEYS[self.LAUNCH] not in self.template:
+            return self._launch.to_dict()
+        self.set_config_param(
+            key=self.KEYS[self.LAUNCH],
+            value=self._launch.to_dict()
+        )
+        return self._launch.to_dict()
+
+    @launch.setter
+    def launch(self, value: dict) -> None:
+        self._launch = PackagePath()
+        self._launch.from_dict(value)
+
+    @property
+    def control(self) -> dict:
+        if self.KEYS[self.CONTROL] not in self.template:
+            return self._control.to_dict()
+        self.set_config_param(
+            key=self.KEYS[self.CONTROL],
+            value=self._control.to_dict(),
+        )
+        return self._control.to_dict()
+
+    @control.setter
+    def control(self, value: dict) -> None:
+        self._control = PackagePath()
+        self._control.from_dict(value)
 
     @property
     def battery(self) -> BatteryConfig:
