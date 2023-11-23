@@ -37,7 +37,7 @@ class BatteryConfig(BaseConfig):
     MODEL = "model"
     UNKNOWN = "unknown"
     # D100 Lead Acid
-    TLV12220M5DC = "TLV12220M5DC"
+    TLV1222 = "TLV1222"
     # D100 LiION
     PH3054 = "PH3054"
     # D150 LiION
@@ -72,19 +72,19 @@ class BatteryConfig(BaseConfig):
             HE2613: [S1P3, S1P4],
         },
         Platform.DD100: {
-            TLV12220M5DC: [S1P1],
+            TLV1222: [S1P1],
             PH3054: [S1P1],
         },
         Platform.DO100: {
-            TLV12220M5DC: [S1P1, S1P2, S1P3],
+            TLV1222: [S1P1, S1P2, S1P3],
             PH3054: [S1P1, S1P2, S1P3],
         },
         Platform.DD150: {
-            TLV12220M5DC: [S1P1],
+            TLV1222: [S1P1],
             RB20: [S1P1],
         },
         Platform.DO150: {
-            TLV12220M5DC: [S1P1, S1P2, S1P3],
+            TLV1222: [S1P1, S1P2, S1P3],
             RB20: [S1P1, S1P2, S1P3],
         },
         Platform.J100: {
