@@ -130,7 +130,7 @@ class PACS:
 
         def __init__(
             self,
-            parent: str = "base_link",
+            parent: str = BaseMount.PARENT,
             model: str = DEFAULT,
             xyz: List[float] = [0.0, 0.0, 0.0],
             rpy: List[float] = [0.0, 0.0, 0.0],
