@@ -35,7 +35,7 @@ from clearpath_config.common.utils.dictionary import (
 )
 
 
-class ROSParamaterDefaults:
+class ROSParameterDefaults:
     A200 = {
         "platform_velocity_controller.wheel_radius": 0.1651,
         "platform_velocity_controller.linear.x.max_velocity": 1.0,
@@ -175,7 +175,7 @@ class ExtrasConfig(BaseConfig):
 
     DEFAULTS = {
         URDF: "empty.urdf.xacro",
-        ROS_PARAMETERS: ROSParamaterDefaults(BaseConfig.get_platform_model()),
+        ROS_PARAMETERS: ROSParameterDefaults(BaseConfig.get_platform_model()),
     }
 
     def __init__(
@@ -249,7 +249,7 @@ class ExtrasConfig(BaseConfig):
                 setter(default_parameters[default_parameters_key])
 
     def _update_ros_parameter(self) -> None:
-        default_parameters = ROSParamaterDefaults(self.get_platform_model())
+        default_parameters = ROSParameterDefaults(self.get_platform_model())
         for _, extended_key in self.KEYS.items():
             if extended_key in self._ros_parameters_setters:
                 default_parameters_key = ".".join(extended_key.split(".")[2:])
@@ -257,7 +257,7 @@ class ExtrasConfig(BaseConfig):
                     continue
                 setter = self.setter(self._ros_parameters_setters[extended_key])
                 setter(default_parameters[default_parameters_key])
-        self.DEFAULTS[self.ROS_PARAMETERS] = ROSParamaterDefaults(self.get_platform_model())
+        self.DEFAULTS[self.ROS_PARAMETERS] = ROSParameterDefaults(self.get_platform_model())
 
     """ROS parameters with node names and flattened dictionaries"""
     @property
