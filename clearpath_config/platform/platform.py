@@ -137,6 +137,8 @@ class PlatformConfig(BaseConfig):
     CONTROL = "control"
     # Battery
     BATTERY = "battery"
+    # Wheel
+    WHEEL = "wheel"
 
     TEMPLATE = {
         PLATFORM: {
@@ -147,6 +149,7 @@ class PlatformConfig(BaseConfig):
             LAUNCH: LAUNCH,
             CONTROL: CONTROL,
             BATTERY: BATTERY,
+            WHEEL: WHEEL,
         }
     }
 
@@ -161,6 +164,7 @@ class PlatformConfig(BaseConfig):
         LAUNCH: "",
         CONTROL: "",
         BATTERY: BatteryConfig.DEFAULTS,
+        WHEEL: "default",
     }
 
     def __init__(
@@ -170,6 +174,7 @@ class PlatformConfig(BaseConfig):
             attachments: str = DEFAULTS[ATTACHMENTS],
             battery: dict = DEFAULTS[BATTERY],
             extras: dict = DEFAULTS[EXTRAS],
+            wheel: dict = DEFAULTS[WHEEL],
             ) -> None:
         # Initialization
         self._config = {}
@@ -180,12 +185,14 @@ class PlatformConfig(BaseConfig):
         self.description = self.DEFAULTS[self.DESCRIPTION]
         self.launch = self.DEFAULTS[self.LAUNCH]
         self.control = self.DEFAULTS[self.CONTROL]
+        self.wheel = self.DEFAULTS[self.WHEEL]
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
             self.KEYS[self.ATTACHMENTS]: PlatformConfig.attachments,
             self.KEYS[self.BATTERY]: PlatformConfig.battery,
-            self.KEYS[self.EXTRAS]: PlatformConfig.extras
+            self.KEYS[self.EXTRAS]: PlatformConfig.extras,
+            self.KEYS[self.WHEEL]: PlatformConfig.wheel,
         }
         super().__init__(setters, config, self.PLATFORM)
 
@@ -335,3 +342,15 @@ class PlatformConfig(BaseConfig):
                 isinstance(value, BatteryConfig)), (
                 "Battery configuration must be of type 'dict' or 'BatteryConfig'"
             )
+
+    @property
+    def wheel(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.WHEEL],
+            value=self._wheel
+        )
+        return self._wheel
+
+    @wheel.setter
+    def wheel(self, value: str) -> None:
+        self._wheel = value
