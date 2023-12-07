@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.0 (2023-12-07)
+------------------
 * Added wheel parameter to platform
 * Fixed typo
 * Added dd150 samples
