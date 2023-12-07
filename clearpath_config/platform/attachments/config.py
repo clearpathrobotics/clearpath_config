@@ -28,10 +28,6 @@
 from clearpath_config.common.types.list import ListConfig
 from clearpath_config.common.utils.dictionary import merge_dict
 from clearpath_config.platform.types.attachment import BaseAttachment
-from clearpath_config.platform.types.bumper import Bumper
-from clearpath_config.platform.types.fender import Fender
-from clearpath_config.platform.types.structure import Structure
-from clearpath_config.platform.types.top_plate import TopPlate
 from typing import List
 
 
@@ -50,99 +46,36 @@ class AttachmentListConfig(ListConfig[BaseAttachment, str]):
         return d
 
 
-# Base Attachments Config
-# - to be used by all other configurations.
-class BaseAttachmentsConfig:
+# Attachments Config
+# - to be used by all platforms.
+class AttachmentsConfig:
+    def __init__(
+            self,
+            attachment,
+            config: dict = {}
+            ) -> None:
+        self._attach_type = attachment
+        self._attachments = AttachmentListConfig()
+        self.config = config
 
-    def __init__(self) -> None:
-        # Standard Platform Attachments
-        self.__bumpers = ListConfig[Bumper, str](
-            uid=ListConfig.uid_name,
-            obj_type=Bumper,
-            uid_type=str)
-        self.__top_plates = ListConfig[TopPlate, str](
-            uid=ListConfig.uid_name,
-            obj_type=TopPlate,
-            uid_type=str)
-        self.__structures = ListConfig[Structure, str](
-            uid=ListConfig.uid_name,
-            obj_type=Structure,
-            uid_type=str)
-        self.__fenders = ListConfig[Fender, str](
-            uid=ListConfig.uid_name,
-            obj_type=Fender,
-            uid_type=str)
-
-    def to_dict(self):
-        d = {}
-        for attachment in self.get_all():
-            merge_dict(d, attachment)
-        return d
-
-    @property
-    def top_plates(self):
-        return self.__top_plates
-
-    @top_plates.setter
-    def top_plates(self, value: List[TopPlate] | ListConfig) -> None:
-        if isinstance(value, list):
-            self.__top_plates.set_all(value)
-        elif isinstance(value, ListConfig):
-            self.__top_plates = value
-        else:
-            assert isinstance(value, list) or isinstance(value, ListConfig), (
-                "Top plates must be list of 'TopPlate' or 'ListConfig'"
-            )
-
-    @property
-    def bumpers(self):
-        return self.__bumpers
-
-    @bumpers.setter
-    def bumpers(self, value: List[Bumper] | ListConfig) -> None:
-        if isinstance(value, list):
-            self.__bumpers.set_all(value)
-        elif isinstance(value, ListConfig):
-            self.__bumpers = value
-        else:
-            assert isinstance(value, list) or isinstance(value, ListConfig), (
-                "Bumpers must be list of 'Bumper' or 'ListConfig'"
-            )
-
-    @property
-    def structures(self):
-        return self.__structures
-
-    @structures.setter
-    def structures(self, value: List[Structure] | ListConfig) -> None:
-        if isinstance(value, list):
-            self.__structures.set_all(value)
-        elif isinstance(value, ListConfig):
-            self.__structures = value
-        else:
-            assert isinstance(value, list) or isinstance(value, ListConfig), (
-                "Structures must be list of 'Structure' or 'ListConfig'"
-            )
-
-    @property
-    def fenders(self):
-        return self.__fenders
-
-    @fenders.setter
-    def fenders(self, value: List[Fender] | ListConfig) -> None:
-        if isinstance(value, list):
-            self.__fenders.set_all(value)
-        elif isinstance(value, ListConfig):
-            self.__fenders = value
-        else:
-            assert isinstance(value, list) or isinstance(value, ListConfig), (
-                "Fenders must be list of 'Fender' or 'ListConfig'"
-            )
+    def __add__(self, other):
+        self._attachments.extend(other.get_all())
+        return self
 
     def get_all(self) -> List[BaseAttachment]:
-        attachments = []
-        attachments.extend(self.bumpers.get_all())
-        attachments.extend(self.top_plates.get_all())
-        attachments.extend(self.structures.get_all())
-        attachments.extend(self.fenders.get_all())
-        return attachments
+        return self._attachments.get_all()
+
+    @property
+    def config(self):
+        return [a.to_dict() for a in self.get_all()]
+
+    @config.setter
+    def config(self, attachments: list):
+        # Clear Previous
+        self._attachments.remove_all()
+        # Load New
+        for a in attachments:
+            if self._attach_type.is_valid(a['type']):
+                attachment = self._attach_type(a['type'])()
+                attachment.from_dict(a)
+                self._attachments.add(attachment)

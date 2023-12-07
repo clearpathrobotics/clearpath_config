@@ -25,28 +25,37 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.platform.types.attachment import BaseAttachment
-from clearpath_config.platform.types.bumper import Bumper
-from clearpath_config.platform.types.structure import Structure
-from clearpath_config.platform.types.top_plate import TopPlate
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.platform import Platform
+from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
+from typing import List
 
 
-class AttachmentMux():
-    BUMPER = Bumper.ATTACHMENT_MODEL
-    TOP_PLATE = TopPlate.ATTACHMENT_MODEL
-    STRUCTURE = Structure.ATTACHMENT_MODEL
+class DD100TopPlate(BaseAttachment):
+    PLATFORM = Platform.DD100
+    ATTACHMENT_MODEL = "%s.top_plate" % PLATFORM
+    PACS = "pacs"
+    MODELS = [PACS]
+    PARENT = "default_mount"
 
-    MODEL = {
-        BUMPER: Bumper,
-        TOP_PLATE: TopPlate,
-        STRUCTURE: Structure,
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = PACS,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+# DD100 Attachments
+class DD100Attachment(PlatformAttachment):
+    PLATFORM = Platform.DD100
+    # Top Plates
+    TOP_PLATE = DD100TopPlate.ATTACHMENT_MODEL
+
+    TYPES = {
+        TOP_PLATE: DD100TopPlate,
     }
-
-    def __new__(cls, model: str) -> BaseAttachment:
-        assert model in AttachmentMux.MODEL, (
-            "Model '%s' must be one of: '%s'" % (
-                model,
-                AttachmentMux.MODEL.keys()
-            )
-        )
-        return AttachmentMux.MODEL[model]()

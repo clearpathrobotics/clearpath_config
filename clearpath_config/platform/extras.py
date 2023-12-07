@@ -35,7 +35,50 @@ from clearpath_config.common.utils.dictionary import (
 )
 
 
-class ROSParamaterDefaults:
+class ROSParameterDefaults:
+    A200 = {
+        "platform_velocity_controller.wheel_radius": 0.1651,
+        "platform_velocity_controller.linear.x.max_velocity": 1.0,
+        "platform_velocity_controller.linear.x.min_velocity": -1.0,
+        "platform_velocity_controller.linear.x.max_acceleration": 3.0,
+        "platform_velocity_controller.linear.x.min_acceleration": -3.0,
+        "platform_velocity_controller.angular.z.max_velocity": 2.0,
+        "platform_velocity_controller.angular.z.min_velocity": -2.0,
+        "platform_velocity_controller.angular.z.max_acceleration": 6.0,
+        "platform_velocity_controller.angular.z.min_acceleration": -6.0,
+    }
+
+    DD100 = {
+        "platform_velocity_controller.wheel_radius": 0.049,
+        "platform_velocity_controller.linear.x.max_velocity": 1.3,
+        "platform_velocity_controller.linear.x.min_velocity": -1.3,
+        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
+        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
+        "platform_velocity_controller.angular.z.max_velocity": 4.0,
+        "platform_velocity_controller.angular.z.min_velocity": -4.0,
+        "platform_velocity_controller.angular.z.max_acceleration": 2.0,
+        "platform_velocity_controller.angular.z.min_acceleration": -2.0,
+    }
+
+    DD150 = DD100
+
+    DO100 = {
+        "platform_velocity_controller.wheel_radius": 0.05,
+        "platform_velocity_controller.linear.x.max_velocity": 1.3,
+        "platform_velocity_controller.linear.x.min_velocity": -1.3,
+        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
+        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
+        "platform_velocity_controller.linear.y.max_velocity": 1.3,
+        "platform_velocity_controller.linear.y.min_velocity": -1.3,
+        "platform_velocity_controller.linear.y.max_acceleration": 1.0,
+        "platform_velocity_controller.linear.y.min_acceleration": -1.0,
+        "platform_velocity_controller.angular.z.max_velocity": 4.0,
+        "platform_velocity_controller.angular.z.min_velocity": -4.0,
+        "platform_velocity_controller.angular.z.max_acceleration": 2.0,
+        "platform_velocity_controller.angular.z.min_acceleration": -2.0,
+    }
+
+    DO150 = DO100
 
     GENERIC = {
         "platform_velocity_controller.wheel_radius": 0.1,
@@ -61,22 +104,27 @@ class ROSParamaterDefaults:
         "platform_velocity_controller.angular.z.min_acceleration": -25.0,
     }
 
-    A200 = {
-        "platform_velocity_controller.wheel_radius": 0.1651,
-        "platform_velocity_controller.linear.x.max_velocity": 1.0,
-        "platform_velocity_controller.linear.x.min_velocity": -1.0,
-        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
-        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
-        "platform_velocity_controller.angular.z.max_velocity": 1.0,
-        "platform_velocity_controller.angular.z.min_velocity": -1.0,
-        "platform_velocity_controller.angular.z.max_acceleration": 1.0,
-        "platform_velocity_controller.angular.z.min_acceleration": -1.0,
+    W200 = {
+        "platform_velocity_controller.wheel_radius": 0.3,
+        "platform_velocity_controller.linear.x.max_velocity": 5.0,
+        "platform_velocity_controller.linear.x.min_velocity": -5.0,
+        "platform_velocity_controller.linear.x.max_acceleration": 50.0,
+        "platform_velocity_controller.linear.x.min_acceleration": -50.0,
+        "platform_velocity_controller.angular.z.max_velocity": 4.0,
+        "platform_velocity_controller.angular.z.min_velocity": -4.0,
+        "platform_velocity_controller.angular.z.max_acceleration": 40.0,
+        "platform_velocity_controller.angular.z.min_acceleration": -40.0,
     }
 
     DEFAULTS = {
         Platform.A200: A200,
+        Platform.DD100: DD100,
+        Platform.DO100: DO100,
+        Platform.DD150: DD150,
+        Platform.DO150: DO150,
         Platform.J100: J100,
-        Platform.GENERIC: GENERIC
+        Platform.GENERIC: GENERIC,
+        Platform.W200: W200,
     }
 
     def __new__(cls, platform: str) -> dict:
@@ -127,7 +175,7 @@ class ExtrasConfig(BaseConfig):
 
     DEFAULTS = {
         URDF: "empty.urdf.xacro",
-        ROS_PARAMETERS: ROSParamaterDefaults(BaseConfig.get_platform_model()),
+        ROS_PARAMETERS: ROSParameterDefaults(BaseConfig.get_platform_model()),
     }
 
     def __init__(
@@ -201,7 +249,7 @@ class ExtrasConfig(BaseConfig):
                 setter(default_parameters[default_parameters_key])
 
     def _update_ros_parameter(self) -> None:
-        default_parameters = ROSParamaterDefaults(self.get_platform_model())
+        default_parameters = ROSParameterDefaults(self.get_platform_model())
         for _, extended_key in self.KEYS.items():
             if extended_key in self._ros_parameters_setters:
                 default_parameters_key = ".".join(extended_key.split(".")[2:])
@@ -209,7 +257,7 @@ class ExtrasConfig(BaseConfig):
                     continue
                 setter = self.setter(self._ros_parameters_setters[extended_key])
                 setter(default_parameters[default_parameters_key])
-        self.DEFAULTS[self.ROS_PARAMETERS] = ROSParamaterDefaults(self.get_platform_model())
+        self.DEFAULTS[self.ROS_PARAMETERS] = ROSParameterDefaults(self.get_platform_model())
 
     """ROS parameters with node names and flattened dictionaries"""
     @property

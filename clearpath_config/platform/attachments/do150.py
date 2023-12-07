@@ -26,31 +26,36 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.platform.types.attachment import BaseAttachment
+from clearpath_config.common.types.platform import Platform
+from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 from typing import List
 
 
-class TopPlate(BaseAttachment):
-    ATTACHMENT_MODEL = "top_plate"
-    DEFAULT = "default"
-    LARGE = "large"
+class DO150TopPlate(BaseAttachment):
+    PLATFORM = Platform.DO150
+    ATTACHMENT_MODEL = "%s.top_plate" % PLATFORM
     PACS = "pacs"
-    MODELS = [DEFAULT, LARGE, PACS]
+    MODELS = [PACS]
+    PARENT = "default_mount"
 
     def __init__(
             self,
             name: str = ATTACHMENT_MODEL,
+            model: str = PACS,
             enabled: bool = BaseAttachment.ENABLED,
-            model: str = DEFAULT,
-            parent: str = Accessory.PARENT,
+            parent: str = PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        super().__init__(
-            name,
-            enabled,
-            model,
-            parent,
-            xyz,
-            rpy
-        )
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+# DO150 Attachments
+class DO150Attachment(PlatformAttachment):
+    PLATFORM = Platform.DO100
+    # Top Plates
+    TOP_PLATE = DO150TopPlate.ATTACHMENT_MODEL
+
+    TYPES = {
+        TOP_PLATE: DO150TopPlate,
+    }

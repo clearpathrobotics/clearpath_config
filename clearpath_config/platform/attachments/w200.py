@@ -25,64 +25,19 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-# A200 Husky Platform Configuration
-from clearpath_config.common.types.accessory import Accessory
+from typing import List
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
-from clearpath_config.platform.types.bumper import Bumper
-from typing import List
 
 
-class A200TopPlate(BaseAttachment):
-    PLATFORM = Platform.A200
-    ATTACHMENT_MODEL = "%s.top_plate" % PLATFORM
-    DEFAULT = "default"
-    LARGE = "large"
-    PACS = "pacs"
-    MODELS = [DEFAULT, LARGE, PACS]
-    PARENT = "default_mount"
-
-    def __init__(
-            self,
-            name: str = ATTACHMENT_MODEL,
-            model: str = DEFAULT,
-            enabled: bool = BaseAttachment.ENABLED,
-            parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
-
-
-class A200Bumper(Bumper):
-    PLATFORM = Platform.A200
-    ATTACHMENT_MODEL = "%s.bumper" % PLATFORM
-    EXTENSION = 0.0
+class W200Generator(BaseAttachment):
+    PLATFORM = Platform.W200
+    ATTACHMENT_MODEL = "%s.generator" % PLATFORM
     DEFAULT = "default"
     MODELS = [DEFAULT]
-    PARENT = "front_bumper_mount"
-
-    def __init__(
-            self,
-            name: str = ATTACHMENT_MODEL,
-            model: str = DEFAULT,
-            enabled: bool = BaseAttachment.ENABLED,
-            extension: float = EXTENSION,
-            parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
-            ) -> None:
-        super().__init__(name, model, enabled, extension, parent, xyz, rpy)
-
-
-class A200SensorArch(BaseAttachment):
-    PLATFORM = Platform.A200
-    ATTACHMENT_MODEL = "%s.sensor_arch" % PLATFORM
-    ARCH_300 = "sensor_arch_300"
-    ARCH_510 = "sensor_arch_510"
-    DEFAULT = ARCH_300
-    MODELS = [ARCH_300, ARCH_510]
     PARENT = "default_mount"
+    XYZ = [-0.42506, 0.0, 0.0017]
+    RPY = [0.0, 0.0, 0.0]
 
     def __init__(
             self,
@@ -90,23 +45,67 @@ class A200SensorArch(BaseAttachment):
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
+            xyz: List[float] = XYZ,
+            rpy: List[float] = RPY
             ) -> None:
         super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
-class A200Attachment(PlatformAttachment):
-    PLATFORM = Platform.A200
-    # Top Plates
-    TOP_PLATE = A200TopPlate.ATTACHMENT_MODEL
-    # Bumper
-    BUMPER = A200Bumper.ATTACHMENT_MODEL
-    # Archs
-    SENSOR_ARCH = A200SensorArch.ATTACHMENT_MODEL
+class W200Bulkhead(BaseAttachment):
+    PLATFORM = Platform.W200
+    ATTACHMENT_MODEL = "%s.bulkhead" % PLATFORM
+    DEFAULT = "default"
+    ARM_MOUNT = "arm_mount"
+    MODELS = [DEFAULT, ARM_MOUNT]
+    PARENT = "default_mount"
+    XYZ = [0.00705, 0.0, 0.24184]
+    RPY = [0.0, 0.0, 0.0]
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = XYZ,
+            rpy: List[float] = RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+class W200ArmMount(BaseAttachment):
+    PLATFORM = Platform.W200
+    ATTACHMENT_MODEL = "%s.arm_mount" % PLATFORM
+    DEFAULT = "default"
+    MODELS = [DEFAULT]
+    PARENT = "default_mount"
+    XYZ = [0.0, 0.0, 0.0]
+    RPY = [0.0, 0.0, 0.0]
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = XYZ,
+            rpy: List[float] = RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+# W200 Attachments
+class W200Attachment(PlatformAttachment):
+    PLATFORM = Platform.W200
+    # Generator
+    GENERATOR = W200Generator.ATTACHMENT_MODEL
+    # Bulkhead
+    BULKHEAD = W200Bulkhead.ATTACHMENT_MODEL
+    # ArmMount
+    ARM_MOUNT = W200ArmMount.ATTACHMENT_MODEL
 
     TYPES = {
-        TOP_PLATE: A200TopPlate,
-        BUMPER: A200Bumper,
-        SENSOR_ARCH: A200SensorArch,
+        GENERATOR: W200Generator,
+        BULKHEAD: W200Bulkhead,
+        ARM_MOUNT: W200ArmMount
     }

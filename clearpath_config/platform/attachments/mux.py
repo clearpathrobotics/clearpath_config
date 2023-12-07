@@ -26,32 +26,55 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.attachments.a200 import A200AttachmentsConfig
-from clearpath_config.platform.attachments.config import BaseAttachmentsConfig
-from clearpath_config.platform.attachments.generic import GENERICAttachmentsConfig
-from clearpath_config.platform.attachments.j100 import J100AttachmentsConfig
+from clearpath_config.platform.attachments.a200 import A200Attachment
+from clearpath_config.platform.attachments.config import AttachmentsConfig
+from clearpath_config.platform.attachments.dd100 import DD100Attachment
+from clearpath_config.platform.attachments.do100 import DO100Attachment
+from clearpath_config.platform.attachments.dd150 import DD150Attachment
+from clearpath_config.platform.attachments.do150 import DO150Attachment
+from clearpath_config.platform.attachments.generic import GENERICAttachment
+from clearpath_config.platform.attachments.j100 import J100Attachment
+from clearpath_config.platform.attachments.w200 import W200Attachment
+from clearpath_config.platform.types.attachment import BaseAttachment
 
 
 class AttachmentsConfigMux:
     PLATFORM = {
-        Platform.A200: A200AttachmentsConfig(),
-        Platform.J100: J100AttachmentsConfig(),
-        Platform.GENERIC: GENERICAttachmentsConfig()
+        Platform.A200: AttachmentsConfig(A200Attachment),
+        Platform.DD100: AttachmentsConfig(DD100Attachment),
+        Platform.DO100: AttachmentsConfig(DO100Attachment),
+        Platform.DD150: AttachmentsConfig(DD150Attachment),
+        Platform.DO150: AttachmentsConfig(DO150Attachment),
+        Platform.GENERIC: AttachmentsConfig(GENERICAttachment),
+        Platform.J100: AttachmentsConfig(J100Attachment),
+        Platform.W200: AttachmentsConfig(W200Attachment),
     }
 
-    def __new__(
-            cls,
-            platform: str,
-            config: dict = None
-            ) -> BaseAttachmentsConfig:
+    def __new__(cls, platform: str, attachments: dict = None) -> AttachmentsConfig:
+        # Check Platform is Supported
         assert platform in cls.PLATFORM, (
             "Platform '%s' must be one of: '%s'" % (
                 platform,
                 cls.PLATFORM.keys()
             )
         )
-        if config is not None:
-            cls.PLATFORM[platform].config = config
+        if not attachments:
             return cls.PLATFORM[platform]
-        else:
-            return cls.PLATFORM[platform]
+        # Pre-Process Entries
+        attachments = AttachmentsConfigMux.preprocess(platform, attachments)
+        # Add All Attachments
+        attachments_config = AttachmentsConfig(BaseAttachment)
+        for p in cls.PLATFORM:
+            cls.PLATFORM[p].config = attachments
+            attachments_config += cls.PLATFORM[p]
+        return attachments_config
+
+    @staticmethod
+    def preprocess(platform: str, attachments: dict):
+        for i, a in enumerate(attachments):
+            assert 'name' in a, "An attachment is missing 'name'"
+            assert 'type' in a, "An attachment is missing 'type'"
+            if '.' not in a['type']:
+                a['type'] = "%s.%s" % (platform, a['type'])
+            attachments[i] = a
+        return attachments

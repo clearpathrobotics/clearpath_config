@@ -58,6 +58,10 @@ class Platform:
     DD100 = "dd100"
     # Dingo O V1
     DO100 = "do100"
+    # Dingo D V1.5
+    DD150 = "dd150"
+    # Dingo D V1.5
+    DO150 = "d0150"
     # Jackal V1
     J100 = "j100"
     # Husky V2
@@ -69,16 +73,32 @@ class Platform:
     # Genric Robot
     GENERIC = "generic"
 
-    ALL = [DD100, DO100, J100, A200, R100, W200, GENERIC]
+    ALL = [
+        DD100,
+        DO100,
+        DD150,
+        DO150,
+        J100,
+        A200,
+        R100,
+        W200,
+        GENERIC
+    ]
 
     PACS = {
         GENERIC: PACSProfile(rows=100, columns=100),
         A200: PACSProfile(rows=8, columns=7),
         J100: PACSProfile(rows=4, columns=2),
+        W200: PACSProfile(rows=100, columns=100),
     }
 
     INDEX = {
         GENERIC: IndexingProfile(),
         A200: IndexingProfile(),
+        DD100: IndexingProfile(imu=1),
+        DO100: IndexingProfile(imu=1),
+        DD150: IndexingProfile(imu=1),
+        DO150: IndexingProfile(imu=1),
         J100: IndexingProfile(gps=1, imu=1),
+        W200: IndexingProfile(imu=1),
     }

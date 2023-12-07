@@ -52,6 +52,15 @@ class BaseLidar2D(BaseSensor):
         MIN_ANGLE = "node_name.min_angle"
         MAX_ANGLE = "node_name.max_angle"
 
+    class TOPICS:
+        SCAN = "scan"
+        NAME = {
+            SCAN: "scan",
+        }
+        RATE = {
+            SCAN: 10,
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -224,6 +233,15 @@ class HokuyoUST(BaseLidar2D):
         MIN_ANGLE = "urg_node.angle_min"
         MAX_ANGLE = "urg_node.angle_max"
 
+    class TOPICS:
+        SCAN = "scan"
+        NAME = {
+            SCAN: "scan",
+        }
+        RATE = {
+            SCAN: 10,
+        }
+
     def __init__(
             self,
             idx: int = None,
@@ -275,6 +293,15 @@ class SickLMS1XX(BaseLidar2D):
         IP_PORT = "lms1xx.port"
         MIN_ANGLE = "lms1xx.min_ang"
         MAX_ANGLE = "lms1xx.max_ang"
+
+    class TOPICS:
+        SCAN = "scan"
+        NAME = {
+            SCAN: "scan",
+        }
+        RATE = {
+            SCAN: 10,
+        }
 
     def __init__(
             self,

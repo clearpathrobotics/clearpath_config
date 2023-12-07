@@ -25,32 +25,37 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.platform.types.attachment import BaseAttachment
 from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.platform import Platform
+from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 from typing import List
 
 
-class Structure(BaseAttachment):
-    ATTACHMENT_MODEL = "structure"
-    ARCH_300 = "sensor_arch_300"
-    ARCH_510 = "sensor_arch_510"
-    DEFAULT = ARCH_300
-    MODELS = [DEFAULT, ARCH_300, ARCH_510]
+class DO100TopPlate(BaseAttachment):
+    PLATFORM = Platform.DO100
+    ATTACHMENT_MODEL = "%s.top_plate" % PLATFORM
+    PACS = "pacs"
+    MODELS = [PACS]
+    PARENT = "default_mount"
 
     def __init__(
             self,
             name: str = ATTACHMENT_MODEL,
+            model: str = PACS,
             enabled: bool = BaseAttachment.ENABLED,
-            model: str = DEFAULT,
-            parent: str = Accessory.PARENT,
+            parent: str = PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        super().__init__(
-            name,
-            enabled,
-            model,
-            parent,
-            xyz,
-            rpy
-        )
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+# DO100 Attachments
+class DO100Attachment(PlatformAttachment):
+    PLATFORM = Platform.DO100
+    # Top Plates
+    TOP_PLATE = DO100TopPlate.ATTACHMENT_MODEL
+
+    TYPES = {
+        TOP_PLATE: DO100TopPlate,
+    }

@@ -1,6 +1,7 @@
 serial_number: j100-0000
 version: 0
 system:
+  username: administrator
   hosts:
     self: cpr-j100-0000
     platform:
@@ -8,20 +9,21 @@ system:
     onboard: {}
     remote: {}
   ros2:
-    username: administrator
     namespace: j100_0000
     domain_id: 0
     rmw_implementation: rmw_fastrtps_cpp
     workspaces: []
 platform:
   controller: ps4
+  battery:
+    model: HE2613
+    configuration: S1P1
   attachments:
-    front_fender:
-      enabled: true
-      model: default
-    rear_fender:
-      enabled: true
-      model: default
+    - name: front_fender
+      type: fender
+    - name: rear_fender
+      type: fender
+      rpy: [0.0, 0.0, 3.1415]
   extras:
     urdf: null
     ros_parameters:
@@ -37,7 +39,7 @@ links:
   box: []
   cylinder:
   - name: cylinder
-    parent: mid_mount
+    parent: default_mount
     xyz: [0.0, 0.0, 0.05]
     rpy: [0.0, 0.0, 0.0]
     radius: 0.05
@@ -47,11 +49,11 @@ links:
   sphere: []
 mounts:
   bracket:
-  - parent: front_mount
+  - parent: front_0_mount
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     model: horizontal
-  - parent: rear_mount
+  - parent: rear_0_mount
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     model: horizontal
@@ -94,7 +96,7 @@ sensors:
   - model: velodyne_lidar
     urdf_enabled: true
     launch_enabled: true
-    parent: mid_mount
+    parent: default_mount
     xyz: [0.0, 0.0, 0.1]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:
