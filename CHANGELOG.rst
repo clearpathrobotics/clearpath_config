@@ -2,6 +2,57 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added wheel parameter to platform
+* Fixed typo
+* Added dd150 samples
+* Added dd100 samples
+* Fixed origin of pacs mounts
+* Renamed SLA on Dingo
+* Added entries for all dingo
+* Updated sample to match attachments rework
+* Fixed merge issues
+* Added more warthog samples
+* Updated sample default_mount
+* Removed duplicate
+* Added W200 attachments
+* Updated default mounts on j100
+* Updated default mounts on a200
+* Changed default parent link to default_mount
+* Changed the parent link of attachments
+* Removed blannk line
+* Removed top_plate from tests
+* Updated samples
+* Common attachments accross platforms
+* Concatenate lists
+* Updated all platform attachments
+* Updated base attachment
+* Attachments now list
+* Updated Attachments to more genric case
+* Removed specific attachment classes
+* Remove all from list
+* Accessory from/to dict
+* Fixed long line for linter
+* Moved username out of ros2 section
+* Re-define DEFAULTS based on platform
+* Detailed errors
+* Fixed typo in samples
+* Updated battery model
+* Switched configurations
+* Update commit
+* Revert "Added battery to platform"
+  This reverts commit fce11835ca8d6c477890084761075b5b46532bf2.
+* Added battery to platform
+* Added control section
+* Consistent naming
+* Added topics to base and fixed typos
+* Added get_topic and get_topic_rate
+* Added TOPICS and get_topic
+* Added description and launch to generic robot platform
+* Added Warthog without Attachments or ROS Parameters
+* Contributors: Luis Camero, luis-camero
+
 0.1.1 (2023-10-02)
 ------------------
 * Removed micro_ros_ws
