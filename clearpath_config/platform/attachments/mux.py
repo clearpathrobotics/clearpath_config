@@ -34,6 +34,7 @@ from clearpath_config.platform.attachments.dd150 import DD150Attachment
 from clearpath_config.platform.attachments.do150 import DO150Attachment
 from clearpath_config.platform.attachments.generic import GENERICAttachment
 from clearpath_config.platform.attachments.j100 import J100Attachment
+from clearpath_config.platform.attachments.r100 import R100Attachment
 from clearpath_config.platform.attachments.w200 import W200Attachment
 from clearpath_config.platform.types.attachment import BaseAttachment
 
@@ -48,6 +49,7 @@ class AttachmentsConfigMux:
         Platform.GENERIC: AttachmentsConfig(GENERICAttachment),
         Platform.J100: AttachmentsConfig(J100Attachment),
         Platform.W200: AttachmentsConfig(W200Attachment),
+        Platform.R100: AttachmentsConfig(R100Attachment),
     }
 
     def __new__(cls, platform: str, attachments: dict = None) -> AttachmentsConfig:
