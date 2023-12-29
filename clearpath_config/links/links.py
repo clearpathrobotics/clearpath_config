@@ -497,7 +497,8 @@ class LinksConfig(BaseConfig):
             mesh: Mesh = None,
             # By Parameters
             name: str = None,
-            visual: float = Mesh.VISUAL,
+            visual: str = Mesh.VISUAL,
+            package: str = Mesh.PACKAGE,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
@@ -511,6 +512,7 @@ class LinksConfig(BaseConfig):
             mesh = Mesh(
                 name=name,
                 visual=visual,
+                package=package,
                 parent=parent,
                 xyz=xyz,
                 rpy=rpy,

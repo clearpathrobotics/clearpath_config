@@ -25,6 +25,8 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+import os
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.file import File
 from clearpath_config.links.types.link import BaseLink
@@ -34,13 +36,15 @@ from typing import List
 class Mesh(BaseLink):
     LINK_TYPE = "mesh"
     VISUAL = "empty.stl"
+    PACKAGE = ""
     # COLLISION = "empty.stl"
 
     def __init__(
             self,
             name: str,
             parent: str = Accessory.PARENT,
-            visual: float = VISUAL,
+            visual: str = VISUAL,
+            package: str = PACKAGE,
             # collision: float = COLLISION,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
@@ -55,8 +59,9 @@ class Mesh(BaseLink):
             offset_xyz,
             offset_rpy
         )
-        self.visual: File = File(Mesh.VISUAL)
-        self.set_visual(visual)
+
+        self.visual: str = Mesh.VISUAL
+        self.set_visual(visual, package)
 
     def to_dict(self) -> dict:
         d = super().to_dict()
@@ -66,10 +71,17 @@ class Mesh(BaseLink):
     def from_dict(self, d: dict) -> None:
         super().from_dict(d)
         if 'visual' in d:
-            self.set_visual(d['visual'])
+            if 'package' in d:
+                self.set_visual(d['visual'], d['package'])
+            else:
+                self.set_visual(d['visual'])
 
-    def set_visual(self, visual: str) -> None:
-        self.visual = File(visual)
+    def set_visual(self, visual: str, package: str = "") -> None:
+        if package:
+            self.visual = os.path.join("$(find " + package + ")",
+                                       File.clean(visual, make_abs=False))
+        else:
+            self.visual = File.clean(visual, make_abs=True)
 
     def get_visual(self) -> str:
-        return self.visual.get_path()
+        return self.visual
