@@ -25,6 +25,8 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+import os
+
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.file import File
 from clearpath_config.common.types.platform import Platform
@@ -137,6 +139,7 @@ class ROSParameterDefaults:
 class ExtrasConfig(BaseConfig):
 
     EXTRAS = "extras"
+    URDF_PACKAGE = "urdf_package"
     URDF = "urdf"
     ROS_PARAMETERS = "ros_parameters"
 
@@ -153,6 +156,7 @@ class ExtrasConfig(BaseConfig):
 
     TEMPLATE = {
         EXTRAS: {
+            URDF_PACKAGE: URDF_PACKAGE,
             URDF: URDF,
             ROS_PARAMETERS: {
                 PLATFORM_VELOCITY_CONTROLLER: {
@@ -174,6 +178,7 @@ class ExtrasConfig(BaseConfig):
     KEYS[ROS_PARAMETERS] = ".".join([EXTRAS, ROS_PARAMETERS])
 
     DEFAULTS = {
+        URDF_PACKAGE: "",
         URDF: "empty.urdf.xacro",
         ROS_PARAMETERS: ROSParameterDefaults(BaseConfig.get_platform_model()),
     }
@@ -181,6 +186,7 @@ class ExtrasConfig(BaseConfig):
     def __init__(
             self,
             config: dict = {},
+            urdf_package: str = DEFAULTS[URDF_PACKAGE],
             urdf: str = DEFAULTS[URDF],
             ros_parameters: dict = {},
             ) -> None:
@@ -198,12 +204,14 @@ class ExtrasConfig(BaseConfig):
         }
         # Setter Template
         self.setters = {
+            self.KEYS[self.URDF_PACKAGE]: ExtrasConfig.urdf_package,
             self.KEYS[self.URDF]: ExtrasConfig.urdf,
             self.KEYS[self.ROS_PARAMETERS]: ExtrasConfig.ros_parameters,
         }
         # Initialization
         self._init_ros_parameter()
         self._config = {}
+        self.urdf_package = urdf_package
         self.urdf = urdf
         self.ros_parameters = ros_parameters
         # Set from Config
@@ -212,6 +220,22 @@ class ExtrasConfig(BaseConfig):
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
             self._update_ros_parameter()
+
+    @property
+    def urdf_package(self) -> str:
+        urdf_package = (None if self._is_default(self._urdf_package, self.URDF_PACKAGE)
+                        else str(self._urdf_package))
+        self.set_config_param(
+            key=self.KEYS[self.URDF_PACKAGE],
+            value=urdf_package
+        )
+        return urdf_package
+
+    @urdf_package.setter
+    def urdf_package(self, value: str) -> None:
+        if value is None or value == "None":
+            return
+        self._urdf_package = value
 
     @property
     def urdf(self) -> str:
@@ -226,7 +250,11 @@ class ExtrasConfig(BaseConfig):
     def urdf(self, value: str) -> None:
         if value is None or value == "None":
             return
-        self._urdf = File(path=str(value))
+        elif self._urdf_package:
+            self._urdf = os.path.join("$(find " + self._urdf_package + ")",
+                                      File.clean(path=str(value), make_abs=False))
+        else:
+            self._urdf = File.clean(path=str(value), make_abs=True)
 
     def _is_default(self, curr: str, key: str) -> bool:
         return curr == str(File(self.DEFAULTS[key]))
