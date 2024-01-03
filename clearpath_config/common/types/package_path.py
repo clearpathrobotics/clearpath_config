@@ -25,53 +25,46 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.links.types.link import BaseLink
-from clearpath_config.common.types.package_path import PackagePath
-from typing import List
+
+from clearpath_config.common.types.file import File
 
 
-class Mesh(BaseLink):
-    LINK_TYPE = "mesh"
-    VISUAL = ""
-    # COLLISION = "empty.stl"
+class PackagePath:
+    PACKAGE = "package"
+    PATH = "path"
 
     def __init__(
             self,
-            name: str,
-            parent: str = Accessory.PARENT,
-            visual: dict = VISUAL,
-            # collision: float = COLLISION,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY,
-            offset_xyz: List[float] = BaseLink.OFFSET_XYZ,
-            offset_rpy: List[float] = BaseLink.OFFSET_RPY
+            package: str = None,
+            path: str = None,
             ) -> None:
-        super().__init__(
-            name,
-            parent,
-            xyz,
-            rpy,
-            offset_xyz,
-            offset_rpy
-        )
+        self.package = package
+        self.path = File.clean(path, make_abs=False)
 
-        self.visual: PackagePath = PackagePath(Mesh.VISUAL)
-        self.set_visual(visual)
+    def from_dict(self, config: dict) -> None:
+        if self.PACKAGE in config:
+            self.package = config[self.PACKAGE]
+        if self.PATH in config:
+            self.path = config[self.PATH]
 
     def to_dict(self) -> dict:
-        d = super().to_dict()
-        d['visual'] = self.get_visual()
-        return d
+        return {
+            self.PACKAGE: self.package,
+            self.PATH: self.path,
+        }
 
-    def from_dict(self, d: dict) -> None:
-        super().from_dict(d)
-        if 'visual' in d:
-            self.set_visual(d['visual'])
+    @property
+    def package(self) -> str:
+        return self._package
 
-    def set_visual(self, visual: dict) -> None:
-        if visual:
-            self.visual.from_dict(visual)
+    @package.setter
+    def package(self, value: str) -> None:
+        self._package = value
 
-    def get_visual(self) -> dict:
-        return self.visual.to_dict()
+    @property
+    def path(self) -> str:
+        return self._path
+
+    @path.setter
+    def path(self, value: str) -> None:
+        self._path = value
