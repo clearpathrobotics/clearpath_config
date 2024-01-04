@@ -2,6 +2,12 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Find packages for meshes / extras urdf (`#45 <https://github.com/clearpathrobotics/clearpath_config/issues/45>`_)
+  * Allow meshes visual and extras urdf to be linked using find package functionality
+* Contributors: Hilary Luo
+
 0.2.0 (2023-12-07)
 ------------------
 * Added wheel parameter to platform
