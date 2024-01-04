@@ -26,21 +26,21 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.file import File
 from clearpath_config.links.types.link import BaseLink
+from clearpath_config.common.types.package_path import PackagePath
 from typing import List
 
 
 class Mesh(BaseLink):
     LINK_TYPE = "mesh"
-    VISUAL = "empty.stl"
+    VISUAL = ""
     # COLLISION = "empty.stl"
 
     def __init__(
             self,
             name: str,
             parent: str = Accessory.PARENT,
-            visual: float = VISUAL,
+            visual: dict = VISUAL,
             # collision: float = COLLISION,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
@@ -55,7 +55,8 @@ class Mesh(BaseLink):
             offset_xyz,
             offset_rpy
         )
-        self.visual: File = File(Mesh.VISUAL)
+
+        self.visual: PackagePath = PackagePath(Mesh.VISUAL)
         self.set_visual(visual)
 
     def to_dict(self) -> dict:
@@ -68,8 +69,9 @@ class Mesh(BaseLink):
         if 'visual' in d:
             self.set_visual(d['visual'])
 
-    def set_visual(self, visual: str) -> None:
-        self.visual = File(visual)
+    def set_visual(self, visual: dict) -> None:
+        if visual:
+            self.visual.from_dict(visual)
 
-    def get_visual(self) -> str:
-        return self.visual.get_path()
+    def get_visual(self) -> dict:
+        return self.visual.to_dict()

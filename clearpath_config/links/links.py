@@ -497,7 +497,7 @@ class LinksConfig(BaseConfig):
             mesh: Mesh = None,
             # By Parameters
             name: str = None,
-            visual: float = Mesh.VISUAL,
+            visual: dict = Mesh.VISUAL,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
