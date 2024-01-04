@@ -25,50 +25,46 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-import os
+
+from clearpath_config.common.types.file import File
 
 
-# File
-# - file class
-class File:
-    def __init__(self, path: str, creatable=False, exists=False, make_abs=True) -> None:
-        if creatable:
-            assert File.is_creatable(path)
-        if exists:
-            assert File.is_exists(path)
-        self.path = File.clean(path, make_abs)
+class PackagePath:
+    PACKAGE = "package"
+    PATH = "path"
 
-    def __str__(self) -> str:
-        return self.path
+    def __init__(
+            self,
+            package: str = None,
+            path: str = None,
+            ) -> None:
+        self.package = package
+        self.path = File.clean(path, make_abs=False)
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, str):
-            return self.path == other
-        elif isinstance(other, File):
-            return self.path == other.path
-        else:
-            return False
+    def from_dict(self, config: dict) -> None:
+        if self.PACKAGE in config:
+            self.package = config[self.PACKAGE]
+        if self.PATH in config:
+            self.path = config[self.PATH]
 
-    @staticmethod
-    def clean(path: str, make_abs=True) -> str:
-        if not path:
-            return ""
-        path = os.path.expanduser(path)
-        path = os.path.normpath(path)
-        if make_abs:
-            path = os.path.abspath(path)
-        return path
+    def to_dict(self) -> dict:
+        return {
+            self.PACKAGE: self.package,
+            self.PATH: self.path,
+        }
 
-    @staticmethod
-    def is_creatable(path: str, make_abs=True) -> bool:
-        path = File.clean(path, make_abs)
-        dirname = os.path.dirname(path) or os.getcwd()
-        return os.access(dirname, os.W_OK)
+    @property
+    def package(self) -> str:
+        return self._package
 
-    @staticmethod
-    def is_exists(path: str, make_abs=True) -> bool:
-        path = File.clean(path, make_abs)
-        return os.path.exists(path)
+    @package.setter
+    def package(self, value: str) -> None:
+        self._package = value
 
-    def get_path(self) -> str:
-        return self.path
+    @property
+    def path(self) -> str:
+        return self._path
+
+    @path.setter
+    def path(self, value: str) -> None:
+        self._path = value

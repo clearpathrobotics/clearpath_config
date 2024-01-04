@@ -27,52 +27,12 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.types.config import BaseConfig
+from clearpath_config.common.types.package_path import PackagePath
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.extras import ExtrasConfig
 from clearpath_config.platform.attachments.config import AttachmentsConfig
 from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
-
-
-class PackagePath:
-    PACKAGE = "package"
-    PATH = "path"
-
-    def __init__(
-            self,
-            package: str = None,
-            path: str = None,
-            ) -> None:
-        self.package = package
-        self.path = path
-
-    def from_dict(self, config: dict) -> None:
-        if self.PACKAGE in config:
-            self.package = config[self.PACKAGE]
-        if self.PATH in config:
-            self.path = config[self.PATH]
-
-    def to_dict(self) -> dict:
-        return {
-            self.PACKAGE: self.package,
-            self.PATH: self.path,
-        }
-
-    @property
-    def package(self) -> str:
-        return self._package
-
-    @package.setter
-    def package(self, value: str) -> None:
-        self._package = value
-
-    @property
-    def path(self) -> str:
-        return self._path
-
-    @path.setter
-    def path(self, value: str) -> None:
-        self._path = value
 
 
 class DescriptionPackagePath(PackagePath):

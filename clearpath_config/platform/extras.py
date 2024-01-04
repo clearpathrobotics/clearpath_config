@@ -27,6 +27,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.file import File
+from clearpath_config.common.types.package_path import PackagePath
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.utils.dictionary import (
     flatten_dict,
@@ -174,14 +175,14 @@ class ExtrasConfig(BaseConfig):
     KEYS[ROS_PARAMETERS] = ".".join([EXTRAS, ROS_PARAMETERS])
 
     DEFAULTS = {
-        URDF: "empty.urdf.xacro",
+        URDF: "",
         ROS_PARAMETERS: ROSParameterDefaults(BaseConfig.get_platform_model()),
     }
 
     def __init__(
             self,
             config: dict = {},
-            urdf: str = DEFAULTS[URDF],
+            urdf: dict = DEFAULTS[URDF],
             ros_parameters: dict = {},
             ) -> None:
         # ROS Parameter Setter Template
@@ -214,19 +215,20 @@ class ExtrasConfig(BaseConfig):
             self._update_ros_parameter()
 
     @property
-    def urdf(self) -> str:
-        urdf = None if self._is_default(self._urdf, self.URDF) else str(self._urdf)
+    def urdf(self) -> dict:
+        urdf = None if self._is_default(self._urdf, self.URDF) else dict(self._urdf.to_dict())
         self.set_config_param(
             key=self.KEYS[self.URDF],
-            value=urdf
+            value=urdf,
         )
         return urdf
 
     @urdf.setter
-    def urdf(self, value: str) -> None:
+    def urdf(self, value: dict) -> None:
         if value is None or value == "None":
             return
-        self._urdf = File(path=str(value))
+        self._urdf = PackagePath()
+        self._urdf.from_dict(value)
 
     def _is_default(self, curr: str, key: str) -> bool:
         return curr == str(File(self.DEFAULTS[key]))
