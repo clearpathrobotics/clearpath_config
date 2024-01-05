@@ -26,7 +26,6 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
-from clearpath_config.common.types.file import File
 from clearpath_config.common.types.package_path import PackagePath
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.utils.dictionary import (
@@ -175,7 +174,7 @@ class ExtrasConfig(BaseConfig):
     KEYS[ROS_PARAMETERS] = ".".join([EXTRAS, ROS_PARAMETERS])
 
     DEFAULTS = {
-        URDF: "",
+        URDF: None,
         ROS_PARAMETERS: ROSParameterDefaults(BaseConfig.get_platform_model()),
     }
 
@@ -216,7 +215,7 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def urdf(self) -> dict:
-        urdf = None if self._is_default(self._urdf, self.URDF) else dict(self._urdf.to_dict())
+        urdf = None if (self._urdf == self.DEFAULTS[self.URDF]) else dict(self._urdf.to_dict())
         self.set_config_param(
             key=self.KEYS[self.URDF],
             value=urdf,
@@ -224,14 +223,17 @@ class ExtrasConfig(BaseConfig):
         return urdf
 
     @urdf.setter
-    def urdf(self, value: dict) -> None:
-        if value is None or value == "None":
-            return
-        self._urdf = PackagePath()
-        self._urdf.from_dict(value)
-
-    def _is_default(self, curr: str, key: str) -> bool:
-        return curr == str(File(self.DEFAULTS[key]))
+    def urdf(self, value: dict | PackagePath) -> None:
+        if isinstance(value, dict) and PackagePath.PATH in value and value[PackagePath.PATH]:
+            self._urdf = PackagePath()
+            self._urdf.from_dict(value)
+        elif isinstance(value, PackagePath) and value.path:
+            self._urdf = value
+        else:
+            self._urdf = self.DEFAULTS[self.URDF]
+            assert not value or isinstance(value, dict) or (isinstance(value, PackagePath)), (
+                "Extras URDF must be null or of type `dict` or `PackagePath`"
+            )
 
     def _is_ros_parameter(self, key) -> bool:
         return any([key in i for i in self._ros_parameters_setters])
