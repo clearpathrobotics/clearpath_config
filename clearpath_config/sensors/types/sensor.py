@@ -143,12 +143,15 @@ class BaseSensor(IndexedAccessory):
         super().set_idx(idx)
         self.topic = self.get_topic_from_idx(idx)
 
-    def get_topic(self, topic: str) -> str:
+    def get_topic(self, topic: str, local=False) -> str:
         assert topic in self.TOPICS.NAME, (
             "Topic must be one of %s" % [i for i in self.TOPICS.NAME]
         )
-        ns = BaseConfig.get_namespace()
-        return os.path.join(ns, "sensors", self.name, self.TOPICS.NAME[topic])
+        if local:
+            return os.path.join("sensors", self.name, self.TOPICS.NAME[topic])
+        else:
+            ns = BaseConfig.get_namespace()
+            return os.path.join(ns, "sensors", self.name, self.TOPICS.NAME[topic])
 
     def get_topic_rate(self, topic: str) -> float:
         assert topic in self.TOPICS.RATE, (
