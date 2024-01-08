@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.2 (2024-01-08)
+------------------
 * Fix how blank urdf extras is handled
 * Contributors: Hilary Luo
 
