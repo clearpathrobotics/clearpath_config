@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix how blank urdf extras is handled
+* Contributors: Hilary Luo
+
 0.2.1 (2024-01-04)
 ------------------
 * Find packages for meshes / extras urdf (`#45 <https://github.com/clearpathrobotics/clearpath_config/issues/45>`_)
