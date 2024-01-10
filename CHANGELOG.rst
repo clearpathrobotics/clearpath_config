@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Give option to get topic without namespace
+* Contributors: Hilary Luo
+
 0.2.2 (2024-01-08)
 ------------------
 * Fix how blank urdf extras is handled
