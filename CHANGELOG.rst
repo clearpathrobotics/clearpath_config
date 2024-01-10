@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.3 (2024-01-10)
+------------------
 * Give option to get topic without namespace
 * Contributors: Hilary Luo
 
