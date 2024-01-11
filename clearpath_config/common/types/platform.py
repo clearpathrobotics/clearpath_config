@@ -61,7 +61,7 @@ class Platform:
     # Dingo D V1.5
     DD150 = "dd150"
     # Dingo D V1.5
-    DO150 = "d0150"
+    DO150 = "do150"
     # Jackal V1
     J100 = "j100"
     # Husky V2

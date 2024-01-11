@@ -25,10 +25,40 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.types.attachment import PlatformAttachment
+from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
+
+
+class R100ArmMount(BaseAttachment):
+    PLATFORM = Platform.R100
+    ATTACHMENT_MODEL = "%s.arm_mount" % PLATFORM
+    FAMS = "fams"
+    HAMS = "hams"
+    TOWER = "tower"
+    MODELS = [FAMS, HAMS, TOWER]
+    DEFAULT = TOWER
+    PARENT = "default_mount"
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
 # R100 Attachments
 class R100Attachment(PlatformAttachment):
     PLATFORM = Platform.R100
+    # Arm Mount
+    ARM_MOUNT = R100ArmMount.ATTACHMENT_MODEL
+
+    TYPES = {
+        ARM_MOUNT: R100ArmMount
+    }
