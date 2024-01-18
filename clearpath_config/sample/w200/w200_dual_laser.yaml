@@ -67,8 +67,8 @@ sensors:
         laser_frame_id: lidar2d_0_laser
         ip_address: 192.168.131.20
         ip_port: 10940
-        angle_min: -3.141592653589793
-        angle_max: 3.141592653589793
+        angle_min: -1.5707
+        angle_max: 1.5707
   - model: hokuyo_ust
     urdf_enabled: true
     launch_enabled: true
@@ -80,6 +80,6 @@ sensors:
         laser_frame_id: lidar2d_1_laser
         ip_address: 192.168.131.21
         ip_port: 10940
-        angle_min: -3.141592653589793
-        angle_max: 3.141592653589793
+        angle_min: -1.5707
+        angle_max: 1.5707
   lidar3d: []
