@@ -55,7 +55,7 @@ sensors:
   - model: hokuyo_ust
     urdf_enabled: true
     launch_enabled: true
-    parent: front_mount
+    parent: front_0_mount
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:
@@ -68,7 +68,7 @@ sensors:
   - model: hokuyo_ust
     urdf_enabled: true
     launch_enabled: true
-    parent: rear_mount
+    parent: rear_0_mount
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 3.1415]
     ros_parameters:
