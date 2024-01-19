@@ -57,6 +57,7 @@ class BatteryConfig(BaseConfig):
 
     # Configurations
     CONFIGURATION = "configuration"
+    LAUNCH_ARGS = 'launch_args'
     S1P1 = "S1P1"
     S1P2 = "S1P2"
     S1P3 = "S1P3"
@@ -106,7 +107,8 @@ class BatteryConfig(BaseConfig):
     TEMPLATE = {
         BATTERY: {
             MODEL: MODEL,
-            CONFIGURATION: CONFIGURATION
+            CONFIGURATION: CONFIGURATION,
+            LAUNCH_ARGS: LAUNCH_ARGS
         }
     }
 
@@ -114,7 +116,8 @@ class BatteryConfig(BaseConfig):
 
     DEFAULTS = {
         MODEL: UNKNOWN,
-        CONFIGURATION: UNKNOWN
+        CONFIGURATION: UNKNOWN,
+        LAUNCH_ARGS: {}
     }
 
     def __init__(
@@ -122,6 +125,7 @@ class BatteryConfig(BaseConfig):
             config: dict = {},
             model: str = DEFAULTS[MODEL],
             configuration: str = DEFAULTS[CONFIGURATION],
+            launch_args: dict = DEFAULTS[LAUNCH_ARGS]
             ) -> None:
         # Initialization
         self._config = {}
@@ -135,10 +139,16 @@ class BatteryConfig(BaseConfig):
             self.configuration = self.DEFAULTS[self.CONFIGURATION]
         else:
             self.configuration = configuration
+        if launch_args == self.DEFAULTS[self.LAUNCH_ARGS] or not launch_args:
+            self.launch_args = self.DEFAULTS[self.LAUNCH_ARGS]
+        else:
+            self.launch_args = launch_args
+
         # Setter Template
         setters = {
             self.KEYS[self.MODEL]: BatteryConfig.model,
             self.KEYS[self.CONFIGURATION]: BatteryConfig.configuration,
+            self.KEYS[self.LAUNCH_ARGS]: BatteryConfig.launch_args,
         }
         super().__init__(setters, config, self.BATTERY)
 
@@ -202,3 +212,19 @@ class BatteryConfig(BaseConfig):
                 platform, self.model, list(self.VALID[platform][self.model]))
         ))
         self._configuration = value
+
+    @property
+    def launch_args(self) -> dict:
+        self.set_config_param(
+            key=self.KEYS[self.LAUNCH_ARGS],
+            value=self._launch_args
+        )
+        return self._launch_args
+
+    @launch_args.setter
+    def launch_args(self, value: dict) -> None:
+        assert isinstance(value, dict), ((
+            "Battery Launch args %s are invalid. " % value +
+            "They must be in the format of a dictionary."
+        ))
+        self._launch_args = value
