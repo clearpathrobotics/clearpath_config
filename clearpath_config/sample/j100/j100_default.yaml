@@ -27,14 +27,15 @@ platform:
   extras:
     urdf: null
     ros_parameters:
-      linear.x.max_velocity": 2.0
-      linear.x.min_velocity": -2.0
-      linear.x.max_acceleration": 20.0
-      linear.x.min_acceleration": -20.0
-      angular.z.max_velocity": 4.0
-      angular.z.min_velocity": -4.0
-      angular.z.max_acceleration": 25.0
-      angular.z.min_acceleration": -25.0
+      platform_velocity_controller:
+        linear.x.max_velocity": 2.0
+        linear.x.min_velocity": -2.0
+        linear.x.max_acceleration": 20.0
+        linear.x.min_acceleration": -20.0
+        angular.z.max_velocity": 4.0
+        angular.z.min_velocity": -4.0
+        angular.z.max_acceleration": 25.0
+        angular.z.min_acceleration": -25.0
 links:
   box: []
   cylinder: []
