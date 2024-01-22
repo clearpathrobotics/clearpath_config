@@ -64,6 +64,9 @@ setup(
             package_name + "/sample/j100/j100_dual_laser.yaml",
             package_name + "/sample/j100/j100_sample.yaml",
             package_name + "/sample/j100/j100_velodyne.yaml",
+            package_name + "/sample/w200/w200_default.yaml",
+            package_name + "/sample/w200/w200_dual_laser.yaml",
+            package_name + "/sample/w200/w200_velodyne.yaml",
             ]),
     ],
     install_requires=[
