@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.4 (2024-01-22)
+------------------
 * Install the W200 samples.
 * Fixed j100 and w200 laser sample
 * Contributors: Roni Kreinin, Tony Baltovski
