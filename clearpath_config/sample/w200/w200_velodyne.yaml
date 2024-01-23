@@ -18,15 +18,15 @@ platform:
   extras:
     urdf: null
     ros_parameters:
-      ros_parameters:
-      linear.x.max_velocity": 5.0
-      linear.x.min_velocity": -5.0
-      linear.x.max_acceleration": 50.0
-      linear.x.min_acceleration": -50.0
-      angular.z.max_velocity": 4.0
-      angular.z.min_velocity": -4.0
-      angular.z.max_acceleration": 40.0
-      angular.z.min_acceleration": -40.0
+      platform_velocity_controller:
+        linear.x.max_velocity": 5.0
+        linear.x.min_velocity": -5.0
+        linear.x.max_acceleration": 50.0
+        linear.x.min_acceleration": -50.0
+        angular.z.max_velocity": 4.0
+        angular.z.min_velocity": -4.0
+        angular.z.max_acceleration": 40.0
+        angular.z.min_acceleration": -40.0
 links:
   box:
     - name: structure
