@@ -31,6 +31,80 @@ from clearpath_config.common.utils.dictionary import extend_flat_dict
 from typing import List
 
 
+class Republisher():
+    TYPE = "type"
+
+    class Base():
+        INPUT = "input"
+        OUTPUT = "output"
+        INPUT_DEFAULT = "in"
+        OUTPUT_DEFAULT = "out"
+
+        def __init__(self, config: dict) -> None:
+
+            self.from_dict(config)
+
+        def from_dict(self, config: dict) -> None:
+            self.input = config.get(self.INPUT, self.INPUT_DEFAULT)
+            self.output = config.get(self.OUTPUT, self.OUTPUT_DEFAULT)
+
+        def to_dict(self) -> dict:
+            return {
+                self.INPUT: self.input,
+                self.OUTPUT: self.output
+            }
+
+        @property
+        def input(self) -> str:
+            return self._input
+
+        @input.setter
+        def input(self, value: str) -> None:
+            self._input = value
+
+        @property
+        def output(self) -> str:
+            return self._output
+
+        @output.setter
+        def output(self, value: str) -> None:
+            self._output = value
+
+    class Compress(Base):
+        TYPE = "compress"
+        INPUT_DEFAULT = "color"
+        OUTPUT_DEFAULT = "compressed"
+
+    class Rectify(Base):
+        TYPE = "rectify"
+        INPUT_DEFAULT = "color"
+        OUTPUT_DEFAULT = "rectified"
+
+    class Resize(Base):
+        TYPE = "resize"
+        INPUT_DEFAULT = "color"
+        OUTPUT_DEFAULT = "resize"
+
+    class Theora(Base):
+        TYPE = "theora"
+        INPUT_DEFAULT = "color"
+        OUTPUT_DEFAULT = "theora"
+
+    TYPES = {
+        Compress.TYPE: Compress,
+        Rectify.TYPE: Rectify,
+        Resize.TYPE: Resize,
+        Theora.TYPE: Theora
+    }
+
+    def __new__(self, config: dict) -> None:
+        assert self.TYPE in config, (
+            "Republisher must have '%s' specified." % self.TYPE)
+        assert config[self.TYPE] in self.TYPES, (
+            "Republisher '%s' must be one of: '%s'." % (self.TYPE, [i for i in self.TYPES]))
+        return self.TYPES[config[self.TYPE]](config)
+
+
 class BaseCamera(BaseSensor):
     SENSOR_TYPE = "camera"
     SENSOR_MODEL = "base"
@@ -137,6 +211,29 @@ class BaseCamera(BaseSensor):
 
     def set_serial(self, serial: str) -> None:
         self.serial = serial
+
+    @property
+    def republishers(self) -> list:
+        return [republisher.to_dict() for republisher in self._republishers]
+
+    @republishers.setter
+    def republishers(self, republishers: list) -> None:
+        assert isinstance(republishers, list), (
+            "Camera republishers must be a list of dictionaries")
+        assert all([isinstance(i, dict) for i in republishers]), (
+            "Camera republishers must be a list of dictionaries")
+        self._republishers = []
+        for republisher in republishers:
+            self._republishers.append(Republisher(republisher))
+
+    def to_dict(self) -> dict:
+        config = super().to_dict()
+        config['republishers'] = self.republishers
+        return config
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        self.republishers = d.get('republishers', [])
 
 
 class IntelRealsense(BaseCamera):
