@@ -25,19 +25,19 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.domain_id import DomainID
 from clearpath_config.common.types.namespace import Namespace
 from clearpath_config.common.types.username import Username
-from clearpath_config.common.types.rmw_implementation import RMWImplementation
 from clearpath_config.common.utils.dictionary import flip_dict
-from clearpath_config.system.hosts import HostsConfig
+from clearpath_config.system.hosts import HostConfig, HostListConfig
 
 
 class SystemConfig(BaseConfig):
 
     SYSTEM = "system"
-    HOSTS = HostsConfig.HOSTS
+    HOSTS = "hosts"
     SELF = "self"
     ROS2 = "ros2"
     USERNAME = "username"
@@ -63,8 +63,8 @@ class SystemConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        # HOSTS: platform hostname (serial number) at 192.168.131.1
-        HOSTS: HostsConfig.DEFAULTS,
+        # HOSTS: hostnames and IP's for all computers involved with the system
+        HOSTS: HostConfig.DEFAULTS,
         # USERNAME: administrator
         USERNAME: "administrator",
         # NAMESPACE: serial number
@@ -80,7 +80,7 @@ class SystemConfig(BaseConfig):
     def __init__(
             self,
             config: dict = {},
-            hosts: dict = DEFAULTS[HOSTS],
+            hosts: List[dict] | HostListConfig = DEFAULTS[HOSTS],
             username: str = DEFAULTS[USERNAME],
             namespace: str = DEFAULTS[NAMESPACE],
             domain_id: int = DEFAULTS[DOMAIN_ID],
@@ -118,7 +118,7 @@ class SystemConfig(BaseConfig):
             self.DEFAULTS[self.NAMESPACE] = namespace
 
     @property
-    def hosts(self) -> HostsConfig:
+    def hosts(self) -> HostConfig:
         self.set_config_param(
             key=self.KEYS[self.HOSTS],
             value=self._hosts.config[self.HOSTS]
@@ -126,14 +126,14 @@ class SystemConfig(BaseConfig):
         return self._hosts
 
     @hosts.setter
-    def hosts(self, value: dict | HostsConfig) -> None:
+    def hosts(self, value: List[dict] | HostListConfig) -> None:
         if isinstance(value, dict):
-            self._hosts = HostsConfig(config=value)
-        elif isinstance(value, HostsConfig):
+            self._hosts = HostConfig(config=value)
+        elif isinstance(value, HostConfig):
             self._hosts = value
         else:
-            assert isinstance(value, dict) or isinstance(value, HostsConfig), (
-                "Hosts must be of type 'dict' or 'HostsConfig'"
+            assert isinstance(value, dict) or isinstance(value, HostConfig), (
+                f"Hosts value of {value} is invalid, it must be of type 'dict' or 'HostListConfig'"
             )
 
     @property
