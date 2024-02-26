@@ -25,7 +25,10 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+
+import socket
 from typing import List
+
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.domain_id import DomainID
 from clearpath_config.common.types.namespace import Namespace
@@ -38,6 +41,7 @@ class SystemConfig(BaseConfig):
 
     SYSTEM = "system"
     HOSTS = "hosts"
+    LOCALHOST = "localhost"
     SELF = "self"
     ROS2 = "ros2"
     USERNAME = "username"
@@ -50,6 +54,7 @@ class SystemConfig(BaseConfig):
         SYSTEM: {
             SELF: SELF,
             HOSTS: HOSTS,
+            LOCALHOST: LOCALHOST,
             USERNAME: USERNAME,
             ROS2: {
                 NAMESPACE: NAMESPACE,
@@ -65,6 +70,8 @@ class SystemConfig(BaseConfig):
     DEFAULTS = {
         # HOSTS: hostnames and IP's for all computers involved with the system
         HOSTS: HostConfig.DEFAULTS,
+        # LOCALHOST: hostname for the specific devices - automatically determined
+        LOCALHOST: socket.gethostname(),
         # USERNAME: administrator
         USERNAME: "administrator",
         # NAMESPACE: serial number
@@ -81,7 +88,7 @@ class SystemConfig(BaseConfig):
             self,
             config: dict = {},
             hosts: List[dict] | HostListConfig = DEFAULTS[HOSTS],
-            username: str = DEFAULTS[USERNAME],
+            localhost: str | Hostname = DEFAULTS[LOCALHOST],
             namespace: str = DEFAULTS[NAMESPACE],
             domain_id: int = DEFAULTS[DOMAIN_ID],
             rmw_implementation: str = DEFAULTS[RMW],
@@ -90,6 +97,7 @@ class SystemConfig(BaseConfig):
         # Initialization
         self._config = {}
         self.hosts = hosts
+        self.localhost = localhost
         self.username = username
         self.namespace = namespace
         self.domain_id = domain_id
@@ -98,6 +106,7 @@ class SystemConfig(BaseConfig):
         # Setter Template
         setters = {
             self.KEYS[self.HOSTS]: SystemConfig.hosts,
+            self.KEYS[self.LOCALHOST]: SystemConfig.localhost,
             self.KEYS[self.USERNAME]: SystemConfig.username,
             self.KEYS[self.NAMESPACE]: SystemConfig.namespace,
             self.KEYS[self.DOMAIN_ID]: SystemConfig.domain_id,
@@ -135,6 +144,24 @@ class SystemConfig(BaseConfig):
             assert isinstance(value, dict) or isinstance(value, HostConfig), (
                 f"Hosts value of {value} is invalid, it must be of type 'dict' or 'HostListConfig'"
             )
+
+    @property
+    def localhost(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.LOCALHOST],
+            value=str(self._localhost)
+        )
+        return str(self._localhost)
+
+    @localhost.setter
+    def localhost(self, value: str | Hostname) -> None:
+        assert isinstance(value, str) or isinstance(value, Hostname), (
+            f"Localhost of {value} is invalid, must be of type 'str' or 'Hostname'"
+        )
+        if isinstance(value, str):
+            self._localhost = Hostname(value)
+        elif isinstance(value, Hostname):
+            self._localhost = value
 
     @property
     def username(self) -> str:
