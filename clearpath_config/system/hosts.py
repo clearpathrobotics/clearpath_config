@@ -37,7 +37,7 @@ from typing import List
 # - this is the format for which each host involved in the system will be described
 class HostConfig(BaseConfig):
 
-    HOSTNAME = "host"
+    HOSTNAME = "hostname"
     IP_ADDRESS = "ip"
 
     TEMPLATE = {
@@ -69,20 +69,8 @@ class HostConfig(BaseConfig):
         # Set from Config
         super().__init__(setters, config, None)
 
-    def update(self, serial_number=False) -> None:
-        if serial_number:
-            sn = BaseConfig.get_serial_number()
-            # Update if still defaults
-            if self.self == self.DEFAULTS[self.SELF]:
-                self.self = sn
-            if self.platform.get_hostname() == sn:
-                self.platform.set_hostname(sn)
-            # Update Defaults
-            self.DEFAULTS[self.SELF] = sn
-            self.DEFAULTS[self.PLATFORM] = {sn: "192.168.131.1"}
-
     def __eq__(self, other) -> bool:
-        return self.hostname == other.hostname and self.ip_address == other.ip
+        return self.hostname == other.hostname and self.ip_address == other.ip_address
 
     def __str__(self) -> str:
         return "{ hostname: %s, ip: %s }" % (str(self.hostname), str(self.ip_address))
@@ -136,9 +124,12 @@ class HostConfig(BaseConfig):
 # HostListConfig
 # - list of hosts that are involved with the system
 class HostListConfig(ListConfig[HostConfig, str]):
+
+    DEFAULTS = [HostConfig.DEFAULTS]
+
     def __init__(self) -> None:
         super().__init__(
-            uid=lambda obj: obj.get_hostname(),
+            uid=lambda obj: obj.hostname,
             obj_type=HostConfig,
             uid_type=str
         )
