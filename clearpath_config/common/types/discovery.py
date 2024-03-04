@@ -1,7 +1,7 @@
 # Software License Agreement (BSD)
 #
-# @author    Luis Camero <lcamero@clearpathrobotics.com>
-# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+# @author    Hilary Luo <hluo@clearpathrobotics.com>
+# @copyright (c) 2024, Clearpath Robotics, Inc., All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -26,41 +26,41 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-class RMWImplementation:
-    CONNEXT = "rmw_connext_cpp"
-    CYCLONE_DDS = "rmw_cyclonedds_cpp"
-    FAST_RTPS = "rmw_fastrtps_cpp"
-    GURUM_DDS = "rmw_gurumdds_cpp"
+class Discovery:
+    SIMPLE = "simple"
+    SERVER = "server"
 
-    ALL_SUPPORTED = [FAST_RTPS]
+    # All supported discovery modes, currently only set up for FastDDS
+    ALL_SUPPORTED = [SIMPLE, SERVER]
 
-    DEFAULT = FAST_RTPS
+    # The discovery mode that the system will default to
+    DEFAULT = SIMPLE
 
     def __init__(
             self,
-            rmw: str = DEFAULT
+            mode: str = DEFAULT
             ) -> None:
-        self.assert_valid(rmw)
-        self.rmw = rmw
+        self.assert_valid(mode)
+        self.mode = mode
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, str):
-            return self.rmw == other
-        elif isinstance(other, RMWImplementation):
-            return self.rmw == other.rmw
+            return self.mode == other
+        elif isinstance(other, Discovery):
+            return self.mode == other.mode
         else:
             return False
 
     def __str__(self) -> str:
-        return self.rmw
+        return self.mode
 
     @classmethod
-    def is_valid(cls, rmw: str) -> bool:
-        return rmw in cls.ALL_SUPPORTED
+    def is_valid(cls, mode: str) -> bool:
+        return mode in cls.ALL_SUPPORTED
 
     @classmethod
-    def assert_valid(cls, rmw: str) -> None:
-        assert cls.is_valid(rmw), ("\n".join[
-            "RMW '%s' not supported." % rmw,
-            "RMW must be one of: '%s'" % cls.ALL_SUPPORTED
+    def assert_valid(cls, mode: str) -> None:
+        assert cls.is_valid(mode), ("\n".join[
+            f"Discovery mode '{mode}' not supported."
+            f"Discovery mode must be one of: '{cls.ALL_SUPPORTED}'"
         ])

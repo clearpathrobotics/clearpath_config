@@ -159,6 +159,7 @@ class ListConfig(Generic[T, U]):
         except AssertionError:
             self.__list = tmp_list
 
+    # TODO: the below UID methods are not supported by most implementations of this class
     # Unique Identifier: Name
     @staticmethod
     def uid_name(T) -> str:
