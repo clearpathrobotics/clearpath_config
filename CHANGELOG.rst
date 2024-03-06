@@ -2,6 +2,13 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add republishers to camera
+* Added battery launch arguments to support launching the valence bms node
+* Fix ros_parameters
+* Contributors: Hilary Luo, Luis Camero
+
 0.2.4 (2024-01-22)
 ------------------
 * Install the W200 samples.
