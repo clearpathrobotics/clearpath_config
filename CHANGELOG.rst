@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.5 (2024-03-06)
+------------------
 * Add republishers to camera
 * Added battery launch arguments to support launching the valence bms node
 * Fix ros_parameters
