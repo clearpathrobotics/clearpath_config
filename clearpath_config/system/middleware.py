@@ -268,7 +268,10 @@ class MiddlewareConfig(BaseConfig):
             while i < s.server_id:
                 servers_str += ';'
                 i += 1
-            servers_str += f'{s.ip_address}:{s.port};'
+            if s.hostname == self.localhost:
+                servers_str += f'127.0.0.1:{s.port};'
+            else:
+                servers_str += f'{s.ip_address}:{s.port};'
             i += 1
 
         return servers_str
