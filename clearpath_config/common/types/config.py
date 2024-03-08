@@ -50,6 +50,7 @@ class BaseConfig:
             parent_key: str = None,
             ) -> None:
         # Dictionaries are Stored Flat
+        self._config = {}
         self.template = template
         self._parent_key = parent_key
         if self._parent_key is not None and self._parent_key not in config:

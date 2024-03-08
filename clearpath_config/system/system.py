@@ -25,36 +25,43 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+
+import socket
+from typing import List
+
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.domain_id import DomainID
+from clearpath_config.common.types.hostname import Hostname
 from clearpath_config.common.types.namespace import Namespace
 from clearpath_config.common.types.username import Username
-from clearpath_config.common.types.rmw_implementation import RMWImplementation
 from clearpath_config.common.utils.dictionary import flip_dict
-from clearpath_config.system.hosts import HostsConfig
+from clearpath_config.system.hosts import HostConfig, HostListConfig
+from clearpath_config.system.middleware import MiddlewareConfig
 
 
 class SystemConfig(BaseConfig):
 
     SYSTEM = "system"
-    HOSTS = HostsConfig.HOSTS
+    HOSTS = "hosts"
+    LOCALHOST = "localhost"
     SELF = "self"
     ROS2 = "ros2"
     USERNAME = "username"
     NAMESPACE = "namespace"
     DOMAIN_ID = "domain_id"
-    RMW = "rmw_implementation"
+    MIDDLEWARE = MiddlewareConfig.MIDDLEWARE
     WORKSPACES = "workspaces"
 
     TEMPLATE = {
         SYSTEM: {
             SELF: SELF,
             HOSTS: HOSTS,
+            LOCALHOST: LOCALHOST,
             USERNAME: USERNAME,
             ROS2: {
                 NAMESPACE: NAMESPACE,
                 DOMAIN_ID: DOMAIN_ID,
-                RMW: RMW,
+                MIDDLEWARE: MIDDLEWARE,
                 WORKSPACES: WORKSPACES
             }
         }
@@ -63,16 +70,18 @@ class SystemConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        # HOSTS: platform hostname (serial number) at 192.168.131.1
-        HOSTS: HostsConfig.DEFAULTS,
+        # HOSTS: hostnames and IP's for all computers involved with the system
+        HOSTS: HostListConfig.DEFAULTS,
+        # LOCALHOST: hostname for the specific devices - automatically determined
+        LOCALHOST: socket.gethostname(),
         # USERNAME: administrator
         USERNAME: "administrator",
         # NAMESPACE: serial number
         NAMESPACE: Namespace.clean(BaseConfig.get_serial_number(prefix=True)),
         # DOMAIN_ID: 0
         DOMAIN_ID: 0,
-        # RMW: "rmw_fastrtps_cpp"
-        RMW: "rmw_fastrtps_cpp",
+        # Discovery Server Disabled
+        MIDDLEWARE: MiddlewareConfig.DEFAULTS,
         # Workpaces: empty list
         WORKSPACES: []
     }
@@ -80,28 +89,31 @@ class SystemConfig(BaseConfig):
     def __init__(
             self,
             config: dict = {},
-            hosts: dict = DEFAULTS[HOSTS],
-            username: str = DEFAULTS[USERNAME],
-            namespace: str = DEFAULTS[NAMESPACE],
-            domain_id: int = DEFAULTS[DOMAIN_ID],
-            rmw_implementation: str = DEFAULTS[RMW],
+            hosts: List[dict] | HostListConfig = DEFAULTS[HOSTS],
+            localhost: str | Hostname = DEFAULTS[LOCALHOST],
+            username: str | Username = DEFAULTS[USERNAME],
+            namespace: str | Namespace = DEFAULTS[NAMESPACE],
+            domain_id: int | DomainID = DEFAULTS[DOMAIN_ID],
+            middleware: dict | MiddlewareConfig = DEFAULTS[MIDDLEWARE],
             workspaces: list = DEFAULTS[WORKSPACES]
             ) -> None:
         # Initialization
         self._config = {}
         self.hosts = hosts
+        self.localhost = localhost
         self.username = username
         self.namespace = namespace
         self.domain_id = domain_id
-        self.rmw_implementation = rmw_implementation
+        self.middleware = middleware
         self.workspaces = workspaces
         # Setter Template
         setters = {
             self.KEYS[self.HOSTS]: SystemConfig.hosts,
+            self.KEYS[self.LOCALHOST]: SystemConfig.localhost,
             self.KEYS[self.USERNAME]: SystemConfig.username,
             self.KEYS[self.NAMESPACE]: SystemConfig.namespace,
             self.KEYS[self.DOMAIN_ID]: SystemConfig.domain_id,
-            self.KEYS[self.RMW]: SystemConfig.rmw_implementation,
+            self.KEYS[self.MIDDLEWARE]: SystemConfig.middleware,
             self.KEYS[self.WORKSPACES]: SystemConfig.workspaces,
         }
         # Set from Config
@@ -109,32 +121,73 @@ class SystemConfig(BaseConfig):
 
     def update(self, serial_number=False) -> None:
         if serial_number:
-            self.hosts.update(serial_number=serial_number)
+            # check if hosts list is set to default, if so update it
+            hosts = self.DEFAULTS[self.HOSTS]
+            hosts[0][HostConfig.HOSTNAME] = BaseConfig.get_serial_number()
+            if self.hosts.to_dict() == self.DEFAULTS[self.HOSTS]:
+                self.hosts = hosts
             # Update if still defaults
-            namespace = Namespace.clean(self.get_serial_number(prefix=True))
+            namespace = Namespace.clean(BaseConfig.get_serial_number(prefix=True))
             if self.namespace == self.DEFAULTS[self.NAMESPACE]:
                 self.namespace = namespace
             # Update defaults
+            self.DEFAULTS[self.HOSTS] = hosts
             self.DEFAULTS[self.NAMESPACE] = namespace
 
     @property
-    def hosts(self) -> HostsConfig:
+    def hosts(self) -> HostListConfig:
         self.set_config_param(
             key=self.KEYS[self.HOSTS],
-            value=self._hosts.config[self.HOSTS]
+            value=self._hosts.to_dict()
         )
         return self._hosts
 
     @hosts.setter
-    def hosts(self, value: dict | HostsConfig) -> None:
-        if isinstance(value, dict):
-            self._hosts = HostsConfig(config=value)
-        elif isinstance(value, HostsConfig):
+    def hosts(self, value: List[dict] | HostListConfig) -> None:
+        host_list = []
+        if isinstance(value, list):
+            for d in value:
+                assert isinstance(d, dict), (
+                    f"Host value of {d} is invalid, it must be of type 'dict'"
+                )
+                host_list.append(HostConfig(config=d))
+
+            for host in host_list:
+                # Ensure no duplicate hostname or IP
+                count = sum(((host.ip_address == h.ip_address) or (host.hostname == h.hostname))
+                            for h in host_list)
+                assert count == 1, (
+                    f"Host {host} conflicts with another host. " +
+                    "Each hostname and ip must be unique."
+                )
+
+            self._hosts = HostListConfig()
+            self._hosts.set_all(host_list)
+        elif isinstance(value, HostListConfig):
             self._hosts = value
         else:
-            assert isinstance(value, dict) or isinstance(value, HostsConfig), (
-                "Hosts must be of type 'dict' or 'HostsConfig'"
+            assert isinstance(value, list) or isinstance(value, HostConfig), (
+                f"Hosts value of {value} is invalid, " +
+                "it must be of type 'List[dict]' or 'HostListConfig'"
             )
+
+    @property
+    def localhost(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.LOCALHOST],
+            value=str(self._localhost)
+        )
+        return str(self._localhost)
+
+    @localhost.setter
+    def localhost(self, value: str | Hostname) -> None:
+        assert isinstance(value, str) or isinstance(value, Hostname), (
+            f"Localhost of {value} is invalid, must be of type 'str' or 'Hostname'"
+        )
+        if isinstance(value, str):
+            self._localhost = Hostname(value)
+        elif isinstance(value, Hostname):
+            self._localhost = value
 
     @property
     def username(self) -> str:
@@ -187,24 +240,25 @@ class SystemConfig(BaseConfig):
             )
 
     @property
-    def rmw_implementation(self) -> str:
+    def middleware(self) -> MiddlewareConfig:
         self.set_config_param(
-            key=self.KEYS[self.RMW],
-            value=str(self._rmw_implementation)
+            key=self.KEYS[self.MIDDLEWARE],
+            value=self._middleware.config[self.MIDDLEWARE]
         )
-        return str(self._rmw_implementation)
+        return self._middleware
 
-    @rmw_implementation.setter
-    def rmw_implementation(self, value: str | RMWImplementation) -> None:
-        if isinstance(value, str):
-            self._rmw_implementation = RMWImplementation(value)
-        elif isinstance(value, RMWImplementation):
-            self._rmw_implementation = value
+    @middleware.setter
+    def middleware(self, value: dict | MiddlewareConfig) -> None:
+        if isinstance(value, dict):
+            self._middleware = MiddlewareConfig(config=value,
+                                                hosts=self.hosts,
+                                                localhost=self.localhost)
+        elif isinstance(value, MiddlewareConfig):
+            self._middleware = value
         else:
-            assert (
-                isinstance(value, str)) or (
-                isinstance(value, RMWImplementation)), (
-                "RMW must be of type 'str' or 'RMWImplementation'"
+            assert isinstance(value, dict) or (
+                isinstance(value, MiddlewareConfig)), (
+                "Middleware configuration must be of type 'dict' or 'MiddlewareConfig'"
             )
 
     @property

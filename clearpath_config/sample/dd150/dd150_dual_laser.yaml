@@ -3,15 +3,13 @@ version: 0
 system:
   username: administrator
   hosts:
-    self: cpr-dd150-0000
-    platform:
-      cpr-dd150-0000: 192.168.131.1
-    onboard: {}
-    remote: {}
+    - hostname: cpr-dd150-0000
+      ip: 192.168.131.1
   ros2:
     namespace: dd150_0000
     domain_id: 0
-    rmw_implementation: rmw_fastrtps_cpp
+    middleware:
+      implementation: rmw_fastrtps_cpp
     workspaces: []
 platform:
   controller: ps4

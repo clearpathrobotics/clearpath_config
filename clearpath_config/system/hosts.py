@@ -26,229 +26,116 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
-from clearpath_config.common.types.host import Host
 from clearpath_config.common.types.hostname import Hostname
+from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.list import ListConfig
 from clearpath_config.common.utils.dictionary import flip_dict
 from typing import List
 
 
-# HostListConfig
-# - list of hosts
-class HostListConfig(ListConfig[Host, str]):
-    def __init__(self) -> None:
-        super().__init__(
-            uid=lambda obj: obj.get_hostname(),
-            obj_type=Host,
-            uid_type=str
-        )
+# HostConfig
+# - this is the format for which each host involved in the system will be described
+class HostConfig(BaseConfig):
 
-    def to_dict(self) -> dict:
-        hostdict = {}
-        for host in self.get_all():
-            hostdict[host.get_hostname()] = host.get_ip()
-        return hostdict
-
-
-# HostsConfig
-# - these are the hosts that are involved in this system
-class HostsConfig(BaseConfig):
-
-    HOSTS = "hosts"
-    SELF = "self"
-    PLATFORM = "platform"
-    ONBOARD = "onboard"
-    REMOTE = "remote"
+    HOSTNAME = "hostname"
+    IP_ADDRESS = "ip"
 
     TEMPLATE = {
-        HOSTS: {
-            SELF: SELF,
-            PLATFORM: PLATFORM,
-            ONBOARD: ONBOARD,
-            REMOTE: REMOTE,
-        }
+        HOSTNAME: HOSTNAME,
+        IP_ADDRESS: IP_ADDRESS
     }
 
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        SELF: BaseConfig.get_serial_number(),
-        PLATFORM: {
-            BaseConfig.get_serial_number(): "192.168.131.1"
-        },
-        ONBOARD: {},
-        REMOTE: {}
+        HOSTNAME: BaseConfig.get_serial_number(),
+        IP_ADDRESS: "192.168.131.1",
     }
 
     def __init__(
             self,
             config: dict = {},
-            selfhost: str | Hostname = DEFAULTS[SELF],
-            platform: dict | Host = DEFAULTS[PLATFORM],
-            onboard: dict | List[Host] = DEFAULTS[ONBOARD],
-            remote: dict | List[Host] = DEFAULTS[REMOTE],
+            hostname: str | Hostname = DEFAULTS[HOSTNAME],
+            ip_address: str | IP = DEFAULTS[IP_ADDRESS],
             ) -> None:
         # Initialization
-        self.self = selfhost
-        self.platform = platform
-        self.onboard = onboard
-        self.remote = remote
+        self.hostname = hostname
+        self.ip_address = ip_address
         # Setter Template
         setters = {
-            self.KEYS[self.SELF]: HostsConfig.self,
-            self.KEYS[self.PLATFORM]: HostsConfig.platform,
-            self.KEYS[self.ONBOARD]: HostsConfig.onboard,
-            self.KEYS[self.REMOTE]: HostsConfig.remote
+            self.KEYS[self.HOSTNAME]: HostConfig.hostname,
+            self.KEYS[self.IP_ADDRESS]: HostConfig.ip_address,
         }
         # Set from Config
-        super().__init__(setters, config, self.HOSTS)
+        super().__init__(setters, config, None)
 
-    def update(self, serial_number=False) -> None:
-        if serial_number:
-            sn = BaseConfig.get_serial_number()
-            # Update if still defaults
-            if self.self == self.DEFAULTS[self.SELF]:
-                self.self = sn
-            if self.platform.get_hostname() == sn:
-                self.platform.set_hostname(sn)
-            # Update Defaults
-            self.DEFAULTS[self.SELF] = sn
-            self.DEFAULTS[self.PLATFORM] = {sn: "192.168.131.1"}
+    def __eq__(self, other) -> bool:
+        return self.hostname == other.hostname and self.ip_address == other.ip_address
 
-    # Self:
-    # - the hostname of the computer running this config
+    def __str__(self) -> str:
+        return "{ hostname: %s, ip: %s }" % (str(self.hostname), str(self.ip_address))
+
+    def to_dict(self) -> dict:
+        return {str(self.hostname): str(self.ip_address)}
+
+    # Hostname:
+    # - the hostname of the computer
     @property
-    def self(self) -> str:
+    def hostname(self) -> str:
         self.set_config_param(
-            key=self.KEYS[self.SELF],
-            value=str(self._self)
+            key=self.KEYS[self.HOSTNAME],
+            value=str(self._hostname)
         )
-        return str(self._self)
+        return str(self._hostname)
 
-    @self.setter
-    def self(self, value: str | Hostname) -> None:
+    @hostname.setter
+    def hostname(self, value: str | Hostname) -> None:
         if isinstance(value, str):
-            self._self = Hostname(value)
+            self._hostname = Hostname(value)
         elif isinstance(value, Hostname):
-            self._self = value
+            self._hostname = value
         else:
             assert isinstance(value, str) or isinstance(value, Hostname), (
-                "Self must be of type 'str' or 'Hostname'"
+                f"Hostname of {value} is invalid, must be of type 'str' or 'Hostname'"
             )
 
-    # Platform:
-    # - the main computer for this system (i.e. the robot's computer)
+    # IP Address:
+    # - the IP address at which the computer can be accessed
     @property
-    def platform(self) -> Host:
+    def ip_address(self) -> IP:
         self.set_config_param(
-            key=self.KEYS[self.PLATFORM],
-            value=self._platform.to_dict()
+            key=self.KEYS[self.IP_ADDRESS],
+            value=self._ip
         )
-        return self._platform
+        return self._ip
 
-    @platform.setter
-    def platform(self, value: dict | Host) -> None:
-        if isinstance(value, dict):
-            entry = [{'hostname': k, 'ip': v} for k, v in value.items()]
-            assert len(entry) == 1, (
-                "Platform must only be one hostname, ip pair"
-            )
-            self._platform = Host(
-                hostname=entry[0]['hostname'],
-                ip=entry[0]['ip'])
-        elif isinstance(value, Host):
-            self._platform = value
+    @ip_address.setter
+    def ip_address(self, value: str | IP) -> None:
+        if isinstance(value, str):
+            self._ip = IP(value)
+        elif isinstance(value, IP):
+            self._ip = value
         else:
-            assert isinstance(value, dict) or isinstance(value, Host), (
-                "Platform must be of type 'dict' or 'Host'"
+            assert isinstance(value, dict) or isinstance(value, IP), (
+                f"IP address of {value} is invalid, must be of type 'str' or 'IP'"
             )
 
-    @property
-    def platform_ip(self) -> str:
-        return self._platform.get_ip()
 
-    @platform_ip.setter
-    def platform_ip(self, value: str):
-        self._platform.set_ip(value)
-        self.config[self.KEYS[self.PLATFORM]] = self.platform
+# HostListConfig
+# - list of hosts that are involved with the system
+class HostListConfig(ListConfig[HostConfig, str]):
 
-    @property
-    def platform_hostname(self) -> str:
-        return self._platform.get_hostname()
+    DEFAULTS = [HostConfig.DEFAULTS]
 
-    @platform_hostname.setter
-    def platform_hostname(self, value: str) -> None:
-        self._platform.set_hostname(value)
-
-    # Onboard:
-    # - these are additional on-board computer
-    @property
-    def onboard(self) -> HostListConfig:
-        self.set_config_param(
-            key=self.KEYS[self.ONBOARD],
-            value=self._onboard.to_dict()
+    def __init__(self) -> None:
+        super().__init__(
+            uid=lambda obj: obj.hostname,
+            obj_type=HostConfig,
+            uid_type=str
         )
-        return self._onboard
 
-    @onboard.setter
-    def onboard(self, value: dict | List[Host] | HostListConfig) -> None:
-        if isinstance(value, dict):
-            onboard = HostListConfig()
-            onboard.set_all([Host(k, v) for k, v in value.items()])
-            self._onboard = onboard
-        elif isinstance(value, list):
-            assert all([isinstance(i, Host) for i in value]), (
-                "Onboard hosts passed as list must be of type 'List[Host]'"
-            )
-            onboard = HostListConfig()
-            onboard.set_all(value)
-            self._onboard = value
-
-        elif isinstance(value, HostListConfig):
-            self._onboard = value
-        else:
-            assert ((
-                isinstance(value, dict)) or (
-                isinstance(value, list)) or (
-                isinstance(value, HostListConfig))), (
-                "Onboard hosts must be of type '%s', '%s' or '%s'" % (
-                    dict.__name__, list.__name__, HostListConfig.__name__
-                )
-            )
-
-    # Remote:
-    # - these are remote machines which need to interact with the system
-    # - ex. laptops or other robots
-    @property
-    def remote(self) -> HostListConfig:
-        self.set_config_param(
-            key=self.KEYS[self.REMOTE],
-            value=self._remote.to_dict()
-        )
-        return self._remote
-
-    @remote.setter
-    def remote(self, value: dict | List[Host] | HostListConfig) -> None:
-        if isinstance(value, dict):
-            remote = HostListConfig()
-            remote.set_all([Host(k, v) for k, v in value.items()])
-            self._remote = remote
-        elif isinstance(value, list):
-            assert all([isinstance(i, Host) for i in value]), (
-                "Remote hosts passed as list must be of type 'List[Host]'"
-            )
-            remote = HostListConfig()
-            remote.set_all(value)
-            self._remote = value
-
-        elif isinstance(value, HostListConfig):
-            self._remote = value
-        else:
-            assert ((
-                isinstance(value, dict)) or (
-                isinstance(value, list)) or (
-                isinstance(value, HostListConfig))), (
-                "Remote hosts must be of type '%s', '%s' or '%s'" % (
-                    dict.__name__, list.__name__, HostListConfig.__name__
-                )
-            )
+    def to_dict(self) -> List[dict]:
+        hosts = []
+        for host in self.get_all():
+            hosts.append(host.config)
+        return hosts

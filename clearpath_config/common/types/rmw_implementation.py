@@ -32,11 +32,13 @@ class RMWImplementation:
     FAST_RTPS = "rmw_fastrtps_cpp"
     GURUM_DDS = "rmw_gurumdds_cpp"
 
-    MIDDLEWARE = [FAST_RTPS]
+    ALL_SUPPORTED = [FAST_RTPS]
+
+    DEFAULT = FAST_RTPS
 
     def __init__(
             self,
-            rmw: str = FAST_RTPS
+            rmw: str = DEFAULT
             ) -> None:
         self.assert_valid(rmw)
         self.rmw = rmw
@@ -54,11 +56,11 @@ class RMWImplementation:
 
     @classmethod
     def is_valid(cls, rmw: str) -> bool:
-        return rmw in cls.MIDDLEWARE
+        return rmw in cls.ALL_SUPPORTED
 
     @classmethod
     def assert_valid(cls, rmw: str) -> None:
         assert cls.is_valid(rmw), ("\n".join[
             "RMW '%s' not supported." % rmw,
-            "RMW must be one of: '%s'" % cls.MIDDLEWARE
+            "RMW must be one of: '%s'" % cls.ALL_SUPPORTED
         ])

@@ -66,6 +66,10 @@ class Hostname:
         assert isinstance(hostname, str), (
             "Hostname '%s' must be of type 'str'" % hostname
         )
+        # Min 1 ASCII Characters
+        assert len(hostname) > 0, (
+            "Hostname '%s' is blank." % hostname
+        )
         # Max 253 ASCII Characters
         assert len(hostname) < 254, (
             "Hostname '%s' exceeds 253 ASCII character limit." % hostname

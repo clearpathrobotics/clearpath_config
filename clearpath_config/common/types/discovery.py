@@ -1,7 +1,7 @@
 # Software License Agreement (BSD)
 #
-# @author    Luis Camero <lcamero@clearpathrobotics.com>
-# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+# @author    Hilary Luo <hluo@clearpathrobotics.com>
+# @copyright (c) 2024, Clearpath Robotics, Inc., All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -25,44 +25,42 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.common.types.hostname import Hostname
-from clearpath_config.common.types.ip import IP
 
+class Discovery:
+    SIMPLE = "simple"
+    SERVER = "server"
 
-# Host
-# - hostname and config pair
-class Host:
+    # All supported discovery modes, currently only set up for FastDDS
+    ALL_SUPPORTED = [SIMPLE, SERVER]
+
+    # The discovery mode that the system will default to
+    DEFAULT = SIMPLE
+
     def __init__(
             self,
-            hostname: str = "hostname",
-            ip: str = "0.0.0.0"
+            mode: str = DEFAULT
             ) -> None:
-        self.hostname = Hostname()
-        self.ip = IP()
-        self.set_hostname(hostname)
-        self.set_ip(ip)
+        self.assert_valid(mode)
+        self.mode = mode
 
-    def __eq__(self, other) -> bool:
-        return self.hostname == other.hostname and self.ip == other.ip
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, str):
+            return self.mode == other
+        elif isinstance(other, Discovery):
+            return self.mode == other.mode
+        else:
+            return False
 
     def __str__(self) -> str:
-        return "{ hostname: %s, ip: %s }" % (str(self.hostname), str(self.ip))
+        return self.mode
 
-    def to_dict(self) -> dict:
-        return {str(self.hostname): str(self.ip)}
+    @classmethod
+    def is_valid(cls, mode: str) -> bool:
+        return mode in cls.ALL_SUPPORTED
 
-    # Hostname:
-    # - the hostname of this host
-    def get_hostname(self) -> str:
-        return str(self.hostname)
-
-    def set_hostname(self, hostname: str) -> None:
-        self.hostname = Hostname(hostname)
-
-    # IP
-    # - the ip of this host
-    def get_ip(self) -> str:
-        return str(self.ip)
-
-    def set_ip(self, ip: str) -> None:
-        self.ip = IP(ip)
+    @classmethod
+    def assert_valid(cls, mode: str) -> None:
+        assert cls.is_valid(mode), ("\n".join[
+            f"Discovery mode '{mode}' not supported."
+            f"Discovery mode must be one of: '{cls.ALL_SUPPORTED}'"
+        ])
