@@ -260,7 +260,10 @@ class ExtrasConfig(BaseConfig):
 
     @property
     def launch(self) -> dict:
-        launch = None if (self._launch == self.DEFAULTS[self.LAUNCH]) else dict(self._launch.to_dict())
+        if (self._launch == self.DEFAULTS[self.LAUNCH]):
+            launch = None
+        else:
+            launch = dict(self._launch.to_dict())
         self.set_config_param(
             key=self.KEYS[self.LAUNCH],
             value=launch,
