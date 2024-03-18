@@ -2,6 +2,15 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Switched local server to be referenced as loopback in the ROS_DISCOVERY_SERVER envar
+* Add discovery server support
+* assertion error if the hostname is blank (otherwise causes an invalid index exception)
+* Add localhost field which is set automatically
+* Reformat hosts section to single list of all computers
+* Contributors: Hilary Luo
+
 0.2.5 (2024-03-06)
 ------------------
 * Add republishers to camera
