@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.6 (2024-03-18)
+------------------
 * Switched local server to be referenced as loopback in the ROS_DISCOVERY_SERVER envar
 * Add discovery server support
 * assertion error if the hostname is blank (otherwise causes an invalid index exception)
