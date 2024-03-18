@@ -138,6 +138,7 @@ class ExtrasConfig(BaseConfig):
 
     EXTRAS = "extras"
     URDF = "urdf"
+    LAUNCH = "launch"
     ROS_PARAMETERS = "ros_parameters"
 
     PLATFORM_VELOCITY_CONTROLLER = "platform_velocity_controller"
@@ -154,6 +155,7 @@ class ExtrasConfig(BaseConfig):
     TEMPLATE = {
         EXTRAS: {
             URDF: URDF,
+            LAUNCH: LAUNCH,
             ROS_PARAMETERS: {
                 PLATFORM_VELOCITY_CONTROLLER: {
                     WHEEL_RADIUS: WHEEL_RADIUS,
@@ -175,6 +177,7 @@ class ExtrasConfig(BaseConfig):
 
     DEFAULTS = {
         URDF: None,
+        LAUNCH: None,
         ROS_PARAMETERS: ROSParameterDefaults(BaseConfig.get_platform_model()),
     }
 
@@ -182,6 +185,7 @@ class ExtrasConfig(BaseConfig):
             self,
             config: dict = {},
             urdf: dict = DEFAULTS[URDF],
+            launch: dict = DEFAULTS[LAUNCH],
             ros_parameters: dict = {},
             ) -> None:
         # ROS Parameter Setter Template
@@ -199,12 +203,14 @@ class ExtrasConfig(BaseConfig):
         # Setter Template
         self.setters = {
             self.KEYS[self.URDF]: ExtrasConfig.urdf,
+            self.KEYS[self.LAUNCH]: ExtrasConfig.launch,
             self.KEYS[self.ROS_PARAMETERS]: ExtrasConfig.ros_parameters,
         }
         # Initialization
         self._init_ros_parameter()
         self._config = {}
         self.urdf = urdf
+        self.launch = launch
         self.ros_parameters = ros_parameters
         # Set from Config
         super().__init__(self.setters, config, self.EXTRAS)
@@ -233,6 +239,31 @@ class ExtrasConfig(BaseConfig):
             self._urdf = self.DEFAULTS[self.URDF]
             assert not value or isinstance(value, dict) or (isinstance(value, PackagePath)), (
                 "Extras URDF must be null or of type `dict` or `PackagePath`"
+            )
+
+    @property
+    def launch(self) -> dict:
+        if (self._launch == self.DEFAULTS[self.LAUNCH]):
+            launch = None
+        else:
+            launch = dict(self._launch.to_dict())
+        self.set_config_param(
+            key=self.KEYS[self.LAUNCH],
+            value=launch,
+        )
+        return launch
+
+    @launch.setter
+    def launch(self, value: dict | PackagePath) -> None:
+        if isinstance(value, dict) and PackagePath.PATH in value and value[PackagePath.PATH]:
+            self._launch = PackagePath()
+            self._launch.from_dict(value)
+        elif isinstance(value, PackagePath) and value.path:
+            self._launch = value
+        else:
+            self._launch = self.DEFAULTS[self.LAUNCH]
+            assert not value or isinstance(value, dict) or (isinstance(value, PackagePath)), (
+                "Extras LAUNCH must be null or of type `dict` or `PackagePath`"
             )
 
     def _is_ros_parameter(self, key) -> bool:
