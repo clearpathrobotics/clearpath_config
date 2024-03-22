@@ -36,7 +36,7 @@ class W200Generator(BaseAttachment):
     DEFAULT = "default"
     MODELS = [DEFAULT]
     PARENT = "default_mount"
-    XYZ = [-0.42506, 0.0, 0.0017]
+    XYZ = [0.0, 0.0, 0.0]
     RPY = [0.0, 0.0, 0.0]
 
     def __init__(
@@ -55,10 +55,10 @@ class W200Bulkhead(BaseAttachment):
     PLATFORM = Platform.W200
     ATTACHMENT_MODEL = "%s.bulkhead" % PLATFORM
     DEFAULT = "default"
-    ARM_MOUNT = "arm_mount"
-    MODELS = [DEFAULT, ARM_MOUNT]
+    ARM_PLATE = "arm_plate"
+    MODELS = [DEFAULT, ARM_PLATE]
     PARENT = "default_mount"
-    XYZ = [0.00705, 0.0, 0.24184]
+    XYZ = [0.0, 0.0, 0.0]
     RPY = [0.0, 0.0, 0.0]
 
     def __init__(
@@ -73,9 +73,9 @@ class W200Bulkhead(BaseAttachment):
         super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
-class W200ArmMount(BaseAttachment):
+class W200ArmPlate(BaseAttachment):
     PLATFORM = Platform.W200
-    ATTACHMENT_MODEL = "%s.arm_mount" % PLATFORM
+    ATTACHMENT_MODEL = "%s.arm_plate" % PLATFORM
     DEFAULT = "default"
     MODELS = [DEFAULT]
     PARENT = "default_mount"
@@ -101,11 +101,11 @@ class W200Attachment(PlatformAttachment):
     GENERATOR = W200Generator.ATTACHMENT_MODEL
     # Bulkhead
     BULKHEAD = W200Bulkhead.ATTACHMENT_MODEL
-    # ArmMount
-    ARM_MOUNT = W200ArmMount.ATTACHMENT_MODEL
+    # ArmPlate
+    ARM_PLATE = W200ArmPlate.ATTACHMENT_MODEL
 
     TYPES = {
         GENERATOR: W200Generator,
         BULKHEAD: W200Bulkhead,
-        ARM_MOUNT: W200ArmMount
+        ARM_PLATE: W200ArmPlate
     }
