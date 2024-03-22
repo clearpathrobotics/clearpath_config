@@ -1,33 +1,12 @@
 serial_number: w200-0000
 version: 0
 system:
-  username: administrator
   hosts:
     - hostname: cpr-w200-0000
       ip: 192.168.131.1
   ros2:
     namespace: w200_0000
-    domain_id: 0
-    middleware:
-      implementation: rmw_fastrtps_cpp
-platform:
-  controller: ps4
-  attachments: []
-  extras:
-    urdf: null
-    ros_parameters:
-      platform_velocity_controller:
-        linear.x.max_velocity": 5.0
-        linear.x.min_velocity": -5.0
-        linear.x.max_acceleration": 50.0
-        linear.x.min_acceleration": -50.0
-        angular.z.max_velocity": 4.0
-        angular.z.min_velocity": -4.0
-        angular.z.max_acceleration": 40.0
-        angular.z.min_acceleration": -40.0
 links:
-  box: []
-  cylinder: []
   frame:
     - name: front_left
       parent: left_diff_unit_link
@@ -37,22 +16,13 @@ links:
       parent: right_diff_unit_link
       xyz: [-0.68, 0.03, 0.35]
       rpy: [3.1415, 1.5707, 0.0]
-  mesh: []
-  sphere: []
 mounts:
   bracket:
     - model: vertical
       parent: front_left_link
     - model: vertical
       parent: rear_right_link
-  fath_pivot: []
-  riser: []
-  disk: []
-  post: []
 sensors:
-  camera: []
-  gps: []
-  imu: []
   lidar2d:
   - model: hokuyo_ust
     urdf_enabled: true
@@ -72,7 +42,7 @@ sensors:
     launch_enabled: true
     parent: bracket_1_vertical_mount
     xyz: [0.0, 0.0, 0.0]
-    rpy: [0.0, 0.0, 3.1415]
+    rpy: [0.0, 0.0, 0.0]
     ros_parameters:
       urg_node:
         laser_frame_id: lidar2d_1_laser
@@ -80,4 +50,3 @@ sensors:
         ip_port: 10940
         angle_min: -1.5707
         angle_max: 1.5707
-  lidar3d: []
