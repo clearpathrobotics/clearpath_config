@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.7 (2024-04-08)
+------------------
 * Re-added host and namespace
 * W200 attachments default to 0
 * Minimal samples.
