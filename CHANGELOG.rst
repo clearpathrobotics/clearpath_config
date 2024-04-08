@@ -2,6 +2,15 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Re-added host and namespace
+* W200 attachments default to 0
+* Minimal samples.
+* Removed long line
+* Added launch to extras
+* Contributors: Luis Camero
+
 0.2.6 (2024-03-18)
 ------------------
 * Switched local server to be referenced as loopback in the ROS_DISCOVERY_SERVER envar
