@@ -47,22 +47,27 @@ def find_valid_path(path, cwd=None):
 
 
 def read_yaml(path: str) -> dict:
+    orig = path
     # Check YAML Path
-    path = find_valid_path(path, os.getcwd())
-    assert path, "YAML file '%s' could not be found" % path
+    try:
+        path = find_valid_path(path, os.getcwd())
+        assert path, "YAML file '%s' could not be found" % orig
+    except FileNotFoundError:
+        raise AssertionError(
+            "YAML file '%s' could not be found" % orig)
     # Check YAML can be Opened
     try:
         config = yaml.load(open(path), Loader=yaml.SafeLoader)
     except yaml.scanner.ScannerError:
         raise AssertionError(
-            "YAML file '%s' is not well formed" % path)
+            "YAML file '%s' is not well formed" % orig)
     except yaml.constructor.ConstructorError:
         raise AssertionError(
             "YAML file '%s' is attempting to create unsafe objects" % (
-                path))
+                orig))
     # Check contents are a Dictionary
     assert isinstance(config, dict), (
-        "YAML file '%s' is not a dictionary" % path)
+        "YAML file '%s' is not a dictionary" % orig)
     return config
 
 
