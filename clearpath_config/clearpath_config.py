@@ -30,6 +30,7 @@ from clearpath_config.common.utils.yaml import read_yaml, write_yaml
 from clearpath_config.system.system import SystemConfig
 from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.links.links import LinksConfig
+from clearpath_config.manipulators.manipulators import ManipulatorConfig
 from clearpath_config.mounts.mounts import MountsConfig
 from clearpath_config.sensors.sensors import SensorConfig
 
@@ -44,6 +45,7 @@ class ClearpathConfig(BaseConfig):
     SYSTEM = "system"
     PLATFORM = "platform"
     LINKS = "links"
+    MANIPULATORS = "manipulators"
     MOUNTS = "mounts"
     SENSORS = "sensors"
 
@@ -53,6 +55,7 @@ class ClearpathConfig(BaseConfig):
         SYSTEM: SYSTEM,
         PLATFORM: PLATFORM,
         LINKS: LINKS,
+        MANIPULATORS: MANIPULATORS,
         MOUNTS: MOUNTS,
         SENSORS: SENSORS
     }
@@ -65,6 +68,7 @@ class ClearpathConfig(BaseConfig):
         SYSTEM: SystemConfig.DEFAULTS,
         PLATFORM: PlatformConfig.DEFAULTS,
         LINKS: LinksConfig.DEFAULTS,
+        MANIPULATORS: ManipulatorConfig.DEFAULTS,
         MOUNTS: MountsConfig.DEFAULTS,
         SENSORS: SensorConfig.DEFAULTS,
     }
@@ -78,6 +82,7 @@ class ClearpathConfig(BaseConfig):
         self._system = SystemConfig(self.DEFAULTS[self.SYSTEM])
         self._platform = PlatformConfig(self.DEFAULTS[self.PLATFORM])
         self._links = LinksConfig(self.DEFAULTS[self.LINKS])
+        self._manipulators = ManipulatorConfig(self.DEFAULTS[self.MANIPULATORS])
         self._mounts = MountsConfig(self.DEFAULTS[self.MOUNTS])
         self._sensors = SensorConfig(self.DEFAULTS[self.SENSORS])
         # Initialization
@@ -90,6 +95,7 @@ class ClearpathConfig(BaseConfig):
             self.SYSTEM: ClearpathConfig.system,
             self.PLATFORM: ClearpathConfig.platform,
             self.LINKS: ClearpathConfig.links,
+            self.MANIPULATORS: ClearpathConfig.manipulators,
             self.MOUNTS: ClearpathConfig.mounts,
             self.SENSORS: ClearpathConfig.sensors,
         }
@@ -168,6 +174,17 @@ class ClearpathConfig(BaseConfig):
     @links.setter
     def links(self, config: dict) -> None:
         self._links.config = config
+
+    @property
+    def manipulators(self) -> ManipulatorConfig:
+        self.set_config_param(
+            self.MANIPULATORS,
+            self._manipulators.config[self.MANIPULATORS])
+        return self._manipulators
+
+    @manipulators.setter
+    def manipulators(self, config: dict) -> None:
+        self._manipulators.config = config
 
     @property
     def mounts(self) -> MountsConfig:
