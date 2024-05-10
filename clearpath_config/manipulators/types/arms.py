@@ -27,6 +27,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from typing import List
 from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.ip import IP
+from clearpath_config.common.types.port import Port
 from clearpath_config.manipulators.types.grippers import Gripper
 from clearpath_config.manipulators.types.manipulator import BaseManipulator
 
@@ -35,10 +37,15 @@ class BaseArm(BaseManipulator):
     MANIPULATOR_MODEL = "base"
     MANIPULATOR_TYPE = "arm"
 
+    IP_ADDRESS = "192.168.131.40"
+    IP_PORT = 10000
+
     def __init__(
             self,
             idx: int = None,
             name: str = None,
+            ip: str = IP_ADDRESS,
+            port: int = IP_PORT,
             ros_parameters: dict = BaseManipulator.ROS_PARAMETERS,
             ros_parameters_template: dict = BaseManipulator.ROS_PARAMETERS_TEMPLATE,
             parent: str = Accessory.PARENT,
@@ -47,10 +54,48 @@ class BaseArm(BaseManipulator):
             ) -> None:
         super().__init__(
             idx, name, ros_parameters, ros_parameters_template, parent, xyz, rpy)
+        self.config = {}
         self.gripper = None
+        # IP Address
+        self.ip = IP(ip)
+        # IP Port
+        self.port = Port(port)
+
+    @classmethod
+    def get_ip_from_idx(cls, idx: int) -> str:
+        ip = cls.IP_ADDRESS.split('.')
+        network_id = ip[0:3]
+        host_id = int(ip[-1]) + idx
+        return '.'.join(network_id) + '.' + str(host_id)
+
+    def set_idx(self, idx: int) -> None:
+        super().set_idx(idx)
+        if 'ip' not in self.config:
+            self.ip = self.get_ip_from_idx(idx)
+        if self.gripper:
+            self.gripper.name = self.name + '_gripper'
+            self.gripper.parent = self.name + '_end_effector_link'
+
+    @property
+    def ip(self) -> str:
+        return str(self._ip)
+
+    @ip.setter
+    def ip(self, ip: str) -> None:
+        self._ip = IP(str(ip))
+
+    @property
+    def port(self) -> int:
+        return int(self._port)
+
+    @port.setter
+    def port(self, port: int) -> None:
+        self._port = Port(int(port))
 
     def to_dict(self) -> dict:
         d = super().to_dict()
+        d['ip'] = self.ip
+        d['port'] = self.port
         if self.gripper:
             d['gripper'] = self.gripper.to_dict()
         else:
@@ -58,6 +103,7 @@ class BaseArm(BaseManipulator):
         return d
 
     def from_dict(self, d: dict) -> None:
+        self.config = d
         super().from_dict(d)
         if 'gripper' in d:
             self.gripper = Gripper(d['gripper']['model'])
@@ -65,6 +111,10 @@ class BaseArm(BaseManipulator):
             self.gripper.set_name('%s_gripper' % self.get_name())
             if 'parent' not in d['gripper']:
                 self.gripper.set_parent('%s_end_effector_link' % self.get_name())
+        if 'ip' in d:
+            self.ip = d['ip']
+        if 'port' in d:
+            self.port = d['port']
 
 
 class KinovaGen3Dof6(BaseArm):
