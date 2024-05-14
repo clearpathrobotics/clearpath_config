@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.8 (2024-05-14)
+------------------
 * Renamed node to intel_realsense in config
 * Contributors: Luis Camero
 
