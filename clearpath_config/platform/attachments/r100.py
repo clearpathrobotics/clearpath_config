@@ -25,82 +25,40 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-class PACSProfile:
+from typing import List
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.platform import Platform
+from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
+
+
+class R100ArmMount(BaseAttachment):
+    PLATFORM = Platform.R100
+    ATTACHMENT_MODEL = "%s.arm_mount" % PLATFORM
+    FAMS = "fams"
+    HAMS = "hams"
+    TOWER = "tower"
+    MODELS = [FAMS, HAMS, TOWER]
+    DEFAULT = TOWER
+    PARENT = "default_mount"
+
     def __init__(
             self,
-            rows: int,
-            columns: int
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
             ) -> None:
-        self.rows = rows
-        self.columns = columns
+        super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
-class IndexingProfile:
-    def __init__(
-            self,
-            camera: int = 0,
-            gps: int = 0,
-            imu: int = 0,
-            lidar2d: int = 0,
-            lidar3d: int = 0
-            ) -> None:
-        self.camera = camera
-        self.gps = gps
-        self.imu = imu
-        self.lidar2d = lidar2d
-        self.lidar3d = lidar3d
+# R100 Attachments
+class R100Attachment(PlatformAttachment):
+    PLATFORM = Platform.R100
+    # Arm Mount
+    ARM_MOUNT = R100ArmMount.ATTACHMENT_MODEL
 
-
-# Platform
-# - all supported platforms
-class Platform:
-    # Dingo D V1
-    DD100 = "dd100"
-    # Dingo O V1
-    DO100 = "do100"
-    # Dingo D V1.5
-    DD150 = "dd150"
-    # Dingo D V1.5
-    DO150 = "do150"
-    # Jackal V1
-    J100 = "j100"
-    # Husky V2
-    A200 = "a200"
-    # Ridgeback V1
-    R100 = "r100"
-    # Warthog V2
-    W200 = "w200"
-    # Genric Robot
-    GENERIC = "generic"
-
-    ALL = [
-        DD100,
-        DO100,
-        DD150,
-        DO150,
-        J100,
-        A200,
-        R100,
-        W200,
-        GENERIC
-    ]
-
-    PACS = {
-        GENERIC: PACSProfile(rows=100, columns=100),
-        A200: PACSProfile(rows=8, columns=7),
-        J100: PACSProfile(rows=4, columns=2),
-        W200: PACSProfile(rows=100, columns=100),
-        R100: PACSProfile(rows=100, columns=100),
-    }
-
-    INDEX = {
-        GENERIC: IndexingProfile(),
-        A200: IndexingProfile(),
-        DD100: IndexingProfile(imu=1),
-        DO100: IndexingProfile(imu=1),
-        DD150: IndexingProfile(imu=1),
-        DO150: IndexingProfile(imu=1),
-        J100: IndexingProfile(gps=1, imu=1),
-        R100: IndexingProfile(imu=1),
-        W200: IndexingProfile(imu=1),
+    TYPES = {
+        ARM_MOUNT: R100ArmMount
     }

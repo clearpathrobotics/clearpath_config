@@ -104,6 +104,22 @@ class ROSParameterDefaults:
         "platform_velocity_controller.angular.z.min_acceleration": -25.0,
     }
 
+    R100 = {
+        "platform_velocity_controller.wheel_radius": 0.05,
+        "platform_velocity_controller.linear.x.max_velocity": 1.3,
+        "platform_velocity_controller.linear.x.min_velocity": -1.3,
+        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
+        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
+        "platform_velocity_controller.linear.y.max_velocity": 1.3,
+        "platform_velocity_controller.linear.y.min_velocity": -1.3,
+        "platform_velocity_controller.linear.y.max_acceleration": 1.0,
+        "platform_velocity_controller.linear.y.min_acceleration": -1.0,
+        "platform_velocity_controller.angular.z.max_velocity": 4.0,
+        "platform_velocity_controller.angular.z.min_velocity": -4.0,
+        "platform_velocity_controller.angular.z.max_acceleration": 2.0,
+        "platform_velocity_controller.angular.z.min_acceleration": -2.0,
+    }
+
     W200 = {
         "platform_velocity_controller.wheel_radius": 0.3,
         "platform_velocity_controller.linear.x.max_velocity": 5.0,
@@ -124,6 +140,7 @@ class ROSParameterDefaults:
         Platform.DO150: DO150,
         Platform.J100: J100,
         Platform.GENERIC: GENERIC,
+        Platform.R100: R100,
         Platform.W200: W200,
     }
 
