@@ -43,7 +43,7 @@ def flatten_dict(d: MutableMapping, parent_key: str = '', dlim: str = '.'):
     return dict(_flatten_dict_gen(d, parent_key, dlim))
 
 
-def merge_dict(a, b, path=None):
+def merge_dict(a, b, path=None, priority=0):
     """Merge dict b into dict a."""
     if path is None:
         path = []
@@ -52,9 +52,16 @@ def merge_dict(a, b, path=None):
             if isinstance(a[key], dict) and isinstance(b[key], dict):
                 merge_dict(a[key], b[key], path + [str(key)])
             elif a[key] == b[key]:
-                pass  # same leaf value
+                # same leaf value
+                pass
             else:
-                raise Exception('Conflict at %s' % '.'.join(path + [str(key)]))
+                # assign leaf value of priority
+                if isinstance(a[key], list) and isinstance(b[key], list):
+                    val = a[key]
+                    val.extend(b[key])
+                    a[key] = val
+                elif priority:
+                    a[key] = b[key]
         else:
             a[key] = b[key]
     return a
@@ -123,3 +130,37 @@ def extend_flat_dict(a: dict, b: dict):
     for key, value in flatten_dict(b).items():
         a[key] = value
     return a
+
+
+def replace_dict_keys(d: dict, replacements: dict):
+    new_d = dict()
+    for key, value in flatten_dict(d).items():
+        new_key = key
+        for r in replacements:
+            if r in key:
+                new_key = key.replace(r, replacements[r])
+        new_d[new_key] = value
+    return unflatten_dict(new_d)
+
+
+def replace_dict_values(d: dict, replacements: dict):
+    new_d = dict()
+    for key, value in flatten_dict(d).items():
+        for r in replacements:
+            new_value = value
+            if isinstance(value, str) and r in value:
+                new_value = value.replace(r, replacements[r])
+            if isinstance(value, list):
+                for i, v in enumerate(new_value):
+                    new_v = v
+                    if isinstance(v, str) and r in v:
+                        new_v = v.replace(r, replacements[r])
+                    new_value[i] = new_v
+            new_d[key] = new_value
+    return unflatten_dict(new_d)
+
+
+def replace_dict_items(d: dict, replacements: dict):
+    new_d = replace_dict_keys(d, replacements)
+    new_d = replace_dict_values(new_d, replacements)
+    return unflatten_dict(new_d)
