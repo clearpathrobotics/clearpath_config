@@ -148,12 +148,12 @@ class BaseCamera(BaseSensor):
         # - camera frame rate
         # - default to 30
         # - certain sensors may only accept certain rates
-        self.fps = int()
+        self.fps = fps
         self.set_fps(fps)
         # Serial Number:
         # - camera unique serial number for multi-camera setups
         # - usually an integer value
-        self.serial = str()
+        self.serial = serial
         self.set_serial(serial)
         # ROS Parameter Template
         template = {
@@ -784,3 +784,160 @@ class FlirBlackfly(BaseCamera):
 
     def get_encoding(self) -> str:
         return self.encoding
+
+
+class StereolabsZed(BaseCamera):
+    SENSOR_MODEL = "stereolabs_zed"
+
+    SERIAL = 0
+
+    ZED = 'zed'
+    ZEDM = 'zedm'
+    ZED2 = 'zed2'
+    ZED2I = 'zed2i'
+    ZEDX = 'zedx'
+    ZEDXM = 'zedxm'
+    VIRTUAL = 'virtual'
+    DEVICE_TYPE = ZED2
+    DEVICE_TYPES = [
+        ZED,
+        ZEDM,
+        ZED2,
+        ZED2I,
+        ZEDX,
+        ZEDXM,
+        VIRTUAL
+    ]
+
+    RESOLUTION_DEFAULT = 'AUTO'
+    RESOLUTION_PRESETS = [
+        'AUTO',
+        'HD2K',
+        'HD1080',
+        'HD720',
+        'VGA'
+    ]
+
+    class ROS_PARAMETER_KEYS:
+        FPS = "stereolabs_zed.general.grab_frame_rate"
+        SERIAL = "stereolabs_zed.general.serial_number"
+        CAMERA_MODEL = "stereolabs_zed.general.camera_model"
+        CAMERA_NAME = "stereolabs_zed.general.camera_name"
+        RESOLUTION = "stereolabs_zed.general.grab_resolution"
+
+    class TOPICS:
+        COLOR_IMAGE = "color_image"
+        COLOR_CAMERA_INFO = "color_camera_info"
+        DEPTH_IMAGE = "depth_image"
+        DEPTH_CAMERA_INFO = "depth_camera_info"
+        POINTCLOUD = "points"
+        IMU = "imu"
+        NAME = {
+            COLOR_IMAGE: "color/image",
+            COLOR_CAMERA_INFO: "color/camera_info",
+            DEPTH_IMAGE: "depth/image",
+            DEPTH_CAMERA_INFO: "depth/camera_info",
+            POINTCLOUD: "points",
+            IMU: "imu"
+        }
+        RATE = {
+            COLOR_IMAGE: BaseCamera.FPS,
+            COLOR_CAMERA_INFO: BaseCamera.FPS,
+            DEPTH_IMAGE: BaseCamera.FPS,
+            DEPTH_CAMERA_INFO: BaseCamera.FPS,
+            POINTCLOUD: BaseCamera.FPS,
+            IMU: BaseCamera.FPS
+        }
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseCamera.TOPIC,
+            fps: int = BaseCamera.FPS,
+            serial: str = BaseCamera.SERIAL,
+            device_type: str = ZED2,
+            resolution: str = RESOLUTION_DEFAULT,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FPS: StereolabsZed.fps,
+            self.ROS_PARAMETER_KEYS.SERIAL: StereolabsZed.serial,
+            self.ROS_PARAMETER_KEYS.CAMERA_MODEL: StereolabsZed.device_type,
+            self.ROS_PARAMETER_KEYS.CAMERA_NAME: StereolabsZed.camera_name,
+            self.ROS_PARAMETER_KEYS.RESOLUTION: StereolabsZed.resolution,
+        }
+        # Initialization
+        self.device_type: str = device_type
+        self.resolution: str = resolution
+        super().__init__(
+            idx,
+            name,
+            topic,
+            fps,
+            serial,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+
+    @property
+    def camera_name(self) -> str:
+        return self.get_name()
+
+    @camera_name.setter
+    def camera_name(self, name: str) -> None:
+        self._camera_name = name
+
+    @property
+    def device_type(self) -> str:
+        return self._device_type
+
+    @device_type.setter
+    def device_type(self, device_type: str) -> None:
+        assert device_type in self.DEVICE_TYPES, (
+            "Device type '%s' is not one of '%s'" % (
+                device_type,
+                self.DEVICE_TYPES
+            )
+        )
+        self._device_type = device_type
+
+    @property
+    def resolution(self) -> str:
+        return self._resolution
+
+    @resolution.setter
+    def resolution(self, resolution: str) -> None:
+        assert resolution in self.RESOLUTION_PRESETS, (
+            "Resolution preset '%s' is not one oserial_numberf '%s'" % (
+                resolution,
+                self.RESOLUTION_PRESETS
+            )
+        )
+        self._resolution = resolution
+
+    @property
+    def serial(self) -> int:
+        return self._serial
+
+    @serial.setter
+    def serial(self, serial: int) -> None:
+        self._serial = int(serial)
+
+    def get_serial(self) -> int:
+        return self.serial
+
+    def set_serial(self, serial: int) -> None:
+        self.serial = serial
