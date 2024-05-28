@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.9 (2024-05-28)
+------------------
 * Added Zed to configuration
 * Added Zed as type of camera
 * Contributors: Luis Camero

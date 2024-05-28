@@ -32,7 +32,7 @@ package_name = "clearpath_config"
 
 setup(
     name=package_name,
-    version="0.2.8",
+    version="0.2.9",
     packages=[
         package_name,
         package_name + ".common",
