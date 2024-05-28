@@ -2,6 +2,12 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added Zed to configuration
+* Added Zed as type of camera
+* Contributors: Luis Camero
+
 0.2.8 (2024-05-14)
 ------------------
 * Renamed node to intel_realsense in config
