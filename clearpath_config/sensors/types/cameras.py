@@ -258,11 +258,11 @@ class IntelRealsense(BaseCamera):
     POINTCLOUD_ENABLED = True
 
     class ROS_PARAMETER_KEYS:
-        FPS = "intel_realsense.rgb_camera.profile"
+        FPS = "intel_realsense.rgb_camera.color_profile"
         SERIAL = "intel_realsense.serial_no"
         CAMERA_NAME = "intel_realsense.camera_name"
         DEVICE_TYPE = "intel_realsense.device_type"
-        DEPTH_PROFILE = "intel_realsense.depth_module.profile"
+        DEPTH_PROFILE = "intel_realsense.depth_module.depth_profile"
         DEPTH_ENABLE = "intel_realsense.enable_depth"
         COLOR_ENABLE = "intel_realsense.enable_color"
         POINTCLOUD_ENABLE = "intel_realsense.pointcloud.enable"
