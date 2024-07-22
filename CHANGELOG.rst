@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.10 (2024-07-22)
+-------------------
 * Updated Microstrain link parameter
 * Updated Realsense parameters
 * Contributors: Luis Camero
