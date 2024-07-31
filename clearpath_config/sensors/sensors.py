@@ -40,6 +40,7 @@ from clearpath_config.sensors.types.cameras import (
 from clearpath_config.sensors.types.gps import (
     BaseGPS,
     SwiftNavDuro,
+    MicrostrainGQ7,
     Garmin18x,
     NovatelSmart6,
     NovatelSmart7,
@@ -114,12 +115,14 @@ class Camera():
 
 class GlobalPositioningSystem():
     SWIFTNAV_DURO = SwiftNavDuro.SENSOR_MODEL
+    MICROSTRAIN_GQ7 = MicrostrainGQ7.SENSOR_MODEL
     GARMIN_18X = Garmin18x.SENSOR_MODEL
     NOVATEL_SMART6 = NovatelSmart6.SENSOR_MODEL
     NOVATEL_SMART7 = NovatelSmart7.SENSOR_MODEL
 
     MODEL = {
         SWIFTNAV_DURO: SwiftNavDuro,
+        MICROSTRAIN_GQ7: MicrostrainGQ7,
         GARMIN_18X: Garmin18x,
         NOVATEL_SMART6: NovatelSmart6,
         NOVATEL_SMART7: NovatelSmart7,

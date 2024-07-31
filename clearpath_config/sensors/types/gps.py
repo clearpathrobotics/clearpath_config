@@ -123,6 +123,9 @@ class BaseGPS(BaseSensor):
     def set_frame_id(self, link: str) -> None:
         self.frame_id = link
 
+    def has_imu(self) -> bool:
+        return False
+
 
 class SwiftNavDuro(BaseGPS):
     SENSOR_MODEL = "swiftnav_duro"
@@ -215,6 +218,87 @@ class SwiftNavDuro(BaseGPS):
 
     def set_port(self, port: int) -> None:
         self.port = port
+
+
+class MicrostrainGQ7(BaseGPS):
+    SENSOR_MODEL = "microstrain_gq7"
+
+    FRAME_ID = "link"
+    PORT = "/dev/microstrain_main"
+    BAUD = 115200
+
+    class ROS_PARAMETER_KEYS:
+        FRAME_ID = "microstrain_inertial_driver.frame_id"
+        PORT = "microstrain_inertial_driver.port"
+        BAUD = "microstrain_inertial_driver.baudrate"
+
+    class TOPICS:
+        FIX = "fix"
+        NAME = {
+            FIX: "fix",
+        }
+        RATE = {
+            FIX: 60,
+        }
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseGPS.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            baud: int = BAUD,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        # Port
+        self.port = port
+        # Baud
+        self.baud = baud
+        # ROS Paramater Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.PORT: MicrostrainGQ7.port,
+            self.ROS_PARAMETER_KEYS.BAUD: MicrostrainGQ7.baud
+        }
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+
+    @property
+    def port(self) -> str:
+        return str(self._port)
+
+    @port.setter
+    def port(self, file: str) -> str:
+        self._port = File(str(file))
+
+    @property
+    def baud(self) -> int:
+        return self._baud
+
+    @baud.setter
+    def baud(self, baud: int) -> None:
+        assert isinstance(baud, int), ("Baud must be of type 'int'.")
+        assert baud >= 0, ("Baud must be positive integer.")
+        self._baud = baud
+
+    def has_imu(self) -> bool:
+        return True
 
 
 class NMEA(BaseGPS):
