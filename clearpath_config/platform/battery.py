@@ -94,7 +94,7 @@ class BatteryConfig(BaseConfig):
             HE2613: [S1P1],
         },
         Platform.R100: {
-            DTM8A31: [S2P1],
+            DTM8A31: [S1P2],
         },
         Platform.W200: {
             U1_35: [S4P3],
