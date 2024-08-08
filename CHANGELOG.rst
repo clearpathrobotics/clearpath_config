@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Adds GQ7 as possible sensor
+* Contributors: robbiefish
+
 0.2.10 (2024-07-22)
 -------------------
 * Updated Microstrain link parameter
