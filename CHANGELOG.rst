@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.2.11 (2024-08-08)
+-------------------
 * Adds GQ7 as possible sensor
 * Contributors: robbiefish
 
