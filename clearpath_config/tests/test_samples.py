@@ -39,6 +39,7 @@ A200_VELODYNE = sample + "/a200/a200_velodyne.yaml"
 J100_DEFAULT = sample + "/j100/j100_default.yaml"
 J100_DUAL_LASER = sample + "/j100/j100_dual_laser.yaml"
 J100_VELODYNE = sample + "/j100/j100_velodyne.yaml"
+J100_MICROSTRAIN_GQ7 = sample + "/j100/j100_microstrain_gq7.yaml"
 
 A200_SAMPLES = [
     A200_DEFAULT,
@@ -49,7 +50,8 @@ A200_SAMPLES = [
 J100_SAMPLES = [
     J100_DEFAULT,
     J100_DUAL_LASER,
-    J100_VELODYNE
+    J100_VELODYNE,
+    J100_MICROSTRAIN_GQ7
 ]
 
 

@@ -174,7 +174,7 @@ class Microstrain(BaseIMU):
 
     class ROS_PARAMETERS_KEYS:
         PORT = "microstrain_inertial_driver.port"
-        FRAME_ID = "microstrain_inertial_driver.imu_frame_id"
+        FRAME_ID = "microstrain_inertial_driver.frame_id"
         USE_ENU = "microstrain_inertial_driver.use_enu_frame"
 
     class TOPICS:

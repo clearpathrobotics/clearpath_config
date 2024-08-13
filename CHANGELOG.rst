@@ -2,6 +2,23 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.2.11 (2024-08-08)
+-------------------
+* Adds GQ7 as possible sensor
+* Contributors: robbiefish
+
+0.2.10 (2024-07-22)
+-------------------
+* Updated Microstrain link parameter
+* Updated Realsense parameters
+* Contributors: Luis Camero
+
+0.2.9 (2024-05-28)
+------------------
+* Added Zed to configuration
+* Added Zed as type of camera
+* Contributors: Luis Camero
+
 0.2.8 (2024-05-14)
 ------------------
 * Renamed node to intel_realsense in config
