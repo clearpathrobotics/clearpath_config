@@ -61,7 +61,7 @@ class Platform:
     # Dingo D V1.5
     DD150 = "dd150"
     # Dingo D V1.5
-    DO150 = "d0150"
+    DO150 = "do150"
     # Jackal V1
     J100 = "j100"
     # Husky V2
@@ -90,6 +90,7 @@ class Platform:
         A200: PACSProfile(rows=8, columns=7),
         J100: PACSProfile(rows=4, columns=2),
         W200: PACSProfile(rows=100, columns=100),
+        R100: PACSProfile(rows=100, columns=100),
     }
 
     INDEX = {
@@ -100,5 +101,6 @@ class Platform:
         DD150: IndexingProfile(imu=1),
         DO150: IndexingProfile(imu=1),
         J100: IndexingProfile(gps=1, imu=1),
+        R100: IndexingProfile(imu=1),
         W200: IndexingProfile(imu=1),
     }

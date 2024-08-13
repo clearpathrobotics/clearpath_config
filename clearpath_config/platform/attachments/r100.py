@@ -25,59 +25,40 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-import os
-import yaml
+from typing import List
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.platform import Platform
+from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 
 
-# Get Valid Path
-def find_valid_path(path, cwd=None):
-    abspath = path
-    if cwd:
-        relpath = os.path.join(cwd, path)
-    else:
-        relpath = os.path.join(
-            os.path.dirname(os.path.abspath(__file__)), path)
-    if not os.path.isfile(abspath) and not os.path.isfile(relpath):
-        return None
-    if os.path.isfile(abspath):
-        path = abspath
-    elif os.path.isfile(relpath):
-        path = relpath
-    return path
+class R100ArmMount(BaseAttachment):
+    PLATFORM = Platform.R100
+    ATTACHMENT_MODEL = "%s.arm_mount" % PLATFORM
+    FAMS = "fams"
+    HAMS = "hams"
+    TOWER = "tower"
+    MODELS = [FAMS, HAMS, TOWER]
+    DEFAULT = TOWER
+    PARENT = "default_mount"
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
-def read_yaml(path: str) -> dict:
-    orig = path
-    # Check YAML Path
-    try:
-        path = find_valid_path(path, os.getcwd())
-        assert path, "YAML file '%s' could not be found" % orig
-    except FileNotFoundError:
-        raise AssertionError(
-            "YAML file '%s' could not be found" % orig)
-    # Check YAML can be Opened
-    try:
-        config = yaml.load(open(path), Loader=yaml.SafeLoader)
-    except yaml.scanner.ScannerError:
-        raise AssertionError(
-            "YAML file '%s' is not well formed" % orig)
-    except yaml.constructor.ConstructorError:
-        raise AssertionError(
-            "YAML file '%s' is attempting to create unsafe objects" % (
-                orig))
-    # Check contents are a Dictionary
-    assert isinstance(config, dict), (
-        "YAML file '%s' is not a dictionary" % orig)
-    return config
+# R100 Attachments
+class R100Attachment(PlatformAttachment):
+    PLATFORM = Platform.R100
+    # Arm Mount
+    ARM_MOUNT = R100ArmMount.ATTACHMENT_MODEL
 
-
-def write_yaml(path: str, config: dict) -> None:
-    yaml_file = open(path, "w+")
-    yaml.Dumper.ignore_aliases = lambda *args: True
-    yaml.dump(
-        config,
-        yaml_file,
-        sort_keys=False,
-        default_flow_style=False,
-        allow_unicode=True,
-    )
+    TYPES = {
+        ARM_MOUNT: R100ArmMount
+    }

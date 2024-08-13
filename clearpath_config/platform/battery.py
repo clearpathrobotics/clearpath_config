@@ -46,6 +46,8 @@ class BatteryConfig(BaseConfig):
     ES20_12C = "ES20_12C"
     # A200/J100 LiION
     HE2613 = "HE2613"
+    # R100 Lead Acid
+    DTM8A31 = "8A31DTM"
     # W200 Lead Acid
     U1_35 = "U1_35"
     # W200 LiFEPO4
@@ -90,6 +92,9 @@ class BatteryConfig(BaseConfig):
         },
         Platform.J100: {
             HE2613: [S1P1],
+        },
+        Platform.R100: {
+            DTM8A31: [S1P2],
         },
         Platform.W200: {
             U1_35: [S4P3],
