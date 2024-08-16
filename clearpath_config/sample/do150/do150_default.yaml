@@ -1,0 +1,8 @@
+serial_number: do150-0000
+version: 0
+system:
+  hosts:
+    - hostname: cpr-do150-0000
+      ip: 192.168.131.1
+  ros2:
+    namespace: do150_0000

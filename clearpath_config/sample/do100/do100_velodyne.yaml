@@ -1,0 +1,37 @@
+serial_number: do100-0000
+version: 0
+system:
+  hosts:
+    - hostname: cpr-do100-0000
+      ip: 192.168.131.1
+  ros2:
+    namespace: do100_0000
+links:
+  cylinder:
+    - name: leg_0
+      radius: 0.004
+      length: 0.1
+      parent: default_mount
+      xyz: [0.04, 0.04, 0.05]
+    - name: leg_1
+      radius: 0.004
+      length: 0.1
+      parent: default_mount
+      xyz: [0.04, -0.04, 0.05]
+    - name: leg_2
+      radius: 0.004
+      length: 0.1
+      parent: default_mount
+      xyz: [-0.04, 0.04, 0.05]
+    - name: leg_3
+      radius: 0.004
+      length: 0.1
+      parent: default_mount
+      xyz: [-0.04, -0.04, 0.05]
+mounts:
+  bracket:
+    - xyz: [0.0, 0.0, 0.1]
+sensors:
+  lidar3d:
+    - model: velodyne_lidar
+      parent: bracket_0_mount

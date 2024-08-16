@@ -1,0 +1,17 @@
+serial_number: r100-0000
+version: 0
+system:
+  hosts:
+    - hostname: cpr-r100-0000
+      ip: 192.168.131.1
+  ros2:
+    namespace: r100_0000
+sensors:
+  lidar2d:
+    - model: hokuyo_ust
+      parent: chassis_link
+      xyz: [0.3922, 0.0, 0.1856]
+    - model: hokuyo_ust
+      parent: chassis_link
+      xyz: [-0.3922, 0.0, 0.1856]
+      rpy: [0.0, 0.0, 3.14159]
