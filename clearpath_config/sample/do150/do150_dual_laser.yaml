@@ -1,0 +1,19 @@
+serial_number: do150-0000
+version: 0
+system:
+  hosts:
+    - hostname: cpr-do150-0000
+      ip: 192.168.131.1
+  ros2:
+    namespace: do150_0000
+mounts:
+  bracket:
+    - parent: front_1_mount
+    - parent: rear_1_mount
+      rpy: [0.0, 0.0, 3.1415]
+sensors:
+  lidar2d:
+    - model: hokuyo_ust
+      parent: bracket_0_mount
+    - model: hokuyo_ust
+      parent: bracket_1_mount
