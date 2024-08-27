@@ -33,6 +33,7 @@ from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.extras import ExtrasConfig
 from clearpath_config.platform.attachments.config import AttachmentsConfig
 from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
+from clearpath_config.platform.can import CANBridgeConfig
 
 
 class DescriptionPackagePath(PackagePath):
@@ -89,6 +90,7 @@ class PlatformConfig(BaseConfig):
 
     CONTROLLER = "controller"
     ATTACHMENTS = "attachments"
+    CAN_BRIDGES = "can_bridges"
     # Extras
     EXTRAS = "extras"
     # Generic Robot
@@ -104,6 +106,7 @@ class PlatformConfig(BaseConfig):
         PLATFORM: {
             CONTROLLER: CONTROLLER,
             ATTACHMENTS: ATTACHMENTS,
+            CAN_BRIDGES: CAN_BRIDGES,
             EXTRAS: EXTRAS,
             DESCRIPTION: DESCRIPTION,
             LAUNCH: LAUNCH,
@@ -119,6 +122,7 @@ class PlatformConfig(BaseConfig):
         # PLATFORM
         CONTROLLER: PS4,
         ATTACHMENTS: {},
+        CAN_BRIDGES: {},
         EXTRAS: ExtrasConfig.DEFAULTS,
         DESCRIPTION: "",
         LAUNCH: "",
@@ -131,7 +135,8 @@ class PlatformConfig(BaseConfig):
             self,
             config: dict = {},
             controller: str = DEFAULTS[CONTROLLER],
-            attachments: str = DEFAULTS[ATTACHMENTS],
+            attachments: dict = DEFAULTS[ATTACHMENTS],
+            can_bridges: dict = DEFAULTS[CAN_BRIDGES],
             battery: dict = DEFAULTS[BATTERY],
             extras: dict = DEFAULTS[EXTRAS],
             wheel: dict = DEFAULTS[WHEEL],
@@ -140,6 +145,7 @@ class PlatformConfig(BaseConfig):
         self._config = {}
         self.controller = controller
         self.attachments = attachments
+        self.can_bridges = can_bridges
         self._battery = BatteryConfig(battery)
         self._extras = ExtrasConfig(extras)
         self.description = self.DEFAULTS[self.DESCRIPTION]
@@ -150,6 +156,7 @@ class PlatformConfig(BaseConfig):
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
             self.KEYS[self.ATTACHMENTS]: PlatformConfig.attachments,
+            self.KEYS[self.CAN_BRIDGES]: PlatformConfig.can_bridges,
             self.KEYS[self.BATTERY]: PlatformConfig.battery,
             self.KEYS[self.EXTRAS]: PlatformConfig.extras,
             self.KEYS[self.WHEEL]: PlatformConfig.wheel,
@@ -214,6 +221,18 @@ class PlatformConfig(BaseConfig):
     def attachments(self, value: dict) -> None:
         self._attachments = AttachmentsConfigMux(
             self.get_platform_model(), value)
+
+    @property
+    def can_bridges(self) -> CANBridgeConfig:
+        self.set_config_param(
+            key=self.KEYS[self.CAN_BRIDGES],
+            value=self._can_bridges.config
+        )
+        return self._can_bridges
+
+    @can_bridges.setter
+    def can_bridges(self, value: dict) -> None:
+        self._can_bridges = CANBridgeConfig(value)
 
     @property
     def extras(self) -> ExtrasConfig:
