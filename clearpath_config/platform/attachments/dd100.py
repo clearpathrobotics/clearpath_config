@@ -37,17 +37,30 @@ class DD100TopPlate(BaseAttachment):
     PACS = "pacs"
     MODELS = [PACS]
     PARENT = "default_mount"
+    HEIGHT = 0.1
 
     def __init__(
             self,
             name: str = ATTACHMENT_MODEL,
             model: str = PACS,
             enabled: bool = BaseAttachment.ENABLED,
+            height: float = HEIGHT,
             parent: str = PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
         super().__init__(name, model, enabled, parent, xyz, rpy)
+        self.height = height
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['height'] = self.height
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if 'height' in d:
+            self.height = d['height']
 
 
 # DD100 Attachments
