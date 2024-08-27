@@ -10,7 +10,8 @@ class CANBridge:
     FILTERS = "filters"
     AUTO_CONFIGURE = "auto_configure"
     AUTO_ACTIVATE = "auto_activate"
-    TOPIC = "topic"
+    TOPIC_RX = "topic_rx"
+    TOPIC_TX = "topic_tx"
 
     DEFAULTS = {
         INTERFACE: "can0",
@@ -20,7 +21,8 @@ class CANBridge:
         FILTERS: "0:0",
         AUTO_CONFIGURE: True,
         AUTO_ACTIVATE: True,
-        TOPIC: "from_can0_bus"
+        TOPIC_RX: "can0/rx",
+        TOPIC_TX: "can0/tx"
     }
 
     def __init__(
@@ -32,8 +34,11 @@ class CANBridge:
             filters: str = DEFAULTS[FILTERS],
             auto_configure: bool = DEFAULTS[AUTO_CONFIGURE],
             auto_activate: bool = DEFAULTS[AUTO_ACTIVATE],
-            topic: str = DEFAULTS[TOPIC],
+            topic_rx: str = DEFAULTS[TOPIC_RX],
+            topic_tx: str = DEFAULTS[TOPIC_TX],
             ) -> None:
+        self.topic_rx = topic_rx
+        self.topic_tx = topic_tx
         self.interface = interface
         self.enaled_can_fd = enable_can_fd
         self.interval = interval
@@ -41,7 +46,6 @@ class CANBridge:
         self.filters = filters
         self.auto_configure = auto_configure
         self.auto_activate = auto_activate
-        self.topic = topic
 
     def to_dict(self) -> dict:
         d = dict()
@@ -52,7 +56,8 @@ class CANBridge:
         d[self.FILTERS] = self.filters
         d[self.AUTO_CONFIGURE] = self.auto_configure
         d[self.AUTO_ACTIVATE] = self.auto_activate
-        d[self.TOPIC] = self.topic
+        d[self.TOPIC_RX] = self.topic_rx
+        d[self.TOPIC_TX] = self.topic_tx
         return d
 
     def from_dict(self, d: dict) -> None:
@@ -70,8 +75,22 @@ class CANBridge:
             self.auto_configure = d[self.AUTO_CONFIGURE]
         if self.AUTO_ACTIVATE in d:
             self.auto_activate = d[self.AUTO_ACTIVATE]
-        if self.TOPIC in d:
-            self.topic = d[self.TOPIC]
+        if self.TOPIC_RX in d:
+            self.topic_rx = d[self.TOPIC_RX]
+        if self.TOPIC_TX in d:
+            self.topic_tx = d[self.TOPIC_TX]
+
+    @property
+    def interface(self) -> str:
+        return self._interface
+
+    @interface.setter
+    def interface(self, interface: str) -> None:
+        self._interface = interface
+        if self.topic_rx == self.DEFAULTS[self.TOPIC_RX]:
+            self.topic_rx = f"{interface}/rx"
+        if self.topic_tx == self.DEFAULTS[self.TOPIC_TX]:
+            self.topic_tx = f"{interface}/tx"
 
 
 class CANBridgeListConfig(ListConfig[CANBridge, str]):
