@@ -109,6 +109,8 @@ class R100Tower(BaseAttachment):
     DEFAULT = "default"
     MODELS = [DEFAULT]
     PARENT = "default_mount"
+    LEFT_HEIGHT = 0.0
+    RIGHT_HEIGHT = 0.0
 
     def __init__(
             self,
@@ -116,10 +118,26 @@ class R100Tower(BaseAttachment):
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
+            left_height: float = LEFT_HEIGHT,
+            right_height: float = RIGHT_HEIGHT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
             ) -> None:
         super().__init__(name, model, enabled, parent, xyz, rpy)
+        self.left_height = left_height
+        self.right_height = right_height
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['left_height'] = self.left_height
+        d['right_height'] = self.right_height
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if 'left_height' in d:
+            self.left_height = d['left_height']
+        if 'right_height' in d:
+            self.right_height = d['right_height']
 
 
 # R100 Attachments
