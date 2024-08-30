@@ -31,14 +31,83 @@ from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 
 
-class R100ArmMount(BaseAttachment):
+class R100FAMS(BaseAttachment):
     PLATFORM = Platform.R100
-    ATTACHMENT_MODEL = "%s.arm_mount" % PLATFORM
-    FAMS = "fams"
-    HAMS = "hams"
-    TOWER = "tower"
-    MODELS = [FAMS, HAMS, TOWER]
-    DEFAULT = TOWER
+    ATTACHMENT_MODEL = "%s.fams" % PLATFORM
+    DEFAULT = "default"
+    MODELS = [DEFAULT]
+    PARENT = "default_mount"
+    TABLE_HEIGHT = 0.3
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            table_height: float = TABLE_HEIGHT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY,
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+        self.table_height = table_height
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['table_height'] = self.table_height
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if 'table_height' in d:
+            self.table_height = d['table_height']
+        return d
+
+
+class R100HAMS(BaseAttachment):
+    PLATFORM = Platform.R100
+    ATTACHMENT_MODEL = "%s.hams" % PLATFORM
+    DEFAULT = "default"
+    MODELS = [DEFAULT]
+    PARENT = "default_mount"
+    TABLE_HEIGHT = 0.6
+    MOUNT_HEIGHT = 0.3
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            table_height: float = TABLE_HEIGHT,
+            mount_height: float = MOUNT_HEIGHT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY,
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+        self.table_height = table_height
+        self.mount_height = mount_height
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['table_height'] = self.table_height
+        d['mount_height'] = self.mount_height
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if 'table_height' in d:
+            self.table_height = d['table_height']
+        if 'mount_height' in d:
+            self.mount_height = d['mount_height']
+        return d
+
+
+class R100Tower(BaseAttachment):
+    PLATFORM = Platform.R100
+    ATTACHMENT_MODEL = "%s.tower" % PLATFORM
+    DEFAULT = "default"
+    MODELS = [DEFAULT]
     PARENT = "default_mount"
 
     def __init__(
@@ -48,7 +117,7 @@ class R100ArmMount(BaseAttachment):
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
             xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
+            rpy: List[float] = Accessory.RPY,
             ) -> None:
         super().__init__(name, model, enabled, parent, xyz, rpy)
 
@@ -57,8 +126,12 @@ class R100ArmMount(BaseAttachment):
 class R100Attachment(PlatformAttachment):
     PLATFORM = Platform.R100
     # Arm Mount
-    ARM_MOUNT = R100ArmMount.ATTACHMENT_MODEL
+    HAMS = R100HAMS.ATTACHMENT_MODEL
+    FAMS = R100FAMS.ATTACHMENT_MODEL
+    TOWER = R100Tower.ATTACHMENT_MODEL
 
     TYPES = {
-        ARM_MOUNT: R100ArmMount
+        HAMS: R100HAMS,
+        FAMS: R100FAMS,
+        TOWER: R100Tower
     }
