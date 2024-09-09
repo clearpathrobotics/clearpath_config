@@ -49,7 +49,6 @@ class DO150TopPlate(DD100TopPlate):
         super().__init__(name, model, enabled, height, parent, xyz, rpy)
 
 
-
 # DO150 Attachments
 class DO150Attachment(PlatformAttachment):
     PLATFORM = Platform.DO100
