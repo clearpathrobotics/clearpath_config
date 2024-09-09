@@ -28,26 +28,25 @@
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
+from clearpath_config.platform.attachments.dd100 import DD100TopPlate
 from typing import List
 
 
-class DO150TopPlate(BaseAttachment):
+class DO150TopPlate(DD100TopPlate):
     PLATFORM = Platform.DO150
     ATTACHMENT_MODEL = "%s.top_plate" % PLATFORM
-    PACS = "pacs"
-    MODELS = [PACS]
-    PARENT = "default_mount"
 
     def __init__(
             self,
             name: str = ATTACHMENT_MODEL,
-            model: str = PACS,
+            model: str = DD100TopPlate.PACS,
             enabled: bool = BaseAttachment.ENABLED,
-            parent: str = PARENT,
+            height: float = DD100TopPlate.HEIGHT,
+            parent: str = DD100TopPlate.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
+        super().__init__(name, model, enabled, height, parent, xyz, rpy)
 
 
 # DO150 Attachments
