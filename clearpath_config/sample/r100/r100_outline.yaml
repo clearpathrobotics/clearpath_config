@@ -14,7 +14,7 @@ system:
 platform:
   controller: ps4
   battery:
-    model: DTM8A31
+    model: 8A31DTM
     configuration: S1P2
   attachments: []
   extras:
