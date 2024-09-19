@@ -2,6 +2,77 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add samples to setup.py
+* Remove empty line in D150 attachments
+* Height parameters for tower shoulder
+* FAMS, HAMS, and Tower as separate attachments
+* Add height parameter to Dingo top plate
+* Add samples for Dingo O and Ridgeback
+* 0.3 Release Candidate with Main Changes (`#73 <https://github.com/clearpathrobotics/clearpath_config/issues/73>`_)
+  * Renamed node to intel_realsense in config
+  * Changes.
+  * 0.2.8
+  * Added Zed as type of camera
+  * Added Zed to configuration
+  * Changes.
+  * 0.2.9
+  * Updated Realsense parameters
+  * Updated Microstrain link parameter
+  * Changes.
+  * 0.2.10
+  * Adds GQ7 as possible sensor
+  * Changes.
+  * 0.2.11
+  ---------
+  Co-authored-by: Tony Baltovski <tbaltovski@clearpathrobotics.com>
+  Co-authored-by: robbiefish <rob.fisher@hbkworld.com>
+* Fix ridgeback battery configuration
+* 0.2.8
+* Changes.
+* Renamed node to intel_realsense in config
+* 0.2.7
+* Changes.
+* W200 attachments default to 0
+* Re-added host and namespace
+* Minimal samples.
+* Removed long line
+* Added launch to extras
+* 0.2.6
+* Changes.
+* Switched local server to be referenced as loopback in the ROS_DISCOVERY_SERVER envar
+* Add discovery server support
+* assertion error if the hostname is blank (otherwise causes an invalid index exception)
+* Add localhost field which is set automatically
+* Reformat hosts section to single list of all computers
+* 0.2.5
+* Changes.
+* Added battery launch arguments to support launching the valence bms node
+* Add republishers to camera
+* Add IP and Port parameters to manipulator config
+* Added manipulator to config
+* Added methods to replace entries in a dictionary
+* YAML reader properly displays original path in assertions
+* Fix ros_parameters
+* 0.2.4
+* Changes.
+* Install the W200 samples.
+* Fixed j100 and w200 laser sample
+* 0.2.3
+* Changes.
+* Give option to get topic without namespace
+* 0.2.2
+* Changes.
+* Fix how blank urdf extras is handled
+* 0.2.1
+* Changes.
+* Find packages for meshes / extras urdf (`#45 <https://github.com/clearpathrobotics/clearpath_config/issues/45>`_)
+  * Allow meshes visual and extras urdf to be linked using find package functionality
+* Added Ridgeback attachments
+* Initial Ridgeback
+* Contributors: Hilary Luo, Luis Camero, Roni Kreinin, Tony Baltovski, luis-camero
+
 0.2.11 (2024-08-08)
 -------------------
 * Adds GQ7 as possible sensor
