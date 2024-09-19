@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.1 (2024-09-19)
+------------------
 * Fix battery in r100 sample
 * Contributors: Luis Camero
 
