@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix battery in r100 sample
+* Contributors: Luis Camero
+
 0.3.0 (2024-09-19)
 ------------------
 * Add samples to setup.py
