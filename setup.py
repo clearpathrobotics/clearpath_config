@@ -40,6 +40,8 @@ setup(
         package_name + ".common.utils",
         package_name + ".links",
         package_name + ".links.types",
+        package_name + ".manipulators",
+        package_name + ".manipulators.types",
         package_name + ".mounts",
         package_name + ".mounts.types",
         package_name + ".platform",
