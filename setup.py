@@ -48,6 +48,8 @@ setup(
         package_name + ".sensors",
         package_name + ".sensors.types",
         package_name + ".system",
+        package_name + ".manipulators",
+        package_name + ".manipulators.types"
     ],
     data_files=[
         # Install marker file in the package index
