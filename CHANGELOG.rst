@@ -2,6 +2,12 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Alphabetically order packages
+* Add manipulators to setup
+* Contributors: Luis Camero
+
 0.3.1 (2024-09-19)
 ------------------
 * Fix battery in r100 sample
