@@ -320,7 +320,7 @@ class ExtrasConfig(BaseConfig):
             if not self._is_ros_parameter_default(key):
                 d[".".join(key.split(".")[2:])] = self.getter(prop)()
         # User parameters
-        for key, val, in self._ros_parameters.items():
+        for key, val, in flatten_dict(self._ros_parameters).items():
             if not self._is_ros_parameter(key):
                 d[key] = val
         # Return flat
