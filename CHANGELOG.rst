@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Allow all parameters to be modified
+* Contributors: Luis Camero
+
 0.3.2 (2024-09-23)
 ------------------
 * Alphabetically order packages
