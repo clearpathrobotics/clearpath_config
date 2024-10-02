@@ -54,6 +54,7 @@ class BatteryConfig(BaseConfig):
     NEC_ALM12V35 = "NEC_ALM12V35"
     VALENCE_U24_12XP = "VALENCE_U24_12XP"
     VALENCE_U27_12XP = "VALENCE_U27_12XP"
+    INVENTUS_S_24V20_U1 = "S_24V20_U1"
 
     # Configurations
     CONFIGURATION = "configuration"
@@ -68,7 +69,8 @@ class BatteryConfig(BaseConfig):
 
     VALID = {
         Platform.GENERIC: {
-            UNKNOWN: [UNKNOWN]
+            UNKNOWN: [UNKNOWN],
+            INVENTUS_S_24V20_U1: [S2P1],
         },
         Platform.A200: {
             ES20_12C: [S2P1],
