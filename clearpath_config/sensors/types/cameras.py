@@ -941,3 +941,115 @@ class StereolabsZed(BaseCamera):
 
     def set_serial(self, serial: int) -> None:
         self.serial = serial
+
+
+class LuxonisOAKD(BaseCamera):
+    SENSOR_MODEL = "luxonis_oakd"
+
+    SERIAL = 0
+
+    PRO = "pro"
+    LITE = "lite"
+    DEVICE_TYPE = PRO
+    DEVICE_TYPES = [PRO, LITE]
+
+    HEIGHT = 720
+    WIDTH = 1280
+
+    FPS = 30.0
+
+    class ROS_PARAMETER_KEYS:
+        FPS = "oakd.rgb.i_fps"
+        SERIAL = "oakd.rgb.i_usb_port_id"
+        HEIGHT = "oakd.rgb.i_height"
+        WIDTH = "oakd.rgb.i_width"
+
+    class TOPICS:
+        COLOR_IMAGE = "color_image"
+        COLOR_CAMERA_INFO = "color_camera_info"
+        IMU = "imu"
+        NAME = {
+            COLOR_IMAGE: "color/image",
+            COLOR_CAMERA_INFO: "color/camera_info",
+            IMU: "imu",
+        }
+        RATE = {
+            COLOR_IMAGE: BaseCamera.FPS,
+            COLOR_CAMERA_INFO: BaseCamera.FPS,
+            IMU: BaseCamera.FPS
+        }
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseCamera.TOPIC,
+            fps: int = FPS,
+            serial: str = BaseCamera.SERIAL,
+            device_type: str = DEVICE_TYPE,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FPS: LuxonisOAKD.fps,
+            self.ROS_PARAMETER_KEYS.SERIAL: LuxonisOAKD.serial,
+            self.ROS_PARAMETER_KEYS.HEIGHT: LuxonisOAKD.height,
+            self.ROS_PARAMETER_KEYS.WIDTH: LuxonisOAKD.width,
+        }
+        super().__init__(
+            idx,
+            name,
+            topic,
+            fps,
+            serial,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+        # Topic Rates
+        self.TOPICS.RATE[self.TOPICS.COLOR_IMAGE] = self.fps
+        self.TOPICS.RATE[self.TOPICS.COLOR_CAMERA_INFO] = self.fps
+        self.TOPICS.RATE[self.TOPICS.IMU] = self.fps
+        # Resolution
+        self.height = LuxonisOAKD.HEIGHT
+        self.width = LuxonisOAKD.WIDTH
+
+    @property
+    def width(self) -> int:
+        return self._width
+
+    @width.setter
+    def width(self, width: int) -> None:
+        self._width = width
+
+    @property
+    def height(self) -> int:
+        return self._height
+
+    @height.setter
+    def height(self, height: int) -> None:
+        self._height = height
+
+    @property
+    def fps(self) -> float:
+        return self._fps
+
+    @fps.setter
+    def fps(self, fps: float) -> None:
+        self._fps = fps
+
+    def get_fps(self) -> float:
+        return self.fps
+
+    def set_fps(self, fps: float) -> None:
+        self.fps = fps
