@@ -343,3 +343,61 @@ class RedshiftUM7(BaseIMU):
             xyz,
             rpy
         )
+
+
+class PhidgetsSpatial(BaseIMU):
+    SENSOR_MODEL = "phidgets_spatial"
+
+    PORT = None
+    FRAME_ID = "link"
+    USE_ENU = True
+
+    class ROS_PARAMETER_KEYS:
+        FRAME_ID = "phidgets_spatial.frame_id"
+
+    class TOPICS:
+        RAW_DATA = "raw"
+        MAG = "mag"
+        CALIB = "calibrated"
+        NAME = {
+            RAW_DATA: "data_raw",
+            MAG: "msg",
+            CALIB: "is_calibrated"
+        }
+        RATE = {
+            RAW_DATA: 60,
+            MAG: 60,
+            CALIB: 60,
+        }
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseIMU.TOPIC,
+            frame_id: str = FRAME_ID,
+            port: str = PORT,
+            use_enu: bool = USE_ENU,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        ros_parameters_template = BaseSensor.ROS_PARAMETERS_TEMPLATE
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            port,
+            use_enu,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
