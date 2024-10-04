@@ -36,6 +36,7 @@ from clearpath_config.sensors.types.cameras import (
     FlirBlackfly,
     IntelRealsense,
     StereolabsZed,
+    LuxonisOAKD,
 )
 from clearpath_config.sensors.types.gps import (
     BaseGPS,
@@ -92,11 +93,13 @@ class Camera():
     FLIR_BLACKFLY = FlirBlackfly.SENSOR_MODEL
     INTEL_REALSENSE = IntelRealsense.SENSOR_MODEL
     STEREOLABS_ZED = StereolabsZed.SENSOR_MODEL
+    LUXONIS_OAKD = LuxonisOAKD.SENSOR_MODEL
 
     MODEL = {
         FLIR_BLACKFLY: FlirBlackfly,
         INTEL_REALSENSE: IntelRealsense,
         STEREOLABS_ZED: StereolabsZed,
+        LUXONIS_OAKD: LuxonisOAKD,
     }
 
     @classmethod
