@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.3.4 (2024-10-04)
+------------------
 * Add OAKD
 * Add phidgets spatial to config
 * Contributors: Luis Camero
