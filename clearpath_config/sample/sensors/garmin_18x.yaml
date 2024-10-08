@@ -1,0 +1,15 @@
+serial_number: a200-0000
+version: 0
+sensors:
+  gps:
+    - model: garmin_18x
+      urdf_enabled: true
+      launch_enabled: true
+      parent: base_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        nmea_navsat_driver:
+          frame_id: gps_0_link
+          port: "/dev/clearpath/gps"
+          baud: 115200
