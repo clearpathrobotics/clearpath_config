@@ -1,0 +1,16 @@
+serial_number: a200-0000
+version: 0
+sensors:
+  camera:
+    - model: stereolabs_zed
+      urdf_enabled: true
+      launch_enabled: true
+      parent: base_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        stereolabs_zed:
+          general.grab_frame_rate: 30
+          general.serial_number: 0
+          general.camera_model: 'zed2'
+          general.grab_resolution: 'AUTO'

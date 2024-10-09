@@ -30,6 +30,12 @@ import os
 
 package_name = "clearpath_config"
 
+# Samples
+samples = []
+for path, dirs, files in os.walk(os.path.join(package_name, "sample")):
+    for file in files:
+        samples.append(os.path.join(path, file))
+
 setup(
     name=package_name,
     version="0.3.4",
@@ -57,43 +63,7 @@ setup(
             ["resource/" + package_name]),
         # Include the package.xml file
         (os.path.join("share", package_name), ["package.xml"]),
-        (os.path.join("share", package_name, "sample"), [
-            package_name + "/sample/a200/a200_default.yaml",
-            package_name + "/sample/a200/a200_dual_laser.yaml",
-            package_name + "/sample/a200/a200_sample.yaml",
-            package_name + "/sample/a200/a200_outline.yaml",
-            package_name + "/sample/a200/a200_velodyne.yaml",
-            package_name + "/sample/j100/j100_default.yaml",
-            package_name + "/sample/j100/j100_dual_laser.yaml",
-            package_name + "/sample/j100/j100_sample.yaml",
-            package_name + "/sample/j100/j100_velodyne.yaml",
-            package_name + "/sample/j100/j100_outline.yaml",
-            package_name + "/sample/j100/j100_microstrain_gq7.yaml",
-            package_name + "/sample/w200/w200_default.yaml",
-            package_name + "/sample/w200/w200_outline.yaml",
-            package_name + "/sample/w200/w200_dual_laser.yaml",
-            package_name + "/sample/w200/w200_velodyne.yaml",
-            package_name + "/sample/dd150/dd150_outline.yaml",
-            package_name + "/sample/dd150/dd150_dual_laser.yaml",
-            package_name + "/sample/dd150/dd150_velodyne.yaml",
-            package_name + "/sample/dd150/dd150_default.yaml",
-            package_name + "/sample/dd100/dd100_dual_laser.yaml",
-            package_name + "/sample/dd100/dd100_velodyne.yaml",
-            package_name + "/sample/dd100/dd100_default.yaml",
-            package_name + "/sample/dd100/dd100_outline.yaml",
-            package_name + "/sample/r100/r100_outline.yaml",
-            package_name + "/sample/r100/r100_dual_laser.yaml",
-            package_name + "/sample/r100/r100_dual_laser_hokuyo.yaml",
-            package_name + "/sample/r100/r100_default.yaml",
-            package_name + "/sample/do100/do100_outline.yaml",
-            package_name + "/sample/do100/do100_default.yaml",
-            package_name + "/sample/do100/do100_velodyne.yaml",
-            package_name + "/sample/do100/do100_dual_laser.yaml",
-            package_name + "/sample/do150/do150_dual_laser.yaml",
-            package_name + "/sample/do150/do150_outline.yaml",
-            package_name + "/sample/do150/do150_velodyne.yaml",
-            package_name + "/sample/do150/do150_default.yaml",
-            ]),
+        (os.path.join("share", package_name, "sample"), samples),
     ],
     install_requires=[
         "setuptools",
