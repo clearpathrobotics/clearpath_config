@@ -155,4 +155,3 @@ class CANBridgeConfig:
             bridge = CANBridge()
             bridge.from_dict(b)
             self._can_bridges.add(bridge)
-
