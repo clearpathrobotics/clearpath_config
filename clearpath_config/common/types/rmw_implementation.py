@@ -32,7 +32,7 @@ class RMWImplementation:
     FAST_RTPS = "rmw_fastrtps_cpp"
     GURUM_DDS = "rmw_gurumdds_cpp"
 
-    ALL_SUPPORTED = [FAST_RTPS]
+    ALL_SUPPORTED = [FAST_RTPS, CYCLONE_DDS]
 
     DEFAULT = FAST_RTPS
 
