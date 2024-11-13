@@ -1073,7 +1073,6 @@ class AxisCamera(BaseCamera):
             camera_num: int = CAMERA_NUM,
             frame_width: int = FRAME_WIDTH,
             frame_height: int = FRAME_HEIGHT,
-            fps: int = FPS,
 
             enable_ptz: bool = ENABLE_PTZ,
             min_pan: float = MIN_PAN,
