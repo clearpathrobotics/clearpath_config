@@ -25,6 +25,8 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from math import pi
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.sensors.types.sensor import BaseSensor
 from clearpath_config.common.utils.dictionary import extend_flat_dict
@@ -941,3 +943,584 @@ class StereolabsZed(BaseCamera):
 
     def set_serial(self, serial: int) -> None:
         self.serial = serial
+
+
+class AxisCamera(BaseCamera):
+    """PTZ and fixed cameras that use the axis_camera driver"""
+
+    SENSOR_MODEL = 'axis_camera'
+
+    HOSTNAME = '192.168.10.0'
+
+    DOME_FIXED = 'dome_fixed'
+    DOME_PTZ = 'dome_ptz'
+    Q62 = 'q62'
+
+    DEVICE_TYPE = DOME_PTZ
+    DEVICE_TYPES = [
+        Q62,
+        DOME_PTZ,
+        DOME_FIXED,
+    ]
+
+    HOSTNAME = '192.168.10.0'
+    HTTP_PORT = 80
+    USERNAME = 'root'
+    PASSWORD = ''
+    USE_ENCRYPTED_PASSWORD = True
+
+    CAMERA_NUM = 1
+    FRAME_WIDTH = 640
+    FRAME_HEIGHT = 480
+    FPS = 20
+
+    ENABLE_PTZ = True
+    MIN_PAN = -pi
+    MAX_PAN = pi
+    MIN_TILT = -pi/2
+    MAX_TILT = pi/2
+    MIN_ZOOM = 1
+    MAX_ZOOM = 24
+    MAX_PAN_SPEED = 2.61
+    MAX_TILT_SPEED = 2.61
+
+    ENABLE_IR = False
+    ENABLE_WPER = False
+    ENABLE_DEFOG = False
+
+    ENABLE_PTZ_TELEOP = False
+    BUTTON_ENABLE_PAN_TILT = -1
+    BUTTON_ENABLE_ZOOM = -1
+    AXIS_PAN = -1
+    AXIS_TILT = -1
+    INVERT_TILT = False
+    AXIS_ZOOM_IN = -1
+    AXIS_ZOOM_OUT = -1
+    ZOOM_IN_OFFSET = 0
+    ZOOM_OUT_OFFSET = 0
+    ZOOM_IN_SCALE = 1
+    ZOOM_OUT_SCALE = 1
+    SCALE_PAN = 1
+    SCALE_TILT = 1
+    SCALE_ZOOM = 1
+
+    class ROS_PARAMETER_KEYS:
+        HOSTNAME = 'axis_camera.hostname'
+        HTTP_PORT = 'axis_camera.http_port'
+
+        USERNAME = 'axis_camera.username'
+        PASSWORD = 'axis_camera.password'
+        USE_ENCRYPTED_PASSWORD = 'axis_camera.use_encrypted_password'
+
+        CAMERA_NUM = 'axis_camera.camera_num'
+        FRAME_WIDTH = 'axis_camera.frame_width'
+        FRAME_HEIGHT = 'axis_camera.frame_height'
+        FPS = 'axis_camera.fps'
+
+        # PTZ
+        ENABLE_PTZ = 'axis_camera.ptz'
+        MIN_PAN = 'axis_camera.min_pan'
+        MAX_PAN = 'axis_camera.max_pan'
+        MIN_TILT = 'axis_camera.min_tilt'
+        MAX_TILT = 'axis_camera.max_tilt'
+        MIN_ZOOM = 'axis_camera.min_zoom'
+        MAX_ZOOM = 'axis_camera.max_zoom'
+        MAX_PAN_SPEED = 'axis_camera.max_pan_speed'
+        MAX_TILT_SPEED = 'axis_camera.max_tilt_speed'
+
+        # Q62 additional services
+        ENABLE_IR = 'axis_camera.ir'
+        ENABLE_WIPER = 'axis_camera.wiper'
+        ENABLE_DEFOG = 'axis_camera.defog'
+
+        # PTZ Teleop (see axis_camera/config/teleop_ps4.yaml)
+        ENABLE_PTZ_TELEOP = 'axis_camera.teleop'
+        BUTTON_ENABLE_PAN_TILT = 'axis_camera.button_enable_pan_tilt'
+        BUTTON_ENABLE_ZOOM = 'axis_camera.button_enable_zoom'
+        AXIS_PAN = 'axis_camera.axis_pan'
+        AXIS_TILT = 'axis_camera.axis_tilt'
+        INVERT_TILT = 'axis_camera.invert_tilt'
+        AXIS_ZOOM_IN = 'axis_camera.axis_zoom_in'
+        AXIS_ZOOM_OUT = 'axis_camera.axis_zoom_out'
+        ZOOM_IN_OFFSET = 'axis_camera.zoom_in_offset'
+        ZOOM_OUT_OFFSET = 'axis_camera.zoom_out_offset'
+        ZOOM_IN_SCALE = 'axis_camera.zoom_in_scale'
+        ZOOM_OUT_SCALE = 'axis_camera.zoom_out_scale'
+        SCALE_PAN = 'axis_camera.scale_pan'
+        SCALE_TILT = 'axis_camera.scale_tilt'
+        SCALE_ZOOM = 'axis_camera.scale_zoom'
+
+    class TOPICS:
+        IMAGE = "image_raw"
+
+        # TODO: the rest of the topics
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseCamera.TOPIC,
+            fps: int = FPS,
+            serial: str = None,
+            device_type: str = Q62,
+
+            hostname: str = HOSTNAME,
+            http_port: int = HTTP_PORT,
+            username: str = USERNAME,
+            password: str = PASSWORD,
+            use_encrypted_password: bool = USE_ENCRYPTED_PASSWORD,
+
+            camera_num: int = CAMERA_NUM,
+            frame_width: int = FRAME_WIDTH,
+            frame_height: int = FRAME_HEIGHT,
+            fps: int = FPS,
+
+            enable_ptz: bool = ENABLE_PTZ,
+            min_pan: float = MIN_PAN,
+            max_pan: float = MAX_PAN,
+            min_tilt: float = MIN_TILT,
+            max_tilt: float = MAX_TILT,
+            min_zoom: float = MIN_ZOOM,
+            max_zoom: float = MAX_ZOOM,
+            max_pan_speed: float = MAX_PAN_SPEED,
+            max_tilt_speed: float = MAX_TILT_SPEED,
+
+            enable_ir: bool = ENABLE_IR,
+            enable_wiper: bool = ENABLE_WPER,
+            enable_defog:bool = ENABLE_DEFOG,
+
+            enable_ptz_teleop: bool = ENABLE_PTZ_TELEOP,
+            button_enable_pan_tilt: int = BUTTON_ENABLE_PAN_TILT,
+            button_enable_zoom: int = BUTTON_ENABLE_ZOOM,
+            axis_pan: int = AXIS_PAN,
+            axis_tilt: int = AXIS_TILT,
+            invert_tilt: bool = INVERT_TILT,
+            axis_zoom_in: int = AXIS_ZOOM_IN,
+            axis_zoom_out: int = AXIS_ZOOM_OUT,
+            zoom_in_offset: float = ZOOM_IN_OFFSET,
+            zoom_out_offset: float = ZOOM_OUT_OFFSET,
+            zoom_in_scale: float = ZOOM_IN_SCALE,
+            zoom_out_scale: float = ZOOM_OUT_SCALE,
+            scale_pan: float = SCALE_PAN,
+            scale_tilt: float = SCALE_TILT,
+            scale_zoom: float = SCALE_ZOOM,
+
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.HOSTNAME: AxisCamera.hostname,
+            self.ROS_PARAMETER_KEYS.HTTP_PORT: AxisCamera.http_port,
+
+            self.ROS_PARAMETER_KEYS.USERNAME: AxisCamera.username,
+            self.ROS_PARAMETER_KEYS.PASSWORD: AxisCamera.password,
+            self.ROS_PARAMETER_KEYS.USE_ENCRYPTED_PASSWORD: AxisCamera.use_encrypted_password,
+
+            self.ROS_PARAMETER_KEYS.CAMERA_NUM: AxisCamera.camera_num,
+            self.ROS_PARAMETER_KEYS.FRAME_WIDTH: AxisCamera.frame_width,
+            self.ROS_PARAMETER_KEYS.FRAME_HEIGHT: AxisCamera.frame_height,
+            self.ROS_PARAMETER_KEYS.FPS: AxisCamera.fps,
+
+            # PTZ
+            self.ROS_PARAMETER_KEYS.ENABLE_PTZ: AxisCamera.enable_ptz,
+            self.ROS_PARAMETER_KEYS.MIN_PAN: AxisCamera.min_pan,
+            self.ROS_PARAMETER_KEYS.MAX_PAN: AxisCamera.max_pan,
+            self.ROS_PARAMETER_KEYS.MIN_TILT: AxisCamera.min_tilt,
+            self.ROS_PARAMETER_KEYS.MAX_TILT: AxisCamera.max_tilt,
+            self.ROS_PARAMETER_KEYS.MIN_ZOOM: AxisCamera.min_zoom,
+            self.ROS_PARAMETER_KEYS.MAX_ZOOM: AxisCamera.max_zoom,
+            self.ROS_PARAMETER_KEYS.MAX_PAN_SPEED: AxisCamera.max_pan_speed,
+            self.ROS_PARAMETER_KEYS.MAX_TILT_SPEED: AxisCamera.max_tilt_speed,
+
+            # Q62 additional services
+            self.ROS_PARAMETER_KEYS.ENABLE_IR: AxisCamera.enable_ir,
+            self.ROS_PARAMETER_KEYS.ENABLE_WIPER: AxisCamera.enable_wiper,
+            self.ROS_PARAMETER_KEYS.ENABLE_DEFOG: AxisCamera.enable_defog,
+
+            # PTZ Teleop (see axis_camera/config/teleop_ps4.yaml)
+            self.ROS_PARAMETER_KEYS.ENABLE_PTZ_TELEOP: AxisCamera.enable_ptz_teleop,
+            self.ROS_PARAMETER_KEYS.BUTTON_ENABLE_PAN_TILT: AxisCamera.button_enable_pan_tilt,
+            self.ROS_PARAMETER_KEYS.BUTTON_ENABLE_ZOOM: AxisCamera.button_enable_zoom,
+            self.ROS_PARAMETER_KEYS.AXIS_PAN: AxisCamera.axis_pan,
+            self.ROS_PARAMETER_KEYS.AXIS_TILT: AxisCamera.axis_tilt,
+            self.ROS_PARAMETER_KEYS.INVERT_TILT: AxisCamera.invert_tilt,
+            self.ROS_PARAMETER_KEYS.AXIS_ZOOM_IN: AxisCamera.axis_zoom_in,
+            self.ROS_PARAMETER_KEYS.AXIS_ZOOM_OUT: AxisCamera.axis_zoom_out,
+            self.ROS_PARAMETER_KEYS.ZOOM_IN_OFFSET: AxisCamera.zoom_in_offset,
+            self.ROS_PARAMETER_KEYS.ZOOM_OUT_OFFSET: AxisCamera.zoom_out_offset,
+            self.ROS_PARAMETER_KEYS.ZOOM_IN_SCALE: AxisCamera.zoom_in_scale,
+            self.ROS_PARAMETER_KEYS.ZOOM_OUT_SCALE: AxisCamera.zoom_out_scale,
+            self.ROS_PARAMETER_KEYS.SCALE_PAN: AxisCamera.scale_pan,
+            self.ROS_PARAMETER_KEYS.SCALE_TILT: AxisCamera.scale_tilt,
+            self.ROS_PARAMETER_KEYS.SCALE_ZOOM: AxisCamera.scale_zoom,
+        }
+        # Initialization
+        self.device_type: str = device_type
+        super().__init__(
+            idx,
+            name,
+            topic,
+            fps,
+            serial,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+        self.hostname = hostname
+        self.http_port = http_port
+        self.username = username
+        self.password = password
+        self.use_encrypted_password = use_encrypted_password
+
+        self.camera_num = camera_num
+        self.frame_width = frame_width
+        self.frame_height = frame_height
+
+        self.enable_ptz = enable_ptz
+        self.min_pan = min_pan
+        self.max_pan = max_pan
+        self.min_tilt = min_tilt
+        self.max_tilt = max_tilt
+        self.min_zoom = min_zoom
+        self.max_zoom = max_zoom
+        self.max_pan_speed = max_pan_speed
+        self.max_tilt_speed = max_tilt_speed
+
+        self.enable_ir = enable_ir
+        self.enable_wiper = enable_wiper
+        self.enable_defog = enable_defog
+
+        self.enable_ptz_teleop = enable_ptz_teleop
+        self.button_enable_pan_tilt = button_enable_pan_tilt
+        self.button_enable_zoom = button_enable_zoom
+        self.axis_pan = axis_pan
+        self.axis_tilt = axis_tilt
+        self.invert_tilt = invert_tilt
+        self.axis_zoom_in = axis_zoom_in
+        self.axis_zoom_out = axis_zoom_out
+        self.zoom_in_offset = zoom_in_offset
+        self.zoom_out_offset = zoom_out_offset
+        self.zoom_in_scale = zoom_in_scale
+        self.zoom_out_scale = zoom_out_scale
+        self.scale_pan = scale_pan
+        self.scale_tilt = scale_tilt
+        self.scale_zoom = scale_zoom
+
+    @property
+    def device_type(self) -> str:
+        return self._device_type
+
+    @device_type.setter
+    def device_type(self, device_type: str) -> None:
+        assert device_type in self.DEVICE_TYPES, (
+            "Device type '%s' is not one of '%s'" % (
+                device_type,
+                self.DEVICE_TYPES
+            )
+        )
+        self._device_type = device_type
+
+    @property
+    def hostname(self) -> str:
+        return self._hostname
+
+    @hostname.setter
+    def hostname(self, hostname: str) -> None:
+        self._hostname = hostname
+
+    @property
+    def http_port(self) -> int:
+        return self._http_port
+
+    @http_port.setter
+    def http_port(self, port: int) -> None:
+        assert port >= 0 and port <= 65535, (
+            f'Port {port} must be in range [0, 65535]'
+        )
+        self._http_port = port
+
+    @property
+    def username(self) -> str:
+        return self._username
+
+    @username.setter
+    def username(self, username: str) -> None:
+        assert len(username) > 0, 'Username cannot be empty'
+        self._username = username
+
+    @property
+    def password(self) -> str:
+        return self._password
+
+    @password.setter
+    def password(self, password: str) -> None:
+        self._password = password
+
+    @property
+    def use_encrypted_password(self) -> bool:
+        return self._use_encrypted_password
+
+    @use_encrypted_password.setter
+    def use_encrypted_password(self, encrypt: bool) -> None:
+        self._use_encrypted_password = encrypt
+
+    @property
+    def camera_num(self) -> int:
+        return self._camera_num
+
+    @camera_num.setter
+    def camera_num(self, num: int) -> None:
+        assert num >= 0, f'Camera number {num} cannot be negative'
+        self._camera_num = num
+
+    @property
+    def frame_width(self) -> int:
+        return self._frame_width
+
+    @frame_width.setter
+    def frame_width(self, width: int) -> None:
+        assert width > 0, f'Frame width {width} must be positive'
+        self._frame_width = width
+
+    @property
+    def frame_height(self) -> int:
+        return self._frame_height
+
+    @frame_height.setter
+    def frame_height(self, height: int) -> None:
+        assert height > 0, f'Frame height {height} must be positive'
+        self._frame_height = height
+
+    @property
+    def enable_ptz(self) -> bool:
+        return self._enable_ptz
+
+    @enable_ptz.setter
+    def enable_ptz(self, enable: bool) -> None:
+        self._enable_ptz = enable
+
+    @property
+    def min_pan(self) -> float:
+        return self._min_pan
+
+    @min_pan.setter
+    def min_pan(self, pan: float) -> None:
+        assert pan >= -pi and pan  <= pi, f'Min pan {pan} must be in range [-pi, pi]'
+        self._min_pan = pan
+
+    @property
+    def max_pan(self) -> float:
+        return self._max_pan
+
+    @max_pan.setter
+    def max_pan(self, pan: float) -> None:
+        assert pan >= -pi and pan <= pi, f'Max pan {pan} must be in range [-pi, pi]'
+        self._max_pan = pan
+
+    @property
+    def min_tilt(self) -> float:
+        return self._min_tilt
+
+    @min_tilt.setter
+    def min_tilt(self, tilt: float) -> None:
+        assert tilt >= -pi/2 and tilt  <= pi/2, f'Min tilt {tilt} must be in range [-pi/2, pi/2]'
+        self._min_tilt = tilt
+
+    @property
+    def max_tilt(self) -> float:
+        return self._max_tilt
+
+    @max_tilt.setter
+    def max_tilt(self, tilt: float) -> None:
+        assert tilt >= -pi/2 and tilt <= pi/2, f'Max tilt {tilt} must be in range [-pi/2, pi/2]'
+        self._max_tilt = tilt
+
+    @property
+    def min_zoom(self) -> float:
+        return self._min_zoom
+
+    @min_zoom.setter
+    def min_zoom(self, zoom: float) -> None:
+        assert zoom > 0, f'Min zoom {zoom} must be positive'
+        self._min_zoom = zoom
+
+    @property
+    def max_zoom(self) -> float:
+        return self._max_zoom
+
+    @max_zoom.setter
+    def max_zoom(self, zoom: float) -> None:
+        assert zoom > 0, f'Max zoom {zoom} must be positive'
+        self._max_zoom = zoom
+
+    @property
+    def max_pan_speed(self) -> float:
+        return self._max_pan_speed
+
+    @max_pan_speed.setter
+    def max_pan_speed(self, speed: float) -> None:
+        assert speed > 0, f'Max pan speed {speed} must be positive'
+        self._max_pan_speed = speed
+
+    @property
+    def max_tilt_speed(self) -> float:
+        return self._max_tilt_speed
+
+    @max_tilt_speed.setter
+    def max_tilt_speed(self, speed: float) -> None:
+        assert speed > 0, f'Max tilt speed {speed} must be positive'
+        self._max_tilt_speed = speed
+
+    @property
+    def enable_ir(self) -> bool:
+        return self._enable_ir
+
+    @enable_ir.setter
+    def enable_ir(self, enable: bool) -> None:
+        self._enable_ir = enable
+
+    @property
+    def enable_wiper(self) -> bool:
+        return self._enable_wiper
+
+    @enable_wiper.setter
+    def enable_wiper(self, enable: bool) -> None:
+        self._enable_wiper = enable
+
+    @property
+    def enable_defog(self) -> bool:
+        return self._enable_defog
+
+    @enable_defog.setter
+    def enable_defog(self, enable: bool) -> None:
+        self._enable_defog = enable
+
+    @property
+    def enable_ptz_teleop(self) -> bool:
+        return self._enable_ptz_teleop
+
+    @enable_ptz_teleop.setter
+    def enable_ptz_teleop(self, enable: bool) -> None:
+        self._enable_ptz_teleop = enable
+
+    @property
+    def invert_tilt(self) -> bool:
+        return self._invert_tilt
+
+    @invert_tilt.setter
+    def invert_tilt(self, enable: bool) -> None:
+        self._invert_tilt = enable
+
+    @property
+    def button_enable_pan_tilt(self) -> int:
+        return self._button_enable_pan_tilt
+
+    @button_enable_pan_tilt.setter
+    def button_enable_pan_tilt(self, button: int) -> None:
+        self._button_enable_pan_tilt = button
+
+    @property
+    def button_enable_zoom(self) -> int:
+        return self._button_enable_zoom
+
+    @button_enable_zoom.setter
+    def button_enable_zoom(self, button: int) -> None:
+        self._button_enable_zoom = button
+
+    @property
+    def axis_pan(self) -> int:
+        return self._axis_pan
+
+    @axis_pan.setter
+    def axis_pan(self, axis: int) -> None:
+        self._axis_pan = axis
+
+    @property
+    def axis_tilt(self) -> int:
+        return self._axis_tilt
+
+    @axis_tilt.setter
+    def axis_tilt(self, axis: int) -> None:
+        self._axis_tilt = axis
+
+    @property
+    def axis_zoom_in(self) -> int:
+        return self._axis_zoom_in
+
+    @axis_zoom_in.setter
+    def axis_zoom_in(self, axis: int) -> None:
+        self._axis_zoom_in = axis
+
+    @property
+    def axis_zoom_out(self) -> int:
+        return self._axis_zoom_out
+
+    @axis_zoom_out.setter
+    def axis_zoom_out(self, axis: int) -> None:
+        self._axis_zoom_out = axis
+
+    @property
+    def zoom_in_offset(self) -> float:
+        return self._zoom_in_offset
+
+    @zoom_in_offset.setter
+    def zoom_in_offset(self, offset: float) -> None:
+        self._zoom_in_offset = offset
+
+    @property
+    def zoom_out_offset(self) -> float:
+        return self._zoom_out_offset
+
+    @zoom_out_offset.setter
+    def zoom_out_offset(self, offset: float) -> None:
+        self._zoom_out_offset = offset
+
+    @property
+    def zoom_in_scale(self) -> float:
+        return self._zoom_in_scale
+
+    @zoom_in_scale.setter
+    def zoom_in_scale(self, scale: float) -> None:
+        self._zoom_in_scale = scale
+
+    @property
+    def zoom_out_scale(self) -> float:
+        return self._zoom_out_scale
+
+    @zoom_out_scale.setter
+    def zoom_out_scale(self, scale: float) -> None:
+        self._zoom_out_scale = scale
+
+    @property
+    def scale_pan(self) -> float:
+        return self._scale_pan
+
+    @scale_pan.setter
+    def scale_pan(self, scale: float) -> None:
+        self._scale_pan = scale
+
+    @property
+    def scale_tilt(self) -> float:
+        return self._scale_tilt
+
+    @scale_tilt.setter
+    def scale_tilt(self, scale: float) -> None:
+        self._scale_tilt = scale
+
+    @property
+    def scale_zoom(self) -> float:
+        return self._scale_zoom
+
+    @scale_zoom.setter
+    def scale_zoom(self, scale: float) -> None:
+        self._scale_zoom = scale
