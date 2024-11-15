@@ -954,6 +954,7 @@ class AxisCamera(BaseCamera):
     TF_PREFIX = 'axis'
 
     HOSTNAME = '192.168.10.0'
+    CAMERA_INFO_URL = ''
 
     DOME_FIXED = 'dome_fixed'
     DOME_PTZ = 'dome_ptz'
@@ -1014,6 +1015,7 @@ class AxisCamera(BaseCamera):
 
         HOSTNAME = 'axis_camera.hostname'
         HTTP_PORT = 'axis_camera.http_port'
+        CAMERA_INFO_URL = 'axis_camera.camera_info_url'
 
         USERNAME = 'axis_camera.username'
         PASSWORD = 'axis_camera.password'
@@ -1076,6 +1078,7 @@ class AxisCamera(BaseCamera):
             username: str = USERNAME,
             password: str = PASSWORD,
             use_encrypted_password: bool = USE_ENCRYPTED_PASSWORD,
+            camera_info_url: str = CAMERA_INFO_URL,
 
             camera_num: int = CAMERA_NUM,
             width: int = WIDTH,
@@ -1127,6 +1130,7 @@ class AxisCamera(BaseCamera):
 
             self.ROS_PARAMETER_KEYS.HOSTNAME: AxisCamera.hostname,
             self.ROS_PARAMETER_KEYS.HTTP_PORT: AxisCamera.http_port,
+            self.ROS_PARAMETER_KEYS.CAMERA_INFO_URL: AxisCamera.camera_info_url,
 
             self.ROS_PARAMETER_KEYS.USERNAME: AxisCamera.username,
             self.ROS_PARAMETER_KEYS.PASSWORD: AxisCamera.password,
@@ -1193,6 +1197,7 @@ class AxisCamera(BaseCamera):
         self.username = username
         self.password = password
         self.use_encrypted_password = use_encrypted_password
+        self.camera_info_url = camera_info_url
 
         self.camera_num = camera_num
         self.width = width
@@ -1268,6 +1273,14 @@ class AxisCamera(BaseCamera):
             f'Port {port} must be in range [0, 65535]'
         )
         self._http_port = port
+
+    @property
+    def camera_info_url(self) -> str:
+        return self._camera_info_url
+
+    @camera_info_url.setter
+    def camera_info_url(self, url: str) -> None:
+        self._camera_info_url = url
 
     @property
     def username(self) -> str:
