@@ -1302,7 +1302,7 @@ class AxisCamera(BaseCamera):
         return self._height
 
     @height.setter
-    def frame_height(self, height: int) -> None:
+    def height(self, height: int) -> None:
         assert height > 0, f'Frame height {height} must be positive'
         self._height = height
 
