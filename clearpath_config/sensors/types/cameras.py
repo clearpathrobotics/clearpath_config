@@ -951,6 +951,7 @@ class AxisCamera(BaseCamera):
     SERIAL = ''
 
     SENSOR_MODEL = 'axis_camera'
+    TF_PREFIX = 'axis'
 
     HOSTNAME = '192.168.10.0'
 
@@ -1008,6 +1009,8 @@ class AxisCamera(BaseCamera):
 
     class ROS_PARAMETER_KEYS:
         SERIAL = 'axis_camera.serial'
+
+        TF_PREFIX = 'axis_camera.tf_prefix'
 
         HOSTNAME = 'axis_camera.hostname'
         HTTP_PORT = 'axis_camera.http_port'
@@ -1120,6 +1123,8 @@ class AxisCamera(BaseCamera):
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.SERIAL: AxisCamera.serial,
 
+            self.ROS_PARAMETER_KEYS.TF_PREFIX: AxisCamera.tf_prefix,
+
             self.ROS_PARAMETER_KEYS.HOSTNAME: AxisCamera.hostname,
             self.ROS_PARAMETER_KEYS.HTTP_PORT: AxisCamera.http_port,
 
@@ -1181,6 +1186,8 @@ class AxisCamera(BaseCamera):
             xyz,
             rpy
         )
+        self.tf_prefix = name
+
         self.hostname = hostname
         self.http_port = http_port
         self.username = username
@@ -1234,6 +1241,14 @@ class AxisCamera(BaseCamera):
             )
         )
         self._device_type = device_type
+
+    @property
+    def tf_prefix(self) -> str:
+        return self._tf_prefix
+
+    @tf_prefix.setter
+    def tf_prefix(self, prefix: str) -> None:
+        self._tf_prefix = prefix
 
     @property
     def hostname(self) -> str:
