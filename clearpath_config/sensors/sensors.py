@@ -32,6 +32,7 @@ from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
 from clearpath_config.sensors.types.cameras import (
+    AxisCamera,
     BaseCamera,
     FlirBlackfly,
     IntelRealsense,
@@ -89,11 +90,13 @@ class InertialMeasurementUnit():
 
 
 class Camera():
+    AXIS_CANERA = AxisCamera.SENSOR_MODEL
     FLIR_BLACKFLY = FlirBlackfly.SENSOR_MODEL
     INTEL_REALSENSE = IntelRealsense.SENSOR_MODEL
     STEREOLABS_ZED = StereolabsZed.SENSOR_MODEL
 
     MODEL = {
+        AXIS_CANERA: AxisCamera,
         FLIR_BLACKFLY: FlirBlackfly,
         INTEL_REALSENSE: IntelRealsense,
         STEREOLABS_ZED: StereolabsZed,
