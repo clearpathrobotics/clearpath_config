@@ -972,8 +972,8 @@ class AxisCamera(BaseCamera):
     USE_ENCRYPTED_PASSWORD = True
 
     CAMERA_NUM = 1
-    FRAME_WIDTH = 640
-    FRAME_HEIGHT = 480
+    WIDTH = 640
+    HEIGHT = 480
     FPS = 20
 
     ENABLE_PTZ = True
@@ -1017,8 +1017,8 @@ class AxisCamera(BaseCamera):
         USE_ENCRYPTED_PASSWORD = 'axis_camera.use_encrypted_password'
 
         CAMERA_NUM = 'axis_camera.camera_num'
-        FRAME_WIDTH = 'axis_camera.frame_width'
-        FRAME_HEIGHT = 'axis_camera.frame_height'
+        WIDTH = 'axis_camera.width'
+        HEIGHT = 'axis_camera.height'
         FPS = 'axis_camera.fps'
 
         # PTZ
@@ -1075,8 +1075,8 @@ class AxisCamera(BaseCamera):
             use_encrypted_password: bool = USE_ENCRYPTED_PASSWORD,
 
             camera_num: int = CAMERA_NUM,
-            frame_width: int = FRAME_WIDTH,
-            frame_height: int = FRAME_HEIGHT,
+            width: int = WIDTH,
+            height: int = HEIGHT,
 
             enable_ptz: bool = ENABLE_PTZ,
             min_pan: float = MIN_PAN,
@@ -1128,8 +1128,8 @@ class AxisCamera(BaseCamera):
             self.ROS_PARAMETER_KEYS.USE_ENCRYPTED_PASSWORD: AxisCamera.use_encrypted_password,
 
             self.ROS_PARAMETER_KEYS.CAMERA_NUM: AxisCamera.camera_num,
-            self.ROS_PARAMETER_KEYS.FRAME_WIDTH: AxisCamera.frame_width,
-            self.ROS_PARAMETER_KEYS.FRAME_HEIGHT: AxisCamera.frame_height,
+            self.ROS_PARAMETER_KEYS.WIDTH: AxisCamera.width,
+            self.ROS_PARAMETER_KEYS.HEIGHT: AxisCamera.height,
             self.ROS_PARAMETER_KEYS.FPS: AxisCamera.fps,
 
             # PTZ
@@ -1188,8 +1188,8 @@ class AxisCamera(BaseCamera):
         self.use_encrypted_password = use_encrypted_password
 
         self.camera_num = camera_num
-        self.frame_width = frame_width
-        self.frame_height = frame_height
+        self.width = width
+        self.height = height
 
         self.enable_ptz = enable_ptz
         self.min_pan = min_pan
@@ -1289,22 +1289,22 @@ class AxisCamera(BaseCamera):
         self._camera_num = num
 
     @property
-    def frame_width(self) -> int:
-        return self._frame_width
+    def width(self) -> int:
+        return self._width
 
-    @frame_width.setter
-    def frame_width(self, width: int) -> None:
+    @width.setter
+    def width(self, width: int) -> None:
         assert width > 0, f'Frame width {width} must be positive'
-        self._frame_width = width
+        self._width = width
 
     @property
-    def frame_height(self) -> int:
-        return self._frame_height
+    def height(self) -> int:
+        return self._height
 
-    @frame_height.setter
+    @height.setter
     def frame_height(self, height: int) -> None:
         assert height > 0, f'Frame height {height} must be positive'
-        self._frame_height = height
+        self._height = height
 
     @property
     def enable_ptz(self) -> bool:
