@@ -1005,6 +1005,8 @@ class AxisCamera(BaseCamera):
     SCALE_ZOOM = 1
 
     class ROS_PARAMETER_KEYS:
+        SERIAL = 'axis_camera.serial'
+
         HOSTNAME = 'axis_camera.hostname'
         HTTP_PORT = 'axis_camera.http_port'
 
