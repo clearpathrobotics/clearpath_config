@@ -998,13 +998,13 @@ class AxisCamera(BaseCamera):
     INVERT_TILT = False
     AXIS_ZOOM_IN = -1
     AXIS_ZOOM_OUT = -1
-    ZOOM_IN_OFFSET = 0
-    ZOOM_OUT_OFFSET = 0
-    ZOOM_IN_SCALE = 1
-    ZOOM_OUT_SCALE = 1
-    SCALE_PAN = 1
-    SCALE_TILT = 1
-    SCALE_ZOOM = 1
+    ZOOM_IN_OFFSET = 0.0
+    ZOOM_OUT_OFFSET = 0.0
+    ZOOM_IN_SCALE = 1.0
+    ZOOM_OUT_SCALE = 1.0
+    SCALE_PAN = 1.0
+    SCALE_TILT = 1.0
+    SCALE_ZOOM = 1.0
 
     class ROS_PARAMETER_KEYS:
         SERIAL = 'axis_camera.serial'
