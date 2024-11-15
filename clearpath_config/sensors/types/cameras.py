@@ -973,7 +973,7 @@ class AxisCamera(BaseCamera):
     PASSWORD = ''
     USE_ENCRYPTED_PASSWORD = True
 
-    CAMERA_NUM = 1
+    CAMERA = 1
     WIDTH = 640
     HEIGHT = 480
     FPS = 20
@@ -1021,7 +1021,7 @@ class AxisCamera(BaseCamera):
         PASSWORD = 'axis_camera.password'
         USE_ENCRYPTED_PASSWORD = 'axis_camera.use_encrypted_password'
 
-        CAMERA_NUM = 'axis_camera.camera_num'
+        CAMERA = 'axis_camera.camera'
         WIDTH = 'axis_camera.width'
         HEIGHT = 'axis_camera.height'
         FPS = 'axis_camera.fps'
@@ -1080,7 +1080,7 @@ class AxisCamera(BaseCamera):
             use_encrypted_password: bool = USE_ENCRYPTED_PASSWORD,
             camera_info_url: str = CAMERA_INFO_URL,
 
-            camera_num: int = CAMERA_NUM,
+            camera: int = CAMERA,
             width: int = WIDTH,
             height: int = HEIGHT,
 
@@ -1136,7 +1136,7 @@ class AxisCamera(BaseCamera):
             self.ROS_PARAMETER_KEYS.PASSWORD: AxisCamera.password,
             self.ROS_PARAMETER_KEYS.USE_ENCRYPTED_PASSWORD: AxisCamera.use_encrypted_password,
 
-            self.ROS_PARAMETER_KEYS.CAMERA_NUM: AxisCamera.camera_num,
+            self.ROS_PARAMETER_KEYS.CAMERA: AxisCamera.camera,
             self.ROS_PARAMETER_KEYS.WIDTH: AxisCamera.width,
             self.ROS_PARAMETER_KEYS.HEIGHT: AxisCamera.height,
             self.ROS_PARAMETER_KEYS.FPS: AxisCamera.fps,
@@ -1199,7 +1199,7 @@ class AxisCamera(BaseCamera):
         self.use_encrypted_password = use_encrypted_password
         self.camera_info_url = camera_info_url
 
-        self.camera_num = camera_num
+        self.camera = camera
         self.width = width
         self.height = height
 
@@ -1308,13 +1308,13 @@ class AxisCamera(BaseCamera):
         self._use_encrypted_password = encrypt
 
     @property
-    def camera_num(self) -> int:
-        return self._camera_num
+    def camera(self) -> int:
+        return self._camera
 
-    @camera_num.setter
-    def camera_num(self, num: int) -> None:
+    @camera.setter
+    def camera(self, num: int) -> None:
         assert num >= 0, f'Camera number {num} cannot be negative'
-        self._camera_num = num
+        self._camera = num
 
     @property
     def width(self) -> int:
