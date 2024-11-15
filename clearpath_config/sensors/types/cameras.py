@@ -1063,7 +1063,7 @@ class AxisCamera(BaseCamera):
             name: str = None,
             topic: str = BaseCamera.TOPIC,
             fps: int = FPS,
-            serial: str = None,
+            serial: str = '',
             device_type: str = Q62,
 
             hostname: str = HOSTNAME,
@@ -1116,7 +1116,7 @@ class AxisCamera(BaseCamera):
             ) -> None:
         # ROS Parameter Template
         ros_parameters_template = {
-            self.ROS_PARAMETER_KEYS.SERIAL: None,
+            self.ROS_PARAMETER_KEYS.SERIAL: '',
 
             self.ROS_PARAMETER_KEYS.HOSTNAME: AxisCamera.hostname,
             self.ROS_PARAMETER_KEYS.HTTP_PORT: AxisCamera.http_port,
@@ -1218,6 +1218,14 @@ class AxisCamera(BaseCamera):
         self.scale_pan = scale_pan
         self.scale_tilt = scale_tilt
         self.scale_zoom = scale_zoom
+
+    @property
+    def serial(self) -> str:
+        return self._serial
+
+    @serial.setter
+    def serial(self, s: str) -> None:
+        self._serial = s
 
     @property
     def device_type(self) -> str:
