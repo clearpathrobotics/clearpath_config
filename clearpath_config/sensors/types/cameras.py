@@ -1114,6 +1114,8 @@ class AxisCamera(BaseCamera):
             ) -> None:
         # ROS Parameter Template
         ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.SERIAL: None,
+
             self.ROS_PARAMETER_KEYS.HOSTNAME: AxisCamera.hostname,
             self.ROS_PARAMETER_KEYS.HTTP_PORT: AxisCamera.http_port,
 
