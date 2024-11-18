@@ -1,0 +1,25 @@
+serial_number: a200-0000
+version: 0
+sensors:
+  camera:
+    - model: flir_blackfly
+      urdf_enabled: true
+      launch_enabled: true
+      parent: base_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        flir_blackfly:
+          serial_number: ''
+          gain_auto: Continuous
+          pixel_format: BayerRG8
+          # Resolution
+          # image_width: 1408
+          # image_height: 1080
+          # offset_x: 0
+          # offset_y: 0
+          # binning_x: 1
+          # binning_y: 1
+          frame_rate_enable: true
+          frame_rate_auto: Off
+          frame_rate: 40

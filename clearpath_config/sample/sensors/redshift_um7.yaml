@@ -1,0 +1,15 @@
+serial_number: a200-0000
+version: 0
+sensors:
+  imu:
+    - model: redshift_um7
+      urdf_enabled: true
+      launch_enabled: true
+      parent: base_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        um7_driver:
+          port: /dev/clearpath/imu
+          frame_id: imu_0_link
+          tf_ned_to_enu: true

@@ -1,0 +1,20 @@
+serial_number: a200-0000
+version: 0
+sensors:
+  lidar3d:
+    - model: velodyne_lidar
+      urdf_enabled: true
+      launch_enabled: true
+      parent: base_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        velodyne_driver_node:
+          frame_id: lidar3d_0_laser
+          device_ip: 192.168.131.25
+          port: 2368
+          model: VLP16
+        velodyne_transform_node:
+          model: VLP16
+          fixed_frame: lidar3d_0_laser
+          target_frame: lidar3d_0_laser

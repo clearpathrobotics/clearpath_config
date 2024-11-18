@@ -1,0 +1,34 @@
+serial_number: a200-0000
+version: 0
+sensors:
+  camera:
+  - model: luxonis_oakd
+    urdf_enabled: true
+    launch_enabled: true
+    parent: top_plate_front_mount
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+    ros_parameters:
+      oakd:
+        camera:
+          i_enable_imu: false
+          i_enable_ir: false
+          i_floodlight_brightness: 0
+          i_laser_dot_brightness: 100
+          i_nn_type: none
+          i_pipeline_type: RGB
+          i_usb_speed: SUPER_PLUS
+          i_usb_port_id: ''
+        rgb:
+          i_board_socket_id: 0
+          i_fps: 30.0
+          i_height: 720
+          i_interleaved: false
+          i_max_q_size: 10
+          i_preview_size: 250
+          i_enable_preview: true
+          i_low_bandwidth: true
+          i_keep_preview_aspect_ratio: true
+          i_publish_topic: false
+          i_resolution: '1080P'
+          i_width: 1280

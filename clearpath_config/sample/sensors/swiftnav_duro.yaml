@@ -1,0 +1,16 @@
+serial_number: a200-0000
+version: 0
+sensors:
+  gps:
+    - model: swiftnav_duro
+      urdf_enabled: true
+      launch_enabled: true
+      parent: base_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        duro_node:
+          gps_receiver_frame_id: gps_0_link
+          ip_address: 192.168.131.30
+          ip_port: 55555
+          imu_frame_id: gps_0_link

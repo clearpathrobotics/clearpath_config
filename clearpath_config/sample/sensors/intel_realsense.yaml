@@ -1,0 +1,20 @@
+serial_number: a200-0000
+version: 0
+sensors:
+  camera:
+    - model: intel_realsense
+      urdf_enabled: true
+      launch_enabled: true
+      parent: base_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        intel_realsense:
+          camera_name: camera_0
+          device_type: d435
+          serial_no: "0"
+          enable_color: true
+          rgb_camera.profile: 640,480,30
+          enable_depth: true
+          depth_module.profile: 640,480,30
+          pointcloud.enable: true
