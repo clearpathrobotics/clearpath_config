@@ -1060,7 +1060,7 @@ class AxisCamera(BaseCamera):
         SCALE_ZOOM = 'axis_camera.scale_zoom'
 
     class TOPICS:
-        IMAGE = 'image_raw/compressed'
+        IMAGE = 'image/compressed'
         CAMERA_INFO = 'camera_info'
 
         AUTOFOCUS = 'autofocus'
