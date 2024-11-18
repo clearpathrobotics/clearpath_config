@@ -1009,7 +1009,7 @@ class AxisCamera(BaseCamera):
     SCALE_ZOOM = 1.0
 
     class ROS_PARAMETER_KEYS:
-        SERIAL = 'axis_camera.serial'
+        SERIAL = 'axis_camera.serial'  # required by superclass, not used locally
 
         TF_PREFIX = 'axis_camera.tf_prefix'
 
@@ -1043,7 +1043,7 @@ class AxisCamera(BaseCamera):
         ENABLE_DEFOG = 'axis_camera.defog'
 
         # PTZ Teleop (see axis_camera/config/teleop_ps4.yaml)
-        ENABLE_PTZ_TELEOP = 'axis_camera.teleop'
+        ENABLE_PTZ_TELEOP = 'axis_camera.ptz_teleop'
         BUTTON_ENABLE_PAN_TILT = 'axis_camera.button_enable_pan_tilt'
         BUTTON_ENABLE_ZOOM = 'axis_camera.button_enable_zoom'
         AXIS_PAN = 'axis_camera.axis_pan'
