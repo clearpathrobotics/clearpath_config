@@ -1060,9 +1060,17 @@ class AxisCamera(BaseCamera):
         SCALE_ZOOM = 'axis_camera.scale_zoom'
 
     class TOPICS:
-        IMAGE = "image_raw"
+        IMAGE = 'image_raw/compressed'
+        CAMERA_INFO = 'camera_info'
 
-        # TODO: the rest of the topics
+        AUTOFOCUS = 'autofocus'
+        AUTOIRIS = 'autoiris'
+        BRIGHTNESS = 'brightness'
+        FOCUS = 'focus'
+        IRIS = 'iris'
+        JOINT_STATES = 'joint_states'
+        PTZ_STATE = 'ptz_state'
+
 
     def __init__(
             self,
