@@ -1056,7 +1056,7 @@ class LuxonisOAKD(BaseCamera):
     def set_fps(self, fps: float) -> None:
         self.fps = fps
 
-        
+
 class AxisCamera(BaseCamera):
     """PTZ and fixed cameras that use the axis_camera driver"""
 
@@ -1183,7 +1183,6 @@ class AxisCamera(BaseCamera):
         JOINT_STATES = 'joint_states'
         PTZ_STATE = 'ptz_state'
 
-
     def __init__(
             self,
             idx: int = None,
@@ -1216,7 +1215,7 @@ class AxisCamera(BaseCamera):
 
             enable_ir: bool = ENABLE_IR,
             enable_wiper: bool = ENABLE_WPER,
-            enable_defog:bool = ENABLE_DEFOG,
+            enable_defog: bool = ENABLE_DEFOG,
 
             enable_ptz_teleop: bool = ENABLE_PTZ_TELEOP,
             button_enable_pan_tilt: int = BUTTON_ENABLE_PAN_TILT,
@@ -1468,7 +1467,7 @@ class AxisCamera(BaseCamera):
 
     @min_pan.setter
     def min_pan(self, pan: float) -> None:
-        assert pan >= -pi and pan  <= pi, f'Min pan {pan} must be in range [-pi, pi]'
+        assert pan >= -pi and pan <= pi, f'Min pan {pan} must be in range [-pi, pi]'
         self._min_pan = pan
 
     @property
@@ -1486,7 +1485,7 @@ class AxisCamera(BaseCamera):
 
     @min_tilt.setter
     def min_tilt(self, tilt: float) -> None:
-        assert tilt >= -pi/2 and tilt  <= pi/2, f'Min tilt {tilt} must be in range [-pi/2, pi/2]'
+        assert tilt >= -pi/2 and tilt <= pi/2, f'Min tilt {tilt} must be in range [-pi/2, pi/2]'
         self._min_tilt = tilt
 
     @property
