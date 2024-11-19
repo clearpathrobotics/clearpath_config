@@ -1058,7 +1058,7 @@ class LuxonisOAKD(BaseCamera):
 
 
 class AxisCamera(BaseCamera):
-    """PTZ and fixed cameras that use the axis_camera driver"""
+    """PTZ and fixed cameras that use the axis_camera driver."""
 
     SERIAL = ''
 
