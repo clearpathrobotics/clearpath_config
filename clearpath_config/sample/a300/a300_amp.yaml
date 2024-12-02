@@ -16,6 +16,9 @@ platform:
       parent: rear_bumper_mount
     - name: top_plate
       type: a300.top_plate
+    - name: amp_frame
+      type: a300.amp_frame
+      parent: default_mount
 sensors:
   imu:
     - model: microstrain_imu
