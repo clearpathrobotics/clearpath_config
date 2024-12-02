@@ -58,7 +58,7 @@ class Gripper():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Gripper model "{model}" must be one of "{cls.MODELkeys()}"'
+        assert model in cls.MODEL, f'Gripper model "{model}" must be one of "{cls.MODEL.keys()}"'
 
     def __new__(cls, model: str) -> BaseGripper:
         cls.assert_model(model)
