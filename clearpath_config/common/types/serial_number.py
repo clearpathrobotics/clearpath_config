@@ -64,6 +64,10 @@ class SerialNumber:
                 'cpr-j100-0001',
             )
             sn = sn[1:]
+        # Silently replace A201 prefix with A200
+        # Mechanically both are effectively identical, and re-use the same options & payloads
+        if sn[0] == 'a201':
+            sn[0] = 'a200'
         # Match to Robot
         assert sn[0] in Platform.ALL, (
             'Serial Number model entry must match one of %s' % Platform.ALL

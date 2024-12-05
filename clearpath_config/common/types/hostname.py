@@ -32,6 +32,7 @@ import re
 # Hostname
 # - hostname class
 class Hostname:
+
     def __init__(self, hostname: str = 'hostname') -> None:
         self.assert_valid(hostname)
         self.hostname = hostname

@@ -124,6 +124,7 @@ class CANBridge:
 
 
 class CANBridgeListConfig(ListConfig[CANBridge, str]):
+
     def __init__(self) -> None:
         super().__init__(
             uid=lambda obj: obj.interface,

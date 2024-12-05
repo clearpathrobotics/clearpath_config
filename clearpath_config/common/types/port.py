@@ -29,6 +29,7 @@
 # Port
 # - TCP Port
 class Port:
+
     def __init__(self, port: int) -> None:
         self.assert_valid(port)
         self.port = int(port)

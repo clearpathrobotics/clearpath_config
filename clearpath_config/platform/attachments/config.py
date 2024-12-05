@@ -33,6 +33,7 @@ from clearpath_config.platform.types.attachment import BaseAttachment
 
 
 class AttachmentListConfig(ListConfig[BaseAttachment, str]):
+
     def __init__(self) -> None:
         super().__init__(
             uid=lambda obj: obj.get_name(),
@@ -50,6 +51,7 @@ class AttachmentListConfig(ListConfig[BaseAttachment, str]):
 # Attachments Config
 # - to be used by all platforms.
 class AttachmentsConfig:
+
     def __init__(
             self,
             attachment,

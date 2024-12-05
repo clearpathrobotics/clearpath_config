@@ -97,6 +97,26 @@ class A200SensorArch(BaseAttachment):
         super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
+class A200ObserverBackpack(BaseAttachment):
+    PLATFORM = Platform.A200
+    ATTACHMENT_MODEL = '%s.observer_backpack' % PLATFORM
+    OBSERVER_BACKPACK = 'observer_backpack'
+    MODELS = [OBSERVER_BACKPACK]
+    DEFAULT = OBSERVER_BACKPACK
+    PARENT = 'default_mount'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
 class A200Attachment(PlatformAttachment):
     PLATFORM = Platform.A200
     # Top Plates
@@ -105,9 +125,12 @@ class A200Attachment(PlatformAttachment):
     BUMPER = A200Bumper.ATTACHMENT_MODEL
     # Archs
     SENSOR_ARCH = A200SensorArch.ATTACHMENT_MODEL
+    # Observer Backpack
+    OBSERVER_BACKPACK = A200ObserverBackpack.ATTACHMENT_MODEL
 
     TYPES = {
         TOP_PLATE: A200TopPlate,
         BUMPER: A200Bumper,
         SENSOR_ARCH: A200SensorArch,
+        OBSERVER_BACKPACK: A200ObserverBackpack,
     }

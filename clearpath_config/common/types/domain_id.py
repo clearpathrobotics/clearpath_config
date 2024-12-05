@@ -26,6 +26,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 class DomainID:
+
     def __init__(self, _id: int = 0) -> None:
         self.assert_valid(_id)
         self.id = _id

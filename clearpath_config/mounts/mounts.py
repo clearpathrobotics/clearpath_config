@@ -58,6 +58,7 @@ class Mount():
 
 
 class MountListConfig(OrderedListConfig[BaseMount]):
+
     def __init__(self) -> None:
         super().__init__(obj_type=BaseMount)
 

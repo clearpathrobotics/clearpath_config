@@ -29,6 +29,7 @@
 # IP
 # - ip class
 class IP:
+
     def __init__(self, ip: str = '0.0.0.0') -> None:
         self.assert_valid(ip)
         self.ip_str = ip

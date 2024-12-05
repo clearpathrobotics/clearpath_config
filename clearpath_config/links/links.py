@@ -65,6 +65,7 @@ class Link():
 
 # LinkListConfig
 class LinkListConfig(ListConfig[BaseLink, str]):
+
     def __init__(self) -> None:
         super().__init__(
             uid=lambda obj: obj.get_name(),

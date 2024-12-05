@@ -194,6 +194,7 @@ class ServerConfig(BaseConfig):
 
 # LinkListConfig
 class ServerListConfig(ListConfig[ServerConfig, int]):
+
     def __init__(self) -> None:
         super().__init__(
             uid=lambda obj: obj.server_id,

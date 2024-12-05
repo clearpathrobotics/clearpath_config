@@ -31,6 +31,7 @@ import os
 # File
 # - file class
 class File:
+
     def __init__(self, path: str, creatable=False, exists=False, make_abs=True) -> None:
         if creatable:
             assert File.is_creatable(path)

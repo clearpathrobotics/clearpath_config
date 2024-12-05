@@ -195,6 +195,7 @@ class Sensor():
 
 
 class SensorListConfig(OrderedListConfig[BaseSensor]):
+
     def __init__(self) -> None:
         super().__init__(obj_type=BaseSensor)
 
