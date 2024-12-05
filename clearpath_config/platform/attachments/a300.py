@@ -75,14 +75,36 @@ class A300Bumper(Bumper):
         super().__init__(name, model, enabled, extension, parent, xyz, rpy)
 
 
+class A300AMPFrame(BaseAttachment):
+    PLATFORM = Platform.A300
+    ATTACHMENT_MODEL = '%s.amp_frame' % PLATFORM
+    DEFAULT = 'default'
+    MODELS = [DEFAULT]
+    PARENT = 'default_mount'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
 class A300Attachment(PlatformAttachment):
     PLATFORM = Platform.A300
     # Top Plates
     TOP_PLATE = A300TopPlate.ATTACHMENT_MODEL
     # Bumper
     BUMPER = A300Bumper.ATTACHMENT_MODEL
+    # AMP frame
+    AMP_FRAME = A300AMPFrame.ATTACHMENT_MODEL
 
     TYPES = {
         TOP_PLATE: A300TopPlate,
         BUMPER: A300Bumper,
+        AMP_FRAME: A300AMPFrame,
     }

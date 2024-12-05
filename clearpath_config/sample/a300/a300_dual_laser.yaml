@@ -1,0 +1,58 @@
+serial_number: a300-0000
+version: 0
+system:
+  hosts:
+    - hostname: cpr-a300-0000
+      ip: 192.168.131.1
+  ros2:
+    namespace: a300_0000
+platform:
+  attachments:
+    - name: front_bumper
+      type: a300.bumper
+      parent: front_bumper_mount
+    - name: rear_bumper
+      type: a300.bumper
+      parent: rear_bumper_mount
+    - name: top_plate
+      type: a300.top_plate
+sensors:
+  imu:
+  - model: microstrain_imu
+    urdf_enabled: true
+    launch_enabled: true
+    parent: base_link
+    xyz: [0.0, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+    ros_parameters:
+      microstrain_inertial_driver:
+        imu_frame_id: imu_0_link
+        port: /dev/microstrain_main
+        use_enu_frame: true
+  lidar2d:
+  - model: hokuyo_ust
+    urdf_enabled: true
+    launch_enabled: true
+    parent: top_plate_front_mount
+    xyz: [-0.1, 0.0, 0.0]
+    rpy: [0.0, 0.0, 0.0]
+    ros_parameters:
+      urg_node:
+        laser_frame_id: lidar2d_0_laser
+        ip_address: 192.168.131.20
+        ip_port: 10940
+        angle_min: -3.141592653589793
+        angle_max: 3.141592653589793
+  - model: hokuyo_ust
+    urdf_enabled: true
+    launch_enabled: true
+    parent: top_plate_rear_mount
+    xyz: [0.1, 0.0, 0.0]
+    rpy: [0.0, 0.0, 3.1415]
+    ros_parameters:
+      urg_node:
+        laser_frame_id: lidar2d_1_laser
+        ip_address: 192.168.131.21
+        ip_port: 10940
+        angle_min: -3.141592653589793
+        angle_max: 3.141592653589793
