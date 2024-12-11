@@ -148,7 +148,7 @@ class CANBridgeConfig:
 
     A300_DEFAULT = [
         {
-            CANBridge.INTERFACE: 'can0',
+            CANBridge.INTERFACE: 'vcan0',
             CANBridge.ENABLE_CAN_FD: False,
             CANBridge.INTERVAL: 0.01,
             CANBridge.USE_BUS_TIME: False,
