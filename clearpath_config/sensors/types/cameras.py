@@ -1078,6 +1078,7 @@ class AxisCamera(BaseCamera):
         DOME_PTZ,
         DOME_FIXED,
     ]
+    DEFAULT = DOME_FIXED
 
     HOSTNAME = '192.168.10.0'
     HTTP_PORT = 80
@@ -1122,6 +1123,8 @@ class AxisCamera(BaseCamera):
 
     class ROS_PARAMETER_KEYS:
         SERIAL = 'axis_camera.serial'  # required by superclass, not used locally
+
+        DEVICE_TYPE = 'axis_camera.device_type'
 
         TF_PREFIX = 'axis_camera.tf_prefix'
 
@@ -1190,7 +1193,7 @@ class AxisCamera(BaseCamera):
             topic: str = BaseCamera.TOPIC,
             fps: int = FPS,
             serial: str = SERIAL,
-            device_type: str = Q62,
+            device_type: str = DEFAULT,
 
             hostname: str = HOSTNAME,
             http_port: int = HTTP_PORT,
@@ -1244,6 +1247,8 @@ class AxisCamera(BaseCamera):
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.SERIAL: AxisCamera.serial,
+
+            self.ROS_PARAMETER_KEYS.DEVICE_TYPE: AxisCamera.device_type,
 
             self.ROS_PARAMETER_KEYS.TF_PREFIX: AxisCamera.tf_prefix,
 
