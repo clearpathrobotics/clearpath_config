@@ -148,7 +148,7 @@ class CANBridgeConfig:
 
     A300_DEFAULT = [
         {
-            CANBridge.INTERFACE: 'can0',
+            CANBridge.INTERFACE: 'vcan0',
             CANBridge.ENABLE_CAN_FD: False,
             CANBridge.INTERVAL: 0.01,
             CANBridge.USE_BUS_TIME: False,
@@ -156,15 +156,16 @@ class CANBridgeConfig:
             CANBridge.AUTO_CONFIGURE: True,
             CANBridge.AUTO_ACTIVATE: True,
         },
-        {
-            CANBridge.INTERFACE: 'vcan1',
-            CANBridge.ENABLE_CAN_FD: False,
-            CANBridge.INTERVAL: 0.01,
-            CANBridge.USE_BUS_TIME: False,
-            CANBridge.FILTERS: '0:0',
-            CANBridge.AUTO_CONFIGURE: True,
-            CANBridge.AUTO_ACTIVATE: True,
-        }
+        # TODO: Re-enable when battery driver uses clearpath_ros2_socketcan_interface
+        # {
+        #     CANBridge.INTERFACE: 'vcan1',
+        #     CANBridge.ENABLE_CAN_FD: False,
+        #     CANBridge.INTERVAL: 0.01,
+        #     CANBridge.USE_BUS_TIME: False,
+        #     CANBridge.FILTERS: '0:0',
+        #     CANBridge.AUTO_CONFIGURE: True,
+        #     CANBridge.AUTO_ACTIVATE: True,
+        # }
     ]
 
     DEFAULTS = {
