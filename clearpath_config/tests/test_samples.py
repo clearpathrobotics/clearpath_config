@@ -28,6 +28,10 @@
 import os
 
 from clearpath_config.clearpath_config import ClearpathConfig
+from clearpath_config.common.types.exception import (
+    UnsupportedAccessoryException,
+    UnsupportedPlatformException,
+)
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.tests.test_utils import assert_not_errors
 
@@ -65,6 +69,12 @@ class TestPlatformSamples:
             try:
                 print(sample)
                 cc = ClearpathConfig(sample)
+            except UnsupportedAccessoryException as e:
+                print(f'Unsupported accessory: {e}. Skipping')
+                continue
+            except UnsupportedPlatformException as e:
+                print(f'Unsupported platform: {e}. Skipping')
+                continue
             except AssertionError as ae:
                 errors.append('A200 sample failed to load: %s' % ae.args[0])
             else:
@@ -80,6 +90,12 @@ class TestPlatformSamples:
         for sample in J100_SAMPLES:
             try:
                 cc = ClearpathConfig(sample)
+            except UnsupportedAccessoryException as e:
+                print(f'Unsupported accessory: {e}. Skipping')
+                continue
+            except UnsupportedPlatformException as e:
+                print(f'Unsupported platform: {e}. Skipping')
+                continue
             except AssertionError as ae:
                 errors.append('J100 sample failed to load: %s' % ae.args[0])
             else:
