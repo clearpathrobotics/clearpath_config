@@ -134,6 +134,7 @@ class Platform:
             platform == Platform.DD150 or
             platform == Platform.DO100 or
             platform == Platform.DO150 or
+            platform == Platform.J100 or
             platform == Platform.R100
         ):
             raise UnsupportedPlatformException(f'Platform {platform} is still in-development and not yet supported on {ROS_DISTRO}')  # noqa:E501
