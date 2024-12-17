@@ -88,6 +88,12 @@ class PlatformConfig(BaseConfig):
     # Controllers
     PS4 = 'ps4'
     LOGITECH = 'logitech'
+    XBOX = 'xbox'
+    CONTROLLERS = [
+        PS4,
+        LOGITECH,
+        XBOX
+    ]
 
     CONTROLLER = 'controller'
     ATTACHMENTS = 'attachments'
@@ -217,7 +223,7 @@ class PlatformConfig(BaseConfig):
 
     @controller.setter
     def controller(self, value: str) -> None:
-        assert value.lower() in [self.PS4, self.LOGITECH], f'"{value.lower()}" controller is invalid. Must be one of "{[self.PS4, self.LOGITECH]}"'  # noqa:501
+        assert value.lower() in self.CONTROLLERS, f'"{value.lower()}" controller is invalid. Must be one of "{self.CONTROLLERS}"'  # noqa:501
         self._controller = value.lower()
 
     @property
