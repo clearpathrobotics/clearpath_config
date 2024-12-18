@@ -76,9 +76,35 @@ class Ewellix(BaseLift):
     MANIPULATOR_MODEL = 'ewellix'
 
     EWELLIX_TYPE = 'ewellix_type'
+    ADD_PLATE = 'add_plate'
+    PARAMETERS_FILE = 'parameters_file'
+    INITIAL_POSITIONS = 'initial_positions'
+    INITIAL_POSITIONS_FILE = 'initial_positions_file'
+    GENERATE_ROS2_CONTROL_TAG = 'generate_ros2_control_tag'
+    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    SIM_IGNITION = 'sim_ignition'
+    PORT = 'port'
+    BAUD = 'baud'
+    TIMEOUT = 'timeout'
+    CONVERSION = 'conversion'
+    RATED_EFFORT = 'rated_effort'
+    TOLERANCE = 'tolerance'
 
     URDF_PARAMETERS = {
-        EWELLIX_TYPE: ''
+        EWELLIX_TYPE: '',
+        ADD_PLATE: '',
+        PARAMETERS_FILE: '',
+        INITIAL_POSITIONS: '',
+        INITIAL_POSITIONS_FILE: '',
+        GENERATE_ROS2_CONTROL_TAG: '',
+        USE_FAKE_HARDWARE: '',
+        SIM_IGNITION: '',
+        PORT: '',
+        BAUD: '',
+        TIMEOUT: '',
+        CONVERSION: '',
+        RATED_EFFORT: '',
+        TOLERANCE: '',
     }
 
 
