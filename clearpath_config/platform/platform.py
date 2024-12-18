@@ -88,6 +88,7 @@ class PlatformConfig(BaseConfig):
     # Controllers
     PS4 = "ps4"
     LOGITECH = "logitech"
+
     CONTROLLER = "controller"
     ATTACHMENTS = "attachments"
     CAN_BRIDGES = "can_bridges"
