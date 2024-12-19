@@ -84,6 +84,7 @@ class DescriptionPackagePath(PackagePath):
 class PlatformConfig(BaseConfig):
 
     PLATFORM = "platform"
+
     # Controllers
     PS4 = "ps4"
     LOGITECH = "logitech"
@@ -101,6 +102,8 @@ class PlatformConfig(BaseConfig):
     BATTERY = "battery"
     # Wheel
     WHEEL = "wheel"
+    # Enable/disable EKF
+    ENABLE_EKF = 'enable_ekf'
 
     TEMPLATE = {
         PLATFORM: {
@@ -113,6 +116,7 @@ class PlatformConfig(BaseConfig):
             CONTROL: CONTROL,
             BATTERY: BATTERY,
             WHEEL: WHEEL,
+            ENABLE_EKF: ENABLE_EKF
         }
     }
 
@@ -129,6 +133,7 @@ class PlatformConfig(BaseConfig):
         CONTROL: "",
         BATTERY: BatteryConfig.DEFAULTS,
         WHEEL: "default",
+        ENABLE_EKF: True,
     }
 
     def __init__(
@@ -140,6 +145,7 @@ class PlatformConfig(BaseConfig):
             battery: dict = DEFAULTS[BATTERY],
             extras: dict = DEFAULTS[EXTRAS],
             wheel: dict = DEFAULTS[WHEEL],
+            enable_ekf: bool = DEFAULTS[ENABLE_EKF],
             ) -> None:
         # Initialization
         self._config = {}
@@ -151,7 +157,8 @@ class PlatformConfig(BaseConfig):
         self.description = self.DEFAULTS[self.DESCRIPTION]
         self.launch = self.DEFAULTS[self.LAUNCH]
         self.control = self.DEFAULTS[self.CONTROL]
-        self.wheel = self.DEFAULTS[self.WHEEL]
+        self.wheel = wheel
+        self.enable_ekf = enable_ekf
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
@@ -160,6 +167,7 @@ class PlatformConfig(BaseConfig):
             self.KEYS[self.BATTERY]: PlatformConfig.battery,
             self.KEYS[self.EXTRAS]: PlatformConfig.extras,
             self.KEYS[self.WHEEL]: PlatformConfig.wheel,
+            self.KEYS[self.ENABLE_EKF]: PlatformConfig.enable_ekf
         }
         super().__init__(setters, config, self.PLATFORM)
 
@@ -334,3 +342,15 @@ class PlatformConfig(BaseConfig):
     @wheel.setter
     def wheel(self, value: str) -> None:
         self._wheel = value
+
+    @property
+    def enable_ekf(self) -> bool:
+        self.set_config_param(
+            key=self.KEYS[self.ENABLE_EKF],
+            value=self._enable_ekf
+        )
+        return self._enable_ekf
+
+    @enable_ekf.setter
+    def enable_ekf(self, value: bool) -> None:
+        self._enable_ekf = value
