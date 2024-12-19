@@ -87,10 +87,12 @@ class PlatformConfig(BaseConfig):
 
     # Controllers
     PS4 = 'ps4'
+    PS5 = 'ps5'
     LOGITECH = 'logitech'
     XBOX = 'xbox'
     CONTROLLERS = [
         PS4,
+        PS5,
         LOGITECH,
         XBOX
     ]
