@@ -47,6 +47,7 @@ class BatteryConfig(BaseConfig):
     # A200/J100 LiION
     HE2613 = "HE2613"
     HE2411 = "HE2411"
+    HE2411 = "HE2410"
     # R100 Lead Acid
     DTM8A31 = "8A31DTM"
     # W200 Lead Acid
@@ -75,6 +76,7 @@ class BatteryConfig(BaseConfig):
             ES20_12C: [S2P1],
             HE2613: [S1P3, S1P4],
             HE2411: [S1P3, S1P4],
+            HE2410: [S1P3, S1P4],
         },
         Platform.DD100: {
             TLV1222: [S1P1],
@@ -95,6 +97,7 @@ class BatteryConfig(BaseConfig):
         Platform.J100: {
             HE2613: [S1P1],
             HE2411: [S1P1],
+            HE2410: [S1P1],
         },
         Platform.R100: {
             DTM8A31: [S1P2],
