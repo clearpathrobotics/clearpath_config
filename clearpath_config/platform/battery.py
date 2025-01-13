@@ -47,7 +47,7 @@ class BatteryConfig(BaseConfig):
     # A200/J100 LiION
     HE2613 = "HE2613"
     HE2411 = "HE2411"
-    HE2411 = "HE2410"
+    HE2410 = "HE2410"
     # R100 Lead Acid
     DTM8A31 = "8A31DTM"
     # W200 Lead Acid
