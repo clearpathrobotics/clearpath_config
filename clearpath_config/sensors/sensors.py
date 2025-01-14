@@ -672,8 +672,8 @@ class SensorConfig(BaseConfig):
         )
         if not camera and model:
             camera = Camera(model)
-            camera.set_fps(fps)
-            camera.set_serial(serial)
+            camera.fps = fps
+            camera.serial = serial
             camera.set_urdf_enabled(urdf_enabled)
             camera.set_launch_enabled(launch_enabled)
             camera.set_ros_parameters(ros_parameters)
