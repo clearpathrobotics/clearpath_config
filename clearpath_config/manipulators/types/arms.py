@@ -249,7 +249,9 @@ class UniversalRobots(BaseArm):
         SIM_IGNITION: '',
     }
 
+
 class Arm():
+
     KINOVA_GEN3_6DOF = KinovaGen3Dof6.MANIPULATOR_MODEL
     KINOVA_GEN3_7DOF = KinovaGen3Dof7.MANIPULATOR_MODEL
     KINOVA_GEN3_LITE = KinovaGen3Lite.MANIPULATOR_MODEL
