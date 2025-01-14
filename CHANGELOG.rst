@@ -2,6 +2,143 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add HE2410 & HE2411 battery support (`#110 <https://github.com/clearpathrobotics/clearpath_config/issues/110>`_) (`#111 <https://github.com/clearpathrobotics/clearpath_config/issues/111>`_)
+  * Add support for the HE2410 and HE2411 batteries to J100 and A200
+* Fixed tests.
+* Add additional controllers (`#105 <https://github.com/clearpathrobotics/clearpath_config/issues/105>`_)
+  * Add Xbox controller support
+  * Add PS5 controller support
+* Add enable_ekf property to platform (`#106 <https://github.com/clearpathrobotics/clearpath_config/issues/106>`_)
+* Re-add the A200/A201 Observer sample now that https://github.com/clearpathrobotics/clearpath_common/pull/122 is merged (`#107 <https://github.com/clearpathrobotics/clearpath_config/issues/107>`_)
+* Fix failing tests (`#104 <https://github.com/clearpathrobotics/clearpath_config/issues/104>`_)
+  * Remove the husky observer sample; it depends on as-yet-unmerged changes to clearpath_common
+  * Flag the Zed camera as unsupported for now
+  * Skip any additional tests if there's an unsupported platform or accessory in the sample
+* Fix the Axis camera topics (`#100 <https://github.com/clearpathrobotics/clearpath_config/issues/100>`_)
+* Raise an UnsupportedPlatformException for the Jackal (for now); we don't have Jazzy firmware for it yet (`#103 <https://github.com/clearpathrobotics/clearpath_config/issues/103>`_)
+* A300 VCAN (`#102 <https://github.com/clearpathrobotics/clearpath_config/issues/102>`_)
+  * A300 vcan0 bridge
+  * Disable vcan1 bridge for now
+* Fix support for the device_type parameter; previously the camera would always be a Q62 (`#99 <https://github.com/clearpathrobotics/clearpath_config/issues/99>`_)
+* Add the A200 Observer backpack attachment (`#96 <https://github.com/clearpathrobotics/clearpath_config/issues/96>`_)
+  * Add the A200 Observer backpack attachment
+  * Add the Husky Observer sample
+  * Add the IMU to the sample
+  * Add source CI
+  * Linting for new CI
+  * More linting
+  * Silently replace the A201 prefix with A200; this lets us support the Observer with minimal changes elsewhere (and the number of A201 bases is very small)
+  * Update the Observer sample to use the A201 serial numbers
+* Add A300 samples (`#98 <https://github.com/clearpathrobotics/clearpath_config/issues/98>`_)
+  * Add the AMP mount attachment
+  * Add A300 samples
+  * Add the outline sample
+  * Add AMP frame to sample
+* Bugfix MODEL.keys() (`#97 <https://github.com/clearpathrobotics/clearpath_config/issues/97>`_)
+* A300 battery comment to LiFEPO4
+* Fix all linting errors
+* Add a300 extra ros parameters
+* Add a300 to attachment mux
+* Add a300 platform empty ros parameters
+* Add a300 can interfaces
+* Add a300 platform battery
+* Add a300 platform attachments
+* Add A300 platform entry
+* Add the ability to flag previously-supported accessories & platforms as not (currently) supported (`#86 <https://github.com/clearpathrobotics/clearpath_config/issues/86>`_)
+  * Add initial support for flagging unsupported accessories (e.g. Kinova arms, whose binary drivers don't exist in Jazzy yet)
+  * classmethod -> staticmethod
+  * Use the ROS_DISTRO variable from clearpath_generator_common instead of hard-coding the distro
+  * Start fixing up python linter errors, code formatting, replace % strings with f'' strings.
+  * Finish first-pass replacing " -> '
+  * Fix remaining linter errors. Some tests are still failing, but the major code tidying-up should be done now
+  * Fix type -> _type
+  * Update CI for Jazy
+  * Update Python package workflow for Jazzy
+  * Remove dependency on clearpath_generator_common; doing so creates a circular dependency. Instead use the system level envar
+  * Add the ability to flag whole platforms as deprecated and/or unsupported
+  * Docs
+  * Fix imperative tone, missing periods in docstrings, missing newline at end of file
+  * Mark everything besides Jackal and Husky as presently unsupported
+  * Fix up sample yaml formatting. Remove unmatched quotation marks, restructure to avoid `foo.bar.spam: eggs` notation
+  * Fix quotation marks for the sample serial number
+* Add default vcan ROS interfaces based on platform
+* Add support for Axis cameras (`#90 <https://github.com/clearpathrobotics/clearpath_config/issues/90>`_)
+  * Add the initial AxisCamera class with all ROS parameters defined in axis_camera's launch files & nodes
+  * Remove duplicate argument
+  * Add the AxisCamera class to the sensors generator
+  * Add the serial to the axis camera's template
+  * Add serial to the template keys too
+  * Add serial getter/setter. Use empty string as default serial
+  * Refactoring, set the property to the value for the template
+  * frame_width -> width, frame_height -> height
+  * Rename setter
+  * Make the scales & offsets floats by default
+  * Add the TF prefix parameter
+  * Add the camera_info_url parameter
+  * camera_num -> camera
+  * Note that the serial isn't used, fix the name of the PTZ teleop parameter
+  * Add the remaining camera topics to the Topics object
+  * image_raw -> image
+  * Add axis_camera sample
+  * Linting fixes
+  * End docstring with `.`
+* Add ur_arm
+* Add a sample for each sensor
+* Add default vcan ROS interfaces based on platform
+* Add support for Axis cameras (`#90 <https://github.com/clearpathrobotics/clearpath_config/issues/90>`_)
+  * Add the initial AxisCamera class with all ROS parameters defined in axis_camera's launch files & nodes
+  * Remove duplicate argument
+  * Add the AxisCamera class to the sensors generator
+  * Add the serial to the axis camera's template
+  * Add serial to the template keys too
+  * Add serial getter/setter. Use empty string as default serial
+  * Refactoring, set the property to the value for the template
+  * frame_width -> width, frame_height -> height
+  * Rename setter
+  * Make the scales & offsets floats by default
+  * Add the TF prefix parameter
+  * Add the camera_info_url parameter
+  * camera_num -> camera
+  * Note that the serial isn't used, fix the name of the PTZ teleop parameter
+  * Add the remaining camera topics to the Topics object
+  * image_raw -> image
+  * Add axis_camera sample
+  * Linting fixes
+  * End docstring with `.`
+* Remove empty line at EoF
+* Add header
+* rx and tx topics for can bridge
+* Initial can_bridges add
+* Add ur_arm
+* Add a sample for each sensor
+* Add the ability to flag previously-supported accessories & platforms as not (currently) supported (`#86 <https://github.com/clearpathrobotics/clearpath_config/issues/86>`_)
+  * Add initial support for flagging unsupported accessories (e.g. Kinova arms, whose binary drivers don't exist in Jazzy yet)
+  * classmethod -> staticmethod
+  * Use the ROS_DISTRO variable from clearpath_generator_common instead of hard-coding the distro
+  * Start fixing up python linter errors, code formatting, replace % strings with f'' strings.
+  * Finish first-pass replacing " -> '
+  * Fix remaining linter errors. Some tests are still failing, but the major code tidying-up should be done now
+  * Fix type -> _type
+  * Update CI for Jazy
+  * Update Python package workflow for Jazzy
+  * Remove dependency on clearpath_generator_common; doing so creates a circular dependency. Instead use the system level envar
+  * Add the ability to flag whole platforms as deprecated and/or unsupported
+  * Docs
+  * Fix imperative tone, missing periods in docstrings, missing newline at end of file
+  * Mark everything besides Jackal and Husky as presently unsupported
+  * Fix up sample yaml formatting. Remove unmatched quotation marks, restructure to avoid `foo.bar.spam: eggs` notation
+  * Fix quotation marks for the sample serial number
+* Removed line at EOF
+* Add header
+* Merge pull request `#82 <https://github.com/clearpathrobotics/clearpath_config/issues/82>`_ from clearpathrobotics/lcamero/phidgets_spatial
+  Add phidgets spatial to config
+* Add OAKD
+* rx and tx topics for can bridge
+* Initial can_bridges add
+* Contributors: Chris Iverach-Brereton, Luis Camero, Roni Kreinin, Tony Baltovski, Yoan Mollard
+
 0.3.4 (2024-10-04)
 ------------------
 * Add OAKD
