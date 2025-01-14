@@ -186,14 +186,14 @@ class VelodyneLidar(BaseLidar3D):
     VLP_16 = "VLP16"
     VLP_32C = "32C"
     DEVICE_TYPE = VLP_16
-    DEVICE_TYPES = [
+    DEVICE_TYPES = (
         HDL_32E,
         HDL_64E,
         HDL_64E_S2,
         HDL_64E_S3,
         VLP_16,
         VLP_32C
-    ]
+    )
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = "velodyne_driver_node.frame_id"
