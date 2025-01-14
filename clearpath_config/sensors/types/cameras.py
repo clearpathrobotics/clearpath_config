@@ -246,7 +246,7 @@ class IntelRealsense(BaseCamera):
     D435 = 'd435'
     D435i = 'd435i'
     DEVICE_TYPE = D435
-    DEVICE_TYPES = [D415, D435, D435i]
+    DEVICE_TYPES = (D415, D435, D435i)
 
     COLOR_ENABLED = True
     COLOR_FPS = 30
@@ -628,7 +628,7 @@ class FlirBlackfly(BaseCamera):
     USB3_CONNECTION = 'USB3'
     GIGE_CONNECTION = 'GigE'
     CONNECTION_TYPE = USB3_CONNECTION
-    CONNECTION_TYPES = [USB3_CONNECTION, GIGE_CONNECTION]
+    CONNECTION_TYPES = (USB3_CONNECTION, GIGE_CONNECTION)
 
     MONO_8 = 'Mono8'
     MONO_16 = 'Mono16'
@@ -660,7 +660,7 @@ class FlirBlackfly(BaseCamera):
     BAYER_GB12_PACKED = 'BayerGB12Packed'
     BAYER_BG12_PACKED = 'BayerBG12Packed'
 
-    ENCODINGS = [
+    ENCODINGS = (
         MONO_8,
         MONO_16,
         MONO_12,
@@ -690,7 +690,7 @@ class FlirBlackfly(BaseCamera):
         BAYER_RG12_PACKED,
         BAYER_GB12_PACKED,
         BAYER_BG12_PACKED,
-    ]
+    )
 
     class ROS_PARAMETER_KEYS:
         FPS = 'flir_blackfly.frame_rate'
@@ -802,7 +802,7 @@ class StereolabsZed(BaseCamera):
     ZEDXM = 'zedxm'
     VIRTUAL = 'virtual'
     DEVICE_TYPE = ZED2
-    DEVICE_TYPES = [
+    DEVICE_TYPES = (
         ZED,
         ZEDM,
         ZED2,
@@ -810,16 +810,16 @@ class StereolabsZed(BaseCamera):
         ZEDX,
         ZEDXM,
         VIRTUAL
-    ]
+    )
 
     RESOLUTION_DEFAULT = 'AUTO'
-    RESOLUTION_PRESETS = [
+    RESOLUTION_PRESETS = (
         'AUTO',
         'HD2K',
         'HD1080',
         'HD720',
         'VGA'
-    ]
+    )
 
     class ROS_PARAMETER_KEYS:
         FPS = 'stereolabs_zed.general.grab_frame_rate'
@@ -958,7 +958,7 @@ class LuxonisOAKD(BaseCamera):
     PRO = 'pro'
     LITE = 'lite'
     DEVICE_TYPE = PRO
-    DEVICE_TYPES = [PRO, LITE]
+    DEVICE_TYPES = (PRO, LITE)
 
     HEIGHT = 720
     WIDTH = 1280
@@ -1078,11 +1078,11 @@ class AxisCamera(BaseCamera):
     Q62 = 'q62'
 
     DEVICE_TYPE = DOME_PTZ
-    DEVICE_TYPES = [
+    DEVICE_TYPES = (
         Q62,
         DOME_PTZ,
         DOME_FIXED,
-    ]
+    )
 
     DEFAULT = DOME_FIXED
 
