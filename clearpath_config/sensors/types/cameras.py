@@ -633,7 +633,6 @@ class FlirBlackfly(BaseCamera):
         self.TOPICS.RATE[self.TOPICS.COLOR_CAMERA_INFO] = self.fps
         # Initialization
         self.connection_type = connection_type
-        self.encoding: str = FlirBlackfly.BAYER_RG8
         self.encoding = encoding
 
     @property
@@ -908,7 +907,6 @@ class AxisCamera(BaseCamera):
     SENSOR_MODEL = 'axis_camera'
     TF_PREFIX = 'axis'
 
-    HOSTNAME = '192.168.10.0'
     CAMERA_INFO_URL = ''
 
     DOME_FIXED = 'dome_fixed'
