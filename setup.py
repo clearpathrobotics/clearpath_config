@@ -38,12 +38,6 @@ for path, dirs, files in os.walk(os.path.join(package_name, 'sample')):
     for file in files:
         samples.append(os.path.join(path, file))
 
-# Samples
-samples = []
-for path, dirs, files in os.walk(os.path.join(package_name, "sample")):
-    for file in files:
-        samples.append(os.path.join(path, file))
-
 setup(
     name=package_name,
     version='0.3.4',
