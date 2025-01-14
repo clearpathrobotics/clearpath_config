@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2025-01-14)
+------------------
 * Add HE2410 & HE2411 battery support (`#110 <https://github.com/clearpathrobotics/clearpath_config/issues/110>`_) (`#111 <https://github.com/clearpathrobotics/clearpath_config/issues/111>`_)
   * Add support for the HE2410 and HE2411 batteries to J100 and A200
 * Fixed tests.
