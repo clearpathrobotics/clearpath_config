@@ -29,6 +29,7 @@ from math import pi
 from typing import List
 
 from clearpath_config.common.ros import ROS_DISTRO
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.exception import UnsupportedAccessoryException
 from clearpath_config.common.utils.dictionary import extend_flat_dict
@@ -1082,6 +1083,7 @@ class AxisCamera(BaseCamera):
         DOME_PTZ,
         DOME_FIXED,
     ]
+
     DEFAULT = DOME_FIXED
 
     HOSTNAME = '192.168.10.0'
@@ -1129,7 +1131,6 @@ class AxisCamera(BaseCamera):
         SERIAL = 'axis_camera.serial'  # required by superclass, not used locally
 
         DEVICE_TYPE = 'axis_camera.device_type'
-
         TF_PREFIX = 'axis_camera.tf_prefix'
 
         HOSTNAME = 'axis_camera.hostname'
