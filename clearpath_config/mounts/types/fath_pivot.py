@@ -25,14 +25,15 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.mounts.types.mount import BaseMount
 from math import pi
 from typing import List
 
+from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.mounts.types.mount import BaseMount
+
 
 class FathPivot(BaseMount):
-    MOUNT_MODEL = "fath_pivot"
+    MOUNT_MODEL = 'fath_pivot'
     # Default Values
     ANGLE = 0.0
 
@@ -66,7 +67,5 @@ class FathPivot(BaseMount):
         return self.angle
 
     def set_angle(self, angle: float) -> None:
-        assert -pi < angle <= pi, (
-            "Angle '%s' must be in radian and  between pi and -pi"
-        )
+        assert -pi < angle <= pi, f'Angle "{angle}" must be in radian and  between -pi and pi'
         self.angle = angle

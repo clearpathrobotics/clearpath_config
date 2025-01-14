@@ -25,31 +25,31 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-IP = "ip"
-HOSTNAME = "hostname"
+IP = 'ip'
+HOSTNAME = 'hostname'
 
 INVALID = {
     HOSTNAME: [
-        "space in hostname",
-        "underscore_in_hostname",
-        "-start-hypens-end-",
-        "trailing.period.",
-        "exceedingly----------long----------names-----------\
+        'space in hostname',
+        'underscore_in_hostname',
+        '-start-hypens-end-',
+        'trailing.period.',
+        'exceedingly----------long----------names-----------\
             which----------are----------longer----------than----------\
             two----------hundred----------and----------fifty----------\
             three----------ASCII----------characters----------are----------\
-            not-----------allowed----------as----------hostnames",
+            not-----------allowed----------as----------hostnames',
     ],
     IP: [
-        "regular.string",
-        "0.X.0.0",  # non integer field
-        "255.0.0",  # too few fields
-        "255.0.0.0.0",  # too many fields
-        "0.0.256.0",  # field wider than 8 bits
+        'regular.string',
+        '0.X.0.0',  # non integer field
+        '255.0.0',  # too few fields
+        '255.0.0.0.0',  # too many fields
+        '0.0.256.0',  # field wider than 8 bits
     ]
 }
 
 VALID = {
-    HOSTNAME: ["cpr-x999-9999", "cpr-proj01"],
-    IP: ["192.168.131.1"]
+    HOSTNAME: ['cpr-x999-9999', 'cpr-proj01'],
+    IP: ['192.168.131.1']
 }

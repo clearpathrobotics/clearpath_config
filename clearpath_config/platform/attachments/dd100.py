@@ -25,18 +25,19 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
-from typing import List
 
 
 class DD100TopPlate(BaseAttachment):
     PLATFORM = Platform.DD100
-    ATTACHMENT_MODEL = "%s.top_plate" % PLATFORM
-    PACS = "pacs"
+    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
+    PACS = 'pacs'
     MODELS = [PACS]
-    PARENT = "default_mount"
+    PARENT = 'default_mount'
     HEIGHT = 0.1
 
     def __init__(

@@ -25,29 +25,30 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
 from clearpath_config.common.types.accessory import Accessory
+from clearpath_config.common.types.file import File
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.port import Port
-from clearpath_config.common.types.file import File
 from clearpath_config.common.utils.dictionary import extend_flat_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
-from typing import List
 
 
 class BaseGPS(BaseSensor):
-    SENSOR_TYPE = "gps"
-    SENSOR_MODEL = "base"
-    TOPIC = "fix"
+    SENSOR_TYPE = 'gps'
+    SENSOR_MODEL = 'base'
+    TOPIC = 'fix'
 
-    FRAME_ID = "link"
+    FRAME_ID = 'link'
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "node_name.frame_id"
+        FRAME_ID = 'node_name.frame_id'
 
     class TOPICS:
-        FIX = "fix"
+        FIX = 'fix'
         NAME = {
-            FIX: "fix",
+            FIX: 'fix',
         }
         RATE = {
             FIX: 60,
@@ -90,7 +91,7 @@ class BaseGPS(BaseSensor):
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
-        return "%s_%s" % (
+        return '%s_%s' % (
             cls.get_name_from_idx(idx),
             cls.FRAME_ID
         )
@@ -128,22 +129,22 @@ class BaseGPS(BaseSensor):
 
 
 class SwiftNavDuro(BaseGPS):
-    SENSOR_MODEL = "swiftnav_duro"
+    SENSOR_MODEL = 'swiftnav_duro'
 
-    FRAME_ID = "link"
-    IP_ADDRESS = "192.168.131.30"
+    FRAME_ID = 'link'
+    IP_ADDRESS = '192.168.131.30'
     IP_PORT = 55555
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "duro_node.imu_frame_id"
-        GPS_FRAME = "duro_node.gps_receiver_frame_id"
-        IP_ADDRESS = "duro_node.ip_address"
-        IP_PORT = "duro_node.port"
+        FRAME_ID = 'duro_node.imu_frame_id'
+        GPS_FRAME = 'duro_node.gps_receiver_frame_id'
+        IP_ADDRESS = 'duro_node.ip_address'
+        IP_PORT = 'duro_node.port'
 
     class TOPICS:
-        FIX = "fix"
+        FIX = 'fix'
         NAME = {
-            FIX: "fix",
+            FIX: 'fix',
         }
         RATE = {
             FIX: 60,
@@ -221,21 +222,21 @@ class SwiftNavDuro(BaseGPS):
 
 
 class MicrostrainGQ7(BaseGPS):
-    SENSOR_MODEL = "microstrain_gq7"
+    SENSOR_MODEL = 'microstrain_gq7'
 
-    FRAME_ID = "link"
-    PORT = "/dev/microstrain_main"
+    FRAME_ID = 'link'
+    PORT = '/dev/microstrain_main'
     BAUD = 115200
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "microstrain_inertial_driver.frame_id"
-        PORT = "microstrain_inertial_driver.port"
-        BAUD = "microstrain_inertial_driver.baudrate"
+        FRAME_ID = 'microstrain_inertial_driver.frame_id'
+        PORT = 'microstrain_inertial_driver.port'
+        BAUD = 'microstrain_inertial_driver.baudrate'
 
     class TOPICS:
-        FIX = "fix"
+        FIX = 'fix'
         NAME = {
-            FIX: "fix",
+            FIX: 'fix',
         }
         RATE = {
             FIX: 60,
@@ -293,8 +294,8 @@ class MicrostrainGQ7(BaseGPS):
 
     @baud.setter
     def baud(self, baud: int) -> None:
-        assert isinstance(baud, int), ("Baud must be of type 'int'.")
-        assert baud >= 0, ("Baud must be positive integer.")
+        assert isinstance(baud, int), ('Baud must be of type "int".')
+        assert baud >= 0, ('Baud must be positive integer.')
         self._baud = baud
 
     def has_imu(self) -> bool:
@@ -302,21 +303,21 @@ class MicrostrainGQ7(BaseGPS):
 
 
 class NMEA(BaseGPS):
-    SENSOR_MODEL = "nmea_gps"
+    SENSOR_MODEL = 'nmea_gps'
 
-    FRAME_ID = "link"
-    PORT = "/dev/ttyACM0"
+    FRAME_ID = 'link'
+    PORT = '/dev/ttyACM0'
     BAUD = 115200
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "nmea_navsat_driver.frame_id"
-        PORT = "nmea_navsat_driver.port"
-        BAUD = "nmea_navsat_driver.baud"
+        FRAME_ID = 'nmea_navsat_driver.frame_id'
+        PORT = 'nmea_navsat_driver.port'
+        BAUD = 'nmea_navsat_driver.baud'
 
     class TOPICS:
-        FIX = "fix"
+        FIX = 'fix'
         NAME = {
-            FIX: "fix",
+            FIX: 'fix',
         }
         RATE = {
             FIX: 60,
@@ -374,16 +375,16 @@ class NMEA(BaseGPS):
 
     @baud.setter
     def baud(self, baud: int) -> None:
-        assert isinstance(baud, int), ("Baud must be of type 'int'.")
-        assert baud >= 0, ("Baud must be positive integer.")
+        assert isinstance(baud, int), ('Baud must be of type "int".')
+        assert baud >= 0, ('Baud must be positive integer.')
         self._baud = baud
 
 
 class Garmin18x(NMEA):
-    SENSOR_MODEL = "garmin_18x"
+    SENSOR_MODEL = 'garmin_18x'
 
-    FRAME_ID = "link"
-    PORT = "/dev/ttyACM0"
+    FRAME_ID = 'link'
+    PORT = '/dev/ttyACM0'
     BAUD = 115200
 
     def __init__(
@@ -417,10 +418,10 @@ class Garmin18x(NMEA):
 
 
 class NovatelSmart6(NMEA):
-    SENSOR_MODEL = "novatel_smart6"
+    SENSOR_MODEL = 'novatel_smart6'
 
-    FRAME_ID = "link"
-    PORT = "/dev/ttyACM0"
+    FRAME_ID = 'link'
+    PORT = '/dev/ttyACM0'
     BAUD = 115200
 
     def __init__(
@@ -454,10 +455,10 @@ class NovatelSmart6(NMEA):
 
 
 class NovatelSmart7(NMEA):
-    SENSOR_MODEL = "novatel_smart7"
+    SENSOR_MODEL = 'novatel_smart7'
 
-    FRAME_ID = "link"
-    PORT = "/dev/ttyACM0"
+    FRAME_ID = 'link'
+    PORT = '/dev/ttyACM0'
     BAUD = 115200
 
     def __init__(

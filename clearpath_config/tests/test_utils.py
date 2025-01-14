@@ -29,7 +29,7 @@ from typing import Callable, List
 
 
 def assert_not_errors(errors: List) -> None:
-    assert not errors, "Errors: %s" % "\n".join(errors)
+    assert not errors, 'Errors: %s' % '\n'.join(errors)
 
 
 def valid_object_variable_check(
@@ -42,26 +42,26 @@ def valid_object_variable_check(
             obj = init_test(entry)
         except AssertionError as e:
             errors.append(
-                "Valid entry %s was incorrectly rejected with the following message: %s"
+                'Valid entry %s was incorrectly rejected with the following message: %s'
                 % (entry, e.args[0])
             )
             continue
         var = get_func(obj)
         if var != type(var)(entry):
-            errors.append("Valid variable %s was incorrectly set as %s" % (entry, var))
+            errors.append('Valid variable %s was incorrectly set as %s' % (entry, var))
         # Set Test
         try:
             obj = init_test(entry)
             set_test(obj, entry)
         except AssertionError as e:
             errors.append(
-                "Valid entry %s was incorrectly rejected with the following message: %s"
+                'Valid entry %s was incorrectly rejected with the following message: %s'
                 % (entry, e.args[0])
             )
             continue
         var = get_func(obj)
         if var != type(var)(entry):
-            errors.append("Valid variable %s was incorrectly set as %s" % (entry, var))
+            errors.append('Valid variable %s was incorrectly set as %s' % (entry, var))
     return errors
 
 
@@ -76,7 +76,7 @@ def invalid_object_variable_check(
         except AssertionError:
             pass  # Do nothing, expected
         else:
-            errors.append("Invalid variable %s was incorrectly accepted" % (entry))
+            errors.append('Invalid variable %s was incorrectly accepted' % (entry))
         # Set Test
         try:
             obj = init_test(entry)
@@ -84,5 +84,5 @@ def invalid_object_variable_check(
         except AssertionError:
             pass  # Do nothing, expected
         else:
-            errors.append("Invalid variable %s was incorrectly accepted" % (entry))
+            errors.append('Invalid variable %s was incorrectly accepted' % (entry))
     return errors

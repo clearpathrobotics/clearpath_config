@@ -29,28 +29,28 @@ from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.types.bumper import Bumper
 
 
-SERIAL_NUMBER = "serial_number"
-BUMPER_MODEL = "bumper.model"
-BUMPER_EXTENSION = "bumper.extension"
-TOP_PLATE_MODEL = "top_plate.model"
+SERIAL_NUMBER = 'serial_number'
+BUMPER_MODEL = 'bumper.model'
+BUMPER_EXTENSION = 'bumper.extension'
+TOP_PLATE_MODEL = 'top_plate.model'
 
 
 INVALID = {
     SERIAL_NUMBER: [
-        "randomstring",  # Random String
-        "string-with-hyphens",  # String with Hyphens
-        "cpr-z100-0001",  # Fake Robot Code with Prefix
-        "z100-0001",  # Fake Robot Code w/o Prefix
-        "a200-xyz",  # Real Robot Code
+        'randomstring',  # Random String
+        'string-with-hyphens',  # String with Hyphens
+        'cpr-z100-0001',  # Fake Robot Code with Prefix
+        'z100-0001',  # Fake Robot Code w/o Prefix
+        'a200-xyz',  # Real Robot Code
     ],
-    BUMPER_MODEL: ["random", 1],
-    BUMPER_EXTENSION: ["string", -10.0],
-    TOP_PLATE_MODEL: ["random", 1],
+    BUMPER_MODEL: ['random', 1],
+    BUMPER_EXTENSION: ['string', -10.0],
+    TOP_PLATE_MODEL: ['random', 1],
 }
 
 VALID = {
-    SERIAL_NUMBER: ["cpr-%s-0001" % robot for robot in Platform.ALL] + [
-        "%s-0001" % robot for robot in Platform.ALL],
+    SERIAL_NUMBER: ['cpr-%s-0001' % robot for robot in Platform.ALL] + [
+        '%s-0001' % robot for robot in Platform.ALL],
     BUMPER_MODEL: Bumper.MODELS,
-    BUMPER_EXTENSION:  [0, "12.3", 12.3],
+    BUMPER_EXTENSION:  [0, '12.3', 12.3],
 }

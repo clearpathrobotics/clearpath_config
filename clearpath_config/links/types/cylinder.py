@@ -25,13 +25,14 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.links.types.link import BaseLink
-from typing import List
 
 
 class Cylinder(BaseLink):
-    LINK_TYPE = "cylinder"
+    LINK_TYPE = 'cylinder'
     RADIUS = 0.01
     LENGTH = 0.01
 
@@ -73,7 +74,7 @@ class Cylinder(BaseLink):
             self.set_length(d['length'])
 
     def set_radius(self, radius: float) -> None:
-        msg = "Radius must be a positive float value"
+        msg = 'Radius must be a positive float value'
         assert isinstance(radius, float), msg
         assert radius >= 0.0, msg
         self.radius = radius
@@ -82,7 +83,7 @@ class Cylinder(BaseLink):
         return self.radius
 
     def set_length(self, length: float) -> None:
-        msg = "Length must be a positive float value"
+        msg = 'Length must be a positive float value'
         assert isinstance(length, float), msg
         assert length >= 0.0, msg
         self.length = length

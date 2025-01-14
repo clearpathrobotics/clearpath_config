@@ -37,103 +37,116 @@ from clearpath_config.common.utils.dictionary import (
 
 class ROSParameterDefaults:
     A200 = {
-        "platform_velocity_controller.wheel_radius": 0.1651,
-        "platform_velocity_controller.linear.x.max_velocity": 1.0,
-        "platform_velocity_controller.linear.x.min_velocity": -1.0,
-        "platform_velocity_controller.linear.x.max_acceleration": 3.0,
-        "platform_velocity_controller.linear.x.min_acceleration": -3.0,
-        "platform_velocity_controller.angular.z.max_velocity": 2.0,
-        "platform_velocity_controller.angular.z.min_velocity": -2.0,
-        "platform_velocity_controller.angular.z.max_acceleration": 6.0,
-        "platform_velocity_controller.angular.z.min_acceleration": -6.0,
+        'platform_velocity_controller.wheel_radius': 0.1651,
+        'platform_velocity_controller.linear.x.max_velocity': 1.0,
+        'platform_velocity_controller.linear.x.min_velocity': -1.0,
+        'platform_velocity_controller.linear.x.max_acceleration': 3.0,
+        'platform_velocity_controller.linear.x.min_acceleration': -3.0,
+        'platform_velocity_controller.angular.z.max_velocity': 2.0,
+        'platform_velocity_controller.angular.z.min_velocity': -2.0,
+        'platform_velocity_controller.angular.z.max_acceleration': 6.0,
+        'platform_velocity_controller.angular.z.min_acceleration': -6.0,
+    }
+
+    A300 = {
+        'platform_velocity_controller.wheel_radius': 0.1625,
+        'platform_velocity_controller.linear.x.max_velocity': 2.0,
+        'platform_velocity_controller.linear.x.min_velocity': -2.0,
+        'platform_velocity_controller.linear.x.max_acceleration': 4.0,
+        'platform_velocity_controller.linear.x.min_acceleration': -4.0,
+        'platform_velocity_controller.angular.z.max_velocity': 2.0,
+        'platform_velocity_controller.angular.z.min_velocity': -2.0,
+        'platform_velocity_controller.angular.z.max_acceleration': 4.0,
+        'platform_velocity_controller.angular.z.min_acceleration': -4.0,
     }
 
     DD100 = {
-        "platform_velocity_controller.wheel_radius": 0.049,
-        "platform_velocity_controller.linear.x.max_velocity": 1.3,
-        "platform_velocity_controller.linear.x.min_velocity": -1.3,
-        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
-        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
-        "platform_velocity_controller.angular.z.max_velocity": 4.0,
-        "platform_velocity_controller.angular.z.min_velocity": -4.0,
-        "platform_velocity_controller.angular.z.max_acceleration": 2.0,
-        "platform_velocity_controller.angular.z.min_acceleration": -2.0,
+        'platform_velocity_controller.wheel_radius': 0.049,
+        'platform_velocity_controller.linear.x.max_velocity': 1.3,
+        'platform_velocity_controller.linear.x.min_velocity': -1.3,
+        'platform_velocity_controller.linear.x.max_acceleration': 1.0,
+        'platform_velocity_controller.linear.x.min_acceleration': -1.0,
+        'platform_velocity_controller.angular.z.max_velocity': 4.0,
+        'platform_velocity_controller.angular.z.min_velocity': -4.0,
+        'platform_velocity_controller.angular.z.max_acceleration': 2.0,
+        'platform_velocity_controller.angular.z.min_acceleration': -2.0,
     }
 
     DD150 = DD100
 
     DO100 = {
-        "platform_velocity_controller.wheel_radius": 0.05,
-        "platform_velocity_controller.linear.x.max_velocity": 1.3,
-        "platform_velocity_controller.linear.x.min_velocity": -1.3,
-        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
-        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
-        "platform_velocity_controller.linear.y.max_velocity": 1.3,
-        "platform_velocity_controller.linear.y.min_velocity": -1.3,
-        "platform_velocity_controller.linear.y.max_acceleration": 1.0,
-        "platform_velocity_controller.linear.y.min_acceleration": -1.0,
-        "platform_velocity_controller.angular.z.max_velocity": 4.0,
-        "platform_velocity_controller.angular.z.min_velocity": -4.0,
-        "platform_velocity_controller.angular.z.max_acceleration": 2.0,
-        "platform_velocity_controller.angular.z.min_acceleration": -2.0,
+        'platform_velocity_controller.wheel_radius': 0.05,
+        'platform_velocity_controller.linear.x.max_velocity': 1.3,
+        'platform_velocity_controller.linear.x.min_velocity': -1.3,
+        'platform_velocity_controller.linear.x.max_acceleration': 1.0,
+        'platform_velocity_controller.linear.x.min_acceleration': -1.0,
+        'platform_velocity_controller.linear.y.max_velocity': 1.3,
+        'platform_velocity_controller.linear.y.min_velocity': -1.3,
+        'platform_velocity_controller.linear.y.max_acceleration': 1.0,
+        'platform_velocity_controller.linear.y.min_acceleration': -1.0,
+        'platform_velocity_controller.angular.z.max_velocity': 4.0,
+        'platform_velocity_controller.angular.z.min_velocity': -4.0,
+        'platform_velocity_controller.angular.z.max_acceleration': 2.0,
+        'platform_velocity_controller.angular.z.min_acceleration': -2.0,
     }
 
     DO150 = DO100
 
     GENERIC = {
-        "platform_velocity_controller.wheel_radius": 0.1,
-        "platform_velocity_controller.linear.x.max_velocity": 1.0,
-        "platform_velocity_controller.linear.x.min_velocity": -1.0,
-        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
-        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
-        "platform_velocity_controller.angular.z.max_velocity": 1.0,
-        "platform_velocity_controller.angular.z.min_velocity": -1.0,
-        "platform_velocity_controller.angular.z.max_acceleration": 1.0,
-        "platform_velocity_controller.angular.z.min_acceleration": -1.0,
+        'platform_velocity_controller.wheel_radius': 0.1,
+        'platform_velocity_controller.linear.x.max_velocity': 1.0,
+        'platform_velocity_controller.linear.x.min_velocity': -1.0,
+        'platform_velocity_controller.linear.x.max_acceleration': 1.0,
+        'platform_velocity_controller.linear.x.min_acceleration': -1.0,
+        'platform_velocity_controller.angular.z.max_velocity': 1.0,
+        'platform_velocity_controller.angular.z.min_velocity': -1.0,
+        'platform_velocity_controller.angular.z.max_acceleration': 1.0,
+        'platform_velocity_controller.angular.z.min_acceleration': -1.0,
     }
 
     J100 = {
-        "platform_velocity_controller.wheel_radius": 0.098,
-        "platform_velocity_controller.linear.x.max_velocity": 2.0,
-        "platform_velocity_controller.linear.x.min_velocity": -2.0,
-        "platform_velocity_controller.linear.x.max_acceleration": 20.0,
-        "platform_velocity_controller.linear.x.min_acceleration": -20.0,
-        "platform_velocity_controller.angular.z.max_velocity": 4.0,
-        "platform_velocity_controller.angular.z.min_velocity": -4.0,
-        "platform_velocity_controller.angular.z.max_acceleration": 25.0,
-        "platform_velocity_controller.angular.z.min_acceleration": -25.0,
+        'platform_velocity_controller.wheel_radius': 0.098,
+        'platform_velocity_controller.linear.x.max_velocity': 2.0,
+        'platform_velocity_controller.linear.x.min_velocity': -2.0,
+        'platform_velocity_controller.linear.x.max_acceleration': 20.0,
+        'platform_velocity_controller.linear.x.min_acceleration': -20.0,
+        'platform_velocity_controller.angular.z.max_velocity': 4.0,
+        'platform_velocity_controller.angular.z.min_velocity': -4.0,
+        'platform_velocity_controller.angular.z.max_acceleration': 25.0,
+        'platform_velocity_controller.angular.z.min_acceleration': -25.0,
     }
 
     R100 = {
-        "platform_velocity_controller.wheel_radius": 0.05,
-        "platform_velocity_controller.linear.x.max_velocity": 1.3,
-        "platform_velocity_controller.linear.x.min_velocity": -1.3,
-        "platform_velocity_controller.linear.x.max_acceleration": 1.0,
-        "platform_velocity_controller.linear.x.min_acceleration": -1.0,
-        "platform_velocity_controller.linear.y.max_velocity": 1.3,
-        "platform_velocity_controller.linear.y.min_velocity": -1.3,
-        "platform_velocity_controller.linear.y.max_acceleration": 1.0,
-        "platform_velocity_controller.linear.y.min_acceleration": -1.0,
-        "platform_velocity_controller.angular.z.max_velocity": 4.0,
-        "platform_velocity_controller.angular.z.min_velocity": -4.0,
-        "platform_velocity_controller.angular.z.max_acceleration": 2.0,
-        "platform_velocity_controller.angular.z.min_acceleration": -2.0,
+        'platform_velocity_controller.wheel_radius': 0.05,
+        'platform_velocity_controller.linear.x.max_velocity': 1.3,
+        'platform_velocity_controller.linear.x.min_velocity': -1.3,
+        'platform_velocity_controller.linear.x.max_acceleration': 1.0,
+        'platform_velocity_controller.linear.x.min_acceleration': -1.0,
+        'platform_velocity_controller.linear.y.max_velocity': 1.3,
+        'platform_velocity_controller.linear.y.min_velocity': -1.3,
+        'platform_velocity_controller.linear.y.max_acceleration': 1.0,
+        'platform_velocity_controller.linear.y.min_acceleration': -1.0,
+        'platform_velocity_controller.angular.z.max_velocity': 4.0,
+        'platform_velocity_controller.angular.z.min_velocity': -4.0,
+        'platform_velocity_controller.angular.z.max_acceleration': 2.0,
+        'platform_velocity_controller.angular.z.min_acceleration': -2.0,
     }
 
     W200 = {
-        "platform_velocity_controller.wheel_radius": 0.3,
-        "platform_velocity_controller.linear.x.max_velocity": 5.0,
-        "platform_velocity_controller.linear.x.min_velocity": -5.0,
-        "platform_velocity_controller.linear.x.max_acceleration": 50.0,
-        "platform_velocity_controller.linear.x.min_acceleration": -50.0,
-        "platform_velocity_controller.angular.z.max_velocity": 4.0,
-        "platform_velocity_controller.angular.z.min_velocity": -4.0,
-        "platform_velocity_controller.angular.z.max_acceleration": 40.0,
-        "platform_velocity_controller.angular.z.min_acceleration": -40.0,
+        'platform_velocity_controller.wheel_radius': 0.3,
+        'platform_velocity_controller.linear.x.max_velocity': 5.0,
+        'platform_velocity_controller.linear.x.min_velocity': -5.0,
+        'platform_velocity_controller.linear.x.max_acceleration': 50.0,
+        'platform_velocity_controller.linear.x.min_acceleration': -50.0,
+        'platform_velocity_controller.angular.z.max_velocity': 4.0,
+        'platform_velocity_controller.angular.z.min_velocity': -4.0,
+        'platform_velocity_controller.angular.z.max_acceleration': 40.0,
+        'platform_velocity_controller.angular.z.min_acceleration': -40.0,
     }
 
     DEFAULTS = {
         Platform.A200: A200,
+        Platform.A300: A300,
         Platform.DD100: DD100,
         Platform.DO100: DO100,
         Platform.DD150: DD150,
@@ -153,21 +166,21 @@ class ROSParameterDefaults:
 # - URDF extras: urdf.xacro with custom links and joints
 class ExtrasConfig(BaseConfig):
 
-    EXTRAS = "extras"
-    URDF = "urdf"
-    LAUNCH = "launch"
-    ROS_PARAMETERS = "ros_parameters"
+    EXTRAS = 'extras'
+    URDF = 'urdf'
+    LAUNCH = 'launch'
+    ROS_PARAMETERS = 'ros_parameters'
 
-    PLATFORM_VELOCITY_CONTROLLER = "platform_velocity_controller"
-    WHEEL_RADIUS = "wheel_radius"
-    LIN_MAX_VEL = "linear.x.max_velocity"
-    LIN_MIN_VEL = "linear.x.min_velocity"
-    LIN_MAX_ACC = "linear.x.max_acceleration"
-    LIN_MIN_ACC = "linear.x.min_acceleration"
-    ANG_MAX_VEL = "angular.z.max_velocity"
-    ANG_MIN_VEL = "angular.z.min_velocity"
-    ANG_MAX_ACC = "angular.z.max_acceleration"
-    ANG_MIN_ACC = "angular.z.min_acceleration"
+    PLATFORM_VELOCITY_CONTROLLER = 'platform_velocity_controller'
+    WHEEL_RADIUS = 'wheel_radius'
+    LIN_MAX_VEL = 'linear.x.max_velocity'
+    LIN_MIN_VEL = 'linear.x.min_velocity'
+    LIN_MAX_ACC = 'linear.x.max_acceleration'
+    LIN_MIN_ACC = 'linear.x.min_acceleration'
+    ANG_MAX_VEL = 'angular.z.max_velocity'
+    ANG_MIN_VEL = 'angular.z.min_velocity'
+    ANG_MAX_ACC = 'angular.z.max_acceleration'
+    ANG_MIN_ACC = 'angular.z.min_acceleration'
 
     TEMPLATE = {
         EXTRAS: {
@@ -190,7 +203,7 @@ class ExtrasConfig(BaseConfig):
     }
 
     KEYS = flip_dict(TEMPLATE)
-    KEYS[ROS_PARAMETERS] = ".".join([EXTRAS, ROS_PARAMETERS])
+    KEYS[ROS_PARAMETERS] = '.'.join([EXTRAS, ROS_PARAMETERS])
 
     DEFAULTS = {
         URDF: None,
@@ -255,7 +268,7 @@ class ExtrasConfig(BaseConfig):
         else:
             self._urdf = self.DEFAULTS[self.URDF]
             assert not value or isinstance(value, dict) or (isinstance(value, PackagePath)), (
-                "Extras URDF must be null or of type `dict` or `PackagePath`"
+                'Extras URDF must be null or of type `dict` or `PackagePath`'
             )
 
     @property
@@ -280,23 +293,23 @@ class ExtrasConfig(BaseConfig):
         else:
             self._launch = self.DEFAULTS[self.LAUNCH]
             assert not value or isinstance(value, dict) or (isinstance(value, PackagePath)), (
-                "Extras LAUNCH must be null or of type `dict` or `PackagePath`"
+                'Extras LAUNCH must be null or of type `dict` or `PackagePath`'
             )
 
     def _is_ros_parameter(self, key) -> bool:
-        return any([key in i for i in self._ros_parameters_setters])
+        return any([key in i for i in self._ros_parameters_setters])  # noqa:C419
 
     def _is_ros_parameter_default(self, key) -> bool:
         default_parameters = self.DEFAULTS[self.ROS_PARAMETERS]
         current_val = self.getter(self._ros_parameters_setters[key])()
-        default_val = flatten_dict(default_parameters)[".".join(key.split(".")[2:])]
+        default_val = flatten_dict(default_parameters)['.'.join(key.split('.')[2:])]
         return current_val == default_val
 
     def _init_ros_parameter(self) -> None:
         default_parameters = self.DEFAULTS[self.ROS_PARAMETERS]
         for _, extended_key in self.KEYS.items():
             if extended_key in self._ros_parameters_setters:
-                default_parameters_key = ".".join(extended_key.split(".")[2:])
+                default_parameters_key = '.'.join(extended_key.split('.')[2:])
                 setter = self.setter(self._ros_parameters_setters[extended_key])
                 setter(default_parameters[default_parameters_key])
 
@@ -304,7 +317,7 @@ class ExtrasConfig(BaseConfig):
         default_parameters = ROSParameterDefaults(self.get_platform_model())
         for _, extended_key in self.KEYS.items():
             if extended_key in self._ros_parameters_setters:
-                default_parameters_key = ".".join(extended_key.split(".")[2:])
+                default_parameters_key = '.'.join(extended_key.split('.')[2:])
                 if not self._is_ros_parameter_default(extended_key):
                     continue
                 setter = self.setter(self._ros_parameters_setters[extended_key])
@@ -318,7 +331,7 @@ class ExtrasConfig(BaseConfig):
         # Add non-default values
         for key, prop in self._ros_parameters_setters.items():
             if not self._is_ros_parameter_default(key):
-                d[".".join(key.split(".")[2:])] = self.getter(prop)()
+                d['.'.join(key.split('.')[2:])] = self.getter(prop)()
         # User parameters
         for key, val, in flatten_dict(self._ros_parameters).items():
             if not self._is_ros_parameter(key):
@@ -340,8 +353,8 @@ class ExtrasConfig(BaseConfig):
         self._ros_parameters = d
         # Store Relevant Parameters
         for flatkey, value in flatten_dict(d).items():
-            keys = flatkey.split(".")
-            keys = ".".join(keys[1:])
+            keys = flatkey.split('.')
+            keys = '.'.join(keys[1:])
             if keys not in self.KEYS:
                 continue
             key = self.KEYS[keys]

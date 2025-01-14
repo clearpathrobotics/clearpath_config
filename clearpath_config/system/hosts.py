@@ -25,20 +25,21 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.hostname import Hostname
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.list import ListConfig
 from clearpath_config.common.utils.dictionary import flip_dict
-from typing import List
 
 
 # HostConfig
 # - this is the format for which each host involved in the system will be described
 class HostConfig(BaseConfig):
 
-    HOSTNAME = "hostname"
-    IP_ADDRESS = "ip"
+    HOSTNAME = 'hostname'
+    IP_ADDRESS = 'ip'
 
     TEMPLATE = {
         HOSTNAME: HOSTNAME,
@@ -49,7 +50,7 @@ class HostConfig(BaseConfig):
 
     DEFAULTS = {
         HOSTNAME: BaseConfig.get_serial_number(),
-        IP_ADDRESS: "192.168.131.1",
+        IP_ADDRESS: '192.168.131.1',
     }
 
     def __init__(
@@ -73,7 +74,7 @@ class HostConfig(BaseConfig):
         return self.hostname == other.hostname and self.ip_address == other.ip_address
 
     def __str__(self) -> str:
-        return "{ hostname: %s, ip: %s }" % (str(self.hostname), str(self.ip_address))
+        return '{ hostname: %s, ip: %s }' % (str(self.hostname), str(self.ip_address))
 
     def to_dict(self) -> dict:
         return {str(self.hostname): str(self.ip_address)}
@@ -96,7 +97,7 @@ class HostConfig(BaseConfig):
             self._hostname = value
         else:
             assert isinstance(value, str) or isinstance(value, Hostname), (
-                f"Hostname of {value} is invalid, must be of type 'str' or 'Hostname'"
+                f'Hostname of {value} is invalid, must be of type "str" or "Hostname"'
             )
 
     # IP Address:
@@ -117,7 +118,7 @@ class HostConfig(BaseConfig):
             self._ip = value
         else:
             assert isinstance(value, dict) or isinstance(value, IP), (
-                f"IP address of {value} is invalid, must be of type 'str' or 'IP'"
+                f'IP address of {value} is invalid, must be of type "str" or "IP"'
             )
 
 

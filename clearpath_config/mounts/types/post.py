@@ -25,18 +25,19 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.mounts.types.mount import BaseMount
-from typing import List
 
 
 class Post(BaseMount):
-    MOUNT_MODEL = "post"
+    MOUNT_MODEL = 'post'
     HEIGHT = 0.075
     SPACING = 0.080
-    SINGLE = "single"
-    DUAL = "dual"
-    QUAD = "quad"
+    SINGLE = 'single'
+    DUAL = 'dual'
+    QUAD = 'quad'
     MODELS = [SINGLE, DUAL, QUAD]
 
     def __init__(
@@ -76,10 +77,7 @@ class Post(BaseMount):
         return self.model
 
     def set_model(self, model: str) -> None:
-        assert model in self.MODELS, " ".join([
-            "Unexpected Post model '%s'," % model,
-            "it must be one of the following: %s" % self.MODELS
-        ])
+        assert model in self.MODELS, f'Unexpected Post model "{model}". It must be one of "{self.MODELS}"'  # noqa:E501
         self.model = model
 
     @property
@@ -89,7 +87,7 @@ class Post(BaseMount):
     @height.setter
     def height(self, height: float) -> None:
         assert height > 0, (
-            "Height must be positive 'float'")
+            'Height must be positive "float"')
         self._height = height
 
     @property
@@ -99,5 +97,5 @@ class Post(BaseMount):
     @spacing.setter
     def spacing(self, spacing: float) -> None:
         assert spacing > 0, (
-            "Spacing must be positive 'float'")
+            'Spacing must be positive "float"')
         self._spacing = spacing

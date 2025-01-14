@@ -30,14 +30,18 @@ platform:
     launch: null
     ros_parameters:
       platform_velocity_controller:
-        linear.x.max_velocity": 1.0
-        linear.x.min_velocity": -1.0
-        linear.x.max_acceleration": 3.0
-        linear.x.min_acceleration": -3.0
-        angular.z.max_velocity": 2.0
-        angular.z.min_velocity": -2.0
-        angular.z.max_acceleration": 6.0
-        angular.z.min_acceleration": -6.0
+        linear:
+          x:
+            max_velocity: 1.0
+            min_velocity: -1.0
+            max_acceleration: 3.0
+            min_acceleration: -3.0
+        angular:
+          z:
+            max_velocity: 2.0
+            min_velocity: -2.0
+            max_acceleration: 6.0
+            min_acceleration: -6.0
 links:
   box: []
   cylinder: []

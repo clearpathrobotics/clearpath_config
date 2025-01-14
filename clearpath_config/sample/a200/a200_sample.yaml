@@ -52,7 +52,7 @@ sensors:
       camera:
         camera_name: camera_0
         device_type: d435
-        serial_no: '0'
+        serial_no: "0"
         enable_color: true
         rgb_camera.profile: 640,480,30
         enable_depth: true

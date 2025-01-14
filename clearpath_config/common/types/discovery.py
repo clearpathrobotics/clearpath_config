@@ -27,8 +27,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 class Discovery:
-    SIMPLE = "simple"
-    SERVER = "server"
+    SIMPLE = 'simple'
+    SERVER = 'server'
 
     # All supported discovery modes, currently only set up for FastDDS
     ALL_SUPPORTED = [SIMPLE, SERVER]
@@ -60,7 +60,7 @@ class Discovery:
 
     @classmethod
     def assert_valid(cls, mode: str) -> None:
-        assert cls.is_valid(mode), ("\n".join[
-            f"Discovery mode '{mode}' not supported."
-            f"Discovery mode must be one of: '{cls.ALL_SUPPORTED}'"
+        assert cls.is_valid(mode), ('\n'.join[
+            f'Discovery mode "{mode}" not supported.'
+            f'Discovery mode must be one of: "{cls.ALL_SUPPORTED}"'
         ])

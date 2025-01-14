@@ -26,16 +26,17 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from typing import List
+
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 
 
 class W200Generator(BaseAttachment):
     PLATFORM = Platform.W200
-    ATTACHMENT_MODEL = "%s.generator" % PLATFORM
-    DEFAULT = "default"
+    ATTACHMENT_MODEL = '%s.generator' % PLATFORM
+    DEFAULT = 'default'
     MODELS = [DEFAULT]
-    PARENT = "default_mount"
+    PARENT = 'default_mount'
     XYZ = [0.0, 0.0, 0.0]
     RPY = [0.0, 0.0, 0.0]
 
@@ -53,11 +54,11 @@ class W200Generator(BaseAttachment):
 
 class W200Bulkhead(BaseAttachment):
     PLATFORM = Platform.W200
-    ATTACHMENT_MODEL = "%s.bulkhead" % PLATFORM
-    DEFAULT = "default"
-    ARM_PLATE = "arm_plate"
+    ATTACHMENT_MODEL = '%s.bulkhead' % PLATFORM
+    DEFAULT = 'default'
+    ARM_PLATE = 'arm_plate'
     MODELS = [DEFAULT, ARM_PLATE]
-    PARENT = "default_mount"
+    PARENT = 'default_mount'
     XYZ = [0.0, 0.0, 0.0]
     RPY = [0.0, 0.0, 0.0]
 
@@ -75,10 +76,10 @@ class W200Bulkhead(BaseAttachment):
 
 class W200ArmPlate(BaseAttachment):
     PLATFORM = Platform.W200
-    ATTACHMENT_MODEL = "%s.arm_plate" % PLATFORM
-    DEFAULT = "default"
+    ATTACHMENT_MODEL = '%s.arm_plate' % PLATFORM
+    DEFAULT = 'default'
     MODELS = [DEFAULT]
-    PARENT = "default_mount"
+    PARENT = 'default_mount'
     XYZ = [0.0, 0.0, 0.0]
     RPY = [0.0, 0.0, 0.0]
 

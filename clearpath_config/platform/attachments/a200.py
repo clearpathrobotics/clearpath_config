@@ -26,21 +26,22 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 # A200 Husky Platform Configuration
+from typing import List
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 from clearpath_config.platform.types.bumper import Bumper
-from typing import List
 
 
 class A200TopPlate(BaseAttachment):
     PLATFORM = Platform.A200
-    ATTACHMENT_MODEL = "%s.top_plate" % PLATFORM
-    DEFAULT = "default"
-    LARGE = "large"
-    PACS = "pacs"
+    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
+    DEFAULT = 'default'
+    LARGE = 'large'
+    PACS = 'pacs'
     MODELS = [DEFAULT, LARGE, PACS]
-    PARENT = "default_mount"
+    PARENT = 'default_mount'
 
     def __init__(
             self,
@@ -56,11 +57,11 @@ class A200TopPlate(BaseAttachment):
 
 class A200Bumper(Bumper):
     PLATFORM = Platform.A200
-    ATTACHMENT_MODEL = "%s.bumper" % PLATFORM
+    ATTACHMENT_MODEL = '%s.bumper' % PLATFORM
     EXTENSION = 0.0
-    DEFAULT = "default"
+    DEFAULT = 'default'
     MODELS = [DEFAULT]
-    PARENT = "front_bumper_mount"
+    PARENT = 'front_bumper_mount'
 
     def __init__(
             self,
@@ -77,12 +78,32 @@ class A200Bumper(Bumper):
 
 class A200SensorArch(BaseAttachment):
     PLATFORM = Platform.A200
-    ATTACHMENT_MODEL = "%s.sensor_arch" % PLATFORM
-    ARCH_300 = "sensor_arch_300"
-    ARCH_510 = "sensor_arch_510"
+    ATTACHMENT_MODEL = '%s.sensor_arch' % PLATFORM
+    ARCH_300 = 'sensor_arch_300'
+    ARCH_510 = 'sensor_arch_510'
     DEFAULT = ARCH_300
     MODELS = [ARCH_300, ARCH_510]
-    PARENT = "default_mount"
+    PARENT = 'default_mount'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+class A200ObserverBackpack(BaseAttachment):
+    PLATFORM = Platform.A200
+    ATTACHMENT_MODEL = '%s.observer_backpack' % PLATFORM
+    OBSERVER_BACKPACK = 'observer_backpack'
+    MODELS = [OBSERVER_BACKPACK]
+    DEFAULT = OBSERVER_BACKPACK
+    PARENT = 'default_mount'
 
     def __init__(
             self,
@@ -104,9 +125,12 @@ class A200Attachment(PlatformAttachment):
     BUMPER = A200Bumper.ATTACHMENT_MODEL
     # Archs
     SENSOR_ARCH = A200SensorArch.ATTACHMENT_MODEL
+    # Observer Backpack
+    OBSERVER_BACKPACK = A200ObserverBackpack.ATTACHMENT_MODEL
 
     TYPES = {
         TOP_PLATE: A200TopPlate,
         BUMPER: A200Bumper,
         SENSOR_ARCH: A200SensorArch,
+        OBSERVER_BACKPACK: A200ObserverBackpack,
     }

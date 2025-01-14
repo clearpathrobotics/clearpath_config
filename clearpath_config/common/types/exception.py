@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
 # Software License Agreement (BSD)
 #
-# @author    Luis Camero <lcamero@clearpathrobotics.com>
-# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+# @author    Chris Iverach-Brereton <civerachb@clearpathrobotics.com>
+# @copyright (c) 2024, Clearpath Robotics, Inc., All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -26,45 +27,34 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-from clearpath_config.common.types.file import File
+
+class UnsupportedAccessoryException(AssertionError):
+    """
+    Indicates that an accessory is not supported in the current release.
+
+    The accessory may become available in the future.
+    """
+
+    def __init__(self, message):
+        """
+        Create a new exception.
+
+        @param message  A message indicating why this accessory is not supported
+        """
+        super().__init__(message)
 
 
-class PackagePath:
-    PACKAGE = 'package'
-    PATH = 'path'
+class UnsupportedPlatformException(AssertionError):
+    """
+    Indicates that a platform is not supported in the current release.
 
-    def __init__(
-            self,
-            package: str = None,
-            path: str = None,
-            ) -> None:
-        self.package = package
-        self.path = File.clean(path, make_abs=False)
+    The platform may become available in the future.
+    """
 
-    def from_dict(self, config: dict) -> None:
-        if self.PACKAGE in config:
-            self.package = config[self.PACKAGE]
-        if self.PATH in config:
-            self.path = config[self.PATH]
+    def __init__(self, message):
+        """
+        Create a new exception.
 
-    def to_dict(self) -> dict:
-        return {
-            self.PACKAGE: self.package,
-            self.PATH: self.path,
-        }
-
-    @property
-    def package(self) -> str:
-        return self._package
-
-    @package.setter
-    def package(self, value: str) -> None:
-        self._package = value
-
-    @property
-    def path(self) -> str:
-        return self._path
-
-    @path.setter
-    def path(self, value: str) -> None:
-        self._path = value
+        @param message  A message indicating why this platform is not supported
+        """
+        super().__init__(message)

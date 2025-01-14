@@ -27,10 +27,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 class RMWImplementation:
-    CONNEXT = "rmw_connext_cpp"
-    CYCLONE_DDS = "rmw_cyclonedds_cpp"
-    FAST_RTPS = "rmw_fastrtps_cpp"
-    GURUM_DDS = "rmw_gurumdds_cpp"
+    CONNEXT = 'rmw_connext_cpp'
+    CYCLONE_DDS = 'rmw_cyclonedds_cpp'
+    FAST_RTPS = 'rmw_fastrtps_cpp'
+    GURUM_DDS = 'rmw_gurumdds_cpp'
 
     ALL_SUPPORTED = [FAST_RTPS]
 
@@ -60,7 +60,7 @@ class RMWImplementation:
 
     @classmethod
     def assert_valid(cls, rmw: str) -> None:
-        assert cls.is_valid(rmw), ("\n".join[
-            "RMW '%s' not supported." % rmw,
-            "RMW must be one of: '%s'" % cls.ALL_SUPPORTED
+        assert cls.is_valid(rmw), ('\n'.join[
+            'RMW "%s" not supported.' % rmw,
+            'RMW must be one of: "%s"' % cls.ALL_SUPPORTED
         ])

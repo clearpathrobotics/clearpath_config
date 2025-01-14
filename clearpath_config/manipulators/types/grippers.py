@@ -29,20 +29,20 @@ from clearpath_config.manipulators.types.manipulator import BaseManipulator
 
 
 class BaseGripper(BaseManipulator):
-    MANIPULATOR_MODEL = "base"
-    MANIPULATOR_TYPE = "gripper"
+    MANIPULATOR_MODEL = 'base'
+    MANIPULATOR_TYPE = 'gripper'
 
 
 class Kinova2FLite(BaseGripper):
-    MANIPULATOR_MODEL = "kinova_2f_lite"
+    MANIPULATOR_MODEL = 'kinova_2f_lite'
 
 
 class Robotiq2F85(BaseGripper):
-    MANIPULATOR_MODEL = "robotiq_2f_85"
+    MANIPULATOR_MODEL = 'robotiq_2f_85'
 
 
 class Robotiq2F140(BaseGripper):
-    MANIPULATOR_MODEL = "robotiq_2f_140"
+    MANIPULATOR_MODEL = 'robotiq_2f_140'
 
 
 class Gripper():
@@ -58,12 +58,7 @@ class Gripper():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, (
-            "Gripper model '%s' must be one of: '%s'" % (
-                model,
-                cls.MODEL.keys()
-            )
-        )
+        assert model in cls.MODEL, f'Gripper model "{model}" must be one of "{cls.MODEL.keys()}"'
 
     def __new__(cls, model: str) -> BaseGripper:
         cls.assert_model(model)

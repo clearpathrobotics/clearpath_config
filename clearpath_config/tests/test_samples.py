@@ -26,20 +26,26 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 import os
+
 from clearpath_config.clearpath_config import ClearpathConfig
+from clearpath_config.common.types.exception import (
+    UnsupportedAccessoryException,
+    UnsupportedPlatformException,
+)
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.tests.test_utils import assert_not_errors
 
-sample = os.path.dirname(os.path.realpath(__file__)) + "/../sample"
 
-A200_DEFAULT = sample + "/a200/a200_default.yaml"
-A200_DUAL_LASER = sample + "/a200/a200_dual_laser.yaml"
-A200_VELODYNE = sample + "/a200/a200_velodyne.yaml"
+sample = os.path.dirname(os.path.realpath(__file__)) + '/../sample'
 
-J100_DEFAULT = sample + "/j100/j100_default.yaml"
-J100_DUAL_LASER = sample + "/j100/j100_dual_laser.yaml"
-J100_VELODYNE = sample + "/j100/j100_velodyne.yaml"
-J100_MICROSTRAIN_GQ7 = sample + "/j100/j100_microstrain_gq7.yaml"
+A200_DEFAULT = sample + '/a200/a200_default.yaml'
+A200_DUAL_LASER = sample + '/a200/a200_dual_laser.yaml'
+A200_VELODYNE = sample + '/a200/a200_velodyne.yaml'
+
+J100_DEFAULT = sample + '/j100/j100_default.yaml'
+J100_DUAL_LASER = sample + '/j100/j100_dual_laser.yaml'
+J100_VELODYNE = sample + '/j100/j100_velodyne.yaml'
+J100_MICROSTRAIN_GQ7 = sample + '/j100/j100_microstrain_gq7.yaml'
 
 A200_SAMPLES = [
     A200_DEFAULT,
@@ -63,11 +69,17 @@ class TestPlatformSamples:
             try:
                 print(sample)
                 cc = ClearpathConfig(sample)
+            except UnsupportedAccessoryException as e:
+                print(f'Unsupported accessory: {e}. Skipping')
+                continue
+            except UnsupportedPlatformException as e:
+                print(f'Unsupported platform: {e}. Skipping')
+                continue
             except AssertionError as ae:
-                errors.append("A200 sample failed to load: %s" % ae.args[0])
+                errors.append('A200 sample failed to load: %s' % ae.args[0])
             else:
                 if cc.get_platform_model() != Platform.A200:
-                    errors.append("Platform model does not match. %s =/= %s" % (
+                    errors.append('Platform model does not match. %s =/= %s' % (
                         cc.get_platform_model(),
                         Platform.A200
                     ))
@@ -78,11 +90,17 @@ class TestPlatformSamples:
         for sample in J100_SAMPLES:
             try:
                 cc = ClearpathConfig(sample)
+            except UnsupportedAccessoryException as e:
+                print(f'Unsupported accessory: {e}. Skipping')
+                continue
+            except UnsupportedPlatformException as e:
+                print(f'Unsupported platform: {e}. Skipping')
+                continue
             except AssertionError as ae:
-                errors.append("J100 sample failed to load: %s" % ae.args[0])
+                errors.append('J100 sample failed to load: %s' % ae.args[0])
             else:
                 if cc.get_platform_model() != Platform.J100:
-                    errors.append("Platform model does not match. %s =/= %s" % (
+                    errors.append('Platform model does not match. %s =/= %s' % (
                         cc.get_model(),
                         Platform.J100
                     ))

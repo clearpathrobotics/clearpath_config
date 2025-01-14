@@ -26,6 +26,7 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 import os
+
 import yaml
 
 
@@ -51,28 +52,27 @@ def read_yaml(path: str) -> dict:
     # Check YAML Path
     try:
         path = find_valid_path(path, os.getcwd())
-        assert path, "YAML file '%s' could not be found" % orig
+        assert path, f'YAML file "{orig}" could not be found'
     except FileNotFoundError:
         raise AssertionError(
-            "YAML file '%s' could not be found" % orig)
+            f'YAML file "{orig}" could not be found')
     # Check YAML can be Opened
     try:
         config = yaml.load(open(path), Loader=yaml.SafeLoader)
     except yaml.scanner.ScannerError:
         raise AssertionError(
-            "YAML file '%s' is not well formed" % orig)
+            f'YAML file "{orig}" is not well formed')
     except yaml.constructor.ConstructorError:
         raise AssertionError(
-            "YAML file '%s' is attempting to create unsafe objects" % (
-                orig))
+            f'YAML file "{orig}" is attempting to create unsafe objects')
     # Check contents are a Dictionary
     assert isinstance(config, dict), (
-        "YAML file '%s' is not a dictionary" % orig)
+        f'YAML file "{orig}" is not a dictionary')
     return config
 
 
 def write_yaml(path: str, config: dict) -> None:
-    yaml_file = open(path, "w+")
+    yaml_file = open(path, 'w+')
     yaml.Dumper.ignore_aliases = lambda *args: True
     yaml.dump(
         config,

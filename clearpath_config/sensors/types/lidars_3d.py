@@ -25,34 +25,35 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.port import Port
 from clearpath_config.common.utils.dictionary import extend_flat_dict, is_in_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
-from typing import List
 
 
 class BaseLidar3D(BaseSensor):
-    SENSOR_TYPE = "lidar3d"
-    SENSOR_MODEL = "base"
-    TOPIC = "points"
+    SENSOR_TYPE = 'lidar3d'
+    SENSOR_MODEL = 'base'
+    TOPIC = 'points'
 
-    FRAME_ID = "laser"
-    IP_ADDRESS = "192.168.131.25"
-    IP_PORT = "2368"
+    FRAME_ID = 'laser'
+    IP_ADDRESS = '192.168.131.25'
+    IP_PORT = '2368'
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "node_name.frame_id"
-        IP_ADDRESS = "node_name.ip_address"
-        IP_PORT = "node_name.ip_port"
+        FRAME_ID = 'node_name.frame_id'
+        IP_ADDRESS = 'node_name.ip_address'
+        IP_PORT = 'node_name.ip_port'
 
     class TOPICS:
-        SCAN = "scan"
-        POINTS = "points"
+        SCAN = 'scan'
+        POINTS = 'points'
         NAME = {
-            SCAN: "scan",
-            POINTS: "points",
+            SCAN: 'scan',
+            POINTS: 'points',
         }
         RATE = {
             SCAN: 10,
@@ -106,7 +107,7 @@ class BaseLidar3D(BaseSensor):
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
-        return "%s_%s" % (
+        return '%s_%s' % (
             cls.get_name_from_idx(idx),
             cls.FRAME_ID
         )
@@ -126,7 +127,7 @@ class BaseLidar3D(BaseSensor):
         # Set IP
         if not is_in_dict(
                 self._ros_parameters,
-                self.ROS_PARAMETER_KEYS.IP_ADDRESS.split(".")):
+                self.ROS_PARAMETER_KEYS.IP_ADDRESS.split('.')):
             self.set_ip(self.get_ip_from_idx(idx))
 
     @property
@@ -174,17 +175,17 @@ class BaseLidar3D(BaseSensor):
 
 
 class VelodyneLidar(BaseLidar3D):
-    SENSOR_MODEL = "velodyne_lidar"
+    SENSOR_MODEL = 'velodyne_lidar'
 
-    FRAME_ID = "laser"
+    FRAME_ID = 'laser'
     IP_PORT = 2368
 
-    HDL_32E = "32E"
-    HDL_64E = "64E"
-    HDL_64E_S2 = "64E_S2"
-    HDL_64E_S3 = "64E_S3"
-    VLP_16 = "VLP16"
-    VLP_32C = "32C"
+    HDL_32E = '32E'
+    HDL_64E = '64E'
+    HDL_64E_S2 = '64E_S2'
+    HDL_64E_S3 = '64E_S3'
+    VLP_16 = 'VLP16'
+    VLP_32C = '32C'
     DEVICE_TYPE = VLP_16
     DEVICE_TYPES = [
         HDL_32E,
@@ -196,20 +197,20 @@ class VelodyneLidar(BaseLidar3D):
     ]
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "velodyne_driver_node.frame_id"
-        IP_ADDRESS = "velodyne_driver_node.device_ip"
-        IP_PORT = "velodyne_driver_node.port"
-        DRIVER_NODE_MODEL = "velodyne_driver_node.model"
-        TRANSFORM_NODE_MODEL = "velodyne_transform_node.model"
-        FIXED_FRAME = "velodyne_transform_node.fixed_frame"
-        TARGET_FRAME = "velodyne_transform_node.target_frame"
+        FRAME_ID = 'velodyne_driver_node.frame_id'
+        IP_ADDRESS = 'velodyne_driver_node.device_ip'
+        IP_PORT = 'velodyne_driver_node.port'
+        DRIVER_NODE_MODEL = 'velodyne_driver_node.model'
+        TRANSFORM_NODE_MODEL = 'velodyne_transform_node.model'
+        FIXED_FRAME = 'velodyne_transform_node.fixed_frame'
+        TARGET_FRAME = 'velodyne_transform_node.target_frame'
 
     class TOPICS:
-        SCAN = "scan"
-        POINTS = "points"
+        SCAN = 'scan'
+        POINTS = 'points'
         NAME = {
-            SCAN: "scan",
-            POINTS: "points",
+            SCAN: 'scan',
+            POINTS: 'points',
         }
         RATE = {
             SCAN: 10,
@@ -264,7 +265,7 @@ class VelodyneLidar(BaseLidar3D):
     @device_type.setter
     def device_type(self, device_type) -> None:
         assert device_type in self.DEVICE_TYPES, (
-            "Device type '%s' is not one of '%s'" % (
+            'Device type "%s" is not one of "%s"' % (
                 device_type,
                 self.DEVICE_TYPES
             )

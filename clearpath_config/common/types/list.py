@@ -35,8 +35,8 @@ from typing import (
 
 
 # ListConfigs: Generic Types
-T = TypeVar("T")
-U = TypeVar("U")
+T = TypeVar('T')
+U = TypeVar('U')
 
 
 # ListConfigs
@@ -72,7 +72,7 @@ class ListConfig(Generic[T, U]):
         # Error
         else:
             raise AssertionError(
-                "Object must be of type %s or %s" % (
+                'Object must be of type %s or %s' % (
                     self.__type_T.__name__,
                     self.__type_U.__name__
                 )
@@ -87,12 +87,12 @@ class ListConfig(Generic[T, U]):
             obj: T,
             ) -> None:
         assert isinstance(obj, self.__type_T), (
-            "Object must be of type %s" % (
+            'Object must be of type %s' % (
                 self.__type_T.__name__
             )
         )
         assert self.find(obj) is None, (
-            "Object with uid %s is not unique." % (
+            'Object with uid %s is not unique.' % (
                 self.__uid(obj)
             )
         )
@@ -103,10 +103,10 @@ class ListConfig(Generic[T, U]):
             obj: T,
             ) -> None:
         assert isinstance(obj, self.__type_T), (
-            "Object must be of type %s" % T
+            'Object must be of type %s' % T
         )
         assert self.find(obj) is not None, (
-            "Object with uid %s cannot be replaced. Does not exist." % (
+            'Object with uid %s cannot be replaced. Does not exist.' % (
                 self.__uid(obj)
             )
         )
@@ -133,7 +133,7 @@ class ListConfig(Generic[T, U]):
     def get_all(self) -> List[T]:
         return self.__list
 
-    def set(
+    def set(  # noqa:A003
             self,
             obj: T
             ) -> None:
@@ -201,7 +201,7 @@ class OrderedListConfig(Generic[T]):
             idx = obj
         else:
             raise AssertionError(
-                "Object must of type %s or %s" % (
+                'Object must of type %s or %s' % (
                     self.__type_T, int
                 )
             )
@@ -220,7 +220,7 @@ class OrderedListConfig(Generic[T]):
             obj: T
             ) -> None:
         assert isinstance(obj, self.__type_T), (
-            "Object must be of type %s" % T
+            'Object must be of type %s' % T
         )
         self.__list.append(obj)
         self.update()
@@ -231,7 +231,7 @@ class OrderedListConfig(Generic[T]):
             ) -> None:
         idx = self.find(obj)
         assert idx is not None, (
-            "Object not found. Cannot be replaced"
+            'Object not found. Cannot be replaced'
         )
         self.__list[idx - self.start_idx] = obj
         self.update()
@@ -260,7 +260,7 @@ class OrderedListConfig(Generic[T]):
             ) -> List[T]:
         return self.__list
 
-    def set(
+    def set(  # noqa:A003
             self,
             obj: T
             ) -> None:

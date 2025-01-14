@@ -1,0 +1,126 @@
+serial_number: a300-0000
+version: 0
+system:
+  hosts:
+    - hostname: cpr-a300-0000
+      ip: 192.168.131.1
+  ros2:
+    namespace: a300_0000
+platform:
+  attachments:
+    - name: front_bumper
+      type: a300.bumper
+      parent: front_bumper_mount
+    - name: rear_bumper
+      type: a300.bumper
+      parent: rear_bumper_mount
+    - name: top_plate
+      type: a300.top_plate
+    - name: amp_frame
+      type: a300.amp_frame
+      parent: default_mount
+sensors:
+  imu:
+    - model: microstrain_imu
+      urdf_enabled: true
+      launch_enabled: true
+      parent: base_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        microstrain_inertial_driver:
+          imu_frame_id: imu_0_link
+          port: /dev/microstrain_main
+          use_enu_frame: true
+  lidar2d:
+    - model: hokuyo_ust
+      urdf_enabled: true
+      launch_enabled: true
+      parent: top_plate_front_mount
+      xyz: [-0.1, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        urg_node:
+          laser_frame_id: lidar2d_0_laser
+          ip_address: 192.168.131.20
+          ip_port: 10940
+          angle_min: -3.141592653589793
+          angle_max: 3.141592653589793
+    - model: hokuyo_ust
+      urdf_enabled: true
+      launch_enabled: true
+      parent: top_plate_rear_mount
+      xyz: [0.1, 0.0, 0.0]
+      rpy: [0.0, 0.0, 3.1415]
+      ros_parameters:
+        urg_node:
+          laser_frame_id: lidar2d_1_laser
+          ip_address: 192.168.131.21
+          ip_port: 10940
+          angle_min: -3.141592653589793
+          angle_max: 3.141592653589793
+  gps:
+    - model: swiftnav_duro
+      urdf_enabled: true
+      launch_enabled: true
+      parent: amp_frame_right_gps_mount
+      ros_parameters:
+        duro_node:
+          gps_receiver_frame_id: gps_0_link
+          ip_address: 192.168.131.31
+          ip_port: 55555
+          imu_frame_id: gps_0_link
+    - model: swiftnav_duro
+      urdf_enabled: true
+      launch_enabled: true
+      parent: amp_frame_left_gps_mount
+      ros_parameters:
+        duro_node:
+          gps_receiver_frame_id: gps_1_link
+          ip_address: 192.168.131.32
+          ip_port: 55555
+          imu_frame_id: gps_1_link
+  camera:
+    - model: axis_camera
+      parent: top_plate_default_mount
+      ros_parameters:
+        axis_camera:
+          device_type: q62
+          hostname: "192.168.131.10"
+          http_port: 80
+          username: "root"
+          password: ""
+          width: 640
+          height: 480
+          fps: 20
+          tf_prefix: "axis"
+          camera_info_url: ""
+          use_encrypted_password : False
+          camera : 1
+          ir: True
+          defog: True
+          wiper: True
+          ptz: True
+          min_pan: -3.141592653589793
+          max_pan: 3.141592653589793
+          min_tilt: 0.0
+          max_tilt: 1.5707963267948966
+          min_zoom: 1
+          max_zoom: 24
+          max_pan_speed: 2.61
+          max_tilt_speed: 2.61
+          ptz_teleop: True
+          button_enable_pan_tilt : -1
+          button_enable_zoom     : -1
+          axis_pan      : 3
+          axis_tilt     : 4
+          invert_tilt   : False
+          axis_zoom_in: 5
+          axis_zoom_out: 2
+          zoom_in_offset: -1.0
+          zoom_out_offset: -1.0
+          zoom_in_scale: -0.5
+          zoom_out_scale: 0.5
+          scale_pan     : 2.61
+          scale_tilt    : 2.61
+          scale_zoom    : 100.0

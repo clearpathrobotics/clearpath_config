@@ -25,8 +25,9 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.common.types.accessory import Accessory
 from typing import List
+
+from clearpath_config.common.types.accessory import Accessory
 
 
 class BaseLink(Accessory):
@@ -36,7 +37,7 @@ class BaseLink(Accessory):
     Parameters
     ----------
     name : str
-        Required. Results in "{name}_link" in URDF.
+        Required. Results in '{name}_link' in URDF.
     parent : str
         Parent link in URDF.
     xyz: List[float]
@@ -55,7 +56,7 @@ class BaseLink(Accessory):
 
     """
 
-    LINK_TYPE = "base"
+    LINK_TYPE = 'base'
     OFFSET_XYZ = [0.0, 0.0, 0.0]
     OFFSET_RPY = [0.0, 0.0, 0.0]
 
@@ -99,7 +100,7 @@ class BaseLink(Accessory):
     def set_offset_xyz(self, xyz: List[float]) -> None:
         Accessory.assert_valid_triplet(
             xyz,
-            "Offset XYZ must be a list of exactly three float values"
+            'Offset XYZ must be a list of exactly three float values'
         )
         self.offset_xyz = xyz
 
@@ -109,6 +110,6 @@ class BaseLink(Accessory):
     def set_offset_rpy(self, rpy: List[float]) -> None:
         Accessory.assert_valid_triplet(
             rpy,
-            "Offset RPY must be a list of exactly three float values"
+            'Offset RPY must be a list of exactly three float values'
         )
         self.offset_rpy = rpy

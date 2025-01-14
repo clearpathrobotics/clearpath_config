@@ -25,12 +25,13 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.common.types.accessory import Accessory, IndexedAccessory
 from typing import List
+
+from clearpath_config.common.types.accessory import Accessory, IndexedAccessory
 
 
 class BaseMount(IndexedAccessory):
-    MOUNT_MODEL = "base_mount"
+    MOUNT_MODEL = 'base_mount'
 
     def __init__(
         self,
@@ -63,7 +64,7 @@ class BaseMount(IndexedAccessory):
 
     @classmethod
     def get_name_from_idx(cls, idx: int) -> str:
-        return "%s_%s" % (
+        return '%s_%s' % (
             cls.get_mount_model(),
             idx
         )

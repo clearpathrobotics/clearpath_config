@@ -34,8 +34,8 @@ from clearpath_config.common.utils.dictionary import flatten_dict, unflatten_dic
 
 
 class BaseManipulator(IndexedAccessory):
-    MANIPULATOR_MODEL = "base"
-    MANIPULATOR_TYPE = "manipulator"
+    MANIPULATOR_MODEL = 'base'
+    MANIPULATOR_TYPE = 'manipulator'
     ROS_PARAMETERS = {}
     ROS_PARAMETERS_TEMPLATE = {}
 
@@ -44,7 +44,7 @@ class BaseManipulator(IndexedAccessory):
                 self,
                 key: str,
                 get: Callable,
-                set: Callable
+                set: Callable  # noqa:A002
                 ) -> None:
             self.key = key
             self.get = get
@@ -94,7 +94,7 @@ class BaseManipulator(IndexedAccessory):
 
     @classmethod
     def get_name_from_idx(cls, idx: int) -> str:
-        return "%s_%s" % (
+        return '%s_%s' % (
             cls.get_manipulator_type(),
             idx
         )
@@ -105,12 +105,12 @@ class BaseManipulator(IndexedAccessory):
 
     @ros_parameters_template.setter
     def ros_parameters_template(self, d: dict) -> None:
-        assert isinstance(d, dict), ("Template must be of type 'dict'")
+        assert isinstance(d, dict), ('Template must be of type "dict"')
         # Check that template has all properties
         flat = flatten_dict(d)
         for _, val in flat.items():
             assert isinstance(val, property), (
-                "All entries in template must be properties."
+                'All entries in template must be properties.'
             )
         self._ros_parameters_template = d
 
@@ -126,7 +126,7 @@ class BaseManipulator(IndexedAccessory):
 
     @ros_parameters.setter
     def ros_parameters(self, d: dict) -> None:
-        assert isinstance(d, dict), ("ROS paramaters must be a dictionary")
+        assert isinstance(d, dict), ('ROS paramaters must be a dictionary')
         for d_k, d_v in flatten_dict(d).items():
             for key, prop in flatten_dict(self.ros_parameters_template).items():
                 if d_k == key:

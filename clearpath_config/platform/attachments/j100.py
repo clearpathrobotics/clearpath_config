@@ -26,19 +26,20 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 # J100 Jackal Platform Configuration
+from typing import List
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
-from typing import List
 
 
 class J100Fender(BaseAttachment):
     PLATFORM = Platform.J100
-    ATTACHMENT_MODEL = "%s.fender" % PLATFORM
-    DEFAULT = "default"
-    SENSOR = "sensor"
+    ATTACHMENT_MODEL = '%s.fender' % PLATFORM
+    DEFAULT = 'default'
+    SENSOR = 'sensor'
     MODELS = [DEFAULT, SENSOR]
-    PARENT = "base_link"
+    PARENT = 'base_link'
 
     def __init__(
             self,
@@ -54,11 +55,11 @@ class J100Fender(BaseAttachment):
 
 class J100TopPlate(BaseAttachment):
     PLATFORM = Platform.J100
-    ATTACHMENT_MODEL = "%s.top_plate" % PLATFORM
-    ARK_ENCLOSURE = "ark_enclosure"
+    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
+    ARK_ENCLOSURE = 'ark_enclosure'
     DEFAULT = ARK_ENCLOSURE
     MODELS = [DEFAULT]
-    PARENT = "default_mount"
+    PARENT = 'default_mount'
 
     def __init__(
             self,

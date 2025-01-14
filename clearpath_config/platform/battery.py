@@ -31,40 +31,45 @@ from clearpath_config.common.utils.dictionary import flip_dict
 
 
 class BatteryConfig(BaseConfig):
-    BATTERY = "battery"
+    BATTERY = 'battery'
 
     # Models
-    MODEL = "model"
-    UNKNOWN = "unknown"
+    MODEL = 'model'
+    UNKNOWN = 'unknown'
     # D100 Lead Acid
-    TLV1222 = "TLV1222"
+    TLV1222 = 'TLV1222'
     # D100 LiION
-    PH3054 = "PH3054"
+    PH3054 = 'PH3054'
     # D150 LiION
-    RB20 = "RB20"
+    RB20 = 'RB20'
     # A200 Lead Acid
-    ES20_12C = "ES20_12C"
+    ES20_12C = 'ES20_12C'
     # A200/J100 LiION
-    HE2613 = "HE2613"
+    HE2613 = 'HE2613'
+    HE2411 = 'HE2411'
+    HE2410 = 'HE2410'
+    # A300 LiFEPO4
+    S_24V20_U1 = 'S_24V20_U1'
     # R100 Lead Acid
-    DTM8A31 = "8A31DTM"
+    DTM8A31 = '8A31DTM'
     # W200 Lead Acid
-    U1_35 = "U1_35"
+    U1_35 = 'U1_35'
     # W200 LiFEPO4
-    NEC_ALM12V35 = "NEC_ALM12V35"
-    VALENCE_U24_12XP = "VALENCE_U24_12XP"
-    VALENCE_U27_12XP = "VALENCE_U27_12XP"
+    NEC_ALM12V35 = 'NEC_ALM12V35'
+    VALENCE_U24_12XP = 'VALENCE_U24_12XP'
+    VALENCE_U27_12XP = 'VALENCE_U27_12XP'
 
     # Configurations
-    CONFIGURATION = "configuration"
+    CONFIGURATION = 'configuration'
     LAUNCH_ARGS = 'launch_args'
-    S1P1 = "S1P1"
-    S1P2 = "S1P2"
-    S1P3 = "S1P3"
-    S1P4 = "S1P4"
-    S2P1 = "S2P1"
-    S4P1 = "S4P1"
-    S4P3 = "S4P3"
+    S1P1 = 'S1P1'
+    S1P2 = 'S1P2'
+    S1P3 = 'S1P3'
+    S1P4 = 'S1P4'
+    S1P6 = 'S1P6'
+    S2P1 = 'S2P1'
+    S4P1 = 'S4P1'
+    S4P3 = 'S4P3'
 
     VALID = {
         Platform.GENERIC: {
@@ -73,6 +78,11 @@ class BatteryConfig(BaseConfig):
         Platform.A200: {
             ES20_12C: [S2P1],
             HE2613: [S1P3, S1P4],
+            HE2411: [S1P3, S1P4],
+            HE2410: [S1P3, S1P4],
+        },
+        Platform.A300: {
+            S_24V20_U1: [S1P2, S1P4, S1P6],
         },
         Platform.DD100: {
             TLV1222: [S1P1],
@@ -92,6 +102,8 @@ class BatteryConfig(BaseConfig):
         },
         Platform.J100: {
             HE2613: [S1P1],
+            HE2411: [S1P1],
+            HE2410: [S1P1],
         },
         Platform.R100: {
             DTM8A31: [S1P2],
@@ -175,15 +187,8 @@ class BatteryConfig(BaseConfig):
     @model.setter
     def model(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID, ((
-            "Platform %s is invalid. " % platform +
-            "Platform must be one of: %s" % list(self.VALID)
-        ))
-        assert value in self.VALID[platform], ((
-            "Battery model %s is invalid. " % value +
-            "Battery model for platform '%s' must be one of: %s" % (
-                platform, list(self.VALID[platform]))
-        ))
+        assert platform in self.VALID, f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID)}"'  # noqa:E501
+        assert value in self.VALID[platform], f'Battery model "{value}" is invalid. Battery model for platform "{platform}" must be one of "{list(self.VALID[platform])}"'  # noqa:E501
         self._model = value
 
     @property
@@ -198,19 +203,11 @@ class BatteryConfig(BaseConfig):
     def configuration(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
         assert platform in self.VALID, ((
-            "Platform %s is invalid. " % platform +
-            "Platform must be one of: %s" % list(self.VALID)
+            'Platform %s is invalid. ' % platform +
+            'Platform must be one of: %s' % list(self.VALID)
         ))
-        assert self.model in self.VALID[platform], ((
-            "Battery model %s in invalid. " % self.model +
-            "Battery model for platform '%s' must be one of: %s" % (
-                platform, list(self.VALID[platform]))
-        ))
-        assert value in self.VALID[platform][self.model], ((
-            "Battery configuration %s invalid. " % value +
-            "For platform '%s' and battery model '%s', it must be one of: %s" % (
-                platform, self.model, list(self.VALID[platform][self.model]))
-        ))
+        assert self.model in self.VALID[platform], f'Battery model "{self.model}" is invalid. Battery model for platform "{platform}" it must be one of "{list(self.VALID[platform])}"'  # noqa:E501
+        assert value in self.VALID[platform][self.model], f'Battery configuration "{value}" is invalid. For platform "{platform}" and battery model "{self.model}" it must be one of "{list(self.VALID[platform][self.model])}"'  # noqa:E501
         self._configuration = value
 
     @property
@@ -224,7 +221,7 @@ class BatteryConfig(BaseConfig):
     @launch_args.setter
     def launch_args(self, value: dict) -> None:
         assert isinstance(value, dict), ((
-            "Battery Launch args %s are invalid. " % value +
-            "They must be in the format of a dictionary."
+            'Battery Launch args %s are invalid. ' % value +
+            'They must be in the format of a dictionary.'
         ))
         self._launch_args = value

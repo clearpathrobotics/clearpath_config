@@ -27,12 +27,12 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.utils.yaml import read_yaml, write_yaml
-from clearpath_config.system.system import SystemConfig
-from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.links.links import LinksConfig
 from clearpath_config.manipulators.manipulators import ManipulatorConfig
 from clearpath_config.mounts.mounts import MountsConfig
+from clearpath_config.platform.platform import PlatformConfig
 from clearpath_config.sensors.sensors import SensorConfig
+from clearpath_config.system.system import SystemConfig
 
 
 # ClearpathConfig:
@@ -40,14 +40,14 @@ from clearpath_config.sensors.sensors import SensorConfig
 #  - contains
 class ClearpathConfig(BaseConfig):
 
-    VERSION = "version"
-    SERIAL_NUMBER = "serial_number"
-    SYSTEM = "system"
-    PLATFORM = "platform"
-    LINKS = "links"
-    MANIPULATORS = "manipulators"
-    MOUNTS = "mounts"
-    SENSORS = "sensors"
+    VERSION = 'version'
+    SERIAL_NUMBER = 'serial_number'
+    SYSTEM = 'system'
+    PLATFORM = 'platform'
+    LINKS = 'links'
+    MANIPULATORS = 'manipulators'
+    MOUNTS = 'mounts'
+    SENSORS = 'sensors'
 
     TEMPLATE = {
         SERIAL_NUMBER: SERIAL_NUMBER,
@@ -63,7 +63,7 @@ class ClearpathConfig(BaseConfig):
     KEYS = TEMPLATE
 
     DEFAULTS = {
-        SERIAL_NUMBER: "generic",
+        SERIAL_NUMBER: 'generic',
         VERSION: 0,
         SYSTEM: SystemConfig.DEFAULTS,
         PLATFORM: PlatformConfig.DEFAULTS,
@@ -136,9 +136,7 @@ class ClearpathConfig(BaseConfig):
 
     @version.setter
     def version(self, v: int) -> None:
-        assert isinstance(v, int), (
-            "version must be of type 'int'"
-        )
+        assert isinstance(v, int), 'version must be of type "int"'
         self._version = v
         # Add propagators here
 

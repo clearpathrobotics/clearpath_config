@@ -29,6 +29,7 @@
 # Port
 # - TCP Port
 class Port:
+
     def __init__(self, port: int) -> None:
         self.assert_valid(port)
         self.port = int(port)
@@ -65,6 +66,4 @@ class Port:
         except ValueError as e:
             raise AssertionError(e.args)
         # Must be in Range
-        assert 0 <= port < 65536, (
-            "Port '%s' must be between 0 and 65535" % port
-        )
+        assert 0 <= port < 65536, f'Port "{port}" must be between 0 and 65535'

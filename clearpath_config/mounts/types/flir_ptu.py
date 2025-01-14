@@ -25,23 +25,23 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.file import File
 from clearpath_config.common.types.ip import IP
 from clearpath_config.mounts.types.mount import BaseMount
-from typing import List
 
 
 class FlirPTU(BaseMount):
-    MOUNT_MODEL = "flir_ptu"
+    MOUNT_MODEL = 'flir_ptu'
     # Default Values
-    TTY_PORT = "/dev/ptu"
+    TTY_PORT = '/dev/ptu'
     TCP_PORT = 4000
-    IP_ADDRESS = "192.168.131.70"
+    IP_ADDRESS = '192.168.131.70'
     LIMITS_ENABLED = False
-    TTY = "tty"
-    TCP = "tcp"
+    TTY = 'tty'
+    TCP = 'tcp'
     CONNECTION_TYPE = TTY
     # TTY (uses tty_port)
     # TCP (uses ip_addr and tcp_port)
@@ -90,9 +90,7 @@ class FlirPTU(BaseMount):
         return self.tcp_port
 
     def set_tcp_port(self, tcp_port: int) -> None:
-        assert 1024 < tcp_port < 65536, (
-            "TCP port '%s' must be in range 1024 to 65536" % tcp_port
-        )
+        assert 1024 < tcp_port < 65536, f'TCP port "{tcp_port}" must be in range 1024 to 65536'
         self.tcp_port = tcp_port
 
     def get_ip(self) -> str:
@@ -105,12 +103,7 @@ class FlirPTU(BaseMount):
         return self.connection_type
 
     def set_connection_type(self, connection_type: str) -> None:
-        assert connection_type in self.CONNECTION_TYPES, (
-            "Connection type '%s' must be one of '%s'" % (
-                connection_type,
-                self.CONNECTION_TYPES,
-            )
-        )
+        assert connection_type in self.CONNECTION_TYPES, f'Connection type "{connection_type}" must be one of "{self.CONNECTION_TYPES}"'  # noqa:E501
         self.connection_type = connection_type
 
     def get_limits_enabled(self) -> bool:

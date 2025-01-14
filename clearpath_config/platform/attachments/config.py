@@ -25,13 +25,15 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
 from clearpath_config.common.types.list import ListConfig
 from clearpath_config.common.utils.dictionary import merge_dict
 from clearpath_config.platform.types.attachment import BaseAttachment
-from typing import List
 
 
 class AttachmentListConfig(ListConfig[BaseAttachment, str]):
+
     def __init__(self) -> None:
         super().__init__(
             uid=lambda obj: obj.get_name(),
@@ -49,6 +51,7 @@ class AttachmentListConfig(ListConfig[BaseAttachment, str]):
 # Attachments Config
 # - to be used by all platforms.
 class AttachmentsConfig:
+
     def __init__(
             self,
             attachment,

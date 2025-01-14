@@ -25,35 +25,36 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
 from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.common.types.file import File
 from clearpath_config.common.utils.dictionary import extend_flat_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
-from typing import List
 
 
 class BaseIMU(BaseSensor):
-    SENSOR_TYPE = "imu"
-    SENSOR_MODEL = "base"
-    TOPIC = "imu"
+    SENSOR_TYPE = 'imu'
+    SENSOR_MODEL = 'base'
+    TOPIC = 'imu'
 
-    PORT = "/dev/clearpath/imu"
-    FRAME_ID = "link"
+    PORT = '/dev/clearpath/imu'
+    FRAME_ID = 'link'
     USE_ENU = True
 
     class ROS_PARAMETERS_KEYS:
-        PORT = "node_name.port"
-        FRAME_ID = "node_name.frame_id"
-        USE_ENU = "node_name.use_enu"
+        PORT = 'node_name.port'
+        FRAME_ID = 'node_name.frame_id'
+        USE_ENU = 'node_name.use_enu'
 
     class TOPICS:
-        RAW_DATA = "raw"
-        DATA = "data"
-        MAG = "mag"
+        RAW_DATA = 'raw'
+        DATA = 'data'
+        MAG = 'mag'
         NAME = {
-            RAW_DATA: "data_raw",
-            DATA: "data",
-            MAG: "mag"
+            RAW_DATA: 'data_raw',
+            DATA: 'data',
+            MAG: 'mag'
         }
         RATE = {
             RAW_DATA: 60,
@@ -108,7 +109,7 @@ class BaseIMU(BaseSensor):
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
-        return "%s_%s" % (
+        return '%s_%s' % (
             cls.get_name_from_idx(idx),
             cls.FRAME_ID
         )
@@ -116,7 +117,7 @@ class BaseIMU(BaseSensor):
     def set_idx(self, idx: int) -> None:
         super().set_idx(idx)
         # Update Frame ID
-        self.set_frame_id("%s_%s" % (
+        self.set_frame_id('%s_%s' % (
             self.get_name_from_idx(idx),
             self.FRAME_ID
         ))
@@ -166,25 +167,25 @@ class BaseIMU(BaseSensor):
 
 
 class Microstrain(BaseIMU):
-    SENSOR_MODEL = "microstrain_imu"
+    SENSOR_MODEL = 'microstrain_imu'
 
-    PORT = "/dev/microstrain_main"
-    FRAME_ID = "link"
+    PORT = '/dev/microstrain_main'
+    FRAME_ID = 'link'
     USE_ENU = True
 
     class ROS_PARAMETERS_KEYS:
-        PORT = "microstrain_inertial_driver.port"
-        FRAME_ID = "microstrain_inertial_driver.frame_id"
-        USE_ENU = "microstrain_inertial_driver.use_enu_frame"
+        PORT = 'microstrain_inertial_driver.port'
+        FRAME_ID = 'microstrain_inertial_driver.frame_id'
+        USE_ENU = 'microstrain_inertial_driver.use_enu_frame'
 
     class TOPICS:
-        RAW_DATA = "raw"
-        DATA = "data"
-        MAG = "mag"
+        RAW_DATA = 'raw'
+        DATA = 'data'
+        MAG = 'mag'
         NAME = {
-            RAW_DATA: "data_raw",
-            DATA: "data",
-            MAG: "mag"
+            RAW_DATA: 'data_raw',
+            DATA: 'data',
+            MAG: 'mag'
         }
         RATE = {
             RAW_DATA: 60,
@@ -226,25 +227,25 @@ class Microstrain(BaseIMU):
 
 
 class CHRoboticsUM6(BaseIMU):
-    SENSOR_MODEL = "chrobotics_um6"
+    SENSOR_MODEL = 'chrobotics_um6'
 
-    PORT = "/dev/clearpath/imu"
-    FRAME_ID = "link"
+    PORT = '/dev/clearpath/imu'
+    FRAME_ID = 'link'
     USE_ENU = True
 
     class ROS_PARAMETERS_KEYS:
-        PORT = "um6_driver.port"
-        FRAME_ID = "um6_driver.frame_id"
-        USE_ENU = "um6_driver.tf_ned_to_enu"
+        PORT = 'um6_driver.port'
+        FRAME_ID = 'um6_driver.frame_id'
+        USE_ENU = 'um6_driver.tf_ned_to_enu'
 
     class TOPICS:
-        RAW_DATA = "raw"
-        DATA = "data"
-        MAG = "mag"
+        RAW_DATA = 'raw'
+        DATA = 'data'
+        MAG = 'mag'
         NAME = {
-            RAW_DATA: "data_raw",
-            DATA: "data",
-            MAG: "mag"
+            RAW_DATA: 'data_raw',
+            DATA: 'data',
+            MAG: 'mag'
         }
         RATE = {
             RAW_DATA: 60,
@@ -286,25 +287,25 @@ class CHRoboticsUM6(BaseIMU):
 
 
 class RedshiftUM7(BaseIMU):
-    SENSOR_MODEL = "redshift_um7"
+    SENSOR_MODEL = 'redshift_um7'
 
-    PORT = "/dev/clearpath/um7"
-    FRAME_ID = "link"
+    PORT = '/dev/clearpath/um7'
+    FRAME_ID = 'link'
     USE_ENU = True
 
     class ROS_PARAMETERS_KEYS:
-        PORT = "um7_driver.port"
-        FRAME_ID = "um7_driver.frame_id"
-        USE_ENU = "um7_driver.tf_ned_to_enu"
+        PORT = 'um7_driver.port'
+        FRAME_ID = 'um7_driver.frame_id'
+        USE_ENU = 'um7_driver.tf_ned_to_enu'
 
     class TOPICS:
-        RAW_DATA = "raw"
-        DATA = "data"
-        MAG = "mag"
+        RAW_DATA = 'raw'
+        DATA = 'data'
+        MAG = 'mag'
         NAME = {
-            RAW_DATA: "data_raw",
-            DATA: "data",
-            MAG: "mag"
+            RAW_DATA: 'data_raw',
+            DATA: 'data',
+            MAG: 'mag'
         }
         RATE = {
             RAW_DATA: 60,
@@ -346,23 +347,23 @@ class RedshiftUM7(BaseIMU):
 
 
 class PhidgetsSpatial(BaseIMU):
-    SENSOR_MODEL = "phidgets_spatial"
+    SENSOR_MODEL = 'phidgets_spatial'
 
     PORT = None
-    FRAME_ID = "link"
+    FRAME_ID = 'link'
     USE_ENU = True
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = "phidgets_spatial.frame_id"
+        FRAME_ID = 'phidgets_spatial.frame_id'
 
     class TOPICS:
-        RAW_DATA = "raw"
-        MAG = "mag"
-        CALIB = "calibrated"
+        RAW_DATA = 'raw'
+        MAG = 'mag'
+        CALIB = 'calibrated'
         NAME = {
-            RAW_DATA: "data_raw",
-            MAG: "msg",
-            CALIB: "is_calibrated"
+            RAW_DATA: 'data_raw',
+            MAG: 'msg',
+            CALIB: 'is_calibrated'
         }
         RATE = {
             RAW_DATA: 60,

@@ -17,14 +17,18 @@ platform:
     urdf: null
     ros_parameters:
       platform_velocity_controller:
-        linear.x.max_velocity": 5.0
-        linear.x.min_velocity": -5.0
-        linear.x.max_acceleration": 50.0
-        linear.x.min_acceleration": -50.0
-        angular.z.max_velocity": 4.0
-        angular.z.min_velocity": -4.0
-        angular.z.max_acceleration": 40.0
-        angular.z.min_acceleration": -40.0
+        linear:
+          x:
+            max_velocity: 5.0
+            min_velocity: -5.0
+            max_acceleration: 50.0
+            min_acceleration: -50.0
+        angular:
+          z:
+            max_velocity: 4.0
+            min_velocity: -4.0
+            max_acceleration: 40.0
+            min_acceleration: -40.0
 links:
   box: []
   cylinder: []

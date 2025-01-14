@@ -27,10 +27,12 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from typing import List
 
+from clearpath_config.common.types.exception import UnsupportedAccessoryException
+
 
 class Accessory():
     # Defaults
-    PARENT = "default_mount"
+    PARENT = 'default_mount'
     XYZ = [0.0, 0.0, 0.0]
     RPY = [0.0, 0.0, 0.0]
 
@@ -41,10 +43,15 @@ class Accessory():
             xyz: List[float] = XYZ,
             rpy: List[float] = RPY
             ) -> None:
-        self.name = str()
-        self.parent = str()
-        self.xyz = list()
-        self.rpy = list()
+
+        self.assert_is_supported()
+        if self.is_deprecated:
+            print(f'{type(self)} is deprecated')
+
+        self.name = ''
+        self.parent = ''
+        self.xyz = []
+        self.rpy = []
         self.set_name(name)
         self.set_parent(parent)
         self.set_xyz(xyz)
@@ -88,7 +95,7 @@ class Accessory():
     def set_xyz(self, xyz: List[float]) -> None:
         self.assert_valid_triplet(
             xyz,
-            "XYZ must be a list of exactly three float values"
+            'XYZ must be a list of exactly three float values'
         )
         self.xyz = xyz
 
@@ -98,33 +105,68 @@ class Accessory():
     def set_rpy(self, rpy: List[float]) -> None:
         self.assert_valid_triplet(
             rpy,
-            "RPY must be a list of exactly three float values"
+            'RPY must be a list of exactly three float values'
         )
         self.rpy = rpy
 
     @staticmethod
     def assert_valid_link(link: str) -> None:
         # Link name must be a string
-        assert isinstance(link, str), "Link name '%s' must be string" % link
+        assert isinstance(link, str), f'Link name "{link}" must be string'
         # Link name must not be empty
-        assert link, "Link name '%s' must not be empty" % link
+        assert link, f'Link name "{link}" must not be empty'
         # Link name must not have spaces
-        assert " " not in link, "Link name '%s' must no have spaces" % link
+        assert ' ' not in link, f'Link name "{link}" must no have spaces'
         # Link name must not start with a digit
-        assert not link[0].isdigit(), (
-            "Link name '%s' must not start with a digit" % link
-        )
+        assert not link[0].isdigit(), f'Link name "{link} must not start with a digit'
 
     @staticmethod
     def assert_valid_triplet(tri: List[float], msg: str = None) -> None:
         if msg is None:
-            msg = "Triplet must be a list of three float values"
+            msg = 'Triplet must be a list of three float values'
         # Triplet must be a list
         assert isinstance(tri, list), msg
         # Triplet must have a length of 3
         assert len(tri) == 3, msg
         # Triplet must be all floats
-        assert all([isinstance(i, float) for i in tri])
+        assert all([isinstance(i, float) for i in tri])  # noqa:C419
+
+    @staticmethod
+    def assert_is_supported():
+        """
+        Override this method to temporarily disable accessories that are not currently supported.
+
+        When disabling an accessory, raise a
+        clearpath_config.common.types.exception.UnsupportedAccessoryException
+        with a suitable mesage (e.g. 'SpamEggs driver is not yet released for ROS 2 Jazzy')
+
+        @return None
+
+        @exception  Raises a clearpath_config.common.types.exception.UnsupportedAccessoryException
+                    if the accessory is not supported
+        """
+        pass
+
+    @property
+    def is_suppported(self):
+        try:
+            self.assert_is_supported()
+            return True
+        except UnsupportedAccessoryException:
+            return False
+
+    @property
+    def is_deprecated(self):
+        """
+        Override this method to indicate that this accessory has been deprecated.
+
+        Deprecated accessories may be removed completely in the future.  See:
+        - is_supported
+        - assert_is_supported
+
+        When flagging an accessory for deprecation, simply override it to return True
+        """
+        return False
 
 
 class IndexedAccessory(Accessory):
@@ -155,12 +197,12 @@ class IndexedAccessory(Accessory):
 
     @classmethod
     def get_name_from_idx(idx):
-        return "accessory_%s" % idx
+        return 'accessory_%s' % idx
 
     def get_idx(self) -> str:
         return self.idx
 
     def set_idx(self, idx: int) -> None:
-        assert isinstance(idx, int), "Index must be an integer"
-        assert idx >= 0, "Index must be a positive integer"
+        assert isinstance(idx, int), 'Index must be an integer'
+        assert idx >= 0, 'Index must be a positive integer'
         self.name = self.get_name_from_idx(idx)
