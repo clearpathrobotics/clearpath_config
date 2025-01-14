@@ -45,9 +45,9 @@ class BatteryConfig(BaseConfig):
     # A200 Lead Acid
     ES20_12C = 'ES20_12C'
     # A200/J100 LiION
-    HE2613 = "HE2613"
-    HE2411 = "HE2411"
-    HE2410 = "HE2410"
+    HE2613 = 'HE2613'
+    HE2411 = 'HE2411'
+    HE2410 = 'HE2410'
     # A300 LiFEPO4
     S_24V20_U1 = 'S_24V20_U1'
     # R100 Lead Acid
