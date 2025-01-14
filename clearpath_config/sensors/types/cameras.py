@@ -151,12 +151,10 @@ class BaseCamera(BaseSensor):
         # - default to 30
         # - certain sensors may only accept certain rates
         self.fps = fps
-        self.set_fps(fps)
         # Serial Number:
         # - camera unique serial number for multi-camera setups
         # - usually an integer value
         self.serial = serial
-        self.set_serial(serial)
         # ROS Parameter Template
         template = {
             self.ROS_PARAMETER_KEYS.FPS: BaseCamera.fps,
@@ -177,6 +175,14 @@ class BaseCamera(BaseSensor):
             )
 
     @property
+    def camera_name(self) -> str:
+        return self.get_name()
+
+    @camera_name.setter
+    def camera_name(self, name: str) -> None:
+        self.set_name(name)
+
+    @property
     def fps(self) -> int:
         return self._fps
 
@@ -184,12 +190,6 @@ class BaseCamera(BaseSensor):
     def fps(self, fps: int) -> None:
         BaseCamera.assert_valid_fps(fps)
         self._fps = fps
-
-    def get_fps(self) -> int:
-        return self.fps
-
-    def set_fps(self, fps: int) -> None:
-        self.fps = fps
 
     @staticmethod
     def assert_valid_fps(fps: int) -> None:
@@ -207,12 +207,6 @@ class BaseCamera(BaseSensor):
     @serial.setter
     def serial(self, serial: str) -> None:
         self._serial = str(serial)
-
-    def get_serial(self) -> str:
-        return self.serial
-
-    def set_serial(self, serial: str) -> None:
-        self.serial = serial
 
     @property
     def republishers(self) -> list:
@@ -349,27 +343,18 @@ class IntelRealsense(BaseCamera):
         self.TOPICS.RATE[self.TOPICS.POINTCLOUD] = self.fps
         self.TOPICS.RATE[self.TOPICS.IMU] = self.fps
         # Initialization
-        self.device_type: str = IntelRealsense.DEVICE_TYPE
-        self.set_device_type(device_type)
+        self.device_type = device_type
         # Color Image
-        self.color_enabled: bool = IntelRealsense.COLOR_ENABLED
-        self.color_width: int = IntelRealsense.COLOR_WIDTH
-        self.color_height: int = IntelRealsense.COLOR_HEIGHT
-        self.set_color_enabled(color_enabled)
-        self.set_color_width(color_width)
-        self.set_color_height(color_height)
+        self.color_enabled = color_enabled
+        self.color_width = color_width
+        self.color_height = color_height
         # Depth Image
-        self.depth_enabled: bool = IntelRealsense.DEPTH_ENABLED
-        self.depth_width: int = IntelRealsense.DEPTH_WIDTH
-        self.depth_height: int = IntelRealsense.DEPTH_HEIGHT
-        self.depth_fps: int = IntelRealsense.DEPTH_FPS
-        self.set_depth_enabled(depth_enabled)
-        self.set_depth_width(depth_width)
-        self.set_depth_height(depth_height)
-        self.set_depth_fps(depth_fps)
+        self.depth_enabled = depth_enabled
+        self.depth_width = depth_width
+        self.depth_height = depth_height
+        self.depth_fps = depth_fps
         # Pointcloud
-        self.pointcloud_enabled: bool = IntelRealsense.POINTCLOUD_ENABLED
-        self.set_pointcloud_enabled(pointcloud_enabled)
+        self.pointcloud_enabled = pointcloud_enabled
 
     @staticmethod
     def clean_profile(profile: str | list) -> list:
@@ -401,14 +386,6 @@ class IntelRealsense(BaseCamera):
         )
 
     @property
-    def camera_name(self) -> str:
-        return self.get_name()
-
-    @camera_name.setter
-    def camera_name(self, name: str) -> None:
-        self._camera_name = name
-
-    @property
     def device_type(self) -> str:
         return self._device_type
 
@@ -422,12 +399,6 @@ class IntelRealsense(BaseCamera):
         )
         self._device_type = device_type
 
-    def get_device_type(self) -> str:
-        return self.device_type
-
-    def set_device_type(self, device_type: str) -> None:
-        self.device_type = device_type
-
     @property
     def color_enabled(self) -> bool:
         return self._color_enabled
@@ -435,27 +406,6 @@ class IntelRealsense(BaseCamera):
     @color_enabled.setter
     def color_enabled(self, enabled: bool) -> None:
         self._color_enabled = bool(enabled)
-
-    def enable_color(self) -> None:
-        self.color_enabled = True
-
-    def disable_color(self) -> None:
-        self.color_enabled = False
-
-    def is_color_enabled(self) -> bool:
-        return self.color_enabled
-
-    def get_color_enabled(self) -> bool:
-        return self.color_enabled
-
-    def set_color_enabled(self, enable: bool) -> None:
-        self.color_enabled = bool(enable)
-
-    def set_color_fps(self, fps: int) -> None:
-        self.set_fps(fps)
-
-    def get_color_fps(self) -> int:
-        return self.get_fps()
 
     @property
     def color_height(self) -> int:
@@ -466,12 +416,6 @@ class IntelRealsense(BaseCamera):
         self.assert_pixel_length(height)
         self._color_height = height
 
-    def set_color_height(self, height: int) -> None:
-        self.color_height = height
-
-    def get_color_height(self) -> int:
-        return self.color_height
-
     @property
     def color_width(self) -> int:
         return self._color_width
@@ -480,12 +424,6 @@ class IntelRealsense(BaseCamera):
     def color_width(self, width: int) -> None:
         self.assert_pixel_length(width)
         self._color_width = width
-
-    def set_color_width(self, width: int) -> None:
-        self.color_width = width
-
-    def get_color_width(self) -> int:
-        return self.color_width
 
     @property
     def color_profile(self) -> str:
@@ -516,21 +454,6 @@ class IntelRealsense(BaseCamera):
     def depth_enabled(self, enabled: bool) -> None:
         self._depth_enabled = bool(enabled)
 
-    def enable_depth(self) -> None:
-        self.depth_enabled = True
-
-    def disable_depth(self) -> None:
-        self.depth_enabled = False
-
-    def is_depth_enabled(self) -> bool:
-        return self.depth_enabled
-
-    def get_depth_enabled(self) -> bool:
-        return self.depth_enabled
-
-    def set_depth_enabled(self, enable: bool) -> None:
-        self.depth_enabled = bool(enable)
-
     @property
     def depth_fps(self) -> int:
         return self._depth_fps
@@ -539,12 +462,6 @@ class IntelRealsense(BaseCamera):
     def depth_fps(self, fps: int) -> None:
         self.assert_valid_fps(fps)
         self._depth_fps = fps
-
-    def set_depth_fps(self, fps: int) -> None:
-        self.depth_fps = fps
-
-    def get_depth_fps(self) -> int:
-        return self.depth_fps
 
     @property
     def depth_width(self) -> int:
@@ -555,12 +472,6 @@ class IntelRealsense(BaseCamera):
         self.assert_pixel_length(width)
         self._depth_width = width
 
-    def set_depth_width(self, width: int) -> None:
-        self.depth_width = width
-
-    def get_depth_width(self) -> int:
-        return self.depth_width
-
     @property
     def depth_height(self) -> int:
         return self._depth_height
@@ -569,12 +480,6 @@ class IntelRealsense(BaseCamera):
     def depth_height(self, height: int) -> None:
         self.assert_pixel_length(height)
         self._depth_height = height
-
-    def set_depth_height(self, height: int) -> None:
-        self.depth_height = height
-
-    def get_depth_height(self) -> int:
-        return self.depth_height
 
     @property
     def depth_profile(self) -> str:
@@ -591,12 +496,6 @@ class IntelRealsense(BaseCamera):
         self.depth_height = profile[1]
         self.depth_fps = profile[2]
 
-    def set_depth_profile(self, profile: str | list) -> None:
-        self.depth_profile = profile
-
-    def get_depth_profile(self) -> str:
-        return self.depth_profile
-
     @property
     def pointcloud_enabled(self) -> bool:
         return self._pointcloud_enabled
@@ -604,21 +503,6 @@ class IntelRealsense(BaseCamera):
     @pointcloud_enabled.setter
     def pointcloud_enabled(self, enabled: bool) -> None:
         self._pointcloud_enabled = bool(enabled)
-
-    def enable_pointcloud(self) -> None:
-        self.pointcloud_enabled = True
-
-    def disable_pointcloud(self) -> None:
-        self.pointcloud_enabled = False
-
-    def is_pointcloud_enabled(self) -> bool:
-        return self.pointcloud_enabled
-
-    def get_pointcloud_enabled(self) -> bool:
-        return self.pointcloud_enabled
-
-    def set_pointcloud_enabled(self, enable: bool) -> None:
-        self.pointcloud_enabled = bool(enable)
 
 
 class FlirBlackfly(BaseCamera):
@@ -748,10 +632,9 @@ class FlirBlackfly(BaseCamera):
         self.TOPICS.RATE[self.TOPICS.COLOR_IMAGE] = self.fps
         self.TOPICS.RATE[self.TOPICS.COLOR_CAMERA_INFO] = self.fps
         # Initialization
-        self.connection_type: str = FlirBlackfly.CONNECTION_TYPE
-        self.set_connection_type(connection_type)
+        self.connection_type = connection_type
         self.encoding: str = FlirBlackfly.BAYER_RG8
-        self.set_encoding(encoding)
+        self.encoding = encoding
 
     @property
     def connection_type(self) -> str:
@@ -761,12 +644,6 @@ class FlirBlackfly(BaseCamera):
     def connection_type(self, type: str) -> None:
         assert type in FlirBlackfly.CONNECTION_TYPES
         self._connection_type = type
-
-    def set_connection_type(self, connection_type: str) -> None:
-        self.connection_type = connection_type
-
-    def get_connection_type(self) -> str:
-        return self.connection_type
 
     @property
     def encoding(self) -> str:
@@ -780,12 +657,6 @@ class FlirBlackfly(BaseCamera):
             )
         )
         self._encoding = encoding
-
-    def set_encoding(self, encoding: str) -> None:
-        self.encoding = encoding
-
-    def get_encoding(self) -> str:
-        return self.encoding
 
 
 class StereolabsZed(BaseCamera):
@@ -895,14 +766,6 @@ class StereolabsZed(BaseCamera):
         )
 
     @property
-    def camera_name(self) -> str:
-        return self.get_name()
-
-    @camera_name.setter
-    def camera_name(self, name: str) -> None:
-        self._camera_name = name
-
-    @property
     def device_type(self) -> str:
         return self._device_type
 
@@ -937,12 +800,6 @@ class StereolabsZed(BaseCamera):
     @serial.setter
     def serial(self, serial: int) -> None:
         self._serial = int(serial)
-
-    def get_serial(self) -> int:
-        return self.serial
-
-    def set_serial(self, serial: int) -> None:
-        self.serial = serial
 
 
 class LuxonisOAKD(BaseCamera):
@@ -1041,20 +898,6 @@ class LuxonisOAKD(BaseCamera):
     @height.setter
     def height(self, height: int) -> None:
         self._height = height
-
-    @property
-    def fps(self) -> float:
-        return self._fps
-
-    @fps.setter
-    def fps(self, fps: float) -> None:
-        self._fps = fps
-
-    def get_fps(self) -> float:
-        return self.fps
-
-    def set_fps(self, fps: float) -> None:
-        self.fps = fps
 
 
 class AxisCamera(BaseCamera):

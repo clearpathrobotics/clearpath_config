@@ -69,7 +69,7 @@ class BaseGPS(BaseSensor):
             ) -> None:
         # Frame ID
         self.frame_id: str = self.FRAME_ID
-        self.set_frame_id(frame_id)
+        self.frame_id = frame_id
         # ROS Parameters Template
         template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: BaseGPS.frame_id,
@@ -106,7 +106,7 @@ class BaseGPS(BaseSensor):
         # Set Base: Name and Topic
         super().set_idx(idx)
         # Set Frame ID
-        self.set_frame_id(self.get_frame_id_from_idx(idx))
+        self.frame_id = self.get_frame_id_from_idx(idx)
 
     @property
     def frame_id(self) -> str:
@@ -116,12 +116,6 @@ class BaseGPS(BaseSensor):
     def frame_id(self, link: str) -> None:
         Accessory.assert_valid_link(link)
         self._frame_id = link
-
-    def get_frame_id(self) -> str:
-        return self.frame_id
-
-    def set_frame_id(self, link: str) -> None:
-        self.frame_id = link
 
     def has_imu(self) -> bool:
         return False
@@ -165,11 +159,9 @@ class SwiftNavDuro(BaseGPS):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         # IP Address
-        self.ip: IP = IP(self.IP_ADDRESS)
-        self.set_ip(ip)
+        self.ip = ip
         # IP Port
-        self.port: Port = Port(self.IP_PORT)
-        self.set_port(port)
+        self.port = port
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.IP_ADDRESS: SwiftNavDuro.ip,
@@ -199,12 +191,6 @@ class SwiftNavDuro(BaseGPS):
     def ip(self, ip: str) -> None:
         self._ip = IP(str(ip))
 
-    def get_ip(self) -> str:
-        return str(self.ip)
-
-    def set_ip(self, ip: str) -> None:
-        self.ip = ip
-
     @property
     def port(self) -> int:
         return int(self._port)
@@ -212,12 +198,6 @@ class SwiftNavDuro(BaseGPS):
     @port.setter
     def port(self, port: int) -> None:
         self._port = Port(int(port))
-
-    def get_port(self) -> int:
-        return int(self.port)
-
-    def set_port(self, port: int) -> None:
-        self.port = port
 
 
 class MicrostrainGQ7(BaseGPS):

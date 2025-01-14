@@ -78,14 +78,11 @@ class BaseIMU(BaseSensor):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         # Frame ID
-        self.frame_id: str = self.FRAME_ID
-        self.set_frame_id(frame_id)
+        self.frame_id = frame_id
         # Port
-        self.port: str = self.PORT
-        self.set_port(port)
+        self.port = port
         # Use ENU
-        self.use_enu: bool = self.USE_ENU
-        self.set_use_enu(use_enu)
+        self.use_enu = use_enu
         # ROS Parameter Template
         template = {
             self.ROS_PARAMETERS_KEYS.FRAME_ID: BaseIMU.frame_id,
@@ -116,7 +113,7 @@ class BaseIMU(BaseSensor):
     def set_idx(self, idx: int) -> None:
         super().set_idx(idx)
         # Update Frame ID
-        self.set_frame_id("%s_%s" % (
+        self.frame_id = ('%s_%s' % (
             self.get_name_from_idx(idx),
             self.FRAME_ID
         ))
@@ -130,12 +127,6 @@ class BaseIMU(BaseSensor):
         Accessory.assert_valid_link(link)
         self._frame_id = link
 
-    def get_frame_id(self) -> str:
-        return self.frame_id
-
-    def set_frame_id(self, link: str) -> None:
-        self.frame_id = link
-
     @property
     def port(self) -> str:
         return str(self._port)
@@ -144,12 +135,6 @@ class BaseIMU(BaseSensor):
     def port(self, file: str) -> None:
         self._port = File(file)
 
-    def get_port(self) -> str:
-        return self.port
-
-    def set_port(self, file: str) -> None:
-        self.port = file
-
     @property
     def use_enu(self) -> bool:
         return self._use_enu
@@ -157,12 +142,6 @@ class BaseIMU(BaseSensor):
     @use_enu.setter
     def use_enu(self, enu: bool) -> None:
         self._use_enu = bool(enu)
-
-    def get_use_enu(self) -> bool:
-        return self.use_enu
-
-    def set_use_enu(self, enu: bool) -> None:
-        self.use_enu = bool(enu)
 
 
 class Microstrain(BaseIMU):
