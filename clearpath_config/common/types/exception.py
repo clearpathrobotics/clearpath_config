@@ -71,7 +71,8 @@ class UnsupportedMiddlewareException(AssertionError):
     """
 
     def __init__(self, message):
-        """Create a new exception.
+        """
+        Create a new exception.
 
         @param message  A message indicating why this middleware is not supported
         """
