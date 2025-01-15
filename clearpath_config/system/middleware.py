@@ -44,7 +44,6 @@ class MiddlewareConfig(BaseConfig):
     PROFILE = 'profile'
     OVERRIDE_SERVER_ID = 'override_server_id'
     SERVERS = 'servers'
-    ZENOH_ROUTER_CONFIG_URI = 'zenoh_router_config_uri'
 
     TEMPLATE = {
         MIDDLEWARE: {
@@ -53,7 +52,6 @@ class MiddlewareConfig(BaseConfig):
             PROFILE: PROFILE,
             OVERRIDE_SERVER_ID: OVERRIDE_SERVER_ID,
             SERVERS: SERVERS,
-            ZENOH_ROUTER_CONFIG_URI: ZENOH_ROUTER_CONFIG_URI,
         }
     }
 
@@ -65,7 +63,6 @@ class MiddlewareConfig(BaseConfig):
         PROFILE: '',
         OVERRIDE_SERVER_ID: False,
         SERVERS: [],
-        ZENOH_ROUTER_CONFIG_URI: '',
     }
 
     def __init__(
