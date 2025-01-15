@@ -299,5 +299,5 @@ class MiddlewareConfig(BaseConfig):
                     this middleware
         """
         if self.rmw_implementation == RMWImplementation.ZENOH_DDS:
-            if platform != Platform.A200:
+            if (platform != Platform.A200 and platform != Platform.GENERIC):
                 raise UnsupportedMiddlewareException(f'Cannot use {self.rmw_implementation} on platform {platform}')  # noqa: E501
