@@ -78,7 +78,6 @@ class MiddlewareConfig(BaseConfig):
             servers: List[dict] | ServerListConfig = DEFAULTS[SERVERS],
             hosts: HostListConfig = None,
             localhost: Hostname = None,
-            zenoh_router_config_uri: str = DEFAULTS[ZENOH_ROUTER_CONFIG_URI],
             ) -> None:
         # Initialization
         self._config = {}
@@ -88,7 +87,6 @@ class MiddlewareConfig(BaseConfig):
         self.discovery = discovery
         self.profile = profile
         self.override_server_id = override_server_id
-        self.zenoh_router_config_uri = zenoh_router_config_uri
         if servers:
             self.servers = servers
         elif hosts:
@@ -260,14 +258,6 @@ class MiddlewareConfig(BaseConfig):
         servers = ServerListConfig()
         servers.set_all(server_list)
         self._servers = servers
-
-    @property
-    def zenoh_router_config_uri(self):
-        return self._zenoh_router_config_uri
-
-    @zenoh_router_config_uri.setter
-    def zenoh_router_config_uri(self, path):
-        self._zenoh_router_config_uri = path
 
     def get_servers_string(self) -> str:
         server_list = self.servers.get_all()
