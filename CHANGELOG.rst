@@ -2,6 +2,18 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added Ewellix Lift (`#109 <https://github.com/clearpathrobotics/clearpath_config/issues/109>`_)
+  * Initial add of lifts to config
+  * Added ewellix parameters
+* Add HE2411 battery support (`#110 <https://github.com/clearpathrobotics/clearpath_config/issues/110>`_)
+  * Add support for the HE2411 battery to J100 and A200
+  * Add the even-older HE2410 too
+* Cherry-pick `enable_ekf` support from Jazzy (`#108 <https://github.com/clearpathrobotics/clearpath_config/issues/108>`_)
+* Fix support for the device_type parameter; previously the camera would always be a Q62 (`#99 <https://github.com/clearpathrobotics/clearpath_config/issues/99>`_) (`#101 <https://github.com/clearpathrobotics/clearpath_config/issues/101>`_)
+* Contributors: Chris Iverach-Brereton, luis-camero
+
 1.0.0 (2024-11-25)
 ------------------
 * Add default vcan ROS interfaces based on platform
