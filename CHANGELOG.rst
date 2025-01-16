@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.0 (2025-01-15)
+------------------
 * Added Ewellix Lift (`#109 <https://github.com/clearpathrobotics/clearpath_config/issues/109>`_)
   * Initial add of lifts to config
   * Added ewellix parameters
