@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.1 (2025-01-16)
+------------------
 * Add Zenoh support (`#113 <https://github.com/clearpathrobotics/clearpath_config/issues/113>`_)
   * Add Zenoh to the list of supported RMW implementations
   * Add zenoh_router_config_uri parameter to middleware config
