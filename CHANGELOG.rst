@@ -2,6 +2,15 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add Zenoh support (`#113 <https://github.com/clearpathrobotics/clearpath_config/issues/113>`_)
+  * Add Zenoh to the list of supported RMW implementations
+  * Add zenoh_router_config_uri parameter to middleware config
+  * Add a sanity check to make sure we aren't trying to use Zenoh on a MicroROS-using platform
+  * Allow Zenoh on generic platforms
+* Contributors: Chris Iverach-Brereton
+
 2.0.0 (2025-01-14)
 ------------------
 * Add HE2410 & HE2411 battery support (`#110 <https://github.com/clearpathrobotics/clearpath_config/issues/110>`_) (`#111 <https://github.com/clearpathrobotics/clearpath_config/issues/111>`_)
