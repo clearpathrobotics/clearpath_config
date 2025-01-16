@@ -30,7 +30,9 @@ from typing import List
 
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.discovery import Discovery
+from clearpath_config.common.types.exception import UnsupportedMiddlewareException
 from clearpath_config.common.types.hostname import Hostname
+from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.types.rmw_implementation import RMWImplementation
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.system.hosts import HostListConfig
@@ -74,7 +76,7 @@ class MiddlewareConfig(BaseConfig):
             override_server_id: bool = DEFAULTS[OVERRIDE_SERVER_ID],
             servers: List[dict] | ServerListConfig = DEFAULTS[SERVERS],
             hosts: HostListConfig = None,
-            localhost: Hostname = None
+            localhost: Hostname = None,
             ) -> None:
         # Initialization
         self._config = {}
@@ -282,3 +284,20 @@ class MiddlewareConfig(BaseConfig):
                                                         s.enabled)), None)
         # returns None if the localhost is not listed in the server list
         return local_server
+
+    def assert_is_supported_on_patform(self, platform) -> None:
+        """
+        Make sure that the user's middleware is compatible.
+
+        FastDDS is supported on everything.
+
+        Zenoh is only supported on platforms that do not use MicroROS.
+
+        @param platform  The type of platform we're running on
+
+        @exception  Raises an UnsupportedMiddlewareException if the platform cannot use
+                    this middleware
+        """
+        if self.rmw_implementation == RMWImplementation.ZENOH_DDS:
+            if (platform != Platform.A200 and platform != Platform.GENERIC):
+                raise UnsupportedMiddlewareException(f'Cannot use {self.rmw_implementation} on platform {platform}')  # noqa: E501

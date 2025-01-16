@@ -31,8 +31,9 @@ class RMWImplementation:
     CYCLONE_DDS = 'rmw_cyclonedds_cpp'
     FAST_RTPS = 'rmw_fastrtps_cpp'
     GURUM_DDS = 'rmw_gurumdds_cpp'
+    ZENOH_DDS = 'rmw_zenoh_cpp'
 
-    ALL_SUPPORTED = [FAST_RTPS]
+    ALL_SUPPORTED = [FAST_RTPS, ZENOH_DDS]
 
     DEFAULT = FAST_RTPS
 
@@ -60,7 +61,7 @@ class RMWImplementation:
 
     @classmethod
     def assert_valid(cls, rmw: str) -> None:
-        assert cls.is_valid(rmw), ('\n'.join[
+        assert cls.is_valid(rmw), ('\n'.join([
             'RMW "%s" not supported.' % rmw,
             'RMW must be one of: "%s"' % cls.ALL_SUPPORTED
-        ])
+        ]))
