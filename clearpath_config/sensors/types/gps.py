@@ -50,8 +50,8 @@ class BaseGPS(BaseSensor):
         NAME = {
             FIX: 'fix',
         }
-        RATE = {
-            FIX: 60,
+        TYPE = {
+            FIX: 'sensor_msgs/msg/NavSatFix',
         }
 
     def __init__(
@@ -87,6 +87,10 @@ class BaseGPS(BaseSensor):
             xyz,
             rpy
         )
+        # Topic Rates
+        self.rates = {
+            BaseGPS.TOPICS.FIX: 1,
+        }
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
@@ -134,15 +138,6 @@ class SwiftNavDuro(BaseGPS):
         IP_ADDRESS = 'duro_node.ip_address'
         IP_PORT = 'duro_node.port'
 
-    class TOPICS:
-        FIX = 'fix'
-        NAME = {
-            FIX: 'fix',
-        }
-        RATE = {
-            FIX: 60,
-        }
-
     def __init__(
             self,
             idx: int = None,
@@ -182,6 +177,11 @@ class SwiftNavDuro(BaseGPS):
             xyz,
             rpy
         )
+        # Topic Rates
+        self.rates = {
+            # TODO: Be able to configure this rate through the robot.yaml
+            BaseGPS.TOPICS.FIX: 10,  # Update rate is controlled outside of ROS on the hardware
+        }
 
     @property
     def ip(self) -> str:
@@ -206,19 +206,31 @@ class MicrostrainGQ7(BaseGPS):
     FRAME_ID = 'link'
     PORT = '/dev/microstrain_main'
     BAUD = 115200
+    GPS_RATE = 2
+    IMU_RATE = 100
+    MAG_RATE = 0
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = 'microstrain_inertial_driver.frame_id'
         PORT = 'microstrain_inertial_driver.port'
         BAUD = 'microstrain_inertial_driver.baudrate'
+        GPS_RATE = 'microstrain_inertial_driver.gnss1_llh_position_data_rate'
+        IMU_RATE = 'microstrain_inertial_driver.imu_data_rate'
+        MAG_RATE = 'microstrain_inertial_driver.imu_mag_data_rate'
 
     class TOPICS:
         FIX = 'fix'
+        IMU_DATA = 'imu_data'
+        MAG = 'mag'
         NAME = {
             FIX: 'fix',
+            IMU_DATA: 'imu/data',
+            MAG: 'imu/mag'
         }
-        RATE = {
-            FIX: 60,
+        TYPE = {
+            FIX: 'sensor_msgs/msg/NavSatFix',
+            IMU_DATA: 'sensor_msgs/msg/Imu',
+            MAG: 'sensor_msgs/msg/MagneticField'
         }
 
     def __init__(
@@ -229,6 +241,9 @@ class MicrostrainGQ7(BaseGPS):
             frame_id: str = FRAME_ID,
             port: str = PORT,
             baud: int = BAUD,
+            gps_rate: int = GPS_RATE,
+            imu_rate: int = IMU_RATE,
+            mag_rate: int = MAG_RATE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
@@ -240,10 +255,17 @@ class MicrostrainGQ7(BaseGPS):
         self.port = port
         # Baud
         self.baud = baud
+        # Rates
+        self.gps_rate = gps_rate
+        self.imu_rate = imu_rate
+        self.mag_rate = mag_rate
         # ROS Paramater Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.PORT: MicrostrainGQ7.port,
-            self.ROS_PARAMETER_KEYS.BAUD: MicrostrainGQ7.baud
+            self.ROS_PARAMETER_KEYS.BAUD: MicrostrainGQ7.baud,
+            self.ROS_PARAMETER_KEYS.GPS_RATE: MicrostrainGQ7.gps_rate,
+            self.ROS_PARAMETER_KEYS.IMU_RATE: MicrostrainGQ7.imu_rate,
+            self.ROS_PARAMETER_KEYS.MAG_RATE: MicrostrainGQ7.mag_rate
         }
         super().__init__(
             idx,
@@ -258,6 +280,12 @@ class MicrostrainGQ7(BaseGPS):
             xyz,
             rpy
         )
+        # Topic Rates
+        self.rates = {
+            MicrostrainGQ7.TOPICS.FIX: MicrostrainGQ7.gps_rate,
+            MicrostrainGQ7.TOPICS.IMU_DATA: MicrostrainGQ7.imu_rate,
+            MicrostrainGQ7.TOPICS.MAG: MicrostrainGQ7.mag_rate,
+        }
 
     @property
     def port(self) -> str:
@@ -280,6 +308,30 @@ class MicrostrainGQ7(BaseGPS):
     def has_imu(self) -> bool:
         return True
 
+    @property
+    def gps_rate(self) -> int:
+        return self._gps_rate
+
+    @gps_rate.setter
+    def gps_rate(self, rate: int) -> None:
+        BaseSensor.assert_valid_rate(rate)
+        self._gps_rate = int(rate)
+
+    @property
+    def imu_rate(self) -> int:
+        return self._imu_rate
+
+    @imu_rate.setter
+    def imu_rate(self, rate: int) -> None:
+        self._imu_rate = int(rate)
+
+    @property
+    def mag_rate(self) -> int:
+        return self._mag_rate
+
+    @mag_rate.setter
+    def mag_rate(self, rate: int) -> None:
+        self._mag_rate = int(rate)
 
 class NMEA(BaseGPS):
     SENSOR_MODEL = 'nmea_gps'
@@ -292,15 +344,6 @@ class NMEA(BaseGPS):
         FRAME_ID = 'nmea_navsat_driver.frame_id'
         PORT = 'nmea_navsat_driver.port'
         BAUD = 'nmea_navsat_driver.baud'
-
-    class TOPICS:
-        FIX = 'fix'
-        NAME = {
-            FIX: 'fix',
-        }
-        RATE = {
-            FIX: 60,
-        }
 
     def __init__(
             self,
@@ -339,6 +382,7 @@ class NMEA(BaseGPS):
             xyz,
             rpy
         )
+        # TODO: Be able to configure the expected update rate using the robot.yaml
 
     @property
     def port(self) -> str:
@@ -394,6 +438,10 @@ class Garmin18x(NMEA):
             xyz,
             rpy
         )
+        # Topic Rates
+        self.rates = {
+            BaseGPS.TOPICS.FIX: 5,
+        }
 
 
 class NovatelSmart6(NMEA):

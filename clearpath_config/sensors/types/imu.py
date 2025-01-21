@@ -41,6 +41,7 @@ class BaseIMU(BaseSensor):
     PORT = '/dev/clearpath/imu'
     FRAME_ID = 'link'
     USE_ENU = True
+    UPDATE_RATE = 20
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = 'node_name.frame_id'
@@ -52,9 +53,9 @@ class BaseIMU(BaseSensor):
             DATA: 'data',
             MAG: 'mag'
         }
-        RATE = {
-            DATA: 60,
-            MAG: 60
+        TYPE = {
+            DATA: 'sensor_msgs/msg/Imu',
+            MAG: 'sensor_msgs/msg/MagneticField'
         }
 
     def __init__(
@@ -66,6 +67,7 @@ class BaseIMU(BaseSensor):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            update_rate: int = UPDATE_RATE,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
             ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
@@ -79,6 +81,8 @@ class BaseIMU(BaseSensor):
         self.port = port
         # Use ENU
         self.use_enu = use_enu
+        # Update Rate
+        self.update_rate = update_rate
         # ROS Parameter Template
         template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: BaseIMU.frame_id,
@@ -96,6 +100,10 @@ class BaseIMU(BaseSensor):
             xyz,
             rpy
         )
+        self.rates = {
+            BaseIMU.TOPICS.DATA: 20,
+            BaseIMU.TOPICS.MAG: 20
+        }
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
@@ -137,6 +145,15 @@ class BaseIMU(BaseSensor):
     def use_enu(self, enu: bool) -> None:
         self._use_enu = bool(enu)
 
+    @property
+    def update_rate(self) -> int:
+        return self._update_rate
+
+    @update_rate.setter
+    def update_rate(self, rate: int) -> None:
+        BaseSensor.assert_valid_rate(rate)
+        self._update_rate = int(rate)
+
 
 class Microstrain(BaseIMU):
     SENSOR_MODEL = 'microstrain_imu'
@@ -144,6 +161,8 @@ class Microstrain(BaseIMU):
     PORT = '/dev/microstrain_main'
     FRAME_ID = 'link'
     USE_ENU = True
+    IMU_RATE = 100
+    MAG_RATE = 0
 
     class TOPICS:
         DATA = 'data'
@@ -161,21 +180,8 @@ class Microstrain(BaseIMU):
         PORT = 'microstrain_inertial_driver.port'
         FRAME_ID = 'microstrain_inertial_driver.frame_id'
         USE_ENU = 'microstrain_inertial_driver.use_enu_frame'
-
-    class TOPICS:
-        RAW_DATA = 'raw'
-        DATA = 'data'
-        MAG = 'mag'
-        NAME = {
-            RAW_DATA: 'data_raw',
-            DATA: 'data',
-            MAG: 'mag'
-        }
-        RATE = {
-            RAW_DATA: 60,
-            DATA: 60,
-            MAG: 60
-        }
+        IMU_RATE = 'microstrain_inertial_driver.imu_data_rate'
+        MAG_RATE = 'microstrain_inertial_driver.imu_mag_data_rate'
 
     def __init__(
             self,
@@ -185,6 +191,8 @@ class Microstrain(BaseIMU):
             frame_id: str = FRAME_ID,
             port: str = PORT,
             use_enu: bool = USE_ENU,
+            imu_rate: int = IMU_RATE,
+            mag_rate: int = MAG_RATE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
@@ -192,10 +200,15 @@ class Microstrain(BaseIMU):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+        # Initialization
+        self.mag_rate = mag_rate
+        # ROS Parameters Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: Microstrain.frame_id,
             self.ROS_PARAMETER_KEYS.PORT: Microstrain.port,
             self.ROS_PARAMETER_KEYS.USE_ENU: Microstrain.use_enu,
+            self.ROS_PARAMETER_KEYS.IMU_RATE: Microstrain.imu_rate,
+            self.ROS_PARAMETER_KEYS.MAG_RATE: Microstrain.mag_rate
         }
         super().__init__(
             idx,
@@ -204,6 +217,7 @@ class Microstrain(BaseIMU):
             frame_id,
             port,
             use_enu,
+            imu_rate,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -212,7 +226,26 @@ class Microstrain(BaseIMU):
             xyz,
             rpy
         )
+        self.rates = {
+            Microstrain.TOPICS.DATA: Microstrain.imu_rate,
+            Microstrain.TOPICS.MAG: Microstrain.mag_rate
+        }
 
+    @property
+    def imu_rate(self) -> int:
+        return self.update_rate
+
+    @imu_rate.setter
+    def imu_rate(self, rate: int) -> None:
+        self.update_rate = int(rate)
+
+    @property
+    def mag_rate(self) -> int:
+        return self._mag_rate
+
+    @mag_rate.setter
+    def mag_rate(self, rate: int) -> None:
+        self._mag_rate = int(rate)
 
 class CHRoboticsUM6(BaseIMU):
     SENSOR_MODEL = 'chrobotics_um6'
@@ -220,26 +253,13 @@ class CHRoboticsUM6(BaseIMU):
     PORT = '/dev/clearpath/imu'
     FRAME_ID = 'link'
     USE_ENU = True
+    UPDATE_RATE = 20
 
     class ROS_PARAMETER_KEYS:
         PORT = 'um6_driver.port'
         FRAME_ID = 'um6_driver.frame_id'
         USE_ENU = 'um6_driver.tf_ned_to_enu'
-
-    class TOPICS:
-        RAW_DATA = 'raw'
-        DATA = 'data'
-        MAG = 'mag'
-        NAME = {
-            RAW_DATA: 'data_raw',
-            DATA: 'data',
-            MAG: 'mag'
-        }
-        RATE = {
-            RAW_DATA: 60,
-            DATA: 60,
-            MAG: 60
-        }
+        UPDATE_RATE = 'um6_driver.update_rate'
 
     def __init__(
             self,
@@ -249,6 +269,7 @@ class CHRoboticsUM6(BaseIMU):
             frame_id: str = FRAME_ID,
             port: str = PORT,
             use_enu: bool = USE_ENU,
+            update_rate: int = UPDATE_RATE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -260,6 +281,7 @@ class CHRoboticsUM6(BaseIMU):
             self.ROS_PARAMETER_KEYS.FRAME_ID: CHRoboticsUM6.frame_id,
             self.ROS_PARAMETER_KEYS.PORT: CHRoboticsUM6.port,
             self.ROS_PARAMETER_KEYS.USE_ENU: CHRoboticsUM6.use_enu,
+            self.ROS_PARAMETER_KEYS.UPDATE_RATE: CHRoboticsUM6.update_rate
         }
         super().__init__(
             idx,
@@ -268,6 +290,7 @@ class CHRoboticsUM6(BaseIMU):
             frame_id,
             port,
             use_enu,
+            update_rate,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -276,7 +299,10 @@ class CHRoboticsUM6(BaseIMU):
             xyz,
             rpy
         )
-
+        self.rates = {
+            CHRoboticsUM6.TOPICS.DATA: CHRoboticsUM6.update_rate,
+            CHRoboticsUM6.TOPICS.MAG: CHRoboticsUM6.update_rate,
+        }
 
 class RedshiftUM7(BaseIMU):
     SENSOR_MODEL = 'redshift_um7'
@@ -284,26 +310,13 @@ class RedshiftUM7(BaseIMU):
     PORT = '/dev/clearpath/um7'
     FRAME_ID = 'link'
     USE_ENU = True
+    UPDATE_RATE = 20
 
     class ROS_PARAMETER_KEYS:
         PORT = 'um7_driver.port'
         FRAME_ID = 'um7_driver.frame_id'
         USE_ENU = 'um7_driver.tf_ned_to_enu'
-
-    class TOPICS:
-        RAW_DATA = 'raw'
-        DATA = 'data'
-        MAG = 'mag'
-        NAME = {
-            RAW_DATA: 'data_raw',
-            DATA: 'data',
-            MAG: 'mag'
-        }
-        RATE = {
-            RAW_DATA: 60,
-            DATA: 60,
-            MAG: 60
-        }
+        UPDATE_RATE = 'um7_driver.update_rate'
 
     def __init__(
             self,
@@ -313,6 +326,7 @@ class RedshiftUM7(BaseIMU):
             frame_id: str = FRAME_ID,
             port: str = PORT,
             use_enu: bool = USE_ENU,
+            update_rate: int = UPDATE_RATE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -324,6 +338,7 @@ class RedshiftUM7(BaseIMU):
             self.ROS_PARAMETER_KEYS.FRAME_ID: RedshiftUM7.frame_id,
             self.ROS_PARAMETER_KEYS.PORT: RedshiftUM7.port,
             self.ROS_PARAMETER_KEYS.USE_ENU: RedshiftUM7.use_enu,
+            self.ROS_PARAMETER_KEYS.UPDATE_RATE: RedshiftUM7.update_rate
         }
         super().__init__(
             idx,
@@ -332,6 +347,7 @@ class RedshiftUM7(BaseIMU):
             frame_id,
             port,
             use_enu,
+            update_rate,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -340,6 +356,10 @@ class RedshiftUM7(BaseIMU):
             xyz,
             rpy
         )
+        self.rates = {
+            RedshiftUM7.TOPICS.DATA: RedshiftUM7.update_rate,
+            RedshiftUM7.TOPICS.MAG: RedshiftUM7.update_rate,
+        }
 
 
 class PhidgetsSpatial(BaseIMU):
@@ -348,9 +368,11 @@ class PhidgetsSpatial(BaseIMU):
     PORT = None
     FRAME_ID = 'link'
     USE_ENU = True
+    DATA_INTERVAL = 20
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = 'phidgets_spatial.frame_id'
+        DATA_INTERVAL = 'phidgets_spatial.data_interval_ms'
 
     class TOPICS:
         RAW_DATA = 'raw'
@@ -361,10 +383,10 @@ class PhidgetsSpatial(BaseIMU):
             MAG: 'msg',
             CALIB: 'is_calibrated'
         }
-        RATE = {
-            RAW_DATA: 60,
-            MAG: 60,
-            CALIB: 60,
+        TYPE = {
+            RAW_DATA: 'sensor_msgs/msg/Imu',
+            MAG: 'sensor_msgs/msg/MagneticField',
+            CALIB: 'std_msgs/msg/Bool',
         }
 
     def __init__(
@@ -375,6 +397,7 @@ class PhidgetsSpatial(BaseIMU):
             frame_id: str = FRAME_ID,
             port: str = PORT,
             use_enu: bool = USE_ENU,
+            data_interval: int = DATA_INTERVAL,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -382,8 +405,12 @@ class PhidgetsSpatial(BaseIMU):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+        # Initializations
+        self.data_interval = data_interval
+        # ROS Parameters Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: PhidgetsSpatial.frame_id,
+            self.ROS_PARAMETER_KEYS.DATA_INTERVAL: PhidgetsSpatial.data_interval,
         }
         super().__init__(
             idx,
@@ -392,6 +419,7 @@ class PhidgetsSpatial(BaseIMU):
             frame_id,
             port,
             use_enu,
+            round(1000 / data_interval),
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -400,3 +428,18 @@ class PhidgetsSpatial(BaseIMU):
             xyz,
             rpy
         )
+        self.rates = {
+            PhidgetsSpatial.TOPICS.RAW_DATA: PhidgetsSpatial.update_rate,
+            PhidgetsSpatial.TOPICS.MAG: PhidgetsSpatial.update_rate,
+            PhidgetsSpatial.TOPICS.CALIB: PhidgetsSpatial.update_rate
+        }
+
+    @property
+    def data_interval(self) -> int:
+        return self._data_interval
+
+    @data_interval.setter
+    def data_interval(self, interval: int) -> None:
+        BaseSensor.assert_valid_rate(interval)
+        self._data_interval = int(interval)
+        self.update_rate = round(1000 / interval)
