@@ -126,9 +126,9 @@ class BaseCamera(BaseSensor):
             COLOR_IMAGE: "color/image",
             COLOR_CAMERA_INFO: "color/camera_info"
         }
-        RATE = {
-            COLOR_IMAGE: 30,
-            COLOR_CAMERA_INFO: 30,
+        TYPE = {
+            COLOR_IMAGE: 'sensor_msgs/msg/Image',
+            COLOR_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
         }
 
     def __init__(
@@ -173,6 +173,13 @@ class BaseCamera(BaseSensor):
             xyz,
             rpy,
             )
+        # Rates:
+        # - should be a dictionary matching those in the TOPICS class
+        # - should be updated as necessary to reflect current operation
+        self.rates = {
+            BaseCamera.TOPICS.COLOR_IMAGE: BaseCamera.fps,
+            BaseCamera.TOPICS.COLOR_CAMERA_INFO: BaseCamera.fps,
+        }
 
     @property
     def camera_name(self) -> str:
@@ -188,17 +195,8 @@ class BaseCamera(BaseSensor):
 
     @fps.setter
     def fps(self, fps: int) -> None:
-        BaseCamera.assert_valid_fps(fps)
-        self._fps = fps
-
-    @staticmethod
-    def assert_valid_fps(fps: int) -> None:
-        assert isinstance(fps, int), (
-            "FPS '%s' is invalid, must be an integer." % fps
-        )
-        assert 0 <= fps, (
-            "FPS '%s' must be a positive integer." % fps
-        )
+        BaseSensor.assert_valid_rate(fps)
+        self._fps = int(fps)
 
     @property
     def serial(self) -> str:
@@ -278,13 +276,13 @@ class IntelRealsense(BaseCamera):
             POINTCLOUD: "points",
             IMU: "imu"
         }
-        RATE = {
-            COLOR_IMAGE: BaseCamera.FPS,
-            COLOR_CAMERA_INFO: BaseCamera.FPS,
-            DEPTH_IMAGE: BaseCamera.FPS,
-            DEPTH_CAMERA_INFO: BaseCamera.FPS,
-            POINTCLOUD: BaseCamera.FPS,
-            IMU: BaseCamera.FPS
+        TYPE = {
+            COLOR_IMAGE: 'sensor_msgs/msg/Image',
+            COLOR_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
+            DEPTH_IMAGE: 'sensor_msgs/msg/Image',
+            DEPTH_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
+            POINTCLOUD: 'sensor_msgs/msg/PointCloud2',
+            IMU: 'sensor_msgs/msg/Imu'
         }
 
     def __init__(
@@ -352,13 +350,17 @@ class IntelRealsense(BaseCamera):
             xyz,
             rpy
         )
+
         # Topic Rates
-        self.TOPICS.RATE[self.TOPICS.COLOR_IMAGE] = self.fps
-        self.TOPICS.RATE[self.TOPICS.COLOR_CAMERA_INFO] = self.fps
-        self.TOPICS.RATE[self.TOPICS.DEPTH_IMAGE] = self.fps
-        self.TOPICS.RATE[self.TOPICS.DEPTH_CAMERA_INFO] = self.fps
-        self.TOPICS.RATE[self.TOPICS.POINTCLOUD] = self.fps
-        self.TOPICS.RATE[self.TOPICS.IMU] = self.fps
+        self.rates = {
+            IntelRealsense.TOPICS.COLOR_IMAGE: IntelRealsense.color_fps,
+            IntelRealsense.TOPICS.COLOR_CAMERA_INFO: IntelRealsense.color_fps,
+            IntelRealsense.TOPICS.DEPTH_IMAGE: IntelRealsense.depth_fps,
+            IntelRealsense.TOPICS.DEPTH_CAMERA_INFO: IntelRealsense.depth_fps,
+            IntelRealsense.TOPICS.POINTCLOUD: IntelRealsense.depth_fps,
+            # Tracking of the IMU rate is not currently supported
+        }
+
     @staticmethod
     def clean_profile(profile: str | list) -> list:
         if isinstance(profile, str):
@@ -465,7 +467,7 @@ class IntelRealsense(BaseCamera):
 
     @depth_fps.setter
     def depth_fps(self, fps: int) -> None:
-        self.assert_valid_fps(fps)
+        BaseSensor.assert_valid_rate(fps)
         self._depth_fps = int(fps)
 
     @property
@@ -592,9 +594,9 @@ class FlirBlackfly(BaseCamera):
             COLOR_IMAGE: "color/image",
             COLOR_CAMERA_INFO: "color/camera_info"
         }
-        RATE = {
-            COLOR_IMAGE: BaseCamera.FPS,
-            COLOR_CAMERA_INFO: BaseCamera.FPS,
+        TYPE = {
+            COLOR_IMAGE: 'sensor_msgs/msg/Image',
+            COLOR_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
         }
 
     def __init__(
@@ -640,6 +642,10 @@ class FlirBlackfly(BaseCamera):
         )
 
         # Topic Rates
+        self.rates = {
+            FlirBlackfly.TOPICS.COLOR_IMAGE: FlirBlackfly.fps,
+            FlirBlackfly.TOPICS.COLOR_CAMERA_INFO: FlirBlackfly.fps,
+        }
 
     @property
     def fps(self) -> float:
@@ -727,14 +733,18 @@ class StereolabsZed(BaseCamera):
             POINTCLOUD: "points",
             IMU: "imu"
         }
-        RATE = {
-            COLOR_IMAGE: BaseCamera.FPS,
-            COLOR_CAMERA_INFO: BaseCamera.FPS,
-            DEPTH_IMAGE: BaseCamera.FPS,
-            DEPTH_CAMERA_INFO: BaseCamera.FPS,
-            POINTCLOUD: BaseCamera.FPS,
-            IMU: BaseCamera.FPS
+        TYPE = {
+            COLOR_IMAGE: 'sensor_msgs/msg/Image',
+            COLOR_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
+            DEPTH_IMAGE: 'sensor_msgs/msg/Image',
+            DEPTH_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
+            POINTCLOUD: 'sensor_msgs/msg/PointCloud2',
+            IMU: 'sensor_msgs/msg/Imu'
         }
+
+    @staticmethod
+    def assert_is_supported():
+        raise UnsupportedAccessoryException(f'Stereolabs Zed devices are not yet supported in {ROS_DISTRO}')  # noqa:E501
 
     def __init__(
             self,
@@ -780,6 +790,16 @@ class StereolabsZed(BaseCamera):
             xyz,
             rpy
         )
+
+        # Topic Rates
+        self.rates = {
+            StereolabsZed.TOPICS.COLOR_IMAGE: StereolabsZed.fps,
+            StereolabsZed.TOPICS.COLOR_CAMERA_INFO: StereolabsZed.fps,
+            StereolabsZed.TOPICS.DEPTH_IMAGE: StereolabsZed.fps,
+            StereolabsZed.TOPICS.DEPTH_CAMERA_INFO: StereolabsZed.fps,
+            StereolabsZed.TOPICS.POINTCLOUD: StereolabsZed.fps,
+            # Tracking of the IMU rate is not currently supported
+        }
 
     @property
     def device_type(self) -> str:
@@ -834,10 +854,11 @@ class LuxonisOAKD(BaseCamera):
     FPS = 30.0
 
     class ROS_PARAMETER_KEYS:
-        FPS = "oakd.rgb.i_fps"
-        SERIAL = "oakd.rgb.i_usb_port_id"
-        HEIGHT = "oakd.rgb.i_height"
-        WIDTH = "oakd.rgb.i_width"
+        FPS = 'oakd.rgb.i_fps'
+        STEREO_FPS = 'oakd.stereo.i_fps'
+        SERIAL = 'oakd.rgb.i_usb_port_id'
+        HEIGHT = 'oakd.rgb.i_height'
+        WIDTH = 'oakd.rgb.i_width'
 
     class TOPICS:
         COLOR_IMAGE = 'color_image'
@@ -855,10 +876,13 @@ class LuxonisOAKD(BaseCamera):
             POINTCLOUD: 'points',
             IMU: 'imu',
         }
-        RATE = {
-            COLOR_IMAGE: BaseCamera.FPS,
-            COLOR_CAMERA_INFO: BaseCamera.FPS,
-            IMU: BaseCamera.FPS
+        TYPE = {
+            COLOR_IMAGE: 'sensor_msgs/msg/Image',
+            COLOR_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
+            STEREO_IMAGE: 'sensor_msgs/msg/Image',
+            STEREO_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
+            POINTCLOUD: 'sensor_msgs/msg/PointCloud2',
+            IMU: 'sensor_msgs/msg/Imu'
         }
 
     def __init__(
@@ -867,6 +891,7 @@ class LuxonisOAKD(BaseCamera):
             name: str = None,
             topic: str = BaseCamera.TOPIC,
             fps: int = FPS,
+            stereo_fps: int = FPS,
             serial: str = BaseCamera.SERIAL,
             device_type: str = DEVICE_TYPE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
@@ -881,10 +906,12 @@ class LuxonisOAKD(BaseCamera):
         # Resolution
         self.height = LuxonisOAKD.HEIGHT
         self.width = LuxonisOAKD.WIDTH
+        self.stereo_fps = stereo_fps
 
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FPS: LuxonisOAKD.fps,
+            self.ROS_PARAMETER_KEYS.STEREO_FPS: LuxonisOAKD.stereo_fps,
             self.ROS_PARAMETER_KEYS.SERIAL: LuxonisOAKD.serial,
             self.ROS_PARAMETER_KEYS.HEIGHT: LuxonisOAKD.height,
             self.ROS_PARAMETER_KEYS.WIDTH: LuxonisOAKD.width,
@@ -905,9 +932,14 @@ class LuxonisOAKD(BaseCamera):
         )
 
         # Topic Rates
-        self.TOPICS.RATE[self.TOPICS.COLOR_IMAGE] = self.fps
-        self.TOPICS.RATE[self.TOPICS.COLOR_CAMERA_INFO] = self.fps
-        self.TOPICS.RATE[self.TOPICS.IMU] = self.fps
+        self.rates = {
+            LuxonisOAKD.TOPICS.COLOR_IMAGE: LuxonisOAKD.fps,
+            LuxonisOAKD.TOPICS.COLOR_CAMERA_INFO: LuxonisOAKD.fps,
+            LuxonisOAKD.TOPICS.STEREO_IMAGE: LuxonisOAKD.stereo_fps,
+            LuxonisOAKD.TOPICS.STEREO_CAMERA_INFO: LuxonisOAKD.stereo_fps,
+            LuxonisOAKD.TOPICS.POINTCLOUD: LuxonisOAKD.stereo_fps,
+            # Tracking of the IMU rate is not currently supported
+        }
 
     @property
     def width(self) -> int:
@@ -925,6 +957,23 @@ class LuxonisOAKD(BaseCamera):
     def height(self, height: int) -> None:
         self._height = height
 
+    @property
+    def fps(self) -> float:
+        return self._fps
+
+    @fps.setter
+    def fps(self, fps: float) -> None:
+        BaseSensor.assert_valid_rate(fps)
+        self._fps = float(fps)
+
+    @property
+    def stereo_fps(self) -> float:
+        return self._stereo_fps
+
+    @stereo_fps.setter
+    def stereo_fps(self, fps: float) -> None:
+        BaseSensor.assert_valid_rate(fps)
+        self._stereo_fps = float(fps)
 
 class AxisCamera(BaseCamera):
     """PTZ and fixed cameras that use the axis_camera driver."""
@@ -1057,6 +1106,10 @@ class AxisCamera(BaseCamera):
         NAME = {
             COLOR_IMAGE: 'color/image/compressed',
             COLOR_CAMERA_INFO: 'color/camera_info',
+        }
+        TYPE = {
+            COLOR_IMAGE: 'sensor_msgs/msg/CompressedImage',
+            COLOR_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
         }
 
     def __init__(
@@ -1232,6 +1285,11 @@ class AxisCamera(BaseCamera):
             xyz,
             rpy
         )
+        # Topic Rates
+        self.rates = {
+            AxisCamera.TOPICS.COLOR_IMAGE: AxisCamera.fps,
+            AxisCamera.TOPICS.COLOR_CAMERA_INFO: AxisCamera.fps,
+        }
 
     @property
     def device_type(self) -> str:

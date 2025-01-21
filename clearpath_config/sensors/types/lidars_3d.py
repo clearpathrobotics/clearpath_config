@@ -54,9 +54,9 @@ class BaseLidar3D(BaseSensor):
             SCAN: "scan",
             POINTS: "points",
         }
-        RATE = {
-            SCAN: 10,
-            POINTS: 10
+        TYPE = {
+            SCAN: 'sensor_msgs/msg/LaserScan',
+            POINTS: 'sensor_msgs/msg/PointCloud2',
         }
 
     def __init__(
@@ -100,6 +100,11 @@ class BaseLidar3D(BaseSensor):
             xyz,
             rpy
         )
+        self.rates = {
+            # TODO: Be able to configure the expected update rate using the robot.yaml
+            BaseLidar3D.TOPICS.SCAN: 20,
+            BaseLidar3D.TOPICS.POINTS: 20
+        }
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
@@ -182,18 +187,6 @@ class VelodyneLidar(BaseLidar3D):
         TRANSFORM_NODE_MODEL = "velodyne_transform_node.model"
         FIXED_FRAME = "velodyne_transform_node.fixed_frame"
         TARGET_FRAME = "velodyne_transform_node.target_frame"
-
-    class TOPICS:
-        SCAN = "scan"
-        POINTS = "points"
-        NAME = {
-            SCAN: "scan",
-            POINTS: "points",
-        }
-        RATE = {
-            SCAN: 10,
-            POINTS: 10
-        }
 
     def __init__(
             self,

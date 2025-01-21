@@ -57,8 +57,8 @@ class BaseLidar2D(BaseSensor):
         NAME = {
             SCAN: "scan",
         }
-        RATE = {
-            SCAN: 10,
+        TYPE = {
+            SCAN: 'sensor_msgs/msg/LaserScan',
         }
 
     def __init__(
@@ -111,6 +111,10 @@ class BaseLidar2D(BaseSensor):
             xyz,
             rpy,
             )
+        self.rates = {
+            # TODO: Be able to configure the expected update rate using the robot.yaml
+            BaseLidar2D.TOPICS.SCAN: 40,
+        }
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
@@ -198,15 +202,6 @@ class HokuyoUST(BaseLidar2D):
         MIN_ANGLE = "urg_node.angle_min"
         MAX_ANGLE = "urg_node.angle_max"
 
-    class TOPICS:
-        SCAN = "scan"
-        NAME = {
-            SCAN: "scan",
-        }
-        RATE = {
-            SCAN: 10,
-        }
-
     def __init__(
             self,
             idx: int = None,
@@ -258,15 +253,6 @@ class SickLMS1XX(BaseLidar2D):
         IP_PORT = "lms1xx.port"
         MIN_ANGLE = "lms1xx.min_ang"
         MAX_ANGLE = "lms1xx.max_ang"
-
-    class TOPICS:
-        SCAN = "scan"
-        NAME = {
-            SCAN: "scan",
-        }
-        RATE = {
-            SCAN: 10,
-        }
 
     def __init__(
             self,
