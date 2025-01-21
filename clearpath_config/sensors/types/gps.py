@@ -69,7 +69,6 @@ class BaseGPS(BaseSensor):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         # Frame ID
-        self.frame_id: str = self.FRAME_ID
         self.frame_id = frame_id
         # ROS Parameters Template
         template = {
