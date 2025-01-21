@@ -310,6 +310,23 @@ class IntelRealsense(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+
+        # Initialization
+        self.device_type = device_type
+        self.serial = serial
+        # Color Image
+        self.color_enabled = color_enabled
+        self.color_width = color_width
+        self.color_height = color_height
+        self.color_fps = color_fps
+        # Depth Image
+        self.depth_enabled = depth_enabled
+        self.depth_width = depth_width
+        self.depth_height = depth_height
+        self.depth_fps = depth_fps
+        # Pointcloud
+        self.pointcloud_enabled = pointcloud_enabled
+
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FPS: IntelRealsense.color_profile,
@@ -342,20 +359,6 @@ class IntelRealsense(BaseCamera):
         self.TOPICS.RATE[self.TOPICS.DEPTH_CAMERA_INFO] = self.fps
         self.TOPICS.RATE[self.TOPICS.POINTCLOUD] = self.fps
         self.TOPICS.RATE[self.TOPICS.IMU] = self.fps
-        # Initialization
-        self.device_type = device_type
-        # Color Image
-        self.color_enabled = color_enabled
-        self.color_width = color_width
-        self.color_height = color_height
-        # Depth Image
-        self.depth_enabled = depth_enabled
-        self.depth_width = depth_width
-        self.depth_height = depth_height
-        self.depth_fps = depth_fps
-        # Pointcloud
-        self.pointcloud_enabled = pointcloud_enabled
-
     @staticmethod
     def clean_profile(profile: str | list) -> list:
         if isinstance(profile, str):
@@ -408,6 +411,14 @@ class IntelRealsense(BaseCamera):
         self._color_enabled = bool(enabled)
 
     @property
+    def color_fps(self) -> int:
+        return self.fps
+
+    @color_fps.setter
+    def color_fps(self, fps: int) -> None:
+        self.fps = int(fps)
+
+    @property
     def color_height(self) -> int:
         return self._color_height
 
@@ -430,7 +441,7 @@ class IntelRealsense(BaseCamera):
         return "%s,%s,%s" % (
             self.color_width,
             self.color_height,
-            self.fps
+            self.color_fps
         )
 
     @color_profile.setter
@@ -438,13 +449,7 @@ class IntelRealsense(BaseCamera):
         profile = self.clean_profile(profile)
         self.color_width = profile[0]
         self.color_height = profile[1]
-        self.fps = profile[2]
-
-    def set_color_profile(self, profile: str | list) -> None:
-        self.color_profile = profile
-
-    def get_color_profile(self) -> str:
-        return self.color_profile
+        self.color_fps = profile[2]
 
     @property
     def depth_enabled(self) -> bool:
@@ -461,7 +466,7 @@ class IntelRealsense(BaseCamera):
     @depth_fps.setter
     def depth_fps(self, fps: int) -> None:
         self.assert_valid_fps(fps)
-        self._depth_fps = fps
+        self._depth_fps = int(fps)
 
     @property
     def depth_width(self) -> int:
@@ -608,6 +613,11 @@ class FlirBlackfly(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+
+        # Initialization
+        self.connection_type = connection_type
+        self.encoding = encoding
+
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FPS: FlirBlackfly.fps,
@@ -628,12 +638,17 @@ class FlirBlackfly(BaseCamera):
             xyz,
             rpy
         )
+
         # Topic Rates
-        self.TOPICS.RATE[self.TOPICS.COLOR_IMAGE] = self.fps
-        self.TOPICS.RATE[self.TOPICS.COLOR_CAMERA_INFO] = self.fps
-        # Initialization
-        self.connection_type = connection_type
-        self.encoding = encoding
+
+    @property
+    def fps(self) -> float:
+        return self._fps
+
+    @fps.setter
+    def fps(self, fps: float) -> None:
+        BaseSensor.assert_valid_rate(fps)
+        self._fps = float(fps)
 
     @property
     def connection_type(self) -> str:
@@ -738,6 +753,11 @@ class StereolabsZed(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+
+        # Initialization
+        self.device_type = device_type
+        self.resolution = resolution
+
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FPS: StereolabsZed.fps,
@@ -746,9 +766,6 @@ class StereolabsZed(BaseCamera):
             self.ROS_PARAMETER_KEYS.CAMERA_NAME: StereolabsZed.camera_name,
             self.ROS_PARAMETER_KEYS.RESOLUTION: StereolabsZed.resolution,
         }
-        # Initialization
-        self.device_type: str = device_type
-        self.resolution: str = resolution
         super().__init__(
             idx,
             name,
@@ -823,13 +840,20 @@ class LuxonisOAKD(BaseCamera):
         WIDTH = "oakd.rgb.i_width"
 
     class TOPICS:
-        COLOR_IMAGE = "color_image"
-        COLOR_CAMERA_INFO = "color_camera_info"
-        IMU = "imu"
+        COLOR_IMAGE = 'color_image'
+        COLOR_CAMERA_INFO = 'color_camera_info'
+        STEREO_IMAGE = 'stereo_image'
+        STEREO_CAMERA_INFO = 'stereo_camera_info'
+        POINTCLOUD = 'points'
+        IMU = 'imu'
+
         NAME = {
-            COLOR_IMAGE: "color/image",
-            COLOR_CAMERA_INFO: "color/camera_info",
-            IMU: "imu",
+            COLOR_IMAGE: 'color/image',
+            COLOR_CAMERA_INFO: 'color/camera_info',
+            STEREO_IMAGE: 'stereo/image',
+            STEREO_CAMERA_INFO: 'stereo/camera_info',
+            POINTCLOUD: 'points',
+            IMU: 'imu',
         }
         RATE = {
             COLOR_IMAGE: BaseCamera.FPS,
@@ -853,6 +877,11 @@ class LuxonisOAKD(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+
+        # Resolution
+        self.height = LuxonisOAKD.HEIGHT
+        self.width = LuxonisOAKD.WIDTH
+
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FPS: LuxonisOAKD.fps,
@@ -874,13 +903,11 @@ class LuxonisOAKD(BaseCamera):
             xyz,
             rpy
         )
+
         # Topic Rates
         self.TOPICS.RATE[self.TOPICS.COLOR_IMAGE] = self.fps
         self.TOPICS.RATE[self.TOPICS.COLOR_CAMERA_INFO] = self.fps
         self.TOPICS.RATE[self.TOPICS.IMU] = self.fps
-        # Resolution
-        self.height = LuxonisOAKD.HEIGHT
-        self.width = LuxonisOAKD.WIDTH
 
     @property
     def width(self) -> int:
@@ -1017,9 +1044,8 @@ class AxisCamera(BaseCamera):
         SCALE_ZOOM = 'axis_camera.scale_zoom'
 
     class TOPICS:
-        IMAGE = 'image/compressed'
-        CAMERA_INFO = 'camera_info'
-
+        COLOR_IMAGE = 'color_image'
+        COLOR_CAMERA_INFO = 'color_camera_info'
         AUTOFOCUS = 'autofocus'
         AUTOIRIS = 'autoiris'
         BRIGHTNESS = 'brightness'
@@ -1027,6 +1053,11 @@ class AxisCamera(BaseCamera):
         IRIS = 'iris'
         JOINT_STATES = 'joint_states'
         PTZ_STATE = 'ptz_state'
+
+        NAME = {
+            COLOR_IMAGE: 'color/image/compressed',
+            COLOR_CAMERA_INFO: 'color/camera_info',
+        }
 
     def __init__(
             self,
@@ -1086,6 +1117,51 @@ class AxisCamera(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+
+        # Initializations
+        self.tf_prefix = name
+
+        self.hostname = hostname
+        self.http_port = http_port
+        self.username = username
+        self.password = password
+        self.use_encrypted_password = use_encrypted_password
+        self.camera_info_url = camera_info_url
+
+        self.camera = camera
+        self.width = width
+        self.height = height
+
+        self.enable_ptz = enable_ptz
+        self.min_pan = min_pan
+        self.max_pan = max_pan
+        self.min_tilt = min_tilt
+        self.max_tilt = max_tilt
+        self.min_zoom = min_zoom
+        self.max_zoom = max_zoom
+        self.max_pan_speed = max_pan_speed
+        self.max_tilt_speed = max_tilt_speed
+
+        self.enable_ir = enable_ir
+        self.enable_wiper = enable_wiper
+        self.enable_defog = enable_defog
+
+        self.enable_ptz_teleop = enable_ptz_teleop
+        self.button_enable_pan_tilt = button_enable_pan_tilt
+        self.button_enable_zoom = button_enable_zoom
+        self.axis_pan = axis_pan
+        self.axis_tilt = axis_tilt
+        self.invert_tilt = invert_tilt
+        self.axis_zoom_in = axis_zoom_in
+        self.axis_zoom_out = axis_zoom_out
+        self.zoom_in_offset = zoom_in_offset
+        self.zoom_out_offset = zoom_out_offset
+        self.zoom_in_scale = zoom_in_scale
+        self.zoom_out_scale = zoom_out_scale
+        self.scale_pan = scale_pan
+        self.scale_tilt = scale_tilt
+        self.scale_zoom = scale_zoom
+
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.SERIAL: AxisCamera.serial,
@@ -1156,48 +1232,6 @@ class AxisCamera(BaseCamera):
             xyz,
             rpy
         )
-        self.tf_prefix = name
-
-        self.hostname = hostname
-        self.http_port = http_port
-        self.username = username
-        self.password = password
-        self.use_encrypted_password = use_encrypted_password
-        self.camera_info_url = camera_info_url
-
-        self.camera = camera
-        self.width = width
-        self.height = height
-
-        self.enable_ptz = enable_ptz
-        self.min_pan = min_pan
-        self.max_pan = max_pan
-        self.min_tilt = min_tilt
-        self.max_tilt = max_tilt
-        self.min_zoom = min_zoom
-        self.max_zoom = max_zoom
-        self.max_pan_speed = max_pan_speed
-        self.max_tilt_speed = max_tilt_speed
-
-        self.enable_ir = enable_ir
-        self.enable_wiper = enable_wiper
-        self.enable_defog = enable_defog
-
-        self.enable_ptz_teleop = enable_ptz_teleop
-        self.button_enable_pan_tilt = button_enable_pan_tilt
-        self.button_enable_zoom = button_enable_zoom
-        self.axis_pan = axis_pan
-        self.axis_tilt = axis_tilt
-        self.invert_tilt = invert_tilt
-        self.axis_zoom_in = axis_zoom_in
-        self.axis_zoom_out = axis_zoom_out
-        self.zoom_in_offset = zoom_in_offset
-        self.zoom_out_offset = zoom_out_offset
-        self.zoom_in_scale = zoom_in_scale
-        self.zoom_out_scale = zoom_out_scale
-        self.scale_pan = scale_pan
-        self.scale_tilt = scale_tilt
-        self.scale_zoom = scale_zoom
 
     @property
     def device_type(self) -> str:

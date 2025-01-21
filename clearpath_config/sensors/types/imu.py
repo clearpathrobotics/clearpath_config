@@ -41,22 +41,17 @@ class BaseIMU(BaseSensor):
     FRAME_ID = "link"
     USE_ENU = True
 
-    class ROS_PARAMETERS_KEYS:
-        PORT = "node_name.port"
-        FRAME_ID = "node_name.frame_id"
-        USE_ENU = "node_name.use_enu"
+    class ROS_PARAMETER_KEYS:
+        FRAME_ID = 'node_name.frame_id'
 
     class TOPICS:
-        RAW_DATA = "raw"
-        DATA = "data"
-        MAG = "mag"
+        DATA = 'data'
+        MAG = 'mag'
         NAME = {
-            RAW_DATA: "data_raw",
-            DATA: "data",
-            MAG: "mag"
+            DATA: 'data',
+            MAG: 'mag'
         }
         RATE = {
-            RAW_DATA: 60,
             DATA: 60,
             MAG: 60
         }
@@ -85,9 +80,7 @@ class BaseIMU(BaseSensor):
         self.use_enu = use_enu
         # ROS Parameter Template
         template = {
-            self.ROS_PARAMETERS_KEYS.FRAME_ID: BaseIMU.frame_id,
-            self.ROS_PARAMETERS_KEYS.PORT: BaseIMU.port,
-            self.ROS_PARAMETERS_KEYS.USE_ENU: BaseIMU.use_enu,
+            self.ROS_PARAMETER_KEYS.FRAME_ID: BaseIMU.frame_id,
         }
         ros_parameters_template = extend_flat_dict(template, ros_parameters_template)
         super().__init__(
@@ -151,10 +144,22 @@ class Microstrain(BaseIMU):
     FRAME_ID = "link"
     USE_ENU = True
 
-    class ROS_PARAMETERS_KEYS:
-        PORT = "microstrain_inertial_driver.port"
-        FRAME_ID = "microstrain_inertial_driver.frame_id"
-        USE_ENU = "microstrain_inertial_driver.use_enu_frame"
+    class TOPICS:
+        DATA = 'data'
+        MAG = 'mag'
+        NAME = {
+            DATA: 'data',
+            MAG: 'mag'
+        }
+        TYPE = {
+            DATA: 'sensor_msgs/msg/Imu',
+            MAG: 'sensor_msgs/msg/MagneticField'
+        }
+
+    class ROS_PARAMETER_KEYS:
+        PORT = 'microstrain_inertial_driver.port'
+        FRAME_ID = 'microstrain_inertial_driver.frame_id'
+        USE_ENU = 'microstrain_inertial_driver.use_enu_frame'
 
     class TOPICS:
         RAW_DATA = "raw"
@@ -186,7 +191,11 @@ class Microstrain(BaseIMU):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        ros_parameters_template = BaseSensor.ROS_PARAMETERS_TEMPLATE
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: Microstrain.frame_id,
+            self.ROS_PARAMETER_KEYS.PORT: Microstrain.port,
+            self.ROS_PARAMETER_KEYS.USE_ENU: Microstrain.use_enu,
+        }
         super().__init__(
             idx,
             name,
@@ -211,10 +220,10 @@ class CHRoboticsUM6(BaseIMU):
     FRAME_ID = "link"
     USE_ENU = True
 
-    class ROS_PARAMETERS_KEYS:
-        PORT = "um6_driver.port"
-        FRAME_ID = "um6_driver.frame_id"
-        USE_ENU = "um6_driver.tf_ned_to_enu"
+    class ROS_PARAMETER_KEYS:
+        PORT = 'um6_driver.port'
+        FRAME_ID = 'um6_driver.frame_id'
+        USE_ENU = 'um6_driver.tf_ned_to_enu'
 
     class TOPICS:
         RAW_DATA = "raw"
@@ -246,7 +255,11 @@ class CHRoboticsUM6(BaseIMU):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        ros_parameters_template = BaseSensor.ROS_PARAMETERS_TEMPLATE
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: CHRoboticsUM6.frame_id,
+            self.ROS_PARAMETER_KEYS.PORT: CHRoboticsUM6.port,
+            self.ROS_PARAMETER_KEYS.USE_ENU: CHRoboticsUM6.use_enu,
+        }
         super().__init__(
             idx,
             name,
@@ -271,10 +284,10 @@ class RedshiftUM7(BaseIMU):
     FRAME_ID = "link"
     USE_ENU = True
 
-    class ROS_PARAMETERS_KEYS:
-        PORT = "um7_driver.port"
-        FRAME_ID = "um7_driver.frame_id"
-        USE_ENU = "um7_driver.tf_ned_to_enu"
+    class ROS_PARAMETER_KEYS:
+        PORT = 'um7_driver.port'
+        FRAME_ID = 'um7_driver.frame_id'
+        USE_ENU = 'um7_driver.tf_ned_to_enu'
 
     class TOPICS:
         RAW_DATA = "raw"
@@ -306,7 +319,11 @@ class RedshiftUM7(BaseIMU):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        ros_parameters_template = BaseSensor.ROS_PARAMETERS_TEMPLATE
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: RedshiftUM7.frame_id,
+            self.ROS_PARAMETER_KEYS.PORT: RedshiftUM7.port,
+            self.ROS_PARAMETER_KEYS.USE_ENU: RedshiftUM7.use_enu,
+        }
         super().__init__(
             idx,
             name,
@@ -364,7 +381,9 @@ class PhidgetsSpatial(BaseIMU):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        ros_parameters_template = BaseSensor.ROS_PARAMETERS_TEMPLATE
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: PhidgetsSpatial.frame_id,
+        }
         super().__init__(
             idx,
             name,

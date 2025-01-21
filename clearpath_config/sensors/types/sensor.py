@@ -162,13 +162,9 @@ class BaseSensor(IndexedAccessory):
         else:
             return self.TOPICS.RATE[topic]
 
-    def set_topic(self, topic: str) -> None:
-        assert isinstance(topic, str), (
-            "Topic '%s' of type '%s', expected 'str'" % (topic, type(topic))
-        )
-        assert " " not in topic, (
-            "Topic '%s' contains empty spaces." % topic
-        )
+    def set_topic(self, topic: str) -> None:  # TODO: Should this be removed?
+        assert isinstance(topic, str), f'Topic "{topic}" is of type "{type(topic)}", expected "str"'  # noqa:501
+        assert ' ' not in topic, f'Topic "{topic}" contains whitespace'
         self.topic = topic
 
     def enable_urdf(self) -> None:
@@ -222,7 +218,7 @@ class BaseSensor(IndexedAccessory):
 
     @ros_parameters.setter
     def ros_parameters(self, d: dict) -> None:
-        assert isinstance(d, dict), ("ROS paramaters must be a dictionary")
+        assert isinstance(d, dict), ('ROS parameters must be a dictionary')
         for d_k, d_v in flatten_dict(d).items():
             for key, prop in flatten_dict(self.ros_parameters_template).items():
                 if d_k == key:
