@@ -35,8 +35,8 @@ from clearpath_config.manipulators.types.arms import (
     BaseArm,
 )
 from clearpath_config.manipulators.types.lifts import (
+    BaseLift,
     Lift,
-    BaseLift
 )
 from clearpath_config.manipulators.types.manipulator import BaseManipulator
 
@@ -115,7 +115,7 @@ class ManipulatorConfig(BaseConfig):
     def lifts(self, value: List[dict]) -> None:
         assert isinstance(value, list), (
             "Manipulators must be list of 'dict'")
-        assert all([isinstance(i, dict) for i in value]), (
+        assert all(isinstance(i, dict) for i in value), (
             "Manipulators must be list of 'dict'")
         lifts_list = []
         for d in value:
