@@ -178,7 +178,6 @@ class UniversalRobots(BaseArm):
     SAFETY_POS_MARGIN = 'safety_pos_margin'
     SAFETY_K_POSITION = 'safety_k_position'
     # Control Parameters
-    GENERATE_ROS2_CONTROL_TAG = 'generate_ros2_control_tag'
     HEADLESS_MODE = 'headless_mode'
     IP_ADDRESS = 'robot_ip'
     SCRIPT_FILENAME = 'script_filename'
@@ -203,8 +202,8 @@ class UniversalRobots(BaseArm):
     TOOL_DEVICE_NAME = 'tool_device_name'
     TOOL_TCP_PORT = 'tool_tcp_port'
     # Simulation Parameters
-    USE_FAKE_HARDWARE = 'use_fake_hardware'
-    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    USE_MOCK_HARDWARE = 'use_mock_hardware'
+    MOCK_SENSOR_COMMANDS = 'mock_sensor_commands'
     SIM_GAZEBO = 'sim_gazebo'
     SIM_IGNITION = 'sim_ignition'
 
@@ -220,7 +219,6 @@ class UniversalRobots(BaseArm):
         SAFETY_LIMITS: '',
         SAFETY_POS_MARGIN: '',
         SAFETY_K_POSITION: '',
-        GENERATE_ROS2_CONTROL_TAG: '',
         HEADLESS_MODE: '',
         IP_ADDRESS: '',
         SCRIPT_FILENAME: '',
@@ -243,8 +241,8 @@ class UniversalRobots(BaseArm):
         TOOL_TX_IDLE_CHARS: '',
         TOOL_DEVICE_NAME: '',
         TOOL_TCP_PORT: '',
-        USE_FAKE_HARDWARE: '',
-        FAKE_SENSOR_COMMANDS: '',
+        USE_MOCK_HARDWARE: '',
+        MOCK_SENSOR_COMMANDS: '',
         SIM_GAZEBO: '',
         SIM_IGNITION: '',
     }
