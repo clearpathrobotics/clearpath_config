@@ -246,6 +246,7 @@ class Microstrain(BaseIMU):
     def mag_rate(self, rate: int) -> None:
         self._mag_rate = int(rate)
 
+
 class CHRoboticsUM6(BaseIMU):
     SENSOR_MODEL = "chrobotics_um6"
 
@@ -302,6 +303,7 @@ class CHRoboticsUM6(BaseIMU):
             CHRoboticsUM6.TOPICS.DATA: CHRoboticsUM6.update_rate,
             CHRoboticsUM6.TOPICS.MAG: CHRoboticsUM6.update_rate,
         }
+
 
 class RedshiftUM7(BaseIMU):
     SENSOR_MODEL = "redshift_um7"

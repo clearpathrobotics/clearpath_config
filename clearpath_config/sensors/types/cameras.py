@@ -975,6 +975,7 @@ class LuxonisOAKD(BaseCamera):
         BaseSensor.assert_valid_rate(fps)
         self._stereo_fps = float(fps)
 
+
 class AxisCamera(BaseCamera):
     """PTZ and fixed cameras that use the axis_camera driver."""
 
