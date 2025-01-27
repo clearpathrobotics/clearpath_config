@@ -454,9 +454,11 @@ class PhidgetsSpatial(BaseIMU):
     FRAME_ID = "link"
     USE_ENU = True
     FILTER_DEFAULT = {'type': IMUFilter.Madgwick.TYPE}
+    USE_MAG = True
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = "phidgets_spatial.frame_id"
+        USE_MAG = 'imu_filter_madgwick.use_mag'
 
     class TOPICS:
         RAW_DATA = "raw"
@@ -482,6 +484,7 @@ class PhidgetsSpatial(BaseIMU):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             filter: str = FILTER_DEFAULT,
+            use_mag: bool = USE_MAG,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -489,7 +492,10 @@ class PhidgetsSpatial(BaseIMU):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        ros_parameters_template = BaseSensor.ROS_PARAMETERS_TEMPLATE
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: PhidgetsSpatial.frame_id,
+            self.ROS_PARAMETER_KEYS.USE_MAG: PhidgetsSpatial.use_mag,
+        }
         super().__init__(
             idx,
             name,
@@ -506,3 +512,12 @@ class PhidgetsSpatial(BaseIMU):
             xyz,
             rpy
         )
+        self.use_mag = use_mag
+
+    @property
+    def use_mag(self) -> bool:
+        return self._use_mag
+
+    @use_mag.setter
+    def use_mag(self, value: bool) -> None:
+        self._use_mag = value
