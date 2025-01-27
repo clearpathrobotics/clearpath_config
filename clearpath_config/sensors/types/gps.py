@@ -333,6 +333,7 @@ class MicrostrainGQ7(BaseGPS):
     def mag_rate(self, rate: int) -> None:
         self._mag_rate = int(rate)
 
+
 class NMEA(BaseGPS):
     SENSOR_MODEL = 'nmea_gps'
 

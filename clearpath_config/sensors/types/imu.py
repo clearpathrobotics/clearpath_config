@@ -66,8 +66,8 @@ class BaseIMU(BaseSensor):
             frame_id: str = FRAME_ID,
             port: str = PORT,
             use_enu: bool = USE_ENU,
-            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             update_rate: int = UPDATE_RATE,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
             ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
@@ -247,6 +247,7 @@ class Microstrain(BaseIMU):
     def mag_rate(self, rate: int) -> None:
         self._mag_rate = int(rate)
 
+
 class CHRoboticsUM6(BaseIMU):
     SENSOR_MODEL = 'chrobotics_um6'
 
@@ -303,6 +304,7 @@ class CHRoboticsUM6(BaseIMU):
             CHRoboticsUM6.TOPICS.DATA: CHRoboticsUM6.update_rate,
             CHRoboticsUM6.TOPICS.MAG: CHRoboticsUM6.update_rate,
         }
+
 
 class RedshiftUM7(BaseIMU):
     SENSOR_MODEL = 'redshift_um7'
@@ -380,7 +382,7 @@ class PhidgetsSpatial(BaseIMU):
         CALIB = 'calibrated'
         NAME = {
             RAW_DATA: 'data_raw',
-            MAG: 'msg',
+            MAG: 'mag',
             CALIB: 'is_calibrated'
         }
         TYPE = {
