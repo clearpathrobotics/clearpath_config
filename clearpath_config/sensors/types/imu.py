@@ -380,9 +380,9 @@ class PhidgetsSpatial(BaseIMU):
         MAG = "mag"
         CALIB = "calibrated"
         NAME = {
-            RAW_DATA: "data_raw",
-            MAG: "msg",
-            CALIB: "is_calibrated"
+            RAW_DATA: 'data_raw',
+            MAG: 'mag',
+            CALIB: 'is_calibrated'
         }
         TYPE = {
             RAW_DATA: 'sensor_msgs/msg/Imu',
