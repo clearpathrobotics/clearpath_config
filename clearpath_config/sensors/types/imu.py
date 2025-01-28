@@ -461,17 +461,20 @@ class PhidgetsSpatial(BaseIMU):
         USE_MAG = 'imu_filter_madgwick.use_mag'
 
     class TOPICS:
+        DATA = "data"
         RAW_DATA = "raw"
         MAG = "mag"
         CALIB = "calibrated"
         NAME = {
+            DATA: "data",
             RAW_DATA: "data_raw",
-            MAG: "msg",
+            MAG: "mag",
             CALIB: "is_calibrated"
         }
         RATE = {
-            RAW_DATA: 60,
-            MAG: 60,
+            DATA: 50,
+            RAW_DATA: 50,
+            MAG: 50,
             CALIB: 60,
         }
 
