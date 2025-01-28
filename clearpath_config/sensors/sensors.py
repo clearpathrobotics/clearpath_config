@@ -89,14 +89,14 @@ class InertialMeasurementUnit():
 
 
 class Camera():
-    AXIS_CANERA = AxisCamera.SENSOR_MODEL
+    AXIS_CAMERA = AxisCamera.SENSOR_MODEL
     FLIR_BLACKFLY = FlirBlackfly.SENSOR_MODEL
     INTEL_REALSENSE = IntelRealsense.SENSOR_MODEL
     STEREOLABS_ZED = StereolabsZed.SENSOR_MODEL
     LUXONIS_OAKD = LuxonisOAKD.SENSOR_MODEL
 
     MODEL = {
-        AXIS_CANERA: AxisCamera,
+        AXIS_CAMERA: AxisCamera,
         FLIR_BLACKFLY: FlirBlackfly,
         INTEL_REALSENSE: IntelRealsense,
         STEREOLABS_ZED: StereolabsZed,
@@ -672,8 +672,8 @@ class SensorConfig(BaseConfig):
         )
         if not camera and model:
             camera = Camera(model)
-            camera.set_fps(fps)
-            camera.set_serial(serial)
+            camera.fps = fps
+            camera.serial = serial
             camera.set_urdf_enabled(urdf_enabled)
             camera.set_launch_enabled(launch_enabled)
             camera.set_ros_parameters(ros_parameters)
@@ -793,11 +793,11 @@ class SensorConfig(BaseConfig):
                 all_model_camera.append(camera)
         return all_model_camera
 
-    # Camera: Get All Objects of Model UST
+    # Camera: Get All Objects of Model Intel Realsense
     def get_all_realsense(self) -> List[IntelRealsense]:
         return self.get_all_cameras_by_model(Camera.INTEL_REALSENSE)
 
-    # Camera: Get All Objects of Model LMS1XX
+    # Camera: Get All Objects of Model Flir Blackfly
     def get_all_blackfly(self) -> List[FlirBlackfly]:
         return self.get_all_cameras_by_model(Camera.FLIR_BLACKFLY)
 

@@ -55,9 +55,9 @@ class BaseLidar3D(BaseSensor):
             SCAN: 'scan',
             POINTS: 'points',
         }
-        RATE = {
-            SCAN: 10,
-            POINTS: 10
+        TYPE = {
+            SCAN: 'sensor_msgs/msg/LaserScan',
+            POINTS: 'sensor_msgs/msg/PointCloud2',
         }
 
     def __init__(
@@ -77,14 +77,11 @@ class BaseLidar3D(BaseSensor):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         # Frame ID
-        self.frame_id: str = self.FRAME_ID
-        self.set_frame_id(frame_id)
+        self.frame_id = frame_id
         # IP Address
-        self.ip: IP = IP(self.IP_ADDRESS)
-        self.set_ip(ip)
+        self.ip = ip
         # IP Port
-        self.port: Port = Port(self.IP_PORT)
-        self.set_port(port)
+        self.port = port
         # ROS Parameter Template
         template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: BaseLidar3D.frame_id,
@@ -104,6 +101,11 @@ class BaseLidar3D(BaseSensor):
             xyz,
             rpy
         )
+        self.rates = {
+            # TODO: Be able to configure the expected update rate using the robot.yaml
+            BaseLidar3D.TOPICS.SCAN: 20,
+            BaseLidar3D.TOPICS.POINTS: 20
+        }
 
     @classmethod
     def get_frame_id_from_idx(cls, idx: int) -> str:
@@ -123,12 +125,12 @@ class BaseLidar3D(BaseSensor):
         # Set Base: Name and Topic
         super().set_idx(idx)
         # Set Frame ID
-        self.set_frame_id(self.get_frame_id_from_idx(idx))
+        self.frame_id = self.get_frame_id_from_idx(idx)
         # Set IP
         if not is_in_dict(
                 self._ros_parameters,
                 self.ROS_PARAMETER_KEYS.IP_ADDRESS.split('.')):
-            self.set_ip(self.get_ip_from_idx(idx))
+            self.ip = self.get_ip_from_idx(idx)
 
     @property
     def frame_id(self) -> str:
@@ -139,12 +141,6 @@ class BaseLidar3D(BaseSensor):
         Accessory.assert_valid_link(link)
         self._frame_id = link
 
-    def get_frame_id(self) -> str:
-        return self.frame_id
-
-    def set_frame_id(self, link: str) -> None:
-        self.frame_id = link
-
     @property
     def ip(self) -> str:
         return str(self._ip)
@@ -153,12 +149,6 @@ class BaseLidar3D(BaseSensor):
     def ip(self, ip: str) -> None:
         self._ip = IP(str(ip))
 
-    def get_ip(self) -> str:
-        return str(self.ip)
-
-    def set_ip(self, ip: str) -> None:
-        self.ip = ip
-
     @property
     def port(self) -> int:
         return int(self._port)
@@ -166,12 +156,6 @@ class BaseLidar3D(BaseSensor):
     @port.setter
     def port(self, port: int) -> None:
         self._port = Port(int(port))
-
-    def get_port(self) -> int:
-        return int(self.port)
-
-    def set_port(self, port: int) -> None:
-        self.port = port
 
 
 class VelodyneLidar(BaseLidar3D):
@@ -187,14 +171,14 @@ class VelodyneLidar(BaseLidar3D):
     VLP_16 = 'VLP16'
     VLP_32C = '32C'
     DEVICE_TYPE = VLP_16
-    DEVICE_TYPES = [
+    DEVICE_TYPES = (
         HDL_32E,
         HDL_64E,
         HDL_64E_S2,
         HDL_64E_S3,
         VLP_16,
         VLP_32C
-    ]
+    )
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = 'velodyne_driver_node.frame_id'
@@ -204,18 +188,6 @@ class VelodyneLidar(BaseLidar3D):
         TRANSFORM_NODE_MODEL = 'velodyne_transform_node.model'
         FIXED_FRAME = 'velodyne_transform_node.fixed_frame'
         TARGET_FRAME = 'velodyne_transform_node.target_frame'
-
-    class TOPICS:
-        SCAN = 'scan'
-        POINTS = 'points'
-        NAME = {
-            SCAN: 'scan',
-            POINTS: 'points',
-        }
-        RATE = {
-            SCAN: 10,
-            POINTS: 10
-        }
 
     def __init__(
             self,
@@ -234,7 +206,7 @@ class VelodyneLidar(BaseLidar3D):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         # Device Type:
-        self.set_device_type(device_type)
+        self.device_type = device_type
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.DRIVER_NODE_MODEL: VelodyneLidar.device_type,
@@ -271,9 +243,3 @@ class VelodyneLidar(BaseLidar3D):
             )
         )
         self._device_type = device_type
-
-    def get_device_type(self) -> str:
-        return self.device_type
-
-    def set_device_type(self, device_type: str) -> None:
-        self.device_type = device_type
