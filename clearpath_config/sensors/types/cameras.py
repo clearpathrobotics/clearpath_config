@@ -588,18 +588,6 @@ class FlirBlackfly(BaseCamera):
         SERIAL = 'flir_blackfly.serial_number'
         ENCODING = 'flir_blackfly.pixel_format'
 
-    class TOPICS:
-        COLOR_IMAGE = 'color_image'
-        COLOR_CAMERA_INFO = 'color_camera_info'
-        NAME = {
-            COLOR_IMAGE: 'color/image',
-            COLOR_CAMERA_INFO: 'color/camera_info'
-        }
-        TYPE = {
-            COLOR_IMAGE: 'sensor_msgs/msg/Image',
-            COLOR_CAMERA_INFO: 'sensor_msgs/msg/CameraInfo',
-        }
-
     def __init__(
             self,
             idx: int = None,

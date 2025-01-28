@@ -164,18 +164,6 @@ class Microstrain(BaseIMU):
     IMU_RATE = 100
     MAG_RATE = 0
 
-    class TOPICS:
-        DATA = 'data'
-        MAG = 'mag'
-        NAME = {
-            DATA: 'data',
-            MAG: 'mag'
-        }
-        TYPE = {
-            DATA: 'sensor_msgs/msg/Imu',
-            MAG: 'sensor_msgs/msg/MagneticField'
-        }
-
     class ROS_PARAMETER_KEYS:
         PORT = 'microstrain_inertial_driver.port'
         FRAME_ID = 'microstrain_inertial_driver.frame_id'
