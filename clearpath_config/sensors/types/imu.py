@@ -33,6 +33,78 @@ from clearpath_config.common.utils.dictionary import extend_flat_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
 
 
+class IMUFilter():
+    TYPE = 'type'
+
+    class Base():
+        TYPE = "base"
+        INPUT_RAW = 'input_raw'
+        INPUT_MAG = 'input_mag'
+        OUTPUT = 'output'
+
+        INPUT_RAW_DEFAULT = 'data_raw'
+        INPUT_MAG_DEFAULT = 'mag'
+        OUTPUT_DEFAULT = 'data'
+
+        def __init__(self, config: dict) -> None:
+            self.from_dict(config)
+
+        def from_dict(self, config: dict) -> None:
+            self.input_raw = config.get(self.INPUT_RAW, self.INPUT_RAW_DEFAULT)
+            self.input_mag = config.get(self.INPUT_MAG, self.INPUT_MAG_DEFAULT)
+            self.output = config.get(self.OUTPUT, self.OUTPUT_DEFAULT)
+
+        def to_dict(self) -> dict:
+            return {
+                IMUFilter.TYPE: self.TYPE,
+                self.INPUT_RAW: self.input_raw,
+                self.INPUT_MAG: self.input_mag,
+                self.OUTPUT: self.output
+            }
+
+        @property
+        def input_raw(self) -> str:
+            return self._input_raw
+
+        @input_raw.setter
+        def input_raw(self, value: str) -> None:
+            self._input_raw = value
+
+        @property
+        def input_mag(self) -> str:
+            return self._input_mag
+
+        @input_mag.setter
+        def input_mag(self, value: str) -> None:
+            self._input_mag = value
+
+        @property
+        def output(self) -> str:
+            return self._output
+
+        @output.setter
+        def output(self, value: str) -> None:
+            self._output = value
+
+    class NoFilter(Base):
+        TYPE = 'none'
+
+    class Madgwick(Base):
+        TYPE = 'madgwick'
+
+    TYPES = {
+        NoFilter.TYPE: NoFilter,
+        Madgwick.TYPE: Madgwick
+    }
+
+    def __new__(self, config: dict) -> None:
+        assert self.TYPE in config, (
+            f'IMU filter must have "{self.TYPE}" specified.')
+        assert config[self.TYPE] in self.TYPES, (
+            f'IMU filter "{self.TYPE}" must be one of: "{self.TYPES}"')
+        return self.TYPES[config[self.TYPE]](config)
+
+
 class BaseIMU(BaseSensor):
     SENSOR_TYPE = 'imu'
     SENSOR_MODEL = 'base'
@@ -42,6 +114,9 @@ class BaseIMU(BaseSensor):
     FRAME_ID = 'link'
     USE_ENU = True
     UPDATE_RATE = 20
+
+    FILTER = 'filter'
+    FILTER_DEFAULT = {'type': 'none'}
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = 'node_name.frame_id'
@@ -67,6 +142,7 @@ class BaseIMU(BaseSensor):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             update_rate: int = UPDATE_RATE,
+            filter: IMUFilter = FILTER_DEFAULT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -83,6 +159,8 @@ class BaseIMU(BaseSensor):
         self.use_enu = use_enu
         # Update Rate
         self.update_rate = update_rate
+        # Filter
+        self.filter = filter
         # ROS Parameter Template
         template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: BaseIMU.frame_id,
@@ -154,6 +232,24 @@ class BaseIMU(BaseSensor):
         BaseSensor.assert_valid_rate(rate)
         self._update_rate = int(rate)
 
+    @property
+    def filter(self) -> IMUFilter:
+        return self._filter
+
+    @filter.setter
+    def filter(self, filter: dict) -> None:
+        self._filter = IMUFilter(filter)
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['filter'] = self.filter.to_dict()
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if self.FILTER in d:
+            self.filter = d[self.FILTER]
+
 
 class Microstrain(BaseIMU):
     SENSOR_MODEL = 'microstrain_imu'
@@ -181,6 +277,7 @@ class Microstrain(BaseIMU):
             use_enu: bool = USE_ENU,
             imu_rate: int = IMU_RATE,
             mag_rate: int = MAG_RATE,
+            filter: str = BaseIMU.FILTER_DEFAULT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
@@ -206,6 +303,7 @@ class Microstrain(BaseIMU):
             port,
             use_enu,
             imu_rate,
+            filter,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -259,6 +357,7 @@ class CHRoboticsUM6(BaseIMU):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             update_rate: int = UPDATE_RATE,
+            filter: str = BaseIMU.FILTER_DEFAULT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -280,6 +379,7 @@ class CHRoboticsUM6(BaseIMU):
             port,
             use_enu,
             update_rate,
+            filter,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -317,6 +417,7 @@ class RedshiftUM7(BaseIMU):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             update_rate: int = UPDATE_RATE,
+            filter: str = BaseIMU.FILTER_DEFAULT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -338,6 +439,7 @@ class RedshiftUM7(BaseIMU):
             port,
             use_enu,
             update_rate,
+            filter,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -388,6 +490,8 @@ class PhidgetsSpatial(BaseIMU):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             data_interval: int = DATA_INTERVAL,
+            filter: str = FILTER_DEFAULT,
+            use_mag: bool = USE_MAG,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -401,6 +505,7 @@ class PhidgetsSpatial(BaseIMU):
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: PhidgetsSpatial.frame_id,
             self.ROS_PARAMETER_KEYS.DATA_INTERVAL: PhidgetsSpatial.data_interval,
+            self.ROS_PARAMETER_KEYS.USE_MAG: PhidgetsSpatial.use_mag,
         }
         super().__init__(
             idx,
@@ -410,6 +515,7 @@ class PhidgetsSpatial(BaseIMU):
             port,
             use_enu,
             round(1000 / data_interval),
+            filter,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -433,3 +539,12 @@ class PhidgetsSpatial(BaseIMU):
         BaseSensor.assert_valid_rate(interval)
         self._data_interval = int(interval)
         self.update_rate = round(1000 / interval)
+        self.use_mag = use_mag
+
+    @property
+    def use_mag(self) -> bool:
+        return self._use_mag
+
+    @use_mag.setter
+    def use_mag(self, value: bool) -> None:
+        self._use_mag = value
