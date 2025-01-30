@@ -37,7 +37,7 @@ class IMUFilter():
     TYPE = 'type'
 
     class Base():
-        TYPE = "base"
+        TYPE = 'base'
         INPUT_RAW = 'input_raw'
         INPUT_MAG = 'input_mag'
         OUTPUT = 'output'
@@ -115,8 +115,8 @@ class BaseIMU(BaseSensor):
     USE_ENU = True
     UPDATE_RATE = 20
 
-    FILTER = 'filter'
-    FILTER_DEFAULT = {'type': 'none'}
+    IMU_FILTER = 'filter'
+    IMU_FILTER_DEFAULT = {'type': IMUFilter.NoFilter.TYPE}
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = 'node_name.frame_id'
@@ -142,7 +142,7 @@ class BaseIMU(BaseSensor):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             update_rate: int = UPDATE_RATE,
-            filter: IMUFilter = FILTER_DEFAULT,
+            imu_filter: IMUFilter = IMU_FILTER_DEFAULT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -160,7 +160,7 @@ class BaseIMU(BaseSensor):
         # Update Rate
         self.update_rate = update_rate
         # Filter
-        self.filter = filter
+        self.imu_filter = imu_filter
         # ROS Parameter Template
         template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: BaseIMU.frame_id,
@@ -233,22 +233,22 @@ class BaseIMU(BaseSensor):
         self._update_rate = int(rate)
 
     @property
-    def filter(self) -> IMUFilter:
-        return self._filter
+    def imu_filter(self) -> IMUFilter:
+        return self._imu_filter
 
-    @filter.setter
-    def filter(self, filter: dict) -> None:
-        self._filter = IMUFilter(filter)
+    @imu_filter.setter
+    def imu_filter(self, imu_filter: dict) -> None:
+        self._imu_filter = IMUFilter(imu_filter)
 
     def to_dict(self) -> dict:
         d = super().to_dict()
-        d['filter'] = self.filter.to_dict()
+        d['filter'] = self.imu_filter.to_dict()
         return d
 
     def from_dict(self, d: dict) -> None:
         super().from_dict(d)
-        if self.FILTER in d:
-            self.filter = d[self.FILTER]
+        if self.IMU_FILTER in d:
+            self.imu_filter = d[self.IMU_FILTER]
 
 
 class Microstrain(BaseIMU):
@@ -277,7 +277,7 @@ class Microstrain(BaseIMU):
             use_enu: bool = USE_ENU,
             imu_rate: int = IMU_RATE,
             mag_rate: int = MAG_RATE,
-            filter: str = BaseIMU.FILTER_DEFAULT,
+            imu_filter: str = BaseIMU.IMU_FILTER_DEFAULT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
@@ -303,7 +303,7 @@ class Microstrain(BaseIMU):
             port,
             use_enu,
             imu_rate,
-            filter,
+            imu_filter,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -357,7 +357,7 @@ class CHRoboticsUM6(BaseIMU):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             update_rate: int = UPDATE_RATE,
-            filter: str = BaseIMU.FILTER_DEFAULT,
+            imu_filter: str = BaseIMU.IMU_FILTER_DEFAULT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -379,7 +379,7 @@ class CHRoboticsUM6(BaseIMU):
             port,
             use_enu,
             update_rate,
-            filter,
+            imu_filter,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -417,7 +417,7 @@ class RedshiftUM7(BaseIMU):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             update_rate: int = UPDATE_RATE,
-            filter: str = BaseIMU.FILTER_DEFAULT,
+            imu_filter: str = BaseIMU.IMU_FILTER_DEFAULT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -439,7 +439,7 @@ class RedshiftUM7(BaseIMU):
             port,
             use_enu,
             update_rate,
-            filter,
+            imu_filter,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -460,22 +460,29 @@ class PhidgetsSpatial(BaseIMU):
     PORT = None
     FRAME_ID = 'link'
     USE_ENU = True
+    USE_MAG = True
     DATA_INTERVAL = 20
+
+    IMU_FILTER_DEFAULT = {'type': IMUFilter.Madgwick.TYPE}
 
     class ROS_PARAMETER_KEYS:
         FRAME_ID = 'phidgets_spatial.frame_id'
         DATA_INTERVAL = 'phidgets_spatial.data_interval_ms'
+        USE_MAG = 'imu_filter_madgwick.use_mag'
 
     class TOPICS:
+        DATA = 'data'
         RAW_DATA = 'raw'
         MAG = 'mag'
         CALIB = 'calibrated'
         NAME = {
+            DATA: 'data',
             RAW_DATA: 'data_raw',
             MAG: 'mag',
             CALIB: 'is_calibrated'
         }
         TYPE = {
+            DATA: 'sensor_msgs/msg/Imu',
             RAW_DATA: 'sensor_msgs/msg/Imu',
             MAG: 'sensor_msgs/msg/MagneticField',
             CALIB: 'std_msgs/msg/Bool',
@@ -490,7 +497,7 @@ class PhidgetsSpatial(BaseIMU):
             port: str = PORT,
             use_enu: bool = USE_ENU,
             data_interval: int = DATA_INTERVAL,
-            filter: str = FILTER_DEFAULT,
+            imu_filter: str = IMU_FILTER_DEFAULT,
             use_mag: bool = USE_MAG,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
@@ -501,6 +508,7 @@ class PhidgetsSpatial(BaseIMU):
             ) -> None:
         # Initializations
         self.data_interval = data_interval
+        self.use_mag = use_mag
         # ROS Parameters Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: PhidgetsSpatial.frame_id,
@@ -515,7 +523,7 @@ class PhidgetsSpatial(BaseIMU):
             port,
             use_enu,
             round(1000 / data_interval),
-            filter,
+            imu_filter,
             urdf_enabled,
             launch_enabled,
             ros_parameters,
@@ -525,6 +533,7 @@ class PhidgetsSpatial(BaseIMU):
             rpy
         )
         self.rates = {
+            PhidgetsSpatial.TOPICS.DATA: PhidgetsSpatial.update_rate,
             PhidgetsSpatial.TOPICS.RAW_DATA: PhidgetsSpatial.update_rate,
             PhidgetsSpatial.TOPICS.MAG: PhidgetsSpatial.update_rate,
             PhidgetsSpatial.TOPICS.CALIB: PhidgetsSpatial.update_rate
@@ -539,7 +548,6 @@ class PhidgetsSpatial(BaseIMU):
         BaseSensor.assert_valid_rate(interval)
         self._data_interval = int(interval)
         self.update_rate = round(1000 / interval)
-        self.use_mag = use_mag
 
     @property
     def use_mag(self) -> bool:
