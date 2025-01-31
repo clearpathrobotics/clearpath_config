@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2025-01-31)
+------------------
 * Jazzy Phidgets IMU Filter (`#119 <https://github.com/clearpathrobotics/clearpath_config/issues/119>`_)
   * Add filter to IMU entry
   * Enable mag only for Phidgets
