@@ -2,6 +2,27 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Jazzy Phidgets IMU Filter (`#119 <https://github.com/clearpathrobotics/clearpath_config/issues/119>`_)
+  * Add filter to IMU entry
+  * Enable mag only for Phidgets
+  * Add DATA topic to Phidget
+* Add the phidget to default sample (`#120 <https://github.com/clearpathrobotics/clearpath_config/issues/120>`_)
+* Change default user to robot (`#121 <https://github.com/clearpathrobotics/clearpath_config/issues/121>`_)
+* Feature/diagnostics (`#117 <https://github.com/clearpathrobotics/clearpath_config/issues/117>`_)
+  * Switched class (shared) variables to non-muteable types to prevent unexpected behaviour if they were ever changed
+  * Remove redundant getters and setters
+  * Remove duplicate variable definition
+  * Add topic message type and correct rates so they are not shared muteable variables
+* Ewellix Lift (`#115 <https://github.com/clearpathrobotics/clearpath_config/issues/115>`_)
+  * Added Ewellix Lift (`#109 <https://github.com/clearpathrobotics/clearpath_config/issues/109>`_)
+  * Initial add of lifts to config
+  * Added ewellix parameters
+  * Fix lint
+* Removed deprecated parameters
+* Contributors: Hilary Luo, Luis Camero
+
 2.0.1 (2025-01-16)
 ------------------
 * Add Zenoh support (`#113 <https://github.com/clearpathrobotics/clearpath_config/issues/113>`_)
