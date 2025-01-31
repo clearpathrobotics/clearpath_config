@@ -48,7 +48,7 @@ class BaseSensor(IndexedAccessory):
 
     class TOPICS:
         NAME = {}
-        RATE = {}
+        TYPE = {}
 
     class ROSParameter:
         def __init__(
@@ -79,6 +79,10 @@ class BaseSensor(IndexedAccessory):
         # - should match the Clearpath API
         self.topic = str()
         self.set_topic(topic)
+        # Rates:
+        # - should be a dictionary matching those in the TOPICS class
+        # - should be updated as necessary to reflect current operation
+        self.rates = {}
         # URDF Enable
         # - enables the sensor description in the generated URDF
         self.urdf_enabled = True
@@ -118,6 +122,15 @@ class BaseSensor(IndexedAccessory):
         if 'ros_parameters' in d:
             self.set_ros_parameters(d['ros_parameters'])
 
+    @staticmethod
+    def assert_valid_rate(rate: float | int) -> None:
+        assert isinstance(rate, (float, int)), (
+            'Rate "%s" is invalid, must be an integer or float.' % rate
+        )
+        assert 0 <= rate, (
+            'Rate "%s" must be a positive integer or float.' % rate
+        )
+
     @classmethod
     def get_sensor_type(cls) -> str:
         return cls.SENSOR_TYPE
@@ -144,7 +157,7 @@ class BaseSensor(IndexedAccessory):
         super().set_idx(idx)
         self.topic = self.get_topic_from_idx(idx)
 
-    def get_topic(self, topic: str, local=False) -> str:
+    def get_topic_name(self, topic: str, local=False) -> str:
         assert topic in self.TOPICS.NAME, f'Topic must be one of {self.TOPICS.NAME.keys()}'
         if local:
             return os.path.join('sensors', self.name, self.TOPICS.NAME[topic])
@@ -152,14 +165,18 @@ class BaseSensor(IndexedAccessory):
             ns = BaseConfig.get_namespace()
             return os.path.join(ns, 'sensors', self.name, self.TOPICS.NAME[topic])
 
-    def get_topic_rate(self, topic: str) -> float:
-        assert topic in self.TOPICS.RATE, f'Topic must be one of {self.TOPICS.RATE.keys()}'
-        if isinstance(self.TOPICS.RATE[topic], property):
-            return self.TOPICS.RATE[topic].fget.__get__(self)
-        else:
-            return self.TOPICS.RATE[topic]
+    def get_topic_type(self, topic: str) -> str:
+        assert topic in self.TOPICS.TYPE, f'Topic must be one of {self.TOPICS.TYPE.keys()}'
+        return self.TOPICS.TYPE[topic]
 
-    def set_topic(self, topic: str) -> None:
+    def get_topic_rate(self, topic: str) -> float | int:
+        assert topic in self.rates, f'Topic must be one of {self.rates.keys()}'
+        if isinstance(self.rates[topic], property):
+            return self.rates[topic].fget.__get__(self)()
+        else:
+            return self.rates[topic]
+
+    def set_topic(self, topic: str) -> None:  # TODO: Should this be removed?
         assert isinstance(topic, str), f'Topic "{topic}" is of type "{type(topic)}", expected "str"'  # noqa:501
         assert ' ' not in topic, f'Topic "{topic}" contains whitespace'
         self.topic = topic
@@ -215,7 +232,7 @@ class BaseSensor(IndexedAccessory):
 
     @ros_parameters.setter
     def ros_parameters(self, d: dict) -> None:
-        assert isinstance(d, dict), ('ROS paramaters must be a dictionary')
+        assert isinstance(d, dict), ('ROS parameters must be a dictionary')
         for d_k, d_v in flatten_dict(d).items():
             for key, prop in flatten_dict(self.ros_parameters_template).items():
                 if d_k == key:

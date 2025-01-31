@@ -74,8 +74,8 @@ class SystemConfig(BaseConfig):
         HOSTS: HostListConfig.DEFAULTS,
         # LOCALHOST: hostname for the specific devices - automatically determined
         LOCALHOST: socket.gethostname(),
-        # USERNAME: administrator
-        USERNAME: 'administrator',
+        # USERNAME: robot
+        USERNAME: 'robot',
         # NAMESPACE: serial number
         NAMESPACE: Namespace.clean(BaseConfig.get_serial_number(prefix=True)),
         # DOMAIN_ID: 0

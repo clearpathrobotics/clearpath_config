@@ -31,7 +31,7 @@ import re
 # Username
 class Username:
 
-    def __init__(self, username: str = 'administrator') -> None:
+    def __init__(self, username: str = 'robot') -> None:
         self.assert_valid(username)
         self.username = username
 

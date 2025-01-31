@@ -16,3 +16,14 @@ platform:
       parent: rear_bumper_mount
     - name: top_plate
       type: a300.top_plate
+sensors:
+  imu:
+    - model: phidgets_spatial
+      urdf_enabled: true
+      launch_enabled: true
+      parent: default_mount
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        phidgets_spatial:
+          data_interval_ms: 20
