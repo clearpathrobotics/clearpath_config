@@ -281,15 +281,18 @@ class VelodyneLidar(BaseLidar3D):
 class OusterOS1(BaseLidar3D):
     SENSOR_MODEL = 'ouster_os1'
 
-    FRAME_ID = 'laser'
+    FRAME_ID = 'sensor_link'
     IP_PORT = 7502
     IP_COMPUTER_ADDRESS = '192.168.131.1'
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = 'ouster_driver.laser_frame'
+        FRAME_ID = 'ouster_driver.lidar_frame'
+        SENSOR_FRAME_ID = 'ouster_driver.sensor_frame'
+        IMU_FRAME_ID = 'ouster_driver.imu_frame'
+        PCL_FRAME_ID = 'ouster_driver.point_cloud_frame'
         IP_PORT = 'ouster_driver.lidar_port'
-        IP_ADDRESS = 'ouster_driver.lidar_ip'
-        IP_COMPUTER = 'ouster_driver.computer_ip'
+        IP_ADDRESS = 'ouster_driver.sensor_hostname'
+        IP_COMPUTER = 'ouster_driver.udp_dest'
 
     def __init__(
             self,
@@ -308,7 +311,10 @@ class OusterOS1(BaseLidar3D):
             rpy: List[float] = Accessory.RPY
             ) -> None:
         ros_parameters_template = {
-            self.ROS_PARAMETER_KEYS.IP_COMPUTER: OusterOS1.computer_ip
+            self.ROS_PARAMETER_KEYS.IP_COMPUTER: OusterOS1.computer_ip,
+            self.ROS_PARAMETER_KEYS.IMU_FRAME_ID: OusterOS1.frame_id,
+            self.ROS_PARAMETER_KEYS.SENSOR_FRAME_ID: OusterOS1.frame_id,
+            self.ROS_PARAMETER_KEYS.PCL_FRAME_ID: OusterOS1.frame_id,
         }
         self.computer_ip = computer_ip
         super().__init__(
