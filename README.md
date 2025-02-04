@@ -1,7 +1,7 @@
 # clearpath_config
 Clearpath Configuration YAML Parser
 
-Find documentation on the Clearpath Configuration YAML and more about the Clearpath ROS 2 System on the [Clearpath Documentation](https://docs.clearpathrobotics.com/docs/ros/config/yaml) webpage.
+Find documentation on the Clearpath Configuration YAML and more about the Clearpath ROS 2 System on the [Clearpath Documentation](https://docs.clearpathrobotics.com/docs/ros/config/yaml/overview) webpage.
 
 # Configration Examples
 Under the **_sample_** folder there are example configurations that can be used as the starting point of your `robot.yaml`.
