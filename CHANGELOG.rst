@@ -2,6 +2,12 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed docs link for Robot YAML. (`#124 <https://github.com/clearpathrobotics/clearpath_config/issues/124>`_)
+* Updated the A300's default IMU location.
+* Contributors: Tony Baltovski
+
 2.1.0 (2025-01-31)
 ------------------
 * Jazzy Phidgets IMU Filter (`#119 <https://github.com/clearpathrobotics/clearpath_config/issues/119>`_)
