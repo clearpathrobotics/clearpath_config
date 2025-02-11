@@ -244,13 +244,66 @@ class UniversalRobots(BaseArm):
     }
 
 
+class Franka(BaseArm):
+    MANIPULATOR_MODEL = 'franka'
+
+    # Description Variables
+    ARM_ID = 'arm_id'
+    JOINT_LIMITS = 'joint_limits'
+    JOINT_LIMITS_PARAMETERS_FILE = 'joint_limits_parameters_file'
+    INERTIALS = 'inertials'
+    INERTIALS_PARAMETERS_FILE = 'inertials_parameters_file'
+    KINEMATICS = 'kinematics'
+    KINEMATICS_PARAMETERS_FILE = 'kinematics_parameters_file'
+    DYNAMICS = 'dynamics'
+    DYNAMICS_PARAMETERS_FILE = 'dynamics_parameters_file'
+    GAZEBO = 'gazebo'
+    HAND = 'hand'
+    EE_ID = 'ee_id'
+    WITH_SC = 'with_sc'
+    ROS2_CONTROL = 'ros2_control'
+    IP_ADDRESS = 'robot_ip'
+    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    GAZEBO_EFFORT = 'gazebo_effort'
+    NO_PREFIX = 'no_prefix'
+    ARM_PREFIX = 'arm_prefix'
+    CONNECTED_TO = 'connected_to'
+
+    URDF_PARAMETERS = {
+        ARM_ID: '',
+        JOINT_LIMITS: '',
+        JOINT_LIMITS_PARAMETERS_FILE: '',
+        INERTIALS: '',
+        INERTIALS_PARAMETERS_FILE: '',
+        KINEMATICS: '',
+        KINEMATICS_PARAMETERS_FILE: '',
+        DYNAMICS: '',
+        DYNAMICS_PARAMETERS_FILE: '',
+        GAZEBO: '',
+        HAND: '',
+        EE_ID: '',
+        WITH_SC: '',
+        ROS2_CONTROL: '',
+        IP_ADDRESS: '',
+        USE_FAKE_HARDWARE: '',
+        FAKE_SENSOR_COMMANDS: '',
+        GAZEBO_EFFORT: '',
+        NO_PREFIX: '',
+        ARM_PREFIX: '',
+        CONNECTED_TO: '',
+    }
+
+
 class Arm():
+    FRANKA = Franka.MANIPULATOR_MODEL
     KINOVA_GEN3_6DOF = KinovaGen3Dof6.MANIPULATOR_MODEL
     KINOVA_GEN3_7DOF = KinovaGen3Dof7.MANIPULATOR_MODEL
     KINOVA_GEN3_LITE = KinovaGen3Lite.MANIPULATOR_MODEL
     UNIVERSAL_ROBOTS = UniversalRobots.MANIPULATOR_MODEL
 
     MODEL = {
+        FRANKA: Franka,
         KINOVA_GEN3_6DOF: KinovaGen3Dof6,
         KINOVA_GEN3_7DOF: KinovaGen3Dof7,
         KINOVA_GEN3_LITE: KinovaGen3Lite,
