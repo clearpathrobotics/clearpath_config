@@ -41,6 +41,64 @@ from clearpath_config.manipulators.types.lifts import (
 from clearpath_config.manipulators.types.manipulator import BaseManipulator
 
 
+class MoveItConfig(BaseConfig):
+    ENABLE = 'enable'
+    ROS_PARAMETERS = 'ros_parameters'
+
+    TEMPLATE = {
+        ENABLE: ENABLE,
+        ROS_PARAMETERS: ROS_PARAMETERS
+    }
+
+    KEYS = flip_dict(TEMPLATE)
+
+    DEFAULTS = {
+        ENABLE: False,
+        ROS_PARAMETERS: {}
+    }
+
+    def __init__(
+            self,
+            config: dict = {},
+            enable: bool = DEFAULTS[ENABLE],
+            ros_parameters: dict = DEFAULTS[ROS_PARAMETERS]
+            ) -> None:
+        self.enable = enable
+        self.ros_parameters = ros_parameters
+        if config:
+            self.from_dict(config)
+
+    @property
+    def enable(self) -> bool:
+        return self._enable
+
+    @enable.setter
+    def enable(self, value: bool) -> None:
+        self._enable = bool(value)
+
+    @property
+    def ros_parameters(self) -> dict:
+        return self._ros_parameters
+
+    @ros_parameters.setter
+    def ros_parameters(self, value: dict) -> None:
+        assert isinstance(value, dict), (
+            f'MoveIt ROS parameters must be a dictionary. Got {value} instead.')
+        self._ros_parameters = value
+
+    def from_dict(self, d: dict) -> None:
+        if self.ENABLE in d:
+            self.enable = d[self.ENABLE]
+        if self.ROS_PARAMETERS in d:
+            self.ros_parameters = d[self.ROS_PARAMETERS]
+
+    def to_dict(self) -> dict:
+        return {
+            self.ENABLE: self.enable,
+            self.ROS_PARAMETERS: self.ros_parameters
+        }
+
+
 class ManipulatorListConfig(OrderedListConfig[BaseManipulator]):
 
     def __init__(self) -> None:
@@ -54,11 +112,13 @@ class ManipulatorListConfig(OrderedListConfig[BaseManipulator]):
 
 
 class ManipulatorConfig(BaseConfig):
+    MOVEIT = 'moveit'
     MANIPULATORS = "manipulators"
     ARMS = "arms"
     LIFTS = "lifts"
     TEMPLATE = {
         MANIPULATORS: {
+            MOVEIT: MOVEIT,
             ARMS: ARMS,
             LIFTS: LIFTS
         }
@@ -67,6 +127,7 @@ class ManipulatorConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
+        MOVEIT: MoveItConfig.DEFAULTS,
         ARMS: [],
         LIFTS: [],
     }
@@ -79,10 +140,27 @@ class ManipulatorConfig(BaseConfig):
         self._arms = ManipulatorListConfig()
         self._lifts = ManipulatorListConfig()
         template = {
+            self.KEYS[self.MOVEIT]: ManipulatorConfig.moveit,
             self.KEYS[self.ARMS]: ManipulatorConfig.arms,
             self.KEYS[self.LIFTS]: ManipulatorConfig.lifts
         }
         super().__init__(template, config, self.MANIPULATORS)
+
+    @property
+    def moveit(self) -> MoveItConfig:
+        self.set_config_param(
+            key=self.KEYS[self.MOVEIT],
+            value=self._moveit.to_dict()
+        )
+        return self._moveit
+
+    @moveit.setter
+    def moveit(self, value: dict) -> None:
+        assert isinstance(value, dict), (
+            f'MoveIt entry under Manipulators must be of type dict. Got {value}'
+        )
+        self._moveit = MoveItConfig()
+        self._moveit.from_dict(value)
 
     @property
     def arms(self) -> OrderedListConfig:
