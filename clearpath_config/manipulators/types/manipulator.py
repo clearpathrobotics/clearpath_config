@@ -66,7 +66,7 @@ class BaseManipulator(IndexedAccessory):
         super().__init__(idx, name, parent, xyz, rpy)
 
     def to_dict(self) -> dict:
-        d = {}
+        d = super().to_dict()
         d['model'] = self.get_manipulator_model()
         d['parent'] = self.get_parent()
         d['xyz'] = self.get_xyz()
@@ -75,6 +75,7 @@ class BaseManipulator(IndexedAccessory):
         return d
 
     def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
         if 'parent' in d:
             self.set_parent(d['parent'])
         if 'xyz' in d:
