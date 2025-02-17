@@ -205,4 +205,4 @@ class IndexedAccessory(Accessory):
     def set_idx(self, idx: int) -> None:
         assert isinstance(idx, int), 'Index must be an integer'
         assert idx >= 0, 'Index must be a positive integer'
-        self.name = self.get_name_from_idx(idx)
+        self.idx = idx
