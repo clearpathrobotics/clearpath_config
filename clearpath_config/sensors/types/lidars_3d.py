@@ -252,7 +252,7 @@ class SeyondLidar(BaseLidar3D):
     At present this lidar us URDF-only; launch files are handled by OutdoorNav
     """
 
-    SENSOR_MODEL = 'seyond'
+    SENSOR_MODEL = 'seyond_lidar'
 
     FRAME_ID = 'seyond'
 
