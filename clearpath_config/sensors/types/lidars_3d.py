@@ -243,3 +243,73 @@ class VelodyneLidar(BaseLidar3D):
             )
         )
         self._device_type = device_type
+
+
+class SeyondLidar(BaseLidar3D):
+    """
+    The Seyond Robin W
+
+    At present this lidar us URDF-only; launch files are handled by OutdoorNav
+    """
+
+    SENSOR_MODEL = 'seyond'
+
+    FRAME_ID = 'seyond'
+
+    ROBIN_W = 'robin_w'
+    DEVICE_TYPE = ROBIN_W
+    DEVICE_TYPES = (
+        ROBIN_W
+    )
+
+    class ROS_PARAMETER_KEYS:
+        FRAME_ID = 'seyond_driver.frame_id'
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseLidar3D.TOPIC,
+            frame_id: str = FRAME_ID,
+            ip: str = BaseLidar3D.IP_ADDRESS, # not used
+            port: int = 0,  # not used
+            device_type: str = DEVICE_TYPE,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = False,  # this sensor has no launch (yet)
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        # Device Type:
+        self.device_type = device_type
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: SeyondLidar.frame_id,
+        }
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            ip,
+            port,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+
+    @property
+    def device_type(self) -> str:
+        return self._device_type
+
+    @device_type.setter
+    def device_type(self, device_type: str) -> None:
+        assert device_type in self.DEVICE_TYPES, (
+            f'Device type "{device_type}" is not one of "{self.DEVICE_TYPES}"'
+        )
+        self._device_type = device_type
