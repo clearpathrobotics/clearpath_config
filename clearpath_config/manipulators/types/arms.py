@@ -246,9 +246,15 @@ class UniversalRobots(BaseArm):
 
 class Franka(BaseArm):
     MANIPULATOR_MODEL = 'franka'
+    FER = 'fer'
+    FP3 = 'fp3'
+    FR3 = 'fr3'
+    ARM_ID = 'arm_id'
+    ARM_IDS = [FER, FP3, FR3]
+    DEFAULT_ARM_ID = FR3
+    END_EFFECTOR_LINK = 'link8'
 
     # Description Variables
-    ARM_ID = 'arm_id'
     JOINT_LIMITS = 'joint_limits'
     JOINT_LIMITS_PARAMETERS_FILE = 'joint_limits_parameters_file'
     INERTIALS = 'inertials'
@@ -271,7 +277,6 @@ class Franka(BaseArm):
     CONNECTED_TO = 'connected_to'
 
     URDF_PARAMETERS = {
-        ARM_ID: '',
         JOINT_LIMITS: '',
         JOINT_LIMITS_PARAMETERS_FILE: '',
         INERTIALS: '',
@@ -293,6 +298,44 @@ class Franka(BaseArm):
         ARM_PREFIX: '',
         CONNECTED_TO: '',
     }
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            ip: str = BaseArm.DEFAULT_IP_ADDRESS,
+            port: int = BaseArm.DEFAULT_IP_PORT,
+            arm_id: str = DEFAULT_ARM_ID,
+            ros_parameters: dict = BaseManipulator.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseManipulator.ROS_PARAMETERS_TEMPLATE,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(
+            idx, name, ip, port, ros_parameters, ros_parameters_template, parent, xyz, rpy)
+        self.arm_id = arm_id
+
+    def from_dict(self, d: dict) -> None:
+        self.config = d
+        super().from_dict(d)
+        if 'gripper' in d:
+            self.gripper.arm_id = self.arm_id
+
+    @property
+    def arm_id(self) -> str:
+        return self._arm_id
+
+    @arm_id.setter
+    def arm_id(self, value: str) -> None:
+        assert value in self.ARM_IDS, (
+            f'Franka arm_id must be one of {self.ARM_IDS}, got: {value}')
+        self._arm_id = value
+
+    def set_idx(self, idx: int) -> None:
+        super().set_idx(idx)
+        if self.gripper:
+            self.gripper.parent = f'{self.name}_{self.arm_id}_{self.END_EFFECTOR_LINK}'
 
 
 class Arm():
