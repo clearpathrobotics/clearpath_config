@@ -255,6 +255,7 @@ class SeyondLidar(BaseLidar3D):
     SENSOR_MODEL = 'seyond_lidar'
 
     FRAME_ID = 'seyond'
+    IP_PORT = 0  # not used at present
 
     ROBIN_W = 'robin_w'
     DEVICE_TYPE = ROBIN_W
@@ -263,6 +264,7 @@ class SeyondLidar(BaseLidar3D):
     )
 
     class ROS_PARAMETER_KEYS:
+        FRAME_ID = 'seyond_driver.frame_id'
         IP_ADDRESS = 'seyond_driver.device_ip'
         IP_PORT = 'seyond_driver.port'
 
@@ -271,11 +273,12 @@ class SeyondLidar(BaseLidar3D):
             idx: int = None,
             name: str = None,
             topic: str = BaseLidar3D.TOPIC,
+            frame_id: str = FRAME_ID,
             ip: str = BaseLidar3D.IP_ADDRESS,  # not used
-            port: int = 0,  # not used
+            port: int = IP_PORT,  # not used
             device_type: str = DEVICE_TYPE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
-            launch_enabled: bool = False,  # this sensor has no launch (yet)
+            launch_enabled: bool = False,  # URDF-only for now
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
@@ -286,11 +289,14 @@ class SeyondLidar(BaseLidar3D):
         # ROS Parameter Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: SeyondLidar.frame_id,
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: SeyondLidar.ip,
+            self.ROS_PARAMETER_KEYS.IP_PORT: SeyondLidar.port,
         }
         super().__init__(
             idx,
             name,
             topic,
+            frame_id,
             ip,
             port,
             urdf_enabled,
