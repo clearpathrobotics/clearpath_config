@@ -263,14 +263,14 @@ class SeyondLidar(BaseLidar3D):
     )
 
     class ROS_PARAMETER_KEYS:
-        FRAME_ID = 'seyond_driver.frame_id'
+        IP_ADDRESS = 'seyond_driver.device_ip'
+        IP_PORT = 'seyond_driver.port'
 
     def __init__(
             self,
             idx: int = None,
             name: str = None,
             topic: str = BaseLidar3D.TOPIC,
-            frame_id: str = FRAME_ID,
             ip: str = BaseLidar3D.IP_ADDRESS, # not used
             port: int = 0,  # not used
             device_type: str = DEVICE_TYPE,
@@ -291,7 +291,6 @@ class SeyondLidar(BaseLidar3D):
             idx,
             name,
             topic,
-            frame_id,
             ip,
             port,
             urdf_enabled,
