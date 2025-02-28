@@ -247,7 +247,7 @@ class VelodyneLidar(BaseLidar3D):
 
 class SeyondLidar(BaseLidar3D):
     """
-    The Seyond Robin W
+    The Seyond Robin W.
 
     At present this lidar us URDF-only; launch files are handled by OutdoorNav
     """
@@ -271,7 +271,7 @@ class SeyondLidar(BaseLidar3D):
             idx: int = None,
             name: str = None,
             topic: str = BaseLidar3D.TOPIC,
-            ip: str = BaseLidar3D.IP_ADDRESS, # not used
+            ip: str = BaseLidar3D.IP_ADDRESS,  # not used
             port: int = 0,  # not used
             device_type: str = DEVICE_TYPE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
