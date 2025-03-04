@@ -1,0 +1,10 @@
+serial_number: a300-0000
+version: 0
+sensors:
+  lidar3d:
+    - model: seyond_lidar
+      urdf_enabled: true
+      launch_enabled: false
+      parent: default_mount
+      xyz: [0.2, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
