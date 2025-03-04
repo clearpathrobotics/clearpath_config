@@ -848,6 +848,7 @@ class LuxonisOAKD(BaseCamera):
     FPS = 30.0
 
     class ROS_PARAMETER_KEYS:
+        DEVICE_TYPE = 'oakd.device_type'
         FPS = 'oakd.rgb.i_fps'
         STEREO_FPS = 'oakd.stereo.i_fps'
         SERIAL = 'oakd.rgb.i_usb_port_id'
@@ -904,10 +905,12 @@ class LuxonisOAKD(BaseCamera):
         self.width = LuxonisOAKD.WIDTH
         self.stereo_fps = stereo_fps
 
+        self.device_type = device_type
         self.ip_address = ip_address
 
         # ROS Parameter Template
         ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.DEVICE_TYPE: LuxonisOAKD.device_type,
             self.ROS_PARAMETER_KEYS.FPS: LuxonisOAKD.fps,
             self.ROS_PARAMETER_KEYS.STEREO_FPS: LuxonisOAKD.stereo_fps,
             self.ROS_PARAMETER_KEYS.SERIAL: LuxonisOAKD.serial,
@@ -939,6 +942,20 @@ class LuxonisOAKD(BaseCamera):
             LuxonisOAKD.TOPICS.POINTCLOUD: LuxonisOAKD.stereo_fps,
             # Tracking of the IMU rate is not currently supported
         }
+
+    @property
+    def device_type(self) -> str:
+        return self._device_type
+
+    @device_type.setter
+    def device_type(self, device_type: str) -> None:
+        assert device_type in self.DEVICE_TYPES, (
+            'Device type "%s" is not one of "%s"' % (
+                device_type,
+                self.DEVICE_TYPES
+            )
+        )
+        self._device_type = device_type
 
     @property
     def width(self) -> int:
