@@ -834,8 +834,13 @@ class LuxonisOAKD(BaseCamera):
 
     PRO = 'pro'
     LITE = 'lite'
+    PRO_W_POE = 'pro_w_poe'
     DEVICE_TYPE = PRO
-    DEVICE_TYPES = (PRO, LITE)
+    DEVICE_TYPES = (
+        PRO,
+        LITE,
+        PRO_W_POE,
+    )
 
     HEIGHT = 720
     WIDTH = 1280
@@ -848,6 +853,7 @@ class LuxonisOAKD(BaseCamera):
         SERIAL = 'oakd.rgb.i_usb_port_id'
         HEIGHT = 'oakd.rgb.i_height'
         WIDTH = 'oakd.rgb.i_width'
+        IP_ADDRESS = 'oakd.ip_address'
 
     class TOPICS:
         COLOR_IMAGE = 'color_image'
@@ -889,13 +895,16 @@ class LuxonisOAKD(BaseCamera):
             ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
+            rpy: List[float] = Accessory.RPY,
+            ip_address: str = None,  # only relevant for PoE models
             ) -> None:
 
         # Resolution
         self.height = LuxonisOAKD.HEIGHT
         self.width = LuxonisOAKD.WIDTH
         self.stereo_fps = stereo_fps
+
+        self.ip_address = ip_address
 
         # ROS Parameter Template
         ros_parameters_template = {
@@ -904,6 +913,7 @@ class LuxonisOAKD(BaseCamera):
             self.ROS_PARAMETER_KEYS.SERIAL: LuxonisOAKD.serial,
             self.ROS_PARAMETER_KEYS.HEIGHT: LuxonisOAKD.height,
             self.ROS_PARAMETER_KEYS.WIDTH: LuxonisOAKD.width,
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: LuxonisOAKD.ip_address
         }
         super().__init__(
             idx,
@@ -963,6 +973,18 @@ class LuxonisOAKD(BaseCamera):
     def stereo_fps(self, fps: float) -> None:
         BaseSensor.assert_valid_rate(fps)
         self._stereo_fps = float(fps)
+
+    @property
+    def ip_address(self) -> str:
+        return self._ip_address
+
+    @ip_address.setter
+    def ip_address(self, addr: str) -> None:
+        if addr is not None:
+            # non-PoE models should have None for their address
+            # only validate the address if necessary
+            BaseSensor.assert_is_ipv4_address(addr)
+        self._ip_address = addr
 
 
 class AxisCamera(BaseCamera):
