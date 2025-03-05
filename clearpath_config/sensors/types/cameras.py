@@ -1017,8 +1017,8 @@ class LuxonisOAKD(BaseCamera):
         return self._mx_id
 
     @mx_id.setter
-    def mx_id(self, id: str) -> None:
-        self._mx_id = id
+    def mx_id(self, mx_id: str) -> None:
+        self._mx_id = mx_id
 
 
 class AxisCamera(BaseCamera):
