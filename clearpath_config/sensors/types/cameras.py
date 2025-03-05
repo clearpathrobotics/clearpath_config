@@ -1006,7 +1006,7 @@ class LuxonisOAKD(BaseCamera):
 
     @ip_address.setter
     def ip_address(self, addr: str) -> None:
-        if addr is not None:
+        if addr is not None and len(addr) > 0:
             # non-PoE models should have None for their address
             # only validate the address if necessary
             BaseSensor.assert_is_ipv4_address(addr)
