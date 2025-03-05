@@ -830,7 +830,7 @@ class StereolabsZed(BaseCamera):
 class LuxonisOAKD(BaseCamera):
     SENSOR_MODEL = 'luxonis_oakd'
 
-    SERIAL = 0
+    SERIAL = None
 
     PRO = 'pro'
     LITE = 'lite'
@@ -849,12 +849,19 @@ class LuxonisOAKD(BaseCamera):
 
     class ROS_PARAMETER_KEYS:
         DEVICE_TYPE = 'oakd.device_type'
+
+        # RGB parameters
         FPS = 'oakd.rgb.i_fps'
-        STEREO_FPS = 'oakd.stereo.i_fps'
-        SERIAL = 'oakd.rgb.i_usb_port_id'
         HEIGHT = 'oakd.rgb.i_height'
         WIDTH = 'oakd.rgb.i_width'
-        IP_ADDRESS = 'oakd.ip_address'
+
+        # Stereo parameters
+        STEREO_FPS = 'oakd.stereo.i_fps'
+
+        # General camera parameters
+        IP_ADDRESS = 'oakd.camera.i_ip'
+        MX_ID = 'oakd.camera.i_mx_id'
+        SERIAL = 'oakd.camera.i_usb_port_id'
 
     class TOPICS:
         COLOR_IMAGE = 'color_image'
@@ -888,7 +895,7 @@ class LuxonisOAKD(BaseCamera):
             topic: str = BaseCamera.TOPIC,
             fps: int = FPS,
             stereo_fps: int = FPS,
-            serial: str = BaseCamera.SERIAL,
+            serial: str = SERIAL,
             device_type: str = DEVICE_TYPE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
@@ -898,6 +905,7 @@ class LuxonisOAKD(BaseCamera):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
             ip_address: str = None,  # only relevant for PoE models
+            mx_id: str = None,  # optional ID for multiple cameras
             ) -> None:
 
         # Resolution
@@ -907,6 +915,7 @@ class LuxonisOAKD(BaseCamera):
 
         self.device_type = device_type
         self.ip_address = ip_address
+        self.mx_id = mx_id
 
         # ROS Parameter Template
         ros_parameters_template = {
@@ -1002,6 +1011,14 @@ class LuxonisOAKD(BaseCamera):
             # only validate the address if necessary
             BaseSensor.assert_is_ipv4_address(addr)
         self._ip_address = addr
+
+    @property
+    def mx_id(self) -> str:
+        return self._mx_id
+
+    @mx_id.setter
+    def mx_id(self, id: str) -> None:
+        self._mx_id = id
 
 
 class AxisCamera(BaseCamera):
