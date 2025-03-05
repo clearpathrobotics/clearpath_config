@@ -237,8 +237,16 @@ class IntelRealsense(BaseCamera):
     D415 = 'd415'
     D435 = 'd435'
     D435i = 'd435i'
+    D455 = 'd455'
+    D456 = 'd456'
     DEVICE_TYPE = D435
-    DEVICE_TYPES = (D415, D435, D435i)
+    DEVICE_TYPES = (
+        D415,
+        D435,
+        D435i,
+        D455,
+        D456,
+    )
 
     COLOR_ENABLED = True
     COLOR_FPS = 30
