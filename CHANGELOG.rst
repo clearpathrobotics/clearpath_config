@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.1.1 (2025-03-06)
+------------------
 * Fixed docs link for Robot YAML. (`#125 <https://github.com/clearpathrobotics/clearpath_config/issues/125>`_)
 * Add filter to IMU entry (`#116 <https://github.com/clearpathrobotics/clearpath_config/issues/116>`_)
   * Add filter to IMU entry
