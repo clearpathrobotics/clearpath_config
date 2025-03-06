@@ -2,6 +2,15 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed docs link for Robot YAML. (`#125 <https://github.com/clearpathrobotics/clearpath_config/issues/125>`_)
+* Add filter to IMU entry (`#116 <https://github.com/clearpathrobotics/clearpath_config/issues/116>`_)
+  * Add filter to IMU entry
+  * Enable mag only for Phidgets
+  * Add DATA topic to Phidget
+* Contributors: Tony Baltovski, luis-camero
+
 1.1.0 (2025-01-15)
 ------------------
 * Added Ewellix Lift (`#109 <https://github.com/clearpathrobotics/clearpath_config/issues/109>`_)
