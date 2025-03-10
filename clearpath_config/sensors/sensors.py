@@ -55,6 +55,10 @@ from clearpath_config.sensors.types.imu import (
     PhidgetsSpatial,
     RedshiftUM7,
 )
+from clearpath_config.sensors.types.ins import (
+    BaseINS,
+    Fixposition,
+)
 from clearpath_config.sensors.types.lidars_2d import (
     BaseLidar2D,
     HokuyoUST,
@@ -176,6 +180,21 @@ class Lidar3D():
         return cls.MODEL[model]()
 
 
+class INS():
+    FIXPOSITION_INS = Fixposition.SENSOR_MODEL
+
+    MODEL = {
+        FIXPOSITION_INS: Fixposition
+    }
+
+    @classmethod
+    def assert_model(cls, model: str) -> None:
+        assert model in cls.MODEL, f'Model "{model}" must be one of "{cls.MODEL.keys()}"'
+
+    def __new__(cls, model: str) -> BaseINS:
+        cls.assert_model(model)
+        return cls.MODEL[model]()
+
 class Sensor():
     CAMERA = BaseCamera.SENSOR_TYPE
     LIDAR2D = BaseLidar2D.SENSOR_TYPE
@@ -226,6 +245,7 @@ class SensorConfig(BaseConfig):
     GPS = BaseGPS.SENSOR_TYPE
     LIDAR2D = BaseLidar2D.SENSOR_TYPE
     LIDAR3D = BaseLidar3D.SENSOR_TYPE
+    INS = BaseINS.SENSOR_TYPE
 
     TEMPLATE = {
         SENSORS: {
@@ -233,7 +253,8 @@ class SensorConfig(BaseConfig):
             IMU: IMU,
             GPS: GPS,
             LIDAR2D: LIDAR2D,
-            LIDAR3D: LIDAR3D
+            LIDAR3D: LIDAR3D,
+            INS: INS,
         }
     }
 
@@ -244,7 +265,8 @@ class SensorConfig(BaseConfig):
         GPS: [],
         IMU: [],
         LIDAR2D: [],
-        LIDAR3D: []
+        LIDAR3D: [],
+        INS: [],
     }
 
     def __init__(
@@ -254,7 +276,8 @@ class SensorConfig(BaseConfig):
             gps: List[BaseGPS] = DEFAULTS[GPS],
             imu: List[BaseIMU] = DEFAULTS[IMU],
             lidar2d: List[BaseLidar2D] = DEFAULTS[LIDAR2D],
-            lidar3d: List[BaseLidar3D] = DEFAULTS[LIDAR3D]
+            lidar3d: List[BaseLidar3D] = DEFAULTS[LIDAR3D],
+            ins: List[BaseINS] = DEFAULTS[INS],
             ) -> None:
         # List Initialization
         self._camera = SensorListConfig()
@@ -262,12 +285,14 @@ class SensorConfig(BaseConfig):
         self._imu = SensorListConfig()
         self._lidar2d = SensorListConfig()
         self._lidar3d = SensorListConfig()
+        self._ins = SensorListConfig()
         # Initialization
         self.camera = camera
         self.gps = gps
         self.imu = imu
         self.lidar2d = lidar2d
         self.lidar3d = lidar3d
+        self.ins = ins
         # Template
         template = {
             self.KEYS[self.CAMERA]: SensorConfig.camera,
@@ -275,6 +300,7 @@ class SensorConfig(BaseConfig):
             self.KEYS[self.IMU]: SensorConfig.imu,
             self.KEYS[self.LIDAR2D]: SensorConfig.lidar2d,
             self.KEYS[self.LIDAR3D]: SensorConfig.lidar3d,
+            self.KEYS[self.INS]: SensorConfig.ins,
         }
         super().__init__(template, config, self.SENSORS)
 
@@ -287,6 +313,7 @@ class SensorConfig(BaseConfig):
             self._imu.set_index_offset(index.imu)
             self._lidar2d.set_index_offset(index.lidar2d)
             self._lidar3d.set_index_offset(index.lidar3d)
+            self._ins.set_index_offset(index.ins)
 
     @property
     def camera(self) -> OrderedListConfig:
@@ -402,6 +429,32 @@ class SensorConfig(BaseConfig):
             sensor.from_dict(d)
             sensor_list.append(sensor)
         self._lidar3d.set_all(sensor_list)
+
+    @property
+    def ins(self) -> OrderedListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.INS],
+            value=self._ins.to_dict()
+        )
+        return self._ins
+
+    @ins.setter
+    def ins(self, value: List[dict]) -> None:
+        assert isinstance(value, list), (
+            'Sensors must be list of "dict"'
+        )
+        assert all([isinstance(d, dict) for d in value]), (  # noqa: C419
+            'Sensors must be list of "dict"'
+        )
+        assert all(['model' in d for d in value]), (  # noqa: C419
+            'Sensor "dict" must have "model" key'
+        )
+        sensor_list = []
+        for d in value:
+            sensor = INS(d['model'])
+            sensor.from_dict(d)
+            sensor_list.append(sensor)
+        self._ins.set_all(sensor_list)
 
     # Get All Sensors
     def get_all_sensors(self) -> List[BaseSensor]:
