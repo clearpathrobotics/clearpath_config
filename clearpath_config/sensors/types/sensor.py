@@ -131,6 +131,12 @@ class BaseSensor(IndexedAccessory):
             'Rate "%s" must be a positive integer or float.' % rate
         )
 
+    @staticmethod
+    def assert_is_ipv4_address(addr: str) -> None:
+        import re
+        ipv4_re = re.compile(r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$')
+        assert re.match(ipv4_re, addr) is not None
+
     @classmethod
     def get_sensor_type(cls) -> str:
         return cls.SENSOR_TYPE
