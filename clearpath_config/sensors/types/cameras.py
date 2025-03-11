@@ -237,8 +237,16 @@ class IntelRealsense(BaseCamera):
     D415 = 'd415'
     D435 = 'd435'
     D435i = 'd435i'
+    D455 = 'd455'
+    D456 = 'd456'
     DEVICE_TYPE = D435
-    DEVICE_TYPES = (D415, D435, D435i)
+    DEVICE_TYPES = (
+        D415,
+        D435,
+        D435i,
+        D455,
+        D456,
+    )
 
     COLOR_ENABLED = True
     COLOR_FPS = 30
@@ -830,12 +838,17 @@ class StereolabsZed(BaseCamera):
 class LuxonisOAKD(BaseCamera):
     SENSOR_MODEL = 'luxonis_oakd'
 
-    SERIAL = 0
+    SERIAL = None
 
     PRO = 'pro'
     LITE = 'lite'
+    PRO_W_POE = 'pro_w_poe'
     DEVICE_TYPE = PRO
-    DEVICE_TYPES = (PRO, LITE)
+    DEVICE_TYPES = (
+        PRO,
+        LITE,
+        PRO_W_POE,
+    )
 
     HEIGHT = 720
     WIDTH = 1280
@@ -843,11 +856,20 @@ class LuxonisOAKD(BaseCamera):
     FPS = 30.0
 
     class ROS_PARAMETER_KEYS:
+        DEVICE_TYPE = 'oakd.device_type'
+
+        # RGB parameters
         FPS = 'oakd.rgb.i_fps'
-        STEREO_FPS = 'oakd.stereo.i_fps'
-        SERIAL = 'oakd.rgb.i_usb_port_id'
         HEIGHT = 'oakd.rgb.i_height'
         WIDTH = 'oakd.rgb.i_width'
+
+        # Stereo parameters
+        STEREO_FPS = 'oakd.stereo.i_fps'
+
+        # General camera parameters
+        IP_ADDRESS = 'oakd.camera.i_ip'
+        MX_ID = 'oakd.camera.i_mx_id'
+        SERIAL = 'oakd.camera.i_usb_port_id'
 
     class TOPICS:
         COLOR_IMAGE = 'color_image'
@@ -881,7 +903,7 @@ class LuxonisOAKD(BaseCamera):
             topic: str = BaseCamera.TOPIC,
             fps: int = FPS,
             stereo_fps: int = FPS,
-            serial: str = BaseCamera.SERIAL,
+            serial: str = SERIAL,
             device_type: str = DEVICE_TYPE,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
@@ -889,7 +911,9 @@ class LuxonisOAKD(BaseCamera):
             ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
+            rpy: List[float] = Accessory.RPY,
+            ip_address: str = None,  # only relevant for PoE models
+            mx_id: str = None,  # optional ID for multiple cameras
             ) -> None:
 
         # Resolution
@@ -897,13 +921,19 @@ class LuxonisOAKD(BaseCamera):
         self.width = LuxonisOAKD.WIDTH
         self.stereo_fps = stereo_fps
 
+        self.device_type = device_type
+        self.ip_address = ip_address
+        self.mx_id = mx_id
+
         # ROS Parameter Template
         ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.DEVICE_TYPE: LuxonisOAKD.device_type,
             self.ROS_PARAMETER_KEYS.FPS: LuxonisOAKD.fps,
             self.ROS_PARAMETER_KEYS.STEREO_FPS: LuxonisOAKD.stereo_fps,
             self.ROS_PARAMETER_KEYS.SERIAL: LuxonisOAKD.serial,
             self.ROS_PARAMETER_KEYS.HEIGHT: LuxonisOAKD.height,
             self.ROS_PARAMETER_KEYS.WIDTH: LuxonisOAKD.width,
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: LuxonisOAKD.ip_address
         }
         super().__init__(
             idx,
@@ -929,6 +959,20 @@ class LuxonisOAKD(BaseCamera):
             LuxonisOAKD.TOPICS.POINTCLOUD: LuxonisOAKD.stereo_fps,
             # Tracking of the IMU rate is not currently supported
         }
+
+    @property
+    def device_type(self) -> str:
+        return self._device_type
+
+    @device_type.setter
+    def device_type(self, device_type: str) -> None:
+        assert device_type in self.DEVICE_TYPES, (
+            'Device type "%s" is not one of "%s"' % (
+                device_type,
+                self.DEVICE_TYPES
+            )
+        )
+        self._device_type = device_type
 
     @property
     def width(self) -> int:
@@ -963,6 +1007,26 @@ class LuxonisOAKD(BaseCamera):
     def stereo_fps(self, fps: float) -> None:
         BaseSensor.assert_valid_rate(fps)
         self._stereo_fps = float(fps)
+
+    @property
+    def ip_address(self) -> str:
+        return self._ip_address
+
+    @ip_address.setter
+    def ip_address(self, addr: str) -> None:
+        if addr is not None and len(addr) > 0:
+            # non-PoE models should have None for their address
+            # only validate the address if necessary
+            BaseSensor.assert_is_ipv4_address(addr)
+        self._ip_address = addr
+
+    @property
+    def mx_id(self) -> str:
+        return self._mx_id
+
+    @mx_id.setter
+    def mx_id(self, mx_id: str) -> None:
+        self._mx_id = mx_id
 
 
 class AxisCamera(BaseCamera):

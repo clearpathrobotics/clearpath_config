@@ -62,6 +62,8 @@ from clearpath_config.sensors.types.lidars_2d import (
 )
 from clearpath_config.sensors.types.lidars_3d import (
     BaseLidar3D,
+    OusterOS1,
+    SeyondLidar,
     VelodyneLidar,
 )
 from clearpath_config.sensors.types.sensor import BaseSensor
@@ -155,10 +157,14 @@ class Lidar2D():
 
 
 class Lidar3D():
+    OUSTER_OS1 = OusterOS1.SENSOR_MODEL
+    SEYOND_LIDAR = SeyondLidar.SENSOR_MODEL
     VELODYNE_LIDAR = VelodyneLidar.SENSOR_MODEL
 
     MODEL = {
-        VELODYNE_LIDAR: VelodyneLidar
+        OUSTER_OS1: OusterOS1,
+        SEYOND_LIDAR: SeyondLidar,
+        VELODYNE_LIDAR: VelodyneLidar,
     }
 
     @classmethod
