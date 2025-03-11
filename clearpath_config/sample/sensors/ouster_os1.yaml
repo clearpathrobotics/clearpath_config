@@ -1,0 +1,18 @@
+serial_number: a200-0000
+version: 0
+sensors:
+  lidar3d:
+    - model: ouster_os1
+      urdf_enabled: true
+      launch_enabled: true
+      parent: default_mount
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        ouster_driver:
+          sensor_hostname: 192.168.131.20
+          udp_dest: 192.168.131.100
+          lidar_port: 7502
+          imu_port: 7503
+          proc_mask: IMU|PCL|SCAN|IMG|RAW|TLM
+          use_system_default_qos: false
