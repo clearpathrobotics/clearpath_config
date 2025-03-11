@@ -2,6 +2,25 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feature Jazzy Ouster (`#132 <https://github.com/clearpathrobotics/clearpath_config/issues/132>`_)
+  * Add OusterOS1
+  * Add ouster sample
+  * Alphabetical entries to Lidar3D models
+* Add D455, D456 to supported devices (`#136 <https://github.com/clearpathrobotics/clearpath_config/issues/136>`_)
+* Add support for OAK-D Pro W PoE (`#135 <https://github.com/clearpathrobotics/clearpath_config/issues/135>`_)
+  * Add OAK-D Pro W PoE to sensor types. Add IP address field to OAK-D camera class, defaulting to None (for non-PoE models). Add a new assertion to validate IPv4 addresses
+  * Support the `device_type` parameter for OAK-D cameras
+  * Add i_mx_id, i_ip for identifying multiple cameras. Fix serial so it maps to i_usb_port_id
+  * Rename variable to avoid overwriting python builtin
+  * Allow empty strings as well as None for the IP address
+  * Add assert_is_ipv4_address to BaseSensor
+* Add URDF-only support for the Seyond Robin W (`#131 <https://github.com/clearpathrobotics/clearpath_config/issues/131>`_)
+  * Add the SeyondLidar class
+  * Add sample for the Seyond Robin W
+* Contributors: Chris Iverach-Brereton, luis-camero
+
 2.1.1 (2025-02-05)
 ------------------
 * Fixed docs link for Robot YAML. (`#124 <https://github.com/clearpathrobotics/clearpath_config/issues/124>`_)
