@@ -40,7 +40,7 @@ for path, dirs, files in os.walk(os.path.join(package_name, 'sample')):
 
 setup(
     name=package_name,
-    version='2.1.1',
+    version='2.2.0',
     packages=[
         package_name,
         package_name + '.common',
