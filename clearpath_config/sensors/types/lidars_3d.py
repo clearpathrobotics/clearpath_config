@@ -276,3 +276,67 @@ class VelodyneLidar(BaseLidar3D):
 
     def set_device_type(self, device_type: str) -> None:
         self.device_type = device_type
+
+
+class OusterOS1(BaseLidar3D):
+    SENSOR_MODEL = 'ouster_os1'
+
+    FRAME_ID = 'sensor_link'
+    IP_PORT = 7502
+    IP_COMPUTER_ADDRESS = '192.168.131.1'
+
+    class ROS_PARAMETER_KEYS:
+        FRAME_ID = 'ouster_driver.lidar_frame'
+        SENSOR_FRAME_ID = 'ouster_driver.sensor_frame'
+        IMU_FRAME_ID = 'ouster_driver.imu_frame'
+        PCL_FRAME_ID = 'ouster_driver.point_cloud_frame'
+        IP_PORT = 'ouster_driver.lidar_port'
+        IP_ADDRESS = 'ouster_driver.sensor_hostname'
+        IP_COMPUTER = 'ouster_driver.udp_dest'
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseLidar3D.TOPIC,
+            frame_id: str = FRAME_ID,
+            ip: str = BaseLidar3D.IP_ADDRESS,
+            port: int = IP_PORT,
+            computer_ip: str = IP_COMPUTER_ADDRESS,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.IP_COMPUTER: OusterOS1.computer_ip,
+            self.ROS_PARAMETER_KEYS.IMU_FRAME_ID: OusterOS1.frame_id,
+            self.ROS_PARAMETER_KEYS.SENSOR_FRAME_ID: OusterOS1.frame_id,
+            self.ROS_PARAMETER_KEYS.PCL_FRAME_ID: OusterOS1.frame_id,
+        }
+        self.computer_ip = computer_ip
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            ip,
+            port,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+
+    @property
+    def computer_ip(self) -> str:
+        return str(self._computer_ip)
+
+    @computer_ip.setter
+    def computer_ip(self, ip: str) -> None:
+        self._computer_ip = IP(str(ip))
