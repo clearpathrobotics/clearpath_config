@@ -7,6 +7,9 @@ system:
   ros2:
     namespace: a300_0000
 platform:
+  battery:
+    model: S_24V20_U1
+    configuration: S1P2
   attachments:
     - name: front_bumper
       type: a300.bumper
