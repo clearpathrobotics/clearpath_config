@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.2.0 (2025-03-13)
+------------------
 * Feature Franka (`#133 <https://github.com/clearpathrobotics/clearpath_config/issues/133>`_)
 * Feature Humble Ouster (`#123 <https://github.com/clearpathrobotics/clearpath_config/issues/123>`_)
 * Feature: MoveIt Parameters and Enable (`#128 <https://github.com/clearpathrobotics/clearpath_config/issues/128>`_)
