@@ -12,6 +12,9 @@ system:
       implementation: rmw_fastrtps_cpp
     workspaces: []
 platform:
+  battery:
+    model: S_24V20_U1
+    configuration: S1P2
   controller: ps4
   attachments:
     - name: front_bumper
