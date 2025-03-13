@@ -2,6 +2,15 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feature Franka (`#133 <https://github.com/clearpathrobotics/clearpath_config/issues/133>`_)
+* Feature Humble Ouster (`#123 <https://github.com/clearpathrobotics/clearpath_config/issues/123>`_)
+* Feature: MoveIt Parameters and Enable (`#128 <https://github.com/clearpathrobotics/clearpath_config/issues/128>`_)
+* Feature: Manipulator Samples and Poses (`#127 <https://github.com/clearpathrobotics/clearpath_config/issues/127>`_)
+* Feature: Link Material (`#126 <https://github.com/clearpathrobotics/clearpath_config/issues/126>`_)
+* Contributors: Luis Camero
+
 1.1.1 (2025-03-06)
 ------------------
 * Fixed docs link for Robot YAML. (`#125 <https://github.com/clearpathrobotics/clearpath_config/issues/125>`_)
