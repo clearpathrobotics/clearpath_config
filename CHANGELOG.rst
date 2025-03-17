@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.1 (2025-03-17)
+------------------
 * Added battery to A300 samples.
 * Contributors: Tony Baltovski
 
