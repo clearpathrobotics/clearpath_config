@@ -177,6 +177,39 @@ class Fixposition(BaseINS):
         XVN
     )
 
+    def __init__(
+        self,
+        idx: int = None,
+        name: str = None,
+        topic: str = BaseINS.ODOM_TOPIC,
+        frame_id: str = BaseINS.FRAME_ID,
+        urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+        launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
+        ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
+        ros_parameters_template: dict = BaseSensor.ROS_PARAMETERS_TEMPLATE,
+        parent: str = Accessory.PARENT,
+        xyz: List[float] = Accessory.XYZ,
+        rpy: List[float] = Accessory.RPY,
+        antennas: List[InsAntenna] = BaseINS.DEFAULT_ANTENNAS,
+        device_type: str = DEVICE_TYPE,
+    ):
+        self.device_type = device_type
+
+        super().__init__(
+            idx=idx,
+            name=name,
+            topic=topic,
+            frame_id=frame_id,
+            urdf_enabled=urdf_enabled,
+            launch_enabled=launch_enabled,
+            ros_parameters=ros_parameters,
+            ros_parameters_template=ros_parameters_template,
+            parent=parent,
+            xyz=xyz,
+            rpy=rpy,
+            antennas=antennas,
+        )
+
     @property
     def device_type(self) -> str:
         return self._device_type
