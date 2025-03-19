@@ -54,11 +54,17 @@ class Kinova2FLite(BaseGripper):
 class Robotiq2F85(BaseGripper):
     MANIPULATOR_MODEL = "robotiq_2f_85"
     JOINT_COUNT = 1
+    URDF_PARAMETERS = {
+        'com_port': ''
+    }
 
 
 class Robotiq2F140(BaseGripper):
     MANIPULATOR_MODEL = "robotiq_2f_140"
     JOINT_COUNT = 1
+    URDF_PARAMETERS = {
+        'com_port': ''
+    }
 
 
 class Gripper():
