@@ -38,6 +38,8 @@ class BaseManipulator(IndexedAccessory):
     MANIPULATOR_TYPE = 'manipulator'
     ROS_PARAMETERS = {}
     ROS_PARAMETERS_TEMPLATE = {}
+    JOINT_COUNT = 0
+    URDF_PARAMETERS = {}
 
     class ROSParameter:
         def __init__(
@@ -63,6 +65,8 @@ class BaseManipulator(IndexedAccessory):
         # ROS Parameters
         self.ros_parameters_template = ros_parameters_template
         self.ros_parameters = ros_parameters
+        # URDF Parameters
+        self.urdf_parameters = dict(self.URDF_PARAMETERS)
         super().__init__(idx, name, parent, xyz, rpy)
 
     def to_dict(self) -> dict:
@@ -72,6 +76,12 @@ class BaseManipulator(IndexedAccessory):
         d['xyz'] = self.get_xyz()
         d['rpy'] = self.get_rpy()
         d['ros_parameters'] = self.get_ros_parameters()
+        d['poses'] = []
+        for pose in self.poses:
+            d['poses'].append(pose.to_dict())
+        for k, v in self.urdf_parameters.items():
+            if v:
+                d[k] = v
         return d
 
     def from_dict(self, d: dict) -> None:
@@ -83,6 +93,11 @@ class BaseManipulator(IndexedAccessory):
             self.set_rpy(d['rpy'])
         if 'ros_parameters' in d:
             self.set_ros_parameters(d['ros_parameters'])
+        if 'poses' in d:
+            self.poses = d['poses']
+        for k in self.urdf_parameters:
+            if k in d:
+                self.urdf_parameters[k] = d[k]
 
     @classmethod
     def get_manipulator_model(cls) -> str:
@@ -144,3 +159,24 @@ class BaseManipulator(IndexedAccessory):
 
     def getter(self, prop: property):
         return prop.fget.__get__(self)
+
+    @property
+    def poses(self) -> List:
+        return self._poses
+
+    @poses.setter
+    def poses(self, pose_list: List) -> None:
+        assert isinstance(pose_list, list), ('List of poses must be of type list.')
+        poses_ = []
+        for pose in pose_list:
+            manipulator_pose = ManipulatorPose(self.JOINT_COUNT)
+            manipulator_pose.from_dict(pose)
+            poses_.append(manipulator_pose)
+        self._poses = poses_
+
+    def get_urdf_parameters(self) -> dict:
+        d = {}
+        for k, v in self.urdf_parameters.items():
+            if v:
+                d[k] = v
+        return d
