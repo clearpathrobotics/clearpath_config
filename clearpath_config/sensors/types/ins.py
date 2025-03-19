@@ -152,7 +152,7 @@ class BaseINS(BaseSensor):
 
     @antennas.setter
     def antennas(self, antennas: List[InsAntenna]) -> None:
-        self._antenas = []
+        self._antennas = []
         for a in antennas:
             self._antennas.append(a)
         assert len(self.antennas) >= 1, 'Must include at least 1 antenna'
@@ -169,7 +169,7 @@ class BaseINS(BaseSensor):
 
 
 class Fixposition(BaseINS):
-    SENSOR_TYPE = 'fixposition'
+    SENSOR_MODEL = 'fixposition'
 
     XVN = 'xvn'
     DEVICE_TYPE = XVN
