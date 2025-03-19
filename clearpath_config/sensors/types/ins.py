@@ -39,7 +39,7 @@ class InsAntenna(Accessory):
     """
     Container class for the GNSS antenna(s) used by the INS sensor
 
-    Supports 2 types
+    Supports 3 types
     """
     # antenna type
     TYPE_HELICAL = 'helical'
