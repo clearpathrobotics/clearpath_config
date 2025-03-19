@@ -146,6 +146,21 @@ class BaseINS(BaseSensor):
             rpy=rpy,
         )
 
+    def from_dict(self, d):
+        super().from_dict(d)
+
+        if 'antennas' in d:
+            antennas = []
+            i = 0
+            for antenna_dict in d['antennas']:
+                antennas.append(InsAntenna(
+                    idx=i,
+                    prefix=f'ins_{self.idx}',
+                    **antenna_dict
+                ))
+                i += 1
+            self.antennas = antennas
+
     @property
     def antennas(self) -> List[InsAntenna]:
         return self._antennas
