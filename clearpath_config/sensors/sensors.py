@@ -469,6 +469,8 @@ class SensorConfig(BaseConfig):
         sensors.extend(self.get_all_imu())
         # GPS
         sensors.extend(self.get_all_gps())
+        # INS
+        sensors.extend(self.get_all_ins())
         return sensors
 
     # Lidar2D: Add Lidar2D by Object or Common Lidar2D Parameters
@@ -1035,7 +1037,7 @@ class SensorConfig(BaseConfig):
                 all_model_gps.append(gps)
         return all_model_gps
 
-    # GPS: Get All Objects of Model UST
+    # GPS: Get All Objects of Model Duro
     def get_all_duro(self) -> List[SwiftNavDuro]:
         return self.get_all_gps_by_model(
             GlobalPositioningSystem.SWIFTNAV_DURO)
@@ -1047,3 +1049,32 @@ class SensorConfig(BaseConfig):
     # GPS: Set All GPS Objects
     def set_all_gps(self, all_gps: List[BaseGPS]) -> None:
         self._gps.set_all(all_gps)
+
+    # INS: Remove INS by passing object or index
+    def remove_ins(self, ins:  BaseINS | int) -> None:
+        self._ins.remove(ins)
+
+    # INS: Get Single Object
+    def get_ins(self, idx: int) -> BaseINS:
+        return self._ins.get(idx)
+
+    # INS: Get All Objects
+    def get_all_ins(self) -> List[BaseINS]:
+        return self._ins.get_all()
+
+    # INS: Get All Objects of a Specified Model
+    def get_all_ins_by_model(self, model: str) -> List[BaseINS]:
+        INS.assert_model(model)
+        all_model_ins = []
+        for ins in self.get_all_ins():
+            if ins.SENSOR_MODEL == model:
+                all_model_ins.append(ins)
+        return all_model_ins
+
+    # INS: Set INS Object
+    def set_ins(self, ins:  BaseINS) -> None:
+        self._ins.set(ins)
+
+    # INS: Set All INS Objects
+    def set_all_ins(self, all_ins: List[BaseINS]) -> None:
+        self._ins.set_all(all_ins)
