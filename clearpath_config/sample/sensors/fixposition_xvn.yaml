@@ -1,0 +1,11 @@
+serial_number: a300-0000
+version: 0
+sensors:
+  ins:
+    - model: fixposition
+      parent: default_mount
+      antennas:
+        - type: spherical
+          xyz: [0.20, 0.10, 0.5]
+        - type: helical
+          xyz: [0.20, -0.10, 0.5]
