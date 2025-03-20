@@ -209,15 +209,15 @@ class Fixposition(BaseINS):
     XVN_RTCM_TOPIC = ''
 
     class ROS_PARAMETER_KEYS:
-        IP_ADDRESS = 'xvn.fp_output.ip'
-        IP_TYPE = 'xvn.fp_output.type'
-        PORT = 'xvn.fp_output.port'
-        RATE = 'xvn.fp_output.rate'
-        RECONNECT = 'xvn.fp_output.reconnect'
-        FORMATS = 'xvn.fp_output.formats'
+        IP_ADDRESS = 'fixposition_driver.fp_output.ip'
+        IP_TYPE = 'fixposition_driver.fp_output.type'
+        PORT = 'fixposition_driver.fp_output.port'
+        RATE = 'fixposition_driver.fp_output.rate'
+        RECONNECT = 'fixposition_driver.fp_output.reconnect'
+        FORMATS = 'fixposition_driver.fp_output.formats'
 
-        WHEEL_SPEED_TOPIC = 'xvn.customer_input.speed_topic'
-        RTCM_TOPIC = 'xvn.customer_input.rtcm_topic'
+        WHEEL_SPEED_TOPIC = 'fixposition_driver.customer_input.speed_topic'
+        RTCM_TOPIC = 'fixposition_driver.customer_input.rtcm_topic'
 
 
     def __init__(
