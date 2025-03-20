@@ -195,6 +195,7 @@ class INS():
         cls.assert_model(model)
         return cls.MODEL[model]()
 
+
 class Sensor():
     CAMERA = BaseCamera.SENSOR_TYPE
     LIDAR2D = BaseLidar2D.SENSOR_TYPE

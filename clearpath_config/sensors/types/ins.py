@@ -35,10 +35,11 @@ from clearpath_config.sensors.types.sensor import BaseSensor
 
 class InsAntenna(Accessory):
     """
-    Container class for the GNSS antenna(s) used by the INS sensor
+    Container class for the GNSS antenna(s) used by the INS sensor.
 
     Supports 3 types
     """
+
     # antenna type
     TYPE_HELICAL = 'helical'
     TYPE_PATCH = 'patch'
@@ -55,7 +56,7 @@ class InsAntenna(Accessory):
         idx: int = 0,
         prefix: str = 'ins_0',
         parent: str = 'default_mount',
-        type: str = DEFAULT_TYPE,
+        type: str = DEFAULT_TYPE,  # noqa: A002
         xyz: List[float] = [0.0, 0.0, 0.0],
         rpy: List[float] = [0.0, 0.0, 0.0],
     ):
@@ -74,13 +75,13 @@ class InsAntenna(Accessory):
 
     @antenna_type.setter
     def antenna_type(self, antenna_type: str) -> None:
-        assert antenna_type in InsAntenna.TYPES, f'{antenna_type} is not one of ({InsAntenna.TYPES})' # noqa: E501
+        assert antenna_type in InsAntenna.TYPES, f'{antenna_type} is not one of ({InsAntenna.TYPES})'  # noqa: E501
         self._antenna_type = antenna_type
 
 
 class BaseINS(BaseSensor):
     """
-    Base class for all INS sensors
+    Base class for all INS sensors.
 
     INS sensors have 2-3 relevant frames:
     - primary sensor frame
@@ -94,6 +95,7 @@ class BaseINS(BaseSensor):
     - imu/data (Imu)
     - odom (Odometry)
     """
+
     SENSOR_TYPE = 'ins'
     SENSOR_MODEL = 'base'
 
@@ -218,7 +220,6 @@ class Fixposition(BaseINS):
 
         WHEEL_SPEED_TOPIC = 'fixposition_driver.customer_input.speed_topic'
         RTCM_TOPIC = 'fixposition_driver.customer_input.rtcm_topic'
-
 
     def __init__(
         self,
