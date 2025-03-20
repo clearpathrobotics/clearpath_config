@@ -54,7 +54,7 @@ class InsAntenna(Accessory):
         self,
         idx: int = 0,
         prefix: str = 'ins_0',
-        parent: str = 'base_link',
+        parent: str = 'default_mount',
         type: str = DEFAULT_TYPE,
         xyz: List[float] = [0.0, 0.0, 0.0],
         rpy: List[float] = [0.0, 0.0, 0.0],
