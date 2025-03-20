@@ -28,10 +28,8 @@
 from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.file import File
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.port import Port
-from clearpath_config.common.utils.dictionary import extend_flat_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
 
 
@@ -192,6 +190,36 @@ class Fixposition(BaseINS):
         XVN
     )
 
+    XVN_IP = '192.168.131.35'
+    XVN_IP_TYPE = 'tcp'
+    XVN_PORT = 21001
+    XVN_RATE = 200
+    XVN_RECONNECT = 5
+    XVN_FORMATS = [
+        'ODOMETRY',
+        'LLH',
+        'RAWIMU',
+        'CORRIMU'
+    ]
+
+    # These topics are optional and not supported by default on Clearpath platforms
+    # eventually we may have defaults, but for now they're blank and customers can
+    # configure them if desired
+    XVN_WHEEL_SPEED_TOPIC = ''
+    XVN_RTCM_TOPIC = ''
+
+    class ROS_PARAMETER_KEYS:
+        IP_ADDRESS = 'xvn.fp_output.ip'
+        IP_TYPE = 'xvn.fp_output.type'
+        PORT = 'xvn.fp_output.port'
+        RATE = 'xvn.fp_output.rate'
+        RECONNECT = 'xvn.fp_output.reconnect'
+        FORMATS = 'xvn.fp_output.formats'
+
+        WHEEL_SPEED_TOPIC = 'xvn.customer_input.speed_topic'
+        RTCM_TOPIC = 'xvn.customer_input.rtcm_topic'
+
+
     def __init__(
         self,
         idx: int = None,
@@ -209,7 +237,16 @@ class Fixposition(BaseINS):
         device_type: str = DEVICE_TYPE,
     ):
         self.device_type = device_type
-
+        self.ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: Fixposition.ip_address,
+            self.ROS_PARAMETER_KEYS.IP_TYPE: Fixposition.ip_type,
+            self.ROS_PARAMETER_KEYS.PORT: Fixposition.port,
+            self.ROS_PARAMETER_KEYS.RATE: Fixposition.rate,
+            self.ROS_PARAMETER_KEYS.RECONNECT: Fixposition.reconnect,
+            self.ROS_PARAMETER_KEYS.FORMATS: Fixposition.formats,
+            self.ROS_PARAMETER_KEYS.WHEEL_SPEED_TOPIC: Fixposition.wheel_speed_topic,
+            self.ROS_PARAMETER_KEYS.RTCM_TOPIC: Fixposition.rtcm_topic,
+        }
         super().__init__(
             idx=idx,
             name=name,
@@ -235,3 +272,72 @@ class Fixposition(BaseINS):
             f'Device type "{device_type}" is not one of "{self.DEVICE_TYPES}"'
         )
         self._device_type = device_type
+
+    @property
+    def ip_address(self) -> str:
+        return str(self._ip_address)
+
+    @ip_address.setter
+    def ip_address(self, ip: str) -> None:
+        BaseSensor.assert_is_ipv4_address(ip)
+        self._ip_address = IP(ip)
+
+    @property
+    def ip_type(self) -> str:
+        return self._ip_type
+
+    @ip_type.setter
+    def ip_type(self, ip_type: str) -> None:
+        assert ip_type.lower() in ('tcp', 'udp'), f'"{ip_type}" is not one of ["tcp", "udp"]'
+        self._ip_type = ip_type
+
+    @property
+    def port(self) -> int:
+        return int(self._port)
+
+    @port.setter
+    def port(self, port: int) -> None:
+        assert (port >= 0 and port <= 65535), f'Port {port} is invalid: 0-65536'
+        self._port = Port(port)
+
+    @property
+    def rate(self) -> int:
+        return self._rate
+
+    @rate.setter
+    def rate(self, rate: int) -> None:
+        assert rate >= 0, 'Rate cannot be negative'
+        self._rate = rate
+
+    @property
+    def reconnect(self) -> int:
+        return self._reconnect
+
+    @reconnect.setter
+    def reconnect(self, reconnect: int) -> None:
+        assert reconnect >= 0, 'Reconnect timeout cannot be negative'
+        self._reconnect = reconnect
+
+    @property
+    def formats(self) -> List[str]:
+        return self._formats
+
+    @formats.setter
+    def formats(self, formats: List[str]) -> None:
+        self._formats = formats
+
+    @property
+    def wheel_speed_topic(self) -> str:
+        return self._wheel_speed_topic
+
+    @wheel_speed_topic.setter
+    def wheel_speed_topic(self, wheel_speed_topic: str) -> None:
+        self._wheel_speed_topic = wheel_speed_topic
+
+    @property
+    def rtcm_topic(self) -> str:
+        return self._rtcm_topic
+
+    @rtcm_topic.setter
+    def rtcm_topic(self, rtcm_topic: str) -> None:
+        self._rtcm_topic = rtcm_topic
