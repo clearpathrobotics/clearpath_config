@@ -193,7 +193,7 @@ class Fixposition(BaseINS):
     )
 
     XVN_IP = '192.168.131.35'
-    XVN_IP_TYPE = 'tcp'
+    XVN_connection_type = 'tcp'
     XVN_PORT = 21001
     XVN_RATE = 200
     XVN_RECONNECT = 5
@@ -212,7 +212,7 @@ class Fixposition(BaseINS):
 
     class ROS_PARAMETER_KEYS:
         IP_ADDRESS = 'fixposition_driver.fp_output.ip'
-        IP_TYPE = 'fixposition_driver.fp_output.type'
+        connection_type = 'fixposition_driver.fp_output.type'
         PORT = 'fixposition_driver.fp_output.port'
         RATE = 'fixposition_driver.fp_output.rate'
         RECONNECT = 'fixposition_driver.fp_output.reconnect'
@@ -240,7 +240,7 @@ class Fixposition(BaseINS):
         self.device_type = device_type
         self.ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.IP_ADDRESS: Fixposition.ip_address,
-            self.ROS_PARAMETER_KEYS.IP_TYPE: Fixposition.ip_type,
+            self.ROS_PARAMETER_KEYS.connection_type: Fixposition.connection_type,
             self.ROS_PARAMETER_KEYS.PORT: Fixposition.port,
             self.ROS_PARAMETER_KEYS.RATE: Fixposition.rate,
             self.ROS_PARAMETER_KEYS.RECONNECT: Fixposition.reconnect,
@@ -284,13 +284,12 @@ class Fixposition(BaseINS):
         self._ip_address = IP(ip)
 
     @property
-    def ip_type(self) -> str:
-        return self._ip_type
+    def connection_type(self) -> str:
+        return self._connection_type
 
-    @ip_type.setter
-    def ip_type(self, ip_type: str) -> None:
-        assert ip_type.lower() in ('tcp', 'udp'), f'"{ip_type}" is not one of ["tcp", "udp"]'
-        self._ip_type = ip_type
+    @connection_type.setter
+    def connection_type(self, connection_type: str) -> None:
+        self._connection_type = connection_type
 
     @property
     def port(self) -> int:
