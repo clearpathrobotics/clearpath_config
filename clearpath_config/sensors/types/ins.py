@@ -128,7 +128,7 @@ class BaseINS(BaseSensor):
         parent: str = Accessory.PARENT,
         xyz: List[float] = Accessory.XYZ,
         rpy: List[float] = Accessory.RPY,
-        antennas: List[InsAntenna] = DEFAULT_ANTENNAS
+        antennas: List[InsAntenna] = DEFAULT_ANTENNAS,
     ) -> None:
         self.antennas = antennas
         self.frame_id = frame_id
@@ -192,8 +192,11 @@ class Fixposition(BaseINS):
         XVN
     )
 
+    IP_ADDRESS = 'ip'
+    TCP_PORT = 'port'
+
     XVN_IP = '192.168.131.35'
-    XVN_connection_type = 'tcp'
+    XVN_CONNECTION_TYPE = 'tcp'
     XVN_PORT = 21001
     XVN_RATE = 200
     XVN_RECONNECT = 5
@@ -212,7 +215,7 @@ class Fixposition(BaseINS):
 
     class ROS_PARAMETER_KEYS:
         IP_ADDRESS = 'fixposition_driver.fp_output.ip'
-        connection_type = 'fixposition_driver.fp_output.type'
+        CONNECTION_TYPE = 'fixposition_driver.fp_output.type'
         PORT = 'fixposition_driver.fp_output.port'
         RATE = 'fixposition_driver.fp_output.rate'
         RECONNECT = 'fixposition_driver.fp_output.reconnect'
@@ -238,9 +241,18 @@ class Fixposition(BaseINS):
         device_type: str = DEVICE_TYPE,
     ):
         self.device_type = device_type
-        self.ros_parameters_template = {
+        self.ip_address = self.XVN_IP
+        self.port = self.XVN_PORT
+        self.connection_type = self.XVN_CONNECTION_TYPE
+        self.rate = self.XVN_RATE
+        self.reconnect = self.XVN_RECONNECT
+        self.formats = self.XVN_FORMATS
+        self.wheel_speed_topic = self.XVN_WHEEL_SPEED_TOPIC
+        self.rtcm_topic = self.XVN_RTCM_TOPIC
+
+        ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.IP_ADDRESS: Fixposition.ip_address,
-            self.ROS_PARAMETER_KEYS.connection_type: Fixposition.connection_type,
+            self.ROS_PARAMETER_KEYS.CONNECTION_TYPE: Fixposition.connection_type,
             self.ROS_PARAMETER_KEYS.PORT: Fixposition.port,
             self.ROS_PARAMETER_KEYS.RATE: Fixposition.rate,
             self.ROS_PARAMETER_KEYS.RECONNECT: Fixposition.reconnect,
@@ -262,6 +274,13 @@ class Fixposition(BaseINS):
             rpy=rpy,
             antennas=antennas,
         )
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if self.IP_ADDRESS in d:
+            self.ip_address = d[self.IP_ADDRESS]
+        if self.TCP_PORT in d:
+            self.port = d[self.TCP_PORT]
 
     @property
     def device_type(self) -> str:
@@ -297,7 +316,7 @@ class Fixposition(BaseINS):
 
     @port.setter
     def port(self, port: int) -> None:
-        assert (port >= 0 and port <= 65535), f'Port {port} is invalid: 0-65536'
+        assert (port >= 0 and port <= 65535), f'Port {port} is invalid: 0-65535'
         self._port = Port(port)
 
     @property

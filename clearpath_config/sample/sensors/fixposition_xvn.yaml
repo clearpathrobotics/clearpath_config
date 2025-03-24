@@ -4,6 +4,8 @@ sensors:
   ins:
     - model: fixposition
       parent: default_mount
+      port: 21001
+      ip: 192.168.131.35
       antennas:
         - type: spherical
           xyz: [0.20, 0.10, 0.5]
@@ -17,8 +19,6 @@ sensors:
               - LLH
               - RAWIMU
               - CORRIMU
-            port: 21001
-            ip: 192.168.131.35
             rate: 200
             type: tcp
             reconnect: 5
