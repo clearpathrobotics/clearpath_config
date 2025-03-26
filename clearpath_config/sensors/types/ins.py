@@ -197,7 +197,7 @@ class Fixposition(BaseINS):
 
     XVN_IP = '192.168.131.35'
     XVN_CONNECTION_TYPE = 'tcp'
-    XVN_PORT = 21001
+    XVN_PORT = '21001'  # fixposition driver uses a string for the port
     XVN_RATE = 200
     XVN_RECONNECT = 5
     XVN_FORMATS = [
@@ -210,8 +210,8 @@ class Fixposition(BaseINS):
     # These topics are optional and not supported by default on Clearpath platforms
     # eventually we may have defaults, but for now they're blank and customers can
     # configure them if desired
-    XVN_WHEEL_SPEED_TOPIC = ''
-    XVN_RTCM_TOPIC = ''
+    XVN_WHEEL_SPEED_TOPIC = 'sensors/ins_0/xvn/speed'
+    XVN_RTCM_TOPIC = 'sensors/ins_0/xvn/rtcm'
 
     class ROS_PARAMETER_KEYS:
         IP_ADDRESS = 'fixposition_driver.fp_output.ip'
@@ -311,13 +311,12 @@ class Fixposition(BaseINS):
         self._connection_type = connection_type
 
     @property
-    def port(self) -> int:
-        return int(self._port)
+    def port(self) -> str:
+        return self._port
 
     @port.setter
-    def port(self, port: int) -> None:
-        assert (port >= 0 and port <= 65535), f'Port {port} is invalid: 0-65535'
-        self._port = Port(port)
+    def port(self, port: str) -> None:
+        self._port = port
 
     @property
     def rate(self) -> int:
