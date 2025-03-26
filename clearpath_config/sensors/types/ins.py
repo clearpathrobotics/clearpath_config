@@ -210,8 +210,8 @@ class Fixposition(BaseINS):
     # These topics are optional and not supported by default on Clearpath platforms
     # eventually we may have defaults, but for now they're blank and customers can
     # configure them if desired
-    XVN_WHEEL_SPEED_TOPIC = 'sensors/ins_0/xvn/speed'
-    XVN_RTCM_TOPIC = 'sensors/ins_0/xvn/rtcm'
+    XVN_WHEEL_SPEED_TOPIC = 'xvn/speed'
+    XVN_RTCM_TOPIC = 'xvn/rtcm'
 
     class ROS_PARAMETER_KEYS:
         IP_ADDRESS = 'fixposition_driver.fp_output.ip'
