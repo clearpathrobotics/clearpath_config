@@ -295,4 +295,4 @@ class OrderedListConfig(Generic[T]):
         return self.__list[index]
 
     def __len__(self) -> int:
-        return len(self.__sensors)
+        return len(self.__list)
