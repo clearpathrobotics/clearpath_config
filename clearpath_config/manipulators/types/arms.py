@@ -45,11 +45,8 @@ class BaseArm(BaseManipulator):
     DEFAULT_IP_ADDRESS = '192.168.131.40'
     DEFAULT_IP_PORT = 10000
 
-<<<<<<< HEAD
     URDF_PARAMETERS = {}
-=======
-    END_EFFECTOR_LINK = "end_effector"
->>>>>>> 8c2091e (Feature: Manipulator URDF Parameters (#140))
+    END_EFFECTOR_LINK = 'end_effector'
 
     def __init__(
             self,
