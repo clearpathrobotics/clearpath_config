@@ -58,7 +58,7 @@ class ManipulatorPose():
     @name.setter
     def name(self, name: str) -> None:
         assert isinstance(name, str), (
-            "Manipulator pose name must be of type str")
+            'Manipulator pose name must be of type str')
         self._name = name
 
     @property
@@ -68,9 +68,9 @@ class ManipulatorPose():
     @joints.setter
     def joints(self, joints: List) -> None:
         assert isinstance(joints, list), (
-            "Manipulator pose joints must be of type list")
+            'Manipulator pose joints must be of type list')
         assert len(joints) == self.joint_count, (
-            f"Manipulator pose joints must of length {self.joint_count}, got {len(joints)}")
+            f'Manipulator pose joints must of length {self.joint_count}, got {len(joints)}')
         self._joints = joints
 
     def to_dict(self) -> dict:
@@ -80,9 +80,9 @@ class ManipulatorPose():
         }
 
     def from_dict(self, d: dict) -> None:
-        assert isinstance(d, dict), ("Poses in list must be of type dict.")
-        assert 'name' in d, ("Pose must have a name entry.")
-        assert 'joints' in d, ("Pose must have a joints entry.")
+        assert isinstance(d, dict), ('Poses in list must be of type dict.')
+        assert 'name' in d, ('Pose must have a name entry.')
+        assert 'joints' in d, ('Pose must have a joints entry.')
         self.name = d['name']
         self.joints = d['joints']
 
@@ -212,7 +212,7 @@ class BaseManipulator(IndexedAccessory):
 
     @poses.setter
     def poses(self, pose_list: List) -> None:
-        assert isinstance(pose_list, list), ("List of poses must be of type list.")
+        assert isinstance(pose_list, list), ('List of poses must be of type list.')
         poses_ = []
         for pose in pose_list:
             manipulator_pose = ManipulatorPose(self.JOINT_COUNT)
