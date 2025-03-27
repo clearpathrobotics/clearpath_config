@@ -1,0 +1,27 @@
+serial_number: a300-0000
+version: 0
+sensors:
+  ins:
+    - model: fixposition
+      parent: default_mount
+      port: "21001"
+      ip: 192.168.131.35
+      antennas:
+        - type: spherical
+          xyz: [0.20, 0.10, 0.5]
+        - type: helical
+          xyz: [0.20, -0.10, 0.5]
+      ros_parameters:
+        fixposition_driver:
+          fp_output:
+            formats:
+              - ODOMETRY
+              - LLH
+              - RAWIMU
+              - CORRIMU
+            rate: 200
+            type: tcp
+            reconnect: 5
+          customer_input:
+            speed_topic: "xvn/speed"
+            rtcm_topic: "xvn/rtcm"

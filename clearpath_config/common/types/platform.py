@@ -46,13 +46,15 @@ class IndexingProfile:
             gps: int = 0,
             imu: int = 0,
             lidar2d: int = 0,
-            lidar3d: int = 0
+            lidar3d: int = 0,
+            ins: int = 0,
             ) -> None:
         self.camera = camera
         self.gps = gps
         self.imu = imu
         self.lidar2d = lidar2d
         self.lidar3d = lidar3d
+        self.ins = ins
 
 
 # Platform
