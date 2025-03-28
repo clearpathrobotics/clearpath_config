@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.2.2 (2025-03-27)
+------------------
 * Updated the parent link of the base IMU on the A300.
 * Contributors: Tony Baltovski
 
