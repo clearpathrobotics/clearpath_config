@@ -24,7 +24,7 @@ sensors:
     - model: phidgets_spatial
       urdf_enabled: true
       launch_enabled: true
-      parent: default_mount
+      parent: base_link
       xyz: [0.059, 0.0, 0.161275]
       rpy: [0.0, 0.0, 0.0]
       ros_parameters:
