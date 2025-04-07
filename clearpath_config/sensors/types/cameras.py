@@ -283,7 +283,7 @@ class IntelRealsense(BaseCamera):
             DEPTH_IMAGE: 'depth/image',
             DEPTH_CAMERA_INFO: 'depth/camera_info',
             POINTCLOUD: 'points',
-            IMU: 'imu'
+            IMU: 'imu/data_raw'
         }
         TYPE = {
             COLOR_IMAGE: 'sensor_msgs/msg/Image',
@@ -728,7 +728,7 @@ class StereolabsZed(BaseCamera):
             DEPTH_IMAGE: 'depth/image',
             DEPTH_CAMERA_INFO: 'depth/camera_info',
             POINTCLOUD: 'points',
-            IMU: 'imu'
+            IMU: 'imu/data_raw'
         }
         TYPE = {
             COLOR_IMAGE: 'sensor_msgs/msg/Image',
@@ -885,7 +885,7 @@ class LuxonisOAKD(BaseCamera):
             STEREO_IMAGE: 'stereo/image',
             STEREO_CAMERA_INFO: 'stereo/camera_info',
             POINTCLOUD: 'points',
-            IMU: 'imu',
+            IMU: 'imu/data_raw',
         }
         TYPE = {
             COLOR_IMAGE: 'sensor_msgs/msg/Image',
