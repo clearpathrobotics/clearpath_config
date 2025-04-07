@@ -131,7 +131,7 @@ class Platform:
         platform = platform.lower()
 
         match platform:
-            case Platform.W200 | Platform.J100:
+            case Platform.W200:
                 raise UnsupportedPlatformException(
                     f'Platform {platform} is still in-development and not yet supported on {ROS_DISTRO}')  # noqa:E501
 
