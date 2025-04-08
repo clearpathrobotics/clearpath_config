@@ -126,11 +126,13 @@ class ManipulatorListConfig(OrderedListConfig[BaseManipulator]):
 
 
 class ManipulatorConfig(BaseConfig):
+    MOVEIT = 'moveit'
     MANIPULATORS = 'manipulators'
     ARMS = 'arms'
     LIFTS = 'lifts'
     TEMPLATE = {
         MANIPULATORS: {
+            MOVEIT: MOVEIT,
             ARMS: ARMS,
             LIFTS: LIFTS
         }
@@ -139,6 +141,7 @@ class ManipulatorConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
+        MOVEIT: MoveItConfig.DEFAULTS,
         ARMS: [],
         LIFTS: [],
     }
@@ -151,10 +154,27 @@ class ManipulatorConfig(BaseConfig):
         self._arms = ManipulatorListConfig()
         self._lifts = ManipulatorListConfig()
         template = {
+            self.KEYS[self.MOVEIT]: ManipulatorConfig.moveit,
             self.KEYS[self.ARMS]: ManipulatorConfig.arms,
             self.KEYS[self.LIFTS]: ManipulatorConfig.lifts
         }
         super().__init__(template, config, self.MANIPULATORS)
+
+    @property
+    def moveit(self) -> MoveItConfig:
+        self.set_config_param(
+            key=self.KEYS[self.MOVEIT],
+            value=self._moveit.to_dict()
+        )
+        return self._moveit
+
+    @moveit.setter
+    def moveit(self, value: dict) -> None:
+        assert isinstance(value, dict), (
+            f'MoveIt entry under Manipulators must be of type dict. Got {value}'
+        )
+        self._moveit = MoveItConfig()
+        self._moveit.from_dict(value)
 
     @property
     def arms(self) -> OrderedListConfig:
