@@ -162,9 +162,9 @@ class CANAdapter:
         VirtualCANAdapter.TYPE: VirtualCANAdapter,
     }
 
-    def __new__(cls, type: str) -> PhysicalCANAdapter:
-        assert type in cls.TYPES, f'CANAdapter model, {type}, not one of {cls.TYPES}'
-        return cls.TYPES[type]()
+    def __new__(cls, type_: str) -> PhysicalCANAdapter:
+        assert type_ in cls.TYPES, f'CANAdapter model, {type_}, not one of {cls.TYPES}'
+        return cls.TYPES[type_]()
 
 
 class CANAdapterListConfig(ListConfig[PhysicalCANAdapter, str]):
@@ -198,7 +198,7 @@ class CANAdapterConfig:
         Platform.A300: [VCAN0_DEFAULT, VCAN1_DEFAULT],
         Platform.DD100: [VCAN0_DEFAULT],
         Platform.DD150: [VCAN0_DEFAULT],
-        Platform.DO150: [VCAN0_DEFAULT],
+        Platform.DO100: [VCAN0_DEFAULT],
         Platform.DO150: [VCAN0_DEFAULT],
         Platform.GENERIC: [],
         Platform.J100: [],
