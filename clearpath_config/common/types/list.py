@@ -183,6 +183,9 @@ class ListConfig(Generic[T, U]):
 class OrderedListConfig(Generic[T]):
 
     def __init__(self, obj_type: type, start_idx: int = 0) -> None:
+        assert callable(getattr(obj_type, 'get_idx')), f'Type {type} does not have ".get_idx()"'
+        assert callable(getattr(obj_type, 'set_idx')), f'Type {type} does not have ".set_idx(i)"'
+
         self.start_idx = start_idx
         self.__type_T: type = obj_type
         self.__list: List[T] = []
@@ -287,3 +290,9 @@ class OrderedListConfig(Generic[T]):
         except AssertionError:
             self.__list = tmp_list
         self.update()
+
+    def __getitem__(self, index: int) -> T:
+        return self.__list[index]
+
+    def __len__(self) -> int:
+        return len(self.__list)

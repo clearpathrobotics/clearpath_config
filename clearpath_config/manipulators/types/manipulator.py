@@ -33,6 +33,60 @@ from clearpath_config.common.types.accessory import Accessory, IndexedAccessory
 from clearpath_config.common.utils.dictionary import flatten_dict, unflatten_dict
 
 
+class ManipulatorPose():
+
+    def __init__(
+            self,
+            joint_count,
+            name: str = None,
+            joints: List = None,
+            ) -> None:
+        self.joint_count = joint_count
+        if name:
+            self.name = name
+        else:
+            self._name = ''
+        if joints:
+            self.joints = joints
+        else:
+            self._joints = []
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @name.setter
+    def name(self, name: str) -> None:
+        assert isinstance(name, str), (
+            'Manipulator pose name must be of type str')
+        self._name = name
+
+    @property
+    def joints(self) -> list:
+        return self._joints
+
+    @joints.setter
+    def joints(self, joints: List) -> None:
+        assert isinstance(joints, list), (
+            'Manipulator pose joints must be of type list')
+        assert len(joints) == self.joint_count, (
+            f'Manipulator pose joints must of length {self.joint_count}, got {len(joints)}')
+        self._joints = joints
+
+    def to_dict(self) -> dict:
+        return {
+            'name': self.name,
+            'joints': self.joints,
+        }
+
+    def from_dict(self, d: dict) -> None:
+        assert isinstance(d, dict), ('Poses in list must be of type dict.')
+        assert 'name' in d, ('Pose must have a name entry.')
+        assert 'joints' in d, ('Pose must have a joints entry.')
+        self.name = d['name']
+        self.joints = d['joints']
+
+
 class BaseManipulator(IndexedAccessory):
     MANIPULATOR_MODEL = 'base'
     MANIPULATOR_TYPE = 'manipulator'
@@ -62,6 +116,7 @@ class BaseManipulator(IndexedAccessory):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
+        self.poses = []
         # ROS Parameters
         self.ros_parameters_template = ros_parameters_template
         self.ros_parameters = ros_parameters

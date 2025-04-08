@@ -82,7 +82,7 @@ class BaseArm(BaseManipulator):
             self.ip = self.get_ip_from_idx(idx)
         if self.gripper:
             self.gripper.name = self.name + '_gripper'
-            self.gripper.parent = self.name + '_end_effector_link'
+            self.gripper.parent = self.name + '_' + self.END_EFFECTOR_LINK
 
     @property
     def ip(self) -> str:
@@ -127,6 +127,8 @@ class BaseArm(BaseManipulator):
 
 class KinovaGen3Dof6(BaseArm):
     MANIPULATOR_MODEL = 'kinova_gen3_6dof'
+    JOINT_COUNT = 6
+    END_EFFECTOR_LINK = 'end_effector_link'
 
     @staticmethod
     def assert_is_supported():
@@ -135,6 +137,8 @@ class KinovaGen3Dof6(BaseArm):
 
 class KinovaGen3Dof7(BaseArm):
     MANIPULATOR_MODEL = 'kinova_gen3_7dof'
+    JOINT_COUNT = 7
+    END_EFFECTOR_LINK = 'end_effector_link'
 
     @staticmethod
     def assert_is_supported():
@@ -143,6 +147,8 @@ class KinovaGen3Dof7(BaseArm):
 
 class KinovaGen3Lite(BaseArm):
     MANIPULATOR_MODEL = 'kinova_gen3_lite'
+    JOINT_COUNT = 6
+    END_EFFECTOR_LINK = 'end_effector_link'
 
     @staticmethod
     def assert_is_supported():
@@ -151,7 +157,8 @@ class KinovaGen3Lite(BaseArm):
 
 class UniversalRobots(BaseArm):
     MANIPULATOR_MODEL = 'universal_robots'
-
+    JOINT_COUNT = 6
+    END_EFFECTOR_LINK = 'tool0'
     # Description Variables
     UR_TYPE = 'ur_type'
     INITIAL_POSITIONS = 'initial_positions'

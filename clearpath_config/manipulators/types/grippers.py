@@ -35,6 +35,7 @@ class BaseGripper(BaseManipulator):
 
 class Kinova2FLite(BaseGripper):
     MANIPULATOR_MODEL = 'kinova_2f_lite'
+    JOINT_COUNT = 1
 
 
 class Robotiq2F85(BaseGripper):
