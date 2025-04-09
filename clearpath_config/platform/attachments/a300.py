@@ -94,6 +94,46 @@ class A300AMPFrame(BaseAttachment):
         super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
+class A300ObserverBackpack(BaseAttachment):
+    PLATFORM = Platform.A300
+    ATTACHMENT_MODEL = f'{PLATFORM}.observer_backpack'
+    OBSERVER_BACKPACK = 'observer_backpack'
+    MODELS = [OBSERVER_BACKPACK]
+    DEFAULT = OBSERVER_BACKPACK
+    PARENT = 'base_link'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+class A300ObserverArch(BaseAttachment):
+    PLATFORM = Platform.A300
+    ATTACHMENT_MODEL = f'{PLATFORM}.observer_arch'
+    OBSERVER_ARCH = 'observer_arch'
+    MODELS = [OBSERVER_ARCH]
+    DEFAULT = OBSERVER_ARCH
+    PARENT = 'default_mount'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
 class A300Attachment(PlatformAttachment):
     PLATFORM = Platform.A300
     # Top Plates
@@ -102,9 +142,14 @@ class A300Attachment(PlatformAttachment):
     BUMPER = A300Bumper.ATTACHMENT_MODEL
     # AMP frame
     AMP_FRAME = A300AMPFrame.ATTACHMENT_MODEL
+    # Observer
+    OBSERVER_BACKPACK = A300ObserverBackpack.ATTACHMENT_MODEL
+    OBSERVER_ARCH = A300ObserverArch.ATTACHMENT_MODEL
 
     TYPES = {
         TOP_PLATE: A300TopPlate,
         BUMPER: A300Bumper,
         AMP_FRAME: A300AMPFrame,
+        OBSERVER_BACKPACK: A300ObserverBackpack,
+        OBSERVER_ARCH: A300ObserverArch,
     }
