@@ -226,12 +226,11 @@ class CANAdapterConfig:
 
     @config.setter
     def config(self, can_adapters: list):
-        self._can_adapters.remove_all()
         for d in can_adapters:
             assert 'type' in d,  'CAN adapter must have "type" parameter defined'
             adapter = CANAdapter(d['type'])
             adapter.from_dict(d)
-            self._can_adapters.add(adapter)
+            self._can_adapters.set(adapter)
 
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
