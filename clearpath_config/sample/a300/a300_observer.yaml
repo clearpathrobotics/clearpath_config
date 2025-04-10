@@ -18,9 +18,7 @@ platform:
       type: a300.observer_backpack
     - name: observer_arch
       type: a300.observer_arch
-      parent: observer_backpack_center_mount
-      xyz: [-0.4, 0.0, 0.0]
-      rpy: [0.0, 0.0, 0.0]
+      parent: observer_backpack_antenna_mount
 sensors:
   imu:
     - model: phidgets_spatial
@@ -34,17 +32,34 @@ sensors:
           data_interval_ms: 20
   ins:
     - model: fixposition
-      parent: observer_backpack_rear_face_mount
+      parent: observer_backpack_ins_mount
       antennas:
         - parent: observer_arch_right_antenna_mount
         - parent: observer_arch_left_antenna_mount
   camera:
-    - model: intel_realsense
-      parent: observer_backpack_front_face_mount
-      xyz: [0.02, 0.0, 0.0]
+    - model: stereolabs_zed
+      urdf_enabled: true
+      launch_enabled: true
+      parent: observer_arch_front_camera_mount
+      ros_parameters:
+        stereolabs_zed:
+          general.grab_frame_rate: 30
+          general.serial_number: 0
+          general.camera_model: 'zed2'
+          general.grab_resolution: 'AUTO'
+    - model: stereolabs_zed
+      urdf_enabled: true
+      launch_enabled: true
+      parent: observer_arch_rear_camera_mount
+      ros_parameters:
+        stereolabs_zed:
+          general.grab_frame_rate: 30
+          general.serial_number: 0
+          general.camera_model: 'zed2'
+          general.grab_resolution: 'AUTO'
     - model: axis_camera
-      parent: observer_backpack_center_mount
-      xyz: [0.35, 0.0, 0.025]
+      parent: base_link
+      xyz: [0.40 0 0.4106593]
       ros_parameters:
         axis_camera:
           device_type: q62
@@ -86,3 +101,20 @@ sensors:
           scale_pan     : 2.61
           scale_tilt    : 2.61
           scale_zoom    : 100.0
+  lidar3d:
+    - model: seyond_lidar
+      urdf_enabled: true
+      launch_enabled: false
+      parent: observer_backpack_front_lidar_mount
+    - model: ouster_os1
+      urdf_enabled: true
+      launch_enabled: true
+      parent: observer_arch_lidar_mount
+      ros_parameters:
+        ouster_driver:
+          sensor_hostname: 192.168.131.20
+          udp_dest: 192.168.131.100
+          lidar_port: 7502
+          imu_port: 7503
+          proc_mask: IMU|PCL|SCAN|IMG|RAW|TLM
+          use_system_default_qos: false\
