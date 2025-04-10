@@ -24,7 +24,7 @@ sensors:
     - model: phidgets_spatial
       urdf_enabled: true
       launch_enabled: true
-      parent: default_mount
+      parent: base_link
       xyz: [0.059, 0.0, 0.161275]
       rpy: [0.0, 0.0, 0.0]
       ros_parameters:
@@ -37,29 +37,71 @@ sensors:
         - parent: observer_arch_right_antenna_mount
         - parent: observer_arch_left_antenna_mount
   camera:
-    - model: stereolabs_zed
+    - model: luxonis_oakd
       urdf_enabled: true
       launch_enabled: true
       parent: observer_arch_front_camera_mount
       ros_parameters:
-        stereolabs_zed:
-          general.grab_frame_rate: 30
-          general.serial_number: 0
-          general.camera_model: 'zed2'
-          general.grab_resolution: 'AUTO'
-    - model: stereolabs_zed
+        oakd:
+          device_type: pro_w_poe
+          camera:
+            i_enable_imu: false
+            i_enable_ir: false
+            i_floodlight_brightness: 0
+            i_ip: ''
+            i_laser_dot_brightness: 100
+            i_mx_id: ''
+            i_nn_type: none
+            i_pipeline_type: RGB
+            i_usb_speed: SUPER_PLUS
+            i_usb_port_id: ''
+          rgb:
+            i_board_socket_id: 0
+            i_fps: 30.0
+            i_height: 720
+            i_interleaved: false
+            i_max_q_size: 10
+            i_preview_size: 250
+            i_enable_preview: true
+            i_low_bandwidth: true
+            i_keep_preview_aspect_ratio: true
+            i_publish_topic: false
+            i_resolution: '1080P'
+            i_width: 1280
+    - model: luxonis_oakd
       urdf_enabled: true
       launch_enabled: true
       parent: observer_arch_rear_camera_mount
       ros_parameters:
-        stereolabs_zed:
-          general.grab_frame_rate: 30
-          general.serial_number: 0
-          general.camera_model: 'zed2'
-          general.grab_resolution: 'AUTO'
+        oakd:
+          device_type: pro_w_poe
+          camera:
+            i_enable_imu: false
+            i_enable_ir: false
+            i_floodlight_brightness: 0
+            i_ip: ''
+            i_laser_dot_brightness: 100
+            i_mx_id: ''
+            i_nn_type: none
+            i_pipeline_type: RGB
+            i_usb_speed: SUPER_PLUS
+            i_usb_port_id: ''
+          rgb:
+            i_board_socket_id: 0
+            i_fps: 30.0
+            i_height: 720
+            i_interleaved: false
+            i_max_q_size: 10
+            i_preview_size: 250
+            i_enable_preview: true
+            i_low_bandwidth: true
+            i_keep_preview_aspect_ratio: true
+            i_publish_topic: false
+            i_resolution: '1080P'
+            i_width: 1280
     - model: axis_camera
       parent: base_link
-      xyz: [0.40 0 0.4106593]
+      xyz: [0.40, 0.0, 0.4106593]
       ros_parameters:
         axis_camera:
           device_type: q62
@@ -117,4 +159,4 @@ sensors:
           lidar_port: 7502
           imu_port: 7503
           proc_mask: IMU|PCL|SCAN|IMG|RAW|TLM
-          use_system_default_qos: false\
+          use_system_default_qos: false
