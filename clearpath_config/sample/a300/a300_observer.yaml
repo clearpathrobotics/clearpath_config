@@ -154,6 +154,8 @@ sensors:
       parent: observer_arch_lidar_mount
       ros_parameters:
         ouster_driver:
+          cap_type: fins
+          base_type: none
           sensor_hostname: 192.168.131.20
           udp_dest: 192.168.131.100
           lidar_port: 7502
