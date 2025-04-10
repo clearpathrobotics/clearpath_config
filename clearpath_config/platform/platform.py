@@ -258,7 +258,9 @@ class PlatformConfig(BaseConfig):
 
     @can_adapters.setter
     def can_adapters(self, value: dict) -> None:
-        self._can_adapters = CANAdapterConfig(value)
+        self._can_adapters = CANAdapterConfig()
+        self._can_adapters.update(True)
+        self._can_adapters.config = value
 
     @property
     def can_bridges(self) -> CANBridgeConfig:
