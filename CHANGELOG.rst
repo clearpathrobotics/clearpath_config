@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.0 (2025-04-11)
+------------------
 * Added a single Hokuyo laser to default R100 sample. (`#157 <https://github.com/clearpathrobotics/clearpath_config/issues/157>`_)
 * Maintain default can adapters but allow overwriting if matching names (`#155 <https://github.com/clearpathrobotics/clearpath_config/issues/155>`_)
 * Feature: Wiferion Charger (`#154 <https://github.com/clearpathrobotics/clearpath_config/issues/154>`_)
