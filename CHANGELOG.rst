@@ -2,6 +2,23 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added a single Hokuyo laser to default R100 sample. (`#157 <https://github.com/clearpathrobotics/clearpath_config/issues/157>`_)
+* Maintain default can adapters but allow overwriting if matching names (`#155 <https://github.com/clearpathrobotics/clearpath_config/issues/155>`_)
+* Feature: Wiferion Charger (`#154 <https://github.com/clearpathrobotics/clearpath_config/issues/154>`_)
+* Feature: Add CAN adapters  (`#153 <https://github.com/clearpathrobotics/clearpath_config/issues/153>`_)
+* Rename camera IMU topics from imu to imu/data_raw (per RPSW-2503) (`#150 <https://github.com/clearpathrobotics/clearpath_config/issues/150>`_)
+* Feature: Add delay to manipulator controller (`#146 <https://github.com/clearpathrobotics/clearpath_config/issues/146>`_)
+* Feature: Manipulator URDF Parameters (`#145 <https://github.com/clearpathrobotics/clearpath_config/issues/145>`_)
+* Feature: MoveIt Parameters and Enable (`#144 <https://github.com/clearpathrobotics/clearpath_config/issues/144>`_)
+* Fast-Forward Feature: Manipulator Samples and Poses (`#143 <https://github.com/clearpathrobotics/clearpath_config/issues/143>`_)
+* Removed J100 from unsupported platforms (`#149 <https://github.com/clearpathrobotics/clearpath_config/issues/149>`_)
+* Changed all sensor samples to the Husky A300. (`#148 <https://github.com/clearpathrobotics/clearpath_config/issues/148>`_)
+* Add support for INS sensors + Fixposition XVN (`#142 <https://github.com/clearpathrobotics/clearpath_config/issues/142>`_)
+* Removed Dingo and Ridgeback from unsupported exception (`#137 <https://github.com/clearpathrobotics/clearpath_config/issues/137>`_)
+* Contributors: Chris Iverach-Brereton, Roni Kreinin, Tony Baltovski, Luis Camero
+
 2.2.2 (2025-03-27)
 ------------------
 * Updated the parent link of the base IMU on the A300.
