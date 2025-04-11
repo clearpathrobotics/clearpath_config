@@ -46,6 +46,7 @@ class BaseArm(BaseManipulator):
     DEFAULT_IP_PORT = 10000
 
     URDF_PARAMETERS = {}
+    END_EFFECTOR_LINK = 'end_effector'
 
     def __init__(
             self,
@@ -67,8 +68,6 @@ class BaseArm(BaseManipulator):
         self.ip = IP(ip)
         # IP Port
         self.port = Port(port)
-        # URDF Parameters
-        self.urdf_parameters = dict(self.URDF_PARAMETERS)
 
     @classmethod
     def get_ip_from_idx(cls, idx: int) -> str:
@@ -83,7 +82,7 @@ class BaseArm(BaseManipulator):
             self.ip = self.get_ip_from_idx(idx)
         if self.gripper:
             self.gripper.name = self.name + '_gripper'
-            self.gripper.parent = self.name + '_end_effector_link'
+            self.gripper.parent = self.name + '_' + self.END_EFFECTOR_LINK
 
     @property
     def ip(self) -> str:
@@ -109,9 +108,6 @@ class BaseArm(BaseManipulator):
             d['gripper'] = self.gripper.to_dict()
         else:
             d['gripper'] = None
-        for k, v in self.urdf_parameters.items():
-            if v:
-                d[k] = v
         return d
 
     def from_dict(self, d: dict) -> None:
@@ -122,25 +118,17 @@ class BaseArm(BaseManipulator):
             self.gripper.from_dict(d['gripper'])
             self.gripper.set_name('%s_gripper' % self.get_name())
             if 'parent' not in d['gripper']:
-                self.gripper.set_parent('%s_end_effector_link' % self.get_name())
+                self.gripper.set_parent(f'{self.get_name()}_{self.END_EFFECTOR_LINK}')
         if self.IP_ADDRESS in d:
             self.ip = d[self.IP_ADDRESS]
         if self.IP_PORT in d:
             self.port = d[self.IP_PORT]
-        for k in self.urdf_parameters:
-            if k in d:
-                self.urdf_parameters[k] = d[k]
-
-    def get_urdf_parameters(self) -> dict:
-        d = {}
-        for k, v in self.urdf_parameters.items():
-            if v:
-                d[k] = v
-        return d
 
 
 class KinovaGen3Dof6(BaseArm):
     MANIPULATOR_MODEL = 'kinova_gen3_6dof'
+    JOINT_COUNT = 6
+    END_EFFECTOR_LINK = 'end_effector_link'
 
     @staticmethod
     def assert_is_supported():
@@ -149,6 +137,8 @@ class KinovaGen3Dof6(BaseArm):
 
 class KinovaGen3Dof7(BaseArm):
     MANIPULATOR_MODEL = 'kinova_gen3_7dof'
+    JOINT_COUNT = 7
+    END_EFFECTOR_LINK = 'end_effector_link'
 
     @staticmethod
     def assert_is_supported():
@@ -157,6 +147,8 @@ class KinovaGen3Dof7(BaseArm):
 
 class KinovaGen3Lite(BaseArm):
     MANIPULATOR_MODEL = 'kinova_gen3_lite'
+    JOINT_COUNT = 6
+    END_EFFECTOR_LINK = 'end_effector_link'
 
     @staticmethod
     def assert_is_supported():
@@ -165,7 +157,8 @@ class KinovaGen3Lite(BaseArm):
 
 class UniversalRobots(BaseArm):
     MANIPULATOR_MODEL = 'universal_robots'
-
+    JOINT_COUNT = 6
+    END_EFFECTOR_LINK = 'tool0'
     # Description Variables
     UR_TYPE = 'ur_type'
     INITIAL_POSITIONS = 'initial_positions'

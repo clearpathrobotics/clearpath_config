@@ -46,13 +46,15 @@ class IndexingProfile:
             gps: int = 0,
             imu: int = 0,
             lidar2d: int = 0,
-            lidar3d: int = 0
+            lidar3d: int = 0,
+            ins: int = 0,
             ) -> None:
         self.camera = camera
         self.gps = gps
         self.imu = imu
         self.lidar2d = lidar2d
         self.lidar3d = lidar3d
+        self.ins = ins
 
 
 # Platform
@@ -127,17 +129,11 @@ class Platform:
         @exception UnsupportedPlatformException if the platform is not supported
         """
         platform = platform.lower()
-        if platform == Platform.W200:
-            raise UnsupportedPlatformException(f'Warthog ({Platform.W200}) is not supported in {ROS_DISTRO}')  # noqa:E501
-        elif (
-            platform == Platform.DD100 or
-            platform == Platform.DD150 or
-            platform == Platform.DO100 or
-            platform == Platform.DO150 or
-            platform == Platform.J100 or
-            platform == Platform.R100
-        ):
-            raise UnsupportedPlatformException(f'Platform {platform} is still in-development and not yet supported on {ROS_DISTRO}')  # noqa:E501
+
+        match platform:
+            case Platform.W200:
+                raise UnsupportedPlatformException(
+                    f'Platform {platform} is still in-development and not yet supported on {ROS_DISTRO}')  # noqa:E501
 
     @staticmethod
     def notify_if_deprecated(platform):
