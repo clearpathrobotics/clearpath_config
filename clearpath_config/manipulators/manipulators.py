@@ -43,10 +43,12 @@ from clearpath_config.manipulators.types.manipulator import BaseManipulator
 
 class MoveItConfig(BaseConfig):
     ENABLE = 'enable'
+    DELAY = 'delay'
     ROS_PARAMETERS = 'ros_parameters'
 
     TEMPLATE = {
         ENABLE: ENABLE,
+        DELAY: DELAY,
         ROS_PARAMETERS: ROS_PARAMETERS
     }
 
@@ -54,6 +56,7 @@ class MoveItConfig(BaseConfig):
 
     DEFAULTS = {
         ENABLE: False,
+        DELAY: 5.0,
         ROS_PARAMETERS: {}
     }
 
@@ -61,9 +64,11 @@ class MoveItConfig(BaseConfig):
             self,
             config: dict = {},
             enable: bool = DEFAULTS[ENABLE],
+            delay: float = DEFAULTS[DELAY],
             ros_parameters: dict = DEFAULTS[ROS_PARAMETERS]
             ) -> None:
         self.enable = enable
+        self.delay = delay
         self.ros_parameters = ros_parameters
         if config:
             self.from_dict(config)
@@ -75,6 +80,15 @@ class MoveItConfig(BaseConfig):
     @enable.setter
     def enable(self, value: bool) -> None:
         self._enable = bool(value)
+
+    @property
+    def delay(self) -> float:
+        return self._delay
+
+    @delay.setter
+    def delay(self, value: float) -> None:
+        assert value > 0, f'MoveIt delay must be greater than 0. Got {value}'
+        self._delay = value
 
     @property
     def ros_parameters(self) -> dict:

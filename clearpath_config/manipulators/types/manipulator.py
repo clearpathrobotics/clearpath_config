@@ -93,6 +93,7 @@ class BaseManipulator(IndexedAccessory):
     ROS_PARAMETERS = {}
     ROS_PARAMETERS_TEMPLATE = {}
     JOINT_COUNT = 0
+    URDF_PARAMETERS = {}
 
     class ROSParameter:
         def __init__(
@@ -119,6 +120,8 @@ class BaseManipulator(IndexedAccessory):
         # ROS Parameters
         self.ros_parameters_template = ros_parameters_template
         self.ros_parameters = ros_parameters
+        # URDF Parameters
+        self.urdf_parameters = dict(self.URDF_PARAMETERS)
         super().__init__(idx, name, parent, xyz, rpy)
 
     def to_dict(self) -> dict:
@@ -131,6 +134,9 @@ class BaseManipulator(IndexedAccessory):
         d['poses'] = []
         for pose in self.poses:
             d['poses'].append(pose.to_dict())
+        for k, v in self.urdf_parameters.items():
+            if v:
+                d[k] = v
         return d
 
     def from_dict(self, d: dict) -> None:
@@ -144,6 +150,9 @@ class BaseManipulator(IndexedAccessory):
             self.set_ros_parameters(d['ros_parameters'])
         if 'poses' in d:
             self.poses = d['poses']
+        for k in self.urdf_parameters:
+            if k in d:
+                self.urdf_parameters[k] = d[k]
 
     @classmethod
     def get_manipulator_model(cls) -> str:
@@ -219,3 +228,10 @@ class BaseManipulator(IndexedAccessory):
             manipulator_pose.from_dict(pose)
             poses_.append(manipulator_pose)
         self._poses = poses_
+
+    def get_urdf_parameters(self) -> dict:
+        d = {}
+        for k, v in self.urdf_parameters.items():
+            if v:
+                d[k] = v
+        return d
