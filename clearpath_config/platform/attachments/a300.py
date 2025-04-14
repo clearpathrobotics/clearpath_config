@@ -134,6 +134,26 @@ class A300ObserverArch(BaseAttachment):
         super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
+class A300Spotlight(BaseAttachment):
+    PLATFORM = Platform.A300
+    ATTACHMENT_MODEL = f'{PLATFORM}.spotlight'
+    SPOTLIGHT = 'spotlight'
+    MODELS = [SPOTLIGHT]
+    DEFAULT = SPOTLIGHT
+    PARENT = 'default_mount'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
 class A300Attachment(PlatformAttachment):
     PLATFORM = Platform.A300
     # Top Plates
@@ -145,6 +165,8 @@ class A300Attachment(PlatformAttachment):
     # Observer
     OBSERVER_BACKPACK = A300ObserverBackpack.ATTACHMENT_MODEL
     OBSERVER_ARCH = A300ObserverArch.ATTACHMENT_MODEL
+    # Spotlight
+    SPOTLIGHT = A300Spotlight.ATTACHMENT_MODEL
 
     TYPES = {
         TOP_PLATE: A300TopPlate,
@@ -152,4 +174,5 @@ class A300Attachment(PlatformAttachment):
         AMP_FRAME: A300AMPFrame,
         OBSERVER_BACKPACK: A300ObserverBackpack,
         OBSERVER_ARCH: A300ObserverArch,
+        SPOTLIGHT: A300Spotlight,
     }

@@ -19,6 +19,26 @@ platform:
     - name: observer_arch
       type: a300.observer_arch
       parent: observer_backpack_antenna_mount
+    - name: driving_light_1
+      type: a300.spotlight
+      parent: observer_arch_front_left_corner_mount
+      xyz: [0.0, 0.0, -0.08]
+      rpy: [0.0, 0.5235987755982988, 0.5235987755982988]
+    - name: driving_light_2
+      type: a300.spotlight
+      parent: observer_arch_front_right_corner_mount
+      xyz: [0.0, 0.0, -0.08]
+      rpy: [0.0, 0.5235987755982988, -0.5235987755982988]
+    - name: driving_light_3
+      type: a300.spotlight
+      parent: observer_arch_rear_left_corner_mount
+      xyz: [0.0, 0.0, -0.08]
+      rpy: [0.0, 0.5235987755982988, -0.5235987755982988]
+    - name: driving_light_4
+      type: a300.spotlight
+      parent: observer_arch_rear_right_corner_mount
+      xyz: [0.0, 0.0, -0.08]
+      rpy: [0.0, 0.5235987755982988, 0.5235987755982988]
 sensors:
   imu:
     - model: phidgets_spatial
