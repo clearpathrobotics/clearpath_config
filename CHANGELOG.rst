@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.0 (2025-04-15)
+------------------
 * Feature: Add delay to manipulator controller (`#141 <https://github.com/clearpathrobotics/clearpath_config/issues/141>`_)
 * Feature: Manipulator URDF Parameters (`#140 <https://github.com/clearpathrobotics/clearpath_config/issues/140>`_)
 * Contributors: Luis Camero

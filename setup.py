@@ -38,7 +38,7 @@ for path, dirs, files in os.walk(os.path.join(package_name, "sample")):
 
 setup(
     name=package_name,
-    version="1.2.0",
+    version="1.3.0",
     packages=[
         package_name,
         package_name + ".common",
