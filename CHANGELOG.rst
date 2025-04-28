@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fixed the Husky A300 serial sample to match the real serial.
+* Contributors: Tony Baltovski
+
 2.3.0 (2025-04-11)
 ------------------
 * Added a single Hokuyo laser to default R100 sample. (`#157 <https://github.com/clearpathrobotics/clearpath_config/issues/157>`_)
