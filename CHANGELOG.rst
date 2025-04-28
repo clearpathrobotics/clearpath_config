@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.3.1 (2025-04-28)
+------------------
 * Fixed the Husky A300 serial sample to match the real serial.
 * Contributors: Tony Baltovski
 
