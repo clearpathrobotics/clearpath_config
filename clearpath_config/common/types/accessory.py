@@ -132,6 +132,17 @@ class Accessory():
         assert all([isinstance(i, float) for i in tri])  # noqa:C419
 
     @staticmethod
+    def assert_valid_quadruple(quad: List[float], msg: str = None) -> None:
+        if msg is None:
+            msg = 'Quadruple must be a list of four float values'
+        # Quad must be a list
+        assert isinstance(quad, list), msg
+        # Quad must have a length of 4
+        assert len(quad) == 4, msg
+        # Quad must be all floats
+        assert all([isinstance(i, float) for i in quad])  # noqa:C419
+
+    @staticmethod
     def assert_is_supported():
         """
         Override this method to temporarily disable accessories that are not currently supported.

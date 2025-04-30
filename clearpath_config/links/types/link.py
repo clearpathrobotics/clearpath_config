@@ -59,21 +59,24 @@ class BaseLink(Accessory):
     LINK_TYPE = 'base'
     OFFSET_XYZ = [0.0, 0.0, 0.0]
     OFFSET_RPY = [0.0, 0.0, 0.0]
+    rgba = [0.2, 0.2, 0.2, 1.0]  # clearpath_dark_grey
 
     def __init__(
-            self,
-            name: str,
-            parent: str = Accessory.PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY,
-            offset_xyz: List[float] = OFFSET_XYZ,
-            offset_rpy: List[float] = OFFSET_RPY
-            ) -> None:
+        self,
+        name: str,
+        parent: str = Accessory.PARENT,
+        xyz: List[float] = Accessory.XYZ,
+        rpy: List[float] = Accessory.RPY,
+        offset_xyz: List[float] = OFFSET_XYZ,
+        offset_rpy: List[float] = OFFSET_RPY,
+        rgba: List[float] = rgba,
+    ) -> None:
         super().__init__(name, parent, xyz, rpy)
         self.offset_xyz: List[float] = BaseLink.OFFSET_XYZ
         self.set_offset_xyz(offset_xyz)
         self.offset_rpy: List[float] = BaseLink.OFFSET_RPY
         self.set_offset_rpy(offset_rpy)
+        self.set_rgba(rgba)
 
     def to_dict(self) -> dict:
         d = {}
@@ -81,6 +84,7 @@ class BaseLink(Accessory):
         d['parent'] = self.get_parent()
         d['xyz'] = self.get_xyz()
         d['rpy'] = self.get_rpy()
+        d['rgba'] = self.get_rgba()
         return d
 
     def from_dict(self, d: dict) -> None:
@@ -92,6 +96,8 @@ class BaseLink(Accessory):
             self.set_xyz(d['xyz'])
         if 'rpy' in d:
             self.set_rpy(d['rpy'])
+        if 'rgba' in d:
+            self.set_rgba(d['rgba'])
 
     @classmethod
     def get_link_type(cls) -> str:
@@ -113,3 +119,14 @@ class BaseLink(Accessory):
             'Offset RPY must be a list of exactly three float values'
         )
         self.offset_rpy = rpy
+
+    def get_rgba(self) -> List[float]:
+        return self.rgba
+
+    def set_rgba(self, rgba: List[float]) -> None:
+        Accessory.assert_valid_quadruple(
+            rgba,
+            'RGBA must be a list of exactly 4 float values'
+        )
+        self.rgba = rgba
+
