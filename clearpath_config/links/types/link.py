@@ -59,7 +59,8 @@ class BaseLink(Accessory):
     LINK_TYPE = 'base'
     OFFSET_XYZ = [0.0, 0.0, 0.0]
     OFFSET_RPY = [0.0, 0.0, 0.0]
-    rgba = [0.2, 0.2, 0.2, 1.0]  # clearpath_dark_grey
+    RGBA = [0.2, 0.2, 0.2, 1.0]  # clearpath_dark_grey
+    COLLISION_ENABLE = True
 
     def __init__(
         self,
@@ -69,7 +70,8 @@ class BaseLink(Accessory):
         rpy: List[float] = Accessory.RPY,
         offset_xyz: List[float] = OFFSET_XYZ,
         offset_rpy: List[float] = OFFSET_RPY,
-        rgba: List[float] = rgba,
+        rgba: List[float] = RGBA,
+        collision_enable: bool = COLLISION_ENABLE,
     ) -> None:
         super().__init__(name, parent, xyz, rpy)
         self.offset_xyz: List[float] = BaseLink.OFFSET_XYZ
@@ -77,6 +79,7 @@ class BaseLink(Accessory):
         self.offset_rpy: List[float] = BaseLink.OFFSET_RPY
         self.set_offset_rpy(offset_rpy)
         self.set_rgba(rgba)
+        self.set_collision_enable(collision_enable)
 
     def to_dict(self) -> dict:
         d = {}
@@ -85,6 +88,7 @@ class BaseLink(Accessory):
         d['xyz'] = self.get_xyz()
         d['rpy'] = self.get_rpy()
         d['rgba'] = self.get_rgba()
+        d['collision'] = self.get_collision_enable()
         return d
 
     def from_dict(self, d: dict) -> None:
@@ -98,6 +102,8 @@ class BaseLink(Accessory):
             self.set_rpy(d['rpy'])
         if 'rgba' in d:
             self.set_rgba(d['rgba'])
+        if 'collision' in d:
+            self.set_collision_enable(d['collision'])
 
     @classmethod
     def get_link_type(cls) -> str:
@@ -130,3 +136,8 @@ class BaseLink(Accessory):
         )
         self.rgba = rgba
 
+    def get_collision_enable(self) -> bool:
+        return self.collision_enable
+
+    def set_collision_enable(self, enable: bool) -> None:
+        self.collision_enable = enable
