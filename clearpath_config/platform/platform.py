@@ -272,7 +272,9 @@ class PlatformConfig(BaseConfig):
 
     @can_bridges.setter
     def can_bridges(self, value: dict) -> None:
-        self._can_bridges = CANBridgeConfig(value)
+        self._can_bridges = CANBridgeConfig()
+        self._can_bridges.update(True)
+        self._can_bridges.config = value
 
     @property
     def extras(self) -> ExtrasConfig:
