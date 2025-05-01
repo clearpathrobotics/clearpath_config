@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Keep default can_bridge entries (`#160 <https://github.com/clearpathrobotics/clearpath_config/issues/160>`_)
+* Contributors: Luis Camero
+
 2.3.1 (2025-04-28)
 ------------------
 * Fixed the Husky A300 serial sample to match the real serial.
