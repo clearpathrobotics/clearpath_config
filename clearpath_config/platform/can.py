@@ -407,11 +407,10 @@ class CANBridgeConfig:
 
     @config.setter
     def config(self, can_bridges: list):
-        self._can_bridges.remove_all()
         for b in can_bridges:
             bridge = CANBridge()
             bridge.from_dict(b)
-            self._can_bridges.add(bridge)
+            self._can_bridges.set(bridge)
 
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
