@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.4.0 (2025-05-01)
+------------------
 * Keep default can_bridge entries (`#160 <https://github.com/clearpathrobotics/clearpath_config/issues/160>`_)
 * Contributors: Luis Camero
 
