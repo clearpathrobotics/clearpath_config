@@ -119,6 +119,9 @@ class PlatformConfig(BaseConfig):
     # Enable/disable EKF
     ENABLE_EKF = 'enable_ekf'
 
+    # Enable/disable recorder
+    ENABLE_RECORDER = 'enable_recorder'
+
     TEMPLATE = {
         PLATFORM: {
             CONTROLLER: CONTROLLER,
@@ -131,7 +134,8 @@ class PlatformConfig(BaseConfig):
             CONTROL: CONTROL,
             BATTERY: BATTERY,
             WHEEL: WHEEL,
-            ENABLE_EKF: ENABLE_EKF
+            ENABLE_EKF: ENABLE_EKF,
+            ENABLE_RECORDER: ENABLE_RECORDER,
         }
     }
 
@@ -150,6 +154,7 @@ class PlatformConfig(BaseConfig):
         BATTERY: BatteryConfig.DEFAULTS,
         WHEEL: 'default',
         ENABLE_EKF: True,
+        ENABLE_RECORDER: False,
     }
 
     def __init__(
@@ -163,6 +168,7 @@ class PlatformConfig(BaseConfig):
             extras: dict = DEFAULTS[EXTRAS],
             wheel: dict = DEFAULTS[WHEEL],
             enable_ekf: bool = DEFAULTS[ENABLE_EKF],
+            enable_recorder: bool = DEFAULTS[ENABLE_RECORDER],
             ) -> None:
         # Initialization
         self._config = {}
@@ -177,6 +183,7 @@ class PlatformConfig(BaseConfig):
         self.control = self.DEFAULTS[self.CONTROL]
         self.wheel = wheel
         self.enable_ekf = enable_ekf
+        self.enable_recorder = enable_recorder
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
@@ -186,7 +193,8 @@ class PlatformConfig(BaseConfig):
             self.KEYS[self.BATTERY]: PlatformConfig.battery,
             self.KEYS[self.EXTRAS]: PlatformConfig.extras,
             self.KEYS[self.WHEEL]: PlatformConfig.wheel,
-            self.KEYS[self.ENABLE_EKF]: PlatformConfig.enable_ekf
+            self.KEYS[self.ENABLE_EKF]: PlatformConfig.enable_ekf,
+            self.KEYS[self.ENABLE_RECORDER]: PlatformConfig.enable_recorder,
         }
         super().__init__(setters, config, self.PLATFORM)
 
@@ -385,3 +393,15 @@ class PlatformConfig(BaseConfig):
     @enable_ekf.setter
     def enable_ekf(self, value: bool) -> None:
         self._enable_ekf = value
+
+    @property
+    def enable_recorder(self) -> bool:
+        self.set_config_param(
+            key=self.KEYS[self.ENABLE_RECORDER],
+            value=self._enable_recorder
+        )
+        return self._enable_recorder
+
+    @enable_recorder.setter
+    def enable_recorder(self, value: bool) -> None:
+        self._enable_recorder = value
