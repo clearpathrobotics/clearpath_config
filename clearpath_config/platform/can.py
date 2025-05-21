@@ -247,6 +247,8 @@ class CANBridge:
     AUTO_ACTIVATE = 'auto_activate'
     TOPIC_RX = 'topic_rx'
     TOPIC_TX = 'topic_tx'
+    TIMEOUT = 'timeout'
+    TRANSITION_ATTEMPTS = 'transition_attempts'
 
     DEFAULTS = {
         INTERFACE: 'can0',
@@ -257,7 +259,10 @@ class CANBridge:
         AUTO_CONFIGURE: True,
         AUTO_ACTIVATE: True,
         TOPIC_RX: 'can0/rx',
-        TOPIC_TX: 'can0/tx'
+        TOPIC_TX: 'can0/tx',
+        TIMEOUT: 5.0,
+        TRANSITION_ATTEMPTS: 3,
+
     }
 
     def __init__(
@@ -271,6 +276,8 @@ class CANBridge:
             auto_activate: bool = DEFAULTS[AUTO_ACTIVATE],
             topic_rx: str = DEFAULTS[TOPIC_RX],
             topic_tx: str = DEFAULTS[TOPIC_TX],
+            timeout: float = DEFAULTS[TIMEOUT],
+            transition_attempts: int = DEFAULTS[TRANSITION_ATTEMPTS],
             ) -> None:
         self.topic_rx = topic_rx
         self.topic_tx = topic_tx
@@ -281,6 +288,8 @@ class CANBridge:
         self.filters = filters
         self.auto_configure = auto_configure
         self.auto_activate = auto_activate
+        self.timeout = timeout
+        self.transition_attempts = transition_attempts
 
     def to_dict(self) -> dict:
         d = {}
@@ -293,6 +302,8 @@ class CANBridge:
         d[self.AUTO_ACTIVATE] = self.auto_activate
         d[self.TOPIC_RX] = self.topic_rx
         d[self.TOPIC_TX] = self.topic_tx
+        d[self.TIMEOUT] = self.timeout
+        d[self.TRANSITION_ATTEMPTS] = self.transition_attempts
         return d
 
     def from_dict(self, d: dict) -> None:
@@ -314,6 +325,10 @@ class CANBridge:
             self.topic_rx = d[self.TOPIC_RX]
         if self.TOPIC_TX in d:
             self.topic_tx = d[self.TOPIC_TX]
+        if self.TIMEOUT in d:
+            self.timeout = d[self.TIMEOUT]
+        if self.TRANSITION_ATTEMPTS in d:
+            self.transition_attempts = d[self.TRANSITION_ATTEMPTS]
 
     @property
     def interface(self) -> str:
@@ -349,6 +364,8 @@ class CANBridgeConfig:
             CANBridge.FILTERS: '0:0',
             CANBridge.AUTO_CONFIGURE: True,
             CANBridge.AUTO_ACTIVATE: True,
+            CANBridge.TIMEOUT: 5.0,
+            CANBridge.TRANSITION_ATTEMPTS: 3,
         }
     ]
 
@@ -361,6 +378,8 @@ class CANBridgeConfig:
             CANBridge.FILTERS: '0:0',
             CANBridge.AUTO_CONFIGURE: True,
             CANBridge.AUTO_ACTIVATE: True,
+            CANBridge.TIMEOUT: 5.0,
+            CANBridge.TRANSITION_ATTEMPTS: 3,
         },
         # TODO: Re-enable when battery driver uses clearpath_ros2_socketcan_interface
         # {
@@ -371,6 +390,8 @@ class CANBridgeConfig:
         #     CANBridge.FILTERS: '0:0',
         #     CANBridge.AUTO_CONFIGURE: True,
         #     CANBridge.AUTO_ACTIVATE: True,
+        #     CANBridge.TIMEOUT: 5.0,
+        #     CANBridge.TRANSITION_ATTEMPTS: 3,
         # }
     ]
 
