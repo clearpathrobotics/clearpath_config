@@ -118,9 +118,10 @@ class PlatformConfig(BaseConfig):
 
     # Enable/disable EKF
     ENABLE_EKF = 'enable_ekf'
-
     # Enable/disable Foxglove bridge
     ENABLE_FOXGLOVE_BRIDGE = 'enable_foxglove_bridge'
+    # Enable/disable Wireless Watcher
+    ENABLE_WIRELESS_WATCHER = 'enable_wireless_watcher'
 
     TEMPLATE = {
         PLATFORM: {
@@ -136,6 +137,7 @@ class PlatformConfig(BaseConfig):
             WHEEL: WHEEL,
             ENABLE_EKF: ENABLE_EKF,
             ENABLE_FOXGLOVE_BRIDGE: ENABLE_FOXGLOVE_BRIDGE,
+            ENABLE_WIRELESS_WATCHER: ENABLE_WIRELESS_WATCHER
         }
     }
 
@@ -155,6 +157,7 @@ class PlatformConfig(BaseConfig):
         WHEEL: 'default',
         ENABLE_EKF: True,
         ENABLE_FOXGLOVE_BRIDGE: False,
+        ENABLE_WIRELESS_WATCHER: True
     }
 
     def __init__(
@@ -169,6 +172,7 @@ class PlatformConfig(BaseConfig):
             wheel: dict = DEFAULTS[WHEEL],
             enable_ekf: bool = DEFAULTS[ENABLE_EKF],
             enable_foxglove_bridge: bool = DEFAULTS[ENABLE_FOXGLOVE_BRIDGE],
+            enable_wireless_watcher: bool = DEFAULTS[ENABLE_WIRELESS_WATCHER],
             ) -> None:
         # Initialization
         self._config = {}
@@ -184,6 +188,8 @@ class PlatformConfig(BaseConfig):
         self.wheel = wheel
         self.enable_ekf = enable_ekf
         self.enable_foxglove_bridge = enable_foxglove_bridge
+        self.enable_wireless_watcher = enable_wireless_watcher
+
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
@@ -195,6 +201,7 @@ class PlatformConfig(BaseConfig):
             self.KEYS[self.WHEEL]: PlatformConfig.wheel,
             self.KEYS[self.ENABLE_EKF]: PlatformConfig.enable_ekf,
             self.KEYS[self.ENABLE_FOXGLOVE_BRIDGE]: PlatformConfig.enable_foxglove_bridge,
+            self.KEYS[self.ENABLE_WIRELESS_WATCHER]: PlatformConfig.enable_wireless_watcher
         }
         super().__init__(setters, config, self.PLATFORM)
 
@@ -405,3 +412,15 @@ class PlatformConfig(BaseConfig):
     @enable_foxglove_bridge.setter
     def enable_foxglove_bridge(self, value: bool) -> None:
         self._enable_foxglove_bridge = value
+
+    @property
+    def enable_wireless_watcher(self) -> bool:
+        self.set_config_param(
+            key=self.KEYS[self.ENABLE_WIRELESS_WATCHER],
+            value=self._enable_wireless_watcher
+        )
+        return self._enable_wireless_watcher
+
+    @enable_wireless_watcher.setter
+    def enable_wireless_watcher(self, value: bool) -> None:
+        self._enable_wireless_watcher = value
