@@ -119,7 +119,7 @@ class PlatformConfig(BaseConfig):
     # Enable/disable EKF
     ENABLE_EKF = 'enable_ekf'
 
-    # Enable/disable EKF
+    # Enable/disable Wireless Watcher
     ENABLE_WIRELESS_WATCHER = 'enable_wireless_watcher'
 
     TEMPLATE = {
