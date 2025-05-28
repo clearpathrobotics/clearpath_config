@@ -97,7 +97,7 @@ class Platform:
     PACS = {
         GENERIC: PACSProfile(rows=100, columns=100),
         A200: PACSProfile(rows=8, columns=7),
-        A300: PACSProfile(rows=8, columns=7),
+        A300: PACSProfile(rows=9, columns=5),
         J100: PACSProfile(rows=4, columns=2),
         W200: PACSProfile(rows=100, columns=100),
         R100: PACSProfile(rows=100, columns=100),
