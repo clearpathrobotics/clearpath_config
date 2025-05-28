@@ -34,8 +34,8 @@ from clearpath_config.mounts.types.mount import BaseMount
 # PACS
 # - all PACS structures
 class PACS:
-    MAX_ROWS = 8
-    MAX_COLUMNS = 7
+    MAX_ROWS = 20
+    MAX_COLUMNS = 20
 
     class Riser(BaseMount):
         MOUNT_MODEL = 'riser'
