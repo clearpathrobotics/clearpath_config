@@ -2,6 +2,16 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix: PACS Limits (`#171 <https://github.com/clearpathrobotics/clearpath_config/issues/171>`_)
+* Add foxglove bridge enable to platform section (`#169 <https://github.com/clearpathrobotics/clearpath_config/issues/169>`_)
+* Add enable setting for wireless-watcher (`#170 <https://github.com/clearpathrobotics/clearpath_config/issues/170>`_)
+* Feature: CAN Bridge Parameters (`#166 <https://github.com/clearpathrobotics/clearpath_config/issues/166>`_)
+* Add cap_type parameter to the OS1 sample since it's supported (`#163 <https://github.com/clearpathrobotics/clearpath_config/issues/163>`_)
+* Fix/issue typos (`#168 <https://github.com/clearpathrobotics/clearpath_config/issues/168>`_)
+* Contributors: Chris Iverach-Brereton, Hilary Luo, luis-camero
+
 2.4.0 (2025-05-01)
 ------------------
 * Keep default can_bridge entries (`#160 <https://github.com/clearpathrobotics/clearpath_config/issues/160>`_)
