@@ -16,3 +16,4 @@ sensors:
           imu_port: 7503
           proc_mask: IMU|PCL|SCAN|IMG|RAW|TLM
           use_system_default_qos: false
+          cap_type: halo  # either halo or fins
