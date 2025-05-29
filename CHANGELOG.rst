@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.5.0 (2025-05-29)
+------------------
 * Fix: PACS Limits (`#171 <https://github.com/clearpathrobotics/clearpath_config/issues/171>`_)
 * Add foxglove bridge enable to platform section (`#169 <https://github.com/clearpathrobotics/clearpath_config/issues/169>`_)
 * Add enable setting for wireless-watcher (`#170 <https://github.com/clearpathrobotics/clearpath_config/issues/170>`_)
