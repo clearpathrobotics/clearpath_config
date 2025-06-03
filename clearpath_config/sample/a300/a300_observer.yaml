@@ -14,6 +14,8 @@ platform:
     - name: rear_bumper
       type: a300.bumper
       parent: rear_bumper_mount
+    - name: wireless_charger
+      type: a300.wireless_charger
     - name: observer_backpack
       type: a300.observer_backpack
     - name: observer_arch

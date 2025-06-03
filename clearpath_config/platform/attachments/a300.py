@@ -75,6 +75,25 @@ class A300Bumper(Bumper):
         super().__init__(name, model, enabled, extension, parent, xyz, rpy)
 
 
+class A300WirelessCharger(BaseAttachment):
+    PLATFORM = Platform.A300
+    ATTACHMENT_MODEL = f'{PLATFORM}.wireless_charger'
+    DEFAULT = 'default'
+    MODELS = [DEFAULT]
+    PARENT = 'base_link'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
 class A300AMPFrame(BaseAttachment):
     PLATFORM = Platform.A300
     ATTACHMENT_MODEL = '%s.amp_frame' % PLATFORM
@@ -167,6 +186,8 @@ class A300Attachment(PlatformAttachment):
     OBSERVER_ARCH = A300ObserverArch.ATTACHMENT_MODEL
     # Spotlight
     SPOTLIGHT = A300Spotlight.ATTACHMENT_MODEL
+    # Wireless charger
+    WIRELESS_CHARGER = A300WirelessCharger.ATTACHMENT_MODEL
 
     TYPES = {
         TOP_PLATE: A300TopPlate,
@@ -175,4 +196,5 @@ class A300Attachment(PlatformAttachment):
         OBSERVER_BACKPACK: A300ObserverBackpack,
         OBSERVER_ARCH: A300ObserverArch,
         SPOTLIGHT: A300Spotlight,
+        WIRELESS_CHARGER: A300WirelessCharger,
     }
