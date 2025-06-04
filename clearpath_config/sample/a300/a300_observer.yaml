@@ -14,6 +14,8 @@ platform:
     - name: rear_bumper
       type: a300.bumper
       parent: rear_bumper_mount
+    - name: wireless_charger
+      type: a300.wireless_charger
     - name: enclosure
       type: a300.amp_enclosure
     - name: sensor_arch
@@ -119,8 +121,67 @@ sensors:
             i_publish_topic: false
             i_resolution: '1080P'
             i_width: 1280
+    - model: axis_camera
+      parent: base_link
+      xyz: [0.40, 0.0, 0.4106593]
+      ros_parameters:
+        axis_camera:
+          device_type: q62
+          hostname: "192.168.131.10"
+          http_port: 80
+          username: "root"
+          password: ""
+          width: 640
+          height: 480
+          fps: 20
+          tf_prefix: "axis"
+          camera_info_url: ""
+          use_encrypted_password : False
+          camera : 1
+          ir: True
+          defog: True
+          wiper: True
+          ptz: True
+          min_pan: -3.141592653589793
+          max_pan: 3.141592653589793
+          min_tilt: 0.0
+          max_tilt: 1.5707963267948966
+          min_zoom: 1
+          max_zoom: 24
+          max_pan_speed: 2.61
+          max_tilt_speed: 2.61
+          ptz_teleop: True
+          button_enable_pan_tilt : -1
+          button_enable_zoom     : -1
+          axis_pan      : 3
+          axis_tilt     : 4
+          invert_tilt   : False
+          axis_zoom_in: 5
+          axis_zoom_out: 2
+          zoom_in_offset: -1.0
+          zoom_out_offset: -1.0
+          zoom_in_scale: -0.5
+          zoom_out_scale: 0.5
+          scale_pan     : 2.61
+          scale_tilt    : 2.61
+          scale_zoom    : 100.0
   lidar3d:
     - model: seyond_lidar
       urdf_enabled: true
       launch_enabled: false
       parent: enclosure_front_lidar_mount
+    # Ouster is an optional add-on
+    - model: ouster_os1
+      urdf_enabled: true
+      launch_enabled: true
+      parent: sensor_arch_lidar_mount
+      ros_parameters:
+        ouster_driver:
+          cap_type: fins
+          base_type: none
+          sensor_hostname: 192.168.131.20
+          udp_dest: 192.168.131.100
+          lidar_port: 7502
+          imu_port: 7503
+          proc_mask: IMU|PCL|SCAN|IMG|RAW|TLM
+          use_system_default_qos: false
