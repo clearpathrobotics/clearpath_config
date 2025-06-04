@@ -16,29 +16,29 @@ platform:
       parent: rear_bumper_mount
     - name: wireless_charger
       type: a300.wireless_charger
-    - name: observer_backpack
-      type: a300.observer_backpack
-    - name: observer_arch
-      type: a300.observer_arch
-      parent: observer_backpack_antenna_mount
+    - name: enclosure
+      type: a300.amp_enclosure
+    - name: sensor_arch
+      type: a300.amp_sensor_arch
+      parent: enclosure_antenna_mount
     - name: driving_light_1
       type: a300.spotlight
-      parent: observer_arch_front_left_corner_mount
+      parent: sensor_arch_front_left_corner_mount
       xyz: [0.0, 0.0, -0.08]
       rpy: [0.0, 0.5235987755982988, 0.5235987755982988]
     - name: driving_light_2
       type: a300.spotlight
-      parent: observer_arch_front_right_corner_mount
+      parent: sensor_arch_front_right_corner_mount
       xyz: [0.0, 0.0, -0.08]
       rpy: [0.0, 0.5235987755982988, -0.5235987755982988]
     - name: driving_light_3
       type: a300.spotlight
-      parent: observer_arch_rear_left_corner_mount
+      parent: sensor_arch_rear_left_corner_mount
       xyz: [0.0, 0.0, -0.08]
       rpy: [0.0, 0.5235987755982988, -0.5235987755982988]
     - name: driving_light_4
       type: a300.spotlight
-      parent: observer_arch_rear_right_corner_mount
+      parent: sensor_arch_rear_right_corner_mount
       xyz: [0.0, 0.0, -0.08]
       rpy: [0.0, 0.5235987755982988, 0.5235987755982988]
 sensors:
@@ -54,15 +54,15 @@ sensors:
           data_interval_ms: 20
   ins:
     - model: fixposition
-      parent: observer_backpack_ins_mount
+      parent: enclosure_ins_mount
       antennas:
-        - parent: observer_arch_right_antenna_mount
-        - parent: observer_arch_left_antenna_mount
+        - parent: sensor_arch_right_antenna_mount
+        - parent: sensor_arch_left_antenna_mount
   camera:
     - model: luxonis_oakd
       urdf_enabled: true
       launch_enabled: true
-      parent: observer_arch_front_camera_mount
+      parent: sensor_arch_front_camera_mount
       ros_parameters:
         oakd:
           device_type: pro_w_poe
@@ -93,7 +93,7 @@ sensors:
     - model: luxonis_oakd
       urdf_enabled: true
       launch_enabled: true
-      parent: observer_arch_rear_camera_mount
+      parent: sensor_arch_rear_camera_mount
       ros_parameters:
         oakd:
           device_type: pro_w_poe
@@ -169,11 +169,12 @@ sensors:
     - model: seyond_lidar
       urdf_enabled: true
       launch_enabled: false
-      parent: observer_backpack_front_lidar_mount
+      parent: enclosure_front_lidar_mount
+    # Ouster is an optional add-on
     - model: ouster_os1
       urdf_enabled: true
       launch_enabled: true
-      parent: observer_arch_lidar_mount
+      parent: sensor_arch_lidar_mount
       ros_parameters:
         ouster_driver:
           cap_type: fins

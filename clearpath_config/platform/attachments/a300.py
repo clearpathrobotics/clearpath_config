@@ -94,31 +94,12 @@ class A300WirelessCharger(BaseAttachment):
         super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
-class A300AMPFrame(BaseAttachment):
+class A300AmpEnclosure(BaseAttachment):
     PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = '%s.amp_frame' % PLATFORM
-    DEFAULT = 'default'
-    MODELS = [DEFAULT]
-    PARENT = 'default_mount'
-
-    def __init__(
-            self,
-            name: str = ATTACHMENT_MODEL,
-            model: str = DEFAULT,
-            enabled: bool = BaseAttachment.ENABLED,
-            parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
-
-
-class A300ObserverBackpack(BaseAttachment):
-    PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = f'{PLATFORM}.observer_backpack'
-    OBSERVER_BACKPACK = 'observer_backpack'
-    MODELS = [OBSERVER_BACKPACK]
-    DEFAULT = OBSERVER_BACKPACK
+    ATTACHMENT_MODEL = f'{PLATFORM}.amp_enclosure'
+    AMP_ENCLOSURE = 'amp_enclosure'
+    MODELS = [AMP_ENCLOSURE]
+    DEFAULT = AMP_ENCLOSURE
     PARENT = 'base_link'
 
     def __init__(
@@ -133,12 +114,12 @@ class A300ObserverBackpack(BaseAttachment):
         super().__init__(name, model, enabled, parent, xyz, rpy)
 
 
-class A300ObserverArch(BaseAttachment):
+class A300AmpSensorArch(BaseAttachment):
     PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = f'{PLATFORM}.observer_arch'
-    OBSERVER_ARCH = 'observer_arch'
-    MODELS = [OBSERVER_ARCH]
-    DEFAULT = OBSERVER_ARCH
+    ATTACHMENT_MODEL = f'{PLATFORM}.amp_sensor_arch'
+    AMP_SENSOR_ARCH = 'amp_sensor_arch'
+    MODELS = [AMP_SENSOR_ARCH]
+    DEFAULT = AMP_SENSOR_ARCH
     PARENT = 'default_mount'
 
     def __init__(
@@ -179,11 +160,9 @@ class A300Attachment(PlatformAttachment):
     TOP_PLATE = A300TopPlate.ATTACHMENT_MODEL
     # Bumper
     BUMPER = A300Bumper.ATTACHMENT_MODEL
-    # AMP frame
-    AMP_FRAME = A300AMPFrame.ATTACHMENT_MODEL
-    # Observer
-    OBSERVER_BACKPACK = A300ObserverBackpack.ATTACHMENT_MODEL
-    OBSERVER_ARCH = A300ObserverArch.ATTACHMENT_MODEL
+    # Observer/AMP attachments
+    AMP_ENCLOSURE = A300AmpEnclosure.ATTACHMENT_MODEL
+    AMP_SENSOR_ARCH = A300AmpSensorArch.ATTACHMENT_MODEL
     # Spotlight
     SPOTLIGHT = A300Spotlight.ATTACHMENT_MODEL
     # Wireless charger
@@ -192,9 +171,8 @@ class A300Attachment(PlatformAttachment):
     TYPES = {
         TOP_PLATE: A300TopPlate,
         BUMPER: A300Bumper,
-        AMP_FRAME: A300AMPFrame,
-        OBSERVER_BACKPACK: A300ObserverBackpack,
-        OBSERVER_ARCH: A300ObserverArch,
+        AMP_ENCLOSURE: A300AmpEnclosure,
+        AMP_SENSOR_ARCH: A300AmpSensorArch,
         SPOTLIGHT: A300Spotlight,
         WIRELESS_CHARGER: A300WirelessCharger,
     }
