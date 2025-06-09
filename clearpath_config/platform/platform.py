@@ -156,7 +156,7 @@ class PlatformConfig(BaseConfig):
         BATTERY: BatteryConfig.DEFAULTS,
         WHEEL: 'default',
         ENABLE_EKF: True,
-        ENABLE_FOXGLOVE_BRIDGE: False,
+        ENABLE_FOXGLOVE_BRIDGE: True,
         ENABLE_WIRELESS_WATCHER: True
     }
 
