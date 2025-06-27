@@ -123,6 +123,9 @@ class PlatformConfig(BaseConfig):
     # Enable/disable Wireless Watcher
     ENABLE_WIRELESS_WATCHER = 'enable_wireless_watcher'
 
+    # Enable/disable recorder
+    ENABLE_RECORDER = 'enable_recorder'
+
     TEMPLATE = {
         PLATFORM: {
             CONTROLLER: CONTROLLER,
@@ -137,7 +140,9 @@ class PlatformConfig(BaseConfig):
             WHEEL: WHEEL,
             ENABLE_EKF: ENABLE_EKF,
             ENABLE_FOXGLOVE_BRIDGE: ENABLE_FOXGLOVE_BRIDGE,
-            ENABLE_WIRELESS_WATCHER: ENABLE_WIRELESS_WATCHER
+            ENABLE_WIRELESS_WATCHER: ENABLE_WIRELESS_WATCHER,
+            ENABLE_RECORDER: ENABLE_RECORDER,
+
         }
     }
 
@@ -157,7 +162,8 @@ class PlatformConfig(BaseConfig):
         WHEEL: 'default',
         ENABLE_EKF: True,
         ENABLE_FOXGLOVE_BRIDGE: True,
-        ENABLE_WIRELESS_WATCHER: True
+        ENABLE_WIRELESS_WATCHER: True,
+        ENABLE_RECORDER: False,
     }
 
     def __init__(
@@ -173,6 +179,7 @@ class PlatformConfig(BaseConfig):
             enable_ekf: bool = DEFAULTS[ENABLE_EKF],
             enable_foxglove_bridge: bool = DEFAULTS[ENABLE_FOXGLOVE_BRIDGE],
             enable_wireless_watcher: bool = DEFAULTS[ENABLE_WIRELESS_WATCHER],
+            enable_recorder: bool = DEFAULTS[ENABLE_RECORDER],
             ) -> None:
         # Initialization
         self._config = {}
@@ -189,7 +196,7 @@ class PlatformConfig(BaseConfig):
         self.enable_ekf = enable_ekf
         self.enable_foxglove_bridge = enable_foxglove_bridge
         self.enable_wireless_watcher = enable_wireless_watcher
-
+        self.enable_recorder = enable_recorder
         # Setter Template
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
@@ -201,7 +208,8 @@ class PlatformConfig(BaseConfig):
             self.KEYS[self.WHEEL]: PlatformConfig.wheel,
             self.KEYS[self.ENABLE_EKF]: PlatformConfig.enable_ekf,
             self.KEYS[self.ENABLE_FOXGLOVE_BRIDGE]: PlatformConfig.enable_foxglove_bridge,
-            self.KEYS[self.ENABLE_WIRELESS_WATCHER]: PlatformConfig.enable_wireless_watcher
+            self.KEYS[self.ENABLE_WIRELESS_WATCHER]: PlatformConfig.enable_wireless_watcher,
+            self.KEYS[self.ENABLE_RECORDER]: PlatformConfig.enable_recorder,
         }
         super().__init__(setters, config, self.PLATFORM)
 
@@ -424,3 +432,15 @@ class PlatformConfig(BaseConfig):
     @enable_wireless_watcher.setter
     def enable_wireless_watcher(self, value: bool) -> None:
         self._enable_wireless_watcher = value
+    
+    @property
+    def enable_recorder(self) -> bool:
+        self.set_config_param(
+            key=self.KEYS[self.ENABLE_RECORDER],
+            value=self._enable_recorder
+        )
+        return self._enable_recorder
+
+    @enable_recorder.setter
+    def enable_recorder(self, value: bool) -> None:
+        self._enable_recorder = value
