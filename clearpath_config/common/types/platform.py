@@ -25,9 +25,6 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from clearpath_config.common.ros import ROS_DISTRO
-from clearpath_config.common.types.exception import UnsupportedPlatformException
-
 
 class PACSProfile:
     def __init__(
@@ -128,12 +125,8 @@ class Platform:
 
         @exception UnsupportedPlatformException if the platform is not supported
         """
-        platform = platform.lower()
-
-        match platform:
-            case Platform.W200:
-                raise UnsupportedPlatformException(
-                    f'Platform {platform} is still in-development and not yet supported on {ROS_DISTRO}')  # noqa:E501
+        # currently all platforms are supported, nothing to do
+        pass
 
     @staticmethod
     def notify_if_deprecated(platform):
