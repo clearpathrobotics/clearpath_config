@@ -75,11 +75,71 @@ class A300Bumper(Bumper):
         super().__init__(name, model, enabled, extension, parent, xyz, rpy)
 
 
-class A300AMPFrame(BaseAttachment):
+class A300WirelessCharger(BaseAttachment):
     PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = '%s.amp_frame' % PLATFORM
+    ATTACHMENT_MODEL = f'{PLATFORM}.wireless_charger'
     DEFAULT = 'default'
     MODELS = [DEFAULT]
+    PARENT = 'base_link'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+class A300AmpEnclosure(BaseAttachment):
+    PLATFORM = Platform.A300
+    ATTACHMENT_MODEL = f'{PLATFORM}.amp_enclosure'
+    AMP_ENCLOSURE = 'amp_enclosure'
+    MODELS = [AMP_ENCLOSURE]
+    DEFAULT = AMP_ENCLOSURE
+    PARENT = 'base_link'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+class A300AmpSensorArch(BaseAttachment):
+    PLATFORM = Platform.A300
+    ATTACHMENT_MODEL = f'{PLATFORM}.amp_sensor_arch'
+    AMP_SENSOR_ARCH = 'amp_sensor_arch'
+    MODELS = [AMP_SENSOR_ARCH]
+    DEFAULT = AMP_SENSOR_ARCH
+    PARENT = 'default_mount'
+
+    def __init__(
+            self,
+            name: str = ATTACHMENT_MODEL,
+            model: str = DEFAULT,
+            enabled: bool = BaseAttachment.ENABLED,
+            parent: str = PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(name, model, enabled, parent, xyz, rpy)
+
+
+class A300Spotlight(BaseAttachment):
+    PLATFORM = Platform.A300
+    ATTACHMENT_MODEL = f'{PLATFORM}.spotlight'
+    SPOTLIGHT = 'spotlight'
+    MODELS = [SPOTLIGHT]
+    DEFAULT = SPOTLIGHT
     PARENT = 'default_mount'
 
     def __init__(
@@ -100,11 +160,19 @@ class A300Attachment(PlatformAttachment):
     TOP_PLATE = A300TopPlate.ATTACHMENT_MODEL
     # Bumper
     BUMPER = A300Bumper.ATTACHMENT_MODEL
-    # AMP frame
-    AMP_FRAME = A300AMPFrame.ATTACHMENT_MODEL
+    # Observer/AMP attachments
+    AMP_ENCLOSURE = A300AmpEnclosure.ATTACHMENT_MODEL
+    AMP_SENSOR_ARCH = A300AmpSensorArch.ATTACHMENT_MODEL
+    # Spotlight
+    SPOTLIGHT = A300Spotlight.ATTACHMENT_MODEL
+    # Wireless charger
+    WIRELESS_CHARGER = A300WirelessCharger.ATTACHMENT_MODEL
 
     TYPES = {
         TOP_PLATE: A300TopPlate,
         BUMPER: A300Bumper,
-        AMP_FRAME: A300AMPFrame,
+        AMP_ENCLOSURE: A300AmpEnclosure,
+        AMP_SENSOR_ARCH: A300AmpSensorArch,
+        SPOTLIGHT: A300Spotlight,
+        WIRELESS_CHARGER: A300WirelessCharger,
     }
