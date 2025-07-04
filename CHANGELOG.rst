@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.6.0 (2025-07-04)
+------------------
 * Feature: All Platforms Supported (`#176 <https://github.com/clearpathrobotics/clearpath_config/issues/176>`_)
   * All platforms are now supported
   * Remove unused dependencies
