@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add ur_type parameter to UniversalRobots manipulator (`#174 <https://github.com/clearpathrobotics/clearpath_config/issues/174>`_)
+* Contributors: luis-camero
+
 1.3.0 (2025-04-15)
 ------------------
 * Feature: Add delay to manipulator controller (`#141 <https://github.com/clearpathrobotics/clearpath_config/issues/141>`_)
