@@ -2,6 +2,20 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feature: All Platforms Supported (`#176 <https://github.com/clearpathrobotics/clearpath_config/issues/176>`_)
+  * All platforms are now supported
+  * Remove unused dependencies
+* Added sensor sample for phidgets_spatial. (`#175 <https://github.com/clearpathrobotics/clearpath_config/issues/175>`_)
+* Enable foxglove bridge by default (`#173 <https://github.com/clearpathrobotics/clearpath_config/issues/173>`_)
+* Add A300 AMP attachments, samples (`#158 <https://github.com/clearpathrobotics/clearpath_config/issues/158>`_)
+  * Add attachments for A300 Observer
+  * Add A300 Observer sample
+  * Add parameters to set the Ouster OS-1 base & cap type
+  * Add spotlight attachment
+* Contributors: Chris Iverach-Brereton, Hilary Luo, Tony Baltovski, luis-camero
+
 2.5.0 (2025-05-29)
 ------------------
 * Fix: PACS Limits (`#171 <https://github.com/clearpathrobotics/clearpath_config/issues/171>`_)
