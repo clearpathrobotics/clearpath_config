@@ -199,6 +199,20 @@ class UniversalRobots(BaseArm):
     MOCK_SENSOR_COMMANDS = 'mock_sensor_commands'
     SIM_GAZEBO = 'sim_gazebo'
     SIM_IGNITION = 'sim_ignition'
+    # UR Type
+    UR3 = 'ur3'
+    UR3E = 'ur3e'
+    UR5 = 'ur5'
+    UR5E = 'ur5e'
+    UR10 = 'ur10'
+    UR10E = 'ur10e'
+    UR15 = 'ur15'
+    UR16E = 'ur16e'
+    UR20 = 'ur20'
+    UR20E = 'ur20e'
+    UR30 = 'ur30'
+    DEFAULT_UR_TYPE = UR5E
+    UR_TYPES = [UR3, UR3E, UR5, UR5E, UR10, UR10E, UR15, UR16E, UR20, UR20E, UR30]
 
     # URDF Parameters
     URDF_PARAMETERS = {
@@ -239,6 +253,38 @@ class UniversalRobots(BaseArm):
         SIM_GAZEBO: '',
         SIM_IGNITION: '',
     }
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            ip: str = BaseArm.DEFAULT_IP_ADDRESS,
+            port: int = BaseArm.DEFAULT_IP_PORT,
+            ur_type: str = DEFAULT_UR_TYPE,
+            ros_parameters: dict = BaseManipulator.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseManipulator.ROS_PARAMETERS_TEMPLATE,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(
+            idx, name, ip, port, ros_parameters, ros_parameters_template, parent, xyz, rpy)
+        self.ur_type = ur_type
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if self.UR_TYPE in d:
+            self.ur_type = d[self.UR_TYPE]
+
+    @property
+    def ur_type(self) -> str:
+        return self._ur_type
+
+    @ur_type.setter
+    def ur_type(self, value: str) -> None:
+        assert value in self.UR_TYPES, (
+            f'Universal Robot ur_type must be one of {self.UR_TYPES}, got: {value}')
+        self._ur_type = value
 
 
 class Arm():
