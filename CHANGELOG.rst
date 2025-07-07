@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.6.1 (2025-07-07)
+------------------
 * Forward Fix: Add ur_type parameter to UniversalRobots manipulator (`#177 <https://github.com/clearpathrobotics/clearpath_config/issues/177>`_)
 * Contributors: luis-camero
 
