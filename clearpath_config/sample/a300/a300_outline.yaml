@@ -18,7 +18,9 @@ platform:
   controller: ps4
   drivetrain:
     type: diff_4wd
-    wheels: outdoor
+    wheels:
+      front: outdoor
+      rear: outdoor
   attachments:
     - name: front_bumper
       type: a300.bumper

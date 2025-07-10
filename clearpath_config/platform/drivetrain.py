@@ -32,8 +32,10 @@ from clearpath_config.common.utils.dictionary import flip_dict
 
 class DrivetrainConfig(BaseConfig):
     DRIVETRAIN = 'drivetrain'
-    TYPE = 'type'
+    CONTROL = 'control'
     WHEELS = 'wheels'
+    FRONT = 'front'
+    REAR = 'rear'
 
     # Types
     DIFF_FWD = 'diff_fwd'
@@ -45,7 +47,8 @@ class DrivetrainConfig(BaseConfig):
     OUTDOOR = 'outdoor'
     INDOOR = 'indoor'
     MECANUM = 'mecanum'
-    TRACK = 'track'
+    TRACKS = 'tracks'
+    CASTER = 'caster'
 
     # Configurations
     CONFIGURATION = 'configuration'
@@ -53,133 +56,230 @@ class DrivetrainConfig(BaseConfig):
 
     # Valid drivetrain type and wheels given a platform
     VALID = {
-        TYPE: {
-            Platform.GENERIC: [DIFF_FWD, DIFF_RWD, DIFF_4WD, OMNI_4WD],
-            Platform.A200: [DIFF_FWD],
-            Platform.A300: [DIFF_4WD, DIFF_FWD, DIFF_RWD, OMNI_4WD],
-            Platform.DD100: [DIFF_FWD],
-            Platform.DO100: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
-            Platform.DD150: [DIFF_FWD],
-            Platform.DO150: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
-            Platform.J100: [DIFF_FWD],
-            Platform.R100: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
-            Platform.W200: [DIFF_FWD],
+        Platform.GENERIC: {
+            CONTROL: [DIFF_FWD, DIFF_RWD, DIFF_4WD, OMNI_4WD],
+            WHEELS: {
+                FRONT: [OUTDOOR, INDOOR, MECANUM, TRACKS, CASTER],
+                REAR:  [OUTDOOR, INDOOR, MECANUM, TRACKS, CASTER],
+            }
         },
-        WHEELS: {
-            Platform.GENERIC: [OUTDOOR, INDOOR, MECANUM, TRACK],
-            Platform.A200: [OUTDOOR, INDOOR],
-            Platform.A300: [OUTDOOR, MECANUM],
-            Platform.DD100: [INDOOR],
-            Platform.DO100: [MECANUM],
-            Platform.DD150: [INDOOR],
-            Platform.DO150: [MECANUM],
-            Platform.J100: [OUTDOOR],
-            Platform.R100: [MECANUM],
-            Platform.W200: [OUTDOOR, TRACK],
+        Platform.A200: {
+            CONTROL: [DIFF_FWD],
+            WHEELS: {
+                FRONT: [OUTDOOR, INDOOR],
+                REAR:  [OUTDOOR, INDOOR]
+            }
+        },
+        Platform.A300: {
+            CONTROL: [DIFF_4WD, DIFF_FWD, DIFF_RWD, OMNI_4WD],
+            WHEELS: {
+                FRONT: [OUTDOOR, CASTER, MECANUM],
+                REAR:  [OUTDOOR, CASTER, MECANUM]
+            }
+        },
+        Platform.DD100: {
+            CONTROL: [DIFF_FWD],
+            WHEELS: {
+                FRONT: [INDOOR],
+                REAR:  [CASTER]
+            }
+        },
+        Platform.DO100: {
+            CONTROL: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
+            WHEELS: {
+                FRONT: [MECANUM],
+                REAR:  [MECANUM]
+            }
+        },
+        Platform.DD150: {
+            CONTROL: [DIFF_FWD],
+            WHEELS: {
+                FRONT: [INDOOR],
+                REAR:  [CASTER]
+            }
+        },
+        Platform.DO150: {
+            CONTROL: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
+            WHEELS: {
+                FRONT: [MECANUM],
+                REAR:  [MECANUM]
+            }
+        },
+        Platform.J100: {
+            CONTROL: [DIFF_FWD],
+            WHEELS: {
+                FRONT: [OUTDOOR],
+                REAR:  [OUTDOOR]
+            }
+        },
+        Platform.R100: {
+            CONTROL: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
+            WHEELS: {
+                FRONT: [MECANUM],
+                REAR:  [MECANUM]
+            }
+        },
+        Platform.W200: {
+            CONTROL: [DIFF_FWD],
+            WHEELS: {
+                FRONT: [OUTDOOR, TRACKS],
+                REAR:  [OUTDOOR, TRACKS]
+            }
         }
     }
 
     # Valid wheels given a drivetrain type
     VALID_WHEELS = {
-        DIFF_FWD: [OUTDOOR, INDOOR, MECANUM, TRACK],
-        DIFF_RWD: [OUTDOOR, INDOOR, MECANUM, TRACK],
-        DIFF_4WD: [OUTDOOR, INDOOR, MECANUM, TRACK],
-        OMNI_4WD: [MECANUM]
+        DIFF_FWD: {
+            FRONT: [OUTDOOR, INDOOR, MECANUM, TRACKS],
+            REAR:  [OUTDOOR, INDOOR, MECANUM, TRACKS, CASTER]
+        },
+        DIFF_RWD: {
+            FRONT: [OUTDOOR, INDOOR, MECANUM, TRACKS, CASTER],
+            REAR:  [OUTDOOR, INDOOR, MECANUM, TRACKS]
+        },
+        DIFF_4WD: {
+            FRONT: [OUTDOOR, INDOOR, MECANUM, TRACKS],
+            REAR:  [OUTDOOR, INDOOR, MECANUM, TRACKS]
+        },
+        OMNI_4WD: {
+            FRONT: [MECANUM],
+            REAR:  [MECANUM]
+        }
     }
+
+    # Wheel count per platform
 
     # Config template
     TEMPLATE = {
-      DRIVETRAIN: {
-          TYPE: TYPE,
-          WHEELS: WHEELS
-      }
+        DRIVETRAIN: {
+            CONTROL: CONTROL,
+            WHEELS: {
+                FRONT: FRONT,
+                REAR: REAR
+            }
+        }
     }
 
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        TYPE: DIFF_FWD,
-        WHEELS: OUTDOOR
+        CONTROL: DIFF_FWD,
+        FRONT: OUTDOOR,
+        REAR: OUTDOOR
     }
 
     def __init__(
-        self, config: dict = {}, dt_type: str = DEFAULTS[TYPE], wheels: str = DEFAULTS[WHEELS]
+        self, config: dict = {},
+        control: str = DEFAULTS[CONTROL],
+        front_wheels: str = DEFAULTS[FRONT],
+        rear_wheels: str = DEFAULTS[REAR]
     ) -> None:
         # Initialization
         self._config = {}
-        self._wheels = self.DEFAULTS[self.WHEELS]
-        self._dt_type = self.DEFAULTS[self.TYPE]
+        self._front_wheels = self.DEFAULTS[self.FRONT]
+        self._rear_wheels = self.DEFAULTS[self.REAR]
+        self._control = self.DEFAULTS[self.CONTROL]
 
-        if dt_type == self.DEFAULTS[self.TYPE] and wheels == self.DEFAULTS[self.WHEELS]:
+        if control == self.DEFAULTS[self.CONTROL]:
             self.update_defaults()
-            self.wheels = self.DEFAULTS[self.WHEELS]
-            self.dt_type = self.DEFAULTS[self.TYPE]
-        elif dt_type == self.DEFAULTS[self.TYPE]:
-            self.update_defaults()
-            self.wheels = wheels
-            self.dt_type = self.DEFAULTS[self.TYPE]
-        elif wheels == self.DEFAULTS[self.WHEELS]:
-            self.update_defaults()
-            self.dt_type = dt_type
-            self.wheels = self.DEFAULTS[self.WHEELS]
+            self.control = self.DEFAULTS[self.CONTROL]
         else:
-            self.wheels = wheels
-            self.dt_type = dt_type
+            self.control = control
+
+        if front_wheels == self.DEFAULTS[self.FRONT]:
+            self.update_defaults()
+            self.front_wheels = self.DEFAULTS[self.FRONT]
+        else:
+            self.front_wheels = front_wheels
+
+        if rear_wheels == self.DEFAULTS[self.REAR]:
+            self.update_defaults()
+            self.rear_wheels = self.DEFAULTS[self.REAR]
+        else:
+            self.rear_wheels = rear_wheels
 
         # Setter Template
         setters = {
-            self.KEYS[self.TYPE]: DrivetrainConfig.dt_type,
-            self.KEYS[self.WHEELS]: DrivetrainConfig.wheels,
+            self.KEYS[self.CONTROL]: DrivetrainConfig.control,
+            self.KEYS[self.FRONT]: DrivetrainConfig.front_wheels,
+            self.KEYS[self.REAR]: DrivetrainConfig.rear_wheels,
         }
         super().__init__(setters, config, self.DRIVETRAIN)
 
     def update_defaults(self) -> None:
         platform = BaseConfig.get_platform_model()
-        self.DEFAULTS[self.TYPE] = list(self.VALID[self.TYPE][platform])[0]
-        self.DEFAULTS[self.WHEELS] = list(self.VALID[self.WHEELS][platform])[0]
+        self.DEFAULTS[self.CONTROL] = list(self.VALID[platform][self.CONTROL])[0]
+        self.DEFAULTS[self.FRONT] = list(self.VALID[platform][self.WHEELS][self.FRONT])[0]
+        self.DEFAULTS[self.REAR] = list(self.VALID[platform][self.WHEELS][self.REAR])[0]
 
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
             self.update_defaults()
-            self.dt_type = self.DEFAULTS[self.TYPE]
-            self.wheels = self.DEFAULTS[self.WHEELS]
+            self.control = self.DEFAULTS[self.CONTROL]
+            self.front_wheels = self.DEFAULTS[self.FRONT]
+            self.rear_wheels = self.DEFAULTS[self.REAR]
 
     @property
-    def dt_type(self) -> str:
-        self.set_config_param(key=self.KEYS[self.TYPE], value=self._dt_type)
-        return self._dt_type
+    def control(self) -> str:
+        self.set_config_param(key=self.KEYS[self.CONTROL], value=self._control)
+        return self._control
 
-    @dt_type.setter
-    def dt_type(self, value: str) -> None:
+    @control.setter
+    def control(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID[self.TYPE], (
-            f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID[self.TYPE])}"'
+        assert platform in self.VALID, (
+            f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID)}"'
         )  # noqa:E501
-        assert value in self.VALID[self.TYPE][platform], (
-            f'Drivetrain type "{value}" is invalid. Drivetrain type for platform "{platform}" must be one of "{list(self.VALID[self.TYPE][platform])}"'
+        assert value in self.VALID[platform][self.CONTROL], (
+            f'Drivetrain type "{value}" is invalid. Drivetrain type for platform "{platform}" must be one of "{list(self.VALID[platform][self.CONTROL])}"'
         )  # noqa:E501
-        self._dt_type = value
-        # Check that wheels are valid with updated type
-        if self.wheels not in list(set(self.VALID[self.WHEELS][platform]).intersection(self.VALID_WHEELS[self.dt_type])):
-            self.wheels = list(set(self.VALID[self.WHEELS][platform]).intersection(self.VALID_WHEELS[self.dt_type]))[0]
+        self._control = value
+        # Check that front wheels are valid with updated type
+        if self.front_wheels not in list(set(self.VALID[platform][self.WHEELS][self.FRONT]).intersection(self.VALID_WHEELS[self.control][self.FRONT])):
+            self.front_wheels = list(set(self.VALID[platform][self.WHEELS][self.FRONT]).intersection(self.VALID_WHEELS[self.control][self.FRONT]))[0]
+        # Check that rear wheels are valid with updated type
+        if self.rear_wheels not in list(set(self.VALID[platform][self.WHEELS][self.REAR]).intersection(self.VALID_WHEELS[self.control][self.REAR])):
+            self.rear_wheels = list(set(self.VALID[platform][self.WHEELS][self.REAR]).intersection(self.VALID_WHEELS[self.control][self.REAR]))[0]
 
     @property
-    def wheels(self) -> str:
+    def front_wheels(self) -> str:
         self.set_config_param(
-            key=self.KEYS[self.WHEELS], value=self._wheels
+            key=self.KEYS[self.FRONT], value=self._front_wheels
         )
-        return self._wheels
+        return self._front_wheels
 
-    @wheels.setter
-    def wheels(self, value: str) -> None:
+    @front_wheels.setter
+    def front_wheels(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID[self.TYPE], (
+        assert platform in self.VALID, (
             f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID[self.WHEELS])}"'
         )  # noqa:E501
-        assert self.dt_type in self.VALID[self.TYPE][platform], (
-            f'Drivetrain type "{self.dt_type}" is invalid. Drivetrain type for platform "{platform}" must be one of "{list(self.VALID[self.TYPE][platform])}"'
+        assert self.control in self.VALID[platform][self.CONTROL], (
+            f'Drivetrain type "{self.control}" is invalid. Drivetrain type for platform "{platform}" must be one of "{list(self.VALID[self.CONTROL][platform])}"'
         )  # noqa:E501
-        assert value in self.VALID[self.WHEELS][platform] and value in self.VALID_WHEELS[self.dt_type], (
-            f'Wheel type "{value}" is invalid. For platform "{platform}" and drivetrain "{self.dt_type}" it must be one of "{list(set(self.VALID[self.WHEELS][platform]).intersection(self.VALID_WHEELS[self.dt_type]))}"'
+        assert value in self.VALID[platform][self.WHEELS][self.FRONT] and value in self.VALID_WHEELS[self.control][self.FRONT], (
+            f'Front wheel type "{value}" is invalid. For platform "{platform}" and drivetrain "{self.control}" it must be one of "{list(set(self.VALID[platform][self.WHEELS][self.FRONT]).intersection(self.VALID_WHEELS[self.control][self.FRONT]))}"'
         )  # noqa:E501
-        self._wheels = value
+        self._front_wheels = value
+
+    @property
+    def rear_wheels(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.REAR], value=self._rear_wheels
+        )
+        return self._rear_wheels
+
+    @rear_wheels.setter
+    def rear_wheels(self, value: str) -> None:
+        platform = BaseConfig.get_platform_model()
+        assert platform in self.VALID, (
+            f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID[self.WHEELS])}"'
+        )  # noqa:E501
+        assert self.control in self.VALID[platform][self.CONTROL], (
+            f'Drivetrain type "{self.control}" is invalid. Drivetrain type for platform "{platform}" must be one of "{list(self.VALID[self.CONTROL][platform])}"'
+        )  # noqa:E501
+        assert value in self.VALID[platform][self.WHEELS][self.REAR] and value in self.VALID_WHEELS[self.control][self.REAR], (
+            f'Rear wheel type "{value}" is invalid. For platform "{platform}" and drivetrain "{self.control}" it must be one of "{list(set(self.VALID[platform][self.WHEELS][self.REAR]).intersection(self.VALID_WHEELS[self.control][self.REAR]))}"'
+        )  # noqa:E501
+        self._rear_wheels = value

@@ -12,7 +12,9 @@ platform:
     configuration: S1P2
   drivetrain:
     type: omni_4wd
-    wheels: mecanum
+    wheels:
+      front: mecanum
+      rear: mecanum
   attachments:
     - name: front_bumper
       type: a300.bumper

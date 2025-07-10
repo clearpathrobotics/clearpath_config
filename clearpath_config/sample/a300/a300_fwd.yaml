@@ -12,7 +12,9 @@ platform:
     configuration: S1P2
   drivetrain:
     type: diff_fwd
-    wheels: outdoor
+    wheels:
+      front: outdoor
+      rear: caster
   attachments:
     - name: front_bumper
       type: a300.bumper
