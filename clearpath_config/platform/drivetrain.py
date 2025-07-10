@@ -36,7 +36,8 @@ class DrivetrainConfig(BaseConfig):
     WHEELS = 'wheels'
 
     # Types
-    DIFF_2WD = 'diff_2wd'
+    DIFF_FWD = 'diff_fwd'
+    DIFF_RWD = 'diff_rwd'
     DIFF_4WD = 'diff_4wd'
     OMNI_4WD = 'omni_4wd'
 
@@ -53,16 +54,16 @@ class DrivetrainConfig(BaseConfig):
     # Valid drivetrain type and wheels given a platform
     VALID = {
         TYPE: {
-            Platform.GENERIC: [DIFF_2WD, DIFF_4WD, OMNI_4WD],
-            Platform.A200: [DIFF_2WD],
-            Platform.A300: [DIFF_4WD, DIFF_2WD, OMNI_4WD],
-            Platform.DD100: [DIFF_2WD],
-            Platform.DO100: [OMNI_4WD, DIFF_4WD, DIFF_2WD],
-            Platform.DD150: [DIFF_2WD],
-            Platform.DO150: [OMNI_4WD, DIFF_4WD, DIFF_2WD],
-            Platform.J100: [DIFF_2WD],
-            Platform.R100: [OMNI_4WD, DIFF_4WD, DIFF_2WD],
-            Platform.W200: [DIFF_2WD],
+            Platform.GENERIC: [DIFF_FWD, DIFF_RWD, DIFF_4WD, OMNI_4WD],
+            Platform.A200: [DIFF_FWD],
+            Platform.A300: [DIFF_4WD, DIFF_FWD, DIFF_RWD, OMNI_4WD],
+            Platform.DD100: [DIFF_FWD],
+            Platform.DO100: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
+            Platform.DD150: [DIFF_FWD],
+            Platform.DO150: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
+            Platform.J100: [DIFF_FWD],
+            Platform.R100: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
+            Platform.W200: [DIFF_FWD],
         },
         WHEELS: {
             Platform.GENERIC: [OUTDOOR, INDOOR, MECANUM, TRACK],
@@ -80,7 +81,8 @@ class DrivetrainConfig(BaseConfig):
 
     # Valid wheels given a drivetrain type
     VALID_WHEELS = {
-        DIFF_2WD: [OUTDOOR, INDOOR, MECANUM, TRACK],
+        DIFF_FWD: [OUTDOOR, INDOOR, MECANUM, TRACK],
+        DIFF_RWD: [OUTDOOR, INDOOR, MECANUM, TRACK],
         DIFF_4WD: [OUTDOOR, INDOOR, MECANUM, TRACK],
         OMNI_4WD: [MECANUM]
     }
@@ -96,7 +98,7 @@ class DrivetrainConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        TYPE: DIFF_2WD,
+        TYPE: DIFF_FWD,
         WHEELS: OUTDOOR
     }
 
