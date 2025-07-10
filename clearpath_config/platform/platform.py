@@ -33,6 +33,7 @@ from clearpath_config.platform.attachments.config import AttachmentsConfig
 from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.extras import ExtrasConfig
 
 
@@ -113,8 +114,8 @@ class PlatformConfig(BaseConfig):
     # Battery
     BATTERY = 'battery'
 
-    # Wheel
-    WHEEL = 'wheel'
+    # Drivetrain
+    DRIVETRAIN = 'drivetrain'
 
     # Enable/disable EKF
     ENABLE_EKF = 'enable_ekf'
@@ -134,7 +135,7 @@ class PlatformConfig(BaseConfig):
             LAUNCH: LAUNCH,
             CONTROL: CONTROL,
             BATTERY: BATTERY,
-            WHEEL: WHEEL,
+            DRIVETRAIN: DRIVETRAIN,
             ENABLE_EKF: ENABLE_EKF,
             ENABLE_FOXGLOVE_BRIDGE: ENABLE_FOXGLOVE_BRIDGE,
             ENABLE_WIRELESS_WATCHER: ENABLE_WIRELESS_WATCHER
@@ -154,7 +155,7 @@ class PlatformConfig(BaseConfig):
         LAUNCH: '',
         CONTROL: '',
         BATTERY: BatteryConfig.DEFAULTS,
-        WHEEL: 'default',
+        DRIVETRAIN: DrivetrainConfig.DEFAULTS,
         ENABLE_EKF: True,
         ENABLE_FOXGLOVE_BRIDGE: True,
         ENABLE_WIRELESS_WATCHER: True
@@ -169,7 +170,7 @@ class PlatformConfig(BaseConfig):
             can_bridges: dict = DEFAULTS[CAN_BRIDGES],
             battery: dict = DEFAULTS[BATTERY],
             extras: dict = DEFAULTS[EXTRAS],
-            wheel: dict = DEFAULTS[WHEEL],
+            drivetrain: dict = DEFAULTS[DRIVETRAIN],
             enable_ekf: bool = DEFAULTS[ENABLE_EKF],
             enable_foxglove_bridge: bool = DEFAULTS[ENABLE_FOXGLOVE_BRIDGE],
             enable_wireless_watcher: bool = DEFAULTS[ENABLE_WIRELESS_WATCHER],
@@ -185,7 +186,7 @@ class PlatformConfig(BaseConfig):
         self.description = self.DEFAULTS[self.DESCRIPTION]
         self.launch = self.DEFAULTS[self.LAUNCH]
         self.control = self.DEFAULTS[self.CONTROL]
-        self.wheel = wheel
+        self._drivetrain = DrivetrainConfig(drivetrain)
         self.enable_ekf = enable_ekf
         self.enable_foxglove_bridge = enable_foxglove_bridge
         self.enable_wireless_watcher = enable_wireless_watcher
@@ -198,7 +199,7 @@ class PlatformConfig(BaseConfig):
             self.KEYS[self.CAN_BRIDGES]: PlatformConfig.can_bridges,
             self.KEYS[self.BATTERY]: PlatformConfig.battery,
             self.KEYS[self.EXTRAS]: PlatformConfig.extras,
-            self.KEYS[self.WHEEL]: PlatformConfig.wheel,
+            self.KEYS[self.DRIVETRAIN]: PlatformConfig.drivetrain,
             self.KEYS[self.ENABLE_EKF]: PlatformConfig.enable_ekf,
             self.KEYS[self.ENABLE_FOXGLOVE_BRIDGE]: PlatformConfig.enable_foxglove_bridge,
             self.KEYS[self.ENABLE_WIRELESS_WATCHER]: PlatformConfig.enable_wireless_watcher
@@ -236,6 +237,7 @@ class PlatformConfig(BaseConfig):
             self.battery.update(serial_number=serial_number)
             self.can_adapters.update(serial_number=serial_number)
             self.can_bridges.update(serial_number=serial_number)
+            self.drivetrain.update(serial_number=serial_number)
 
     @property
     def controller(self) -> str:
@@ -378,16 +380,22 @@ class PlatformConfig(BaseConfig):
                 isinstance(value, BatteryConfig)), 'Battery configuration must be of type "dict" or "BatteryConfig"'  # noqa:E501
 
     @property
-    def wheel(self) -> str:
+    def drivetrain(self) -> DrivetrainConfig:
         self.set_config_param(
-            key=self.KEYS[self.WHEEL],
-            value=self._wheel
+            key=self.KEYS[self.DRIVETRAIN],
+            value=self._drivetrain.config[self.DRIVETRAIN]
         )
-        return self._wheel
+        return self._drivetrain
 
-    @wheel.setter
-    def wheel(self, value: str) -> None:
-        self._wheel = value
+    @drivetrain.setter
+    def drivetrain(self, value: dict | DrivetrainConfig) -> None:
+        if isinstance(value, dict):
+            self._drivetrain.config = value
+        elif isinstance(value, DrivetrainConfig):
+            self._drivetrain = value
+        else:
+            assert isinstance(value, dict) or (
+                isinstance(value, DrivetrainConfig)), 'Drivetrain configuration must be of type "dict" or "DrivetrainConfig"'  # noqa:E501
 
     @property
     def enable_ekf(self) -> bool:

@@ -106,7 +106,7 @@ class ClearpathConfig(BaseConfig):
         # Run any additional assertions that depend across fields
         # e.g. if there's something in system that can conflict with
         # a setting from platform, it should be checked here
-        self._system.middleware.assert_is_supported_on_patform(self.get_platform_model())
+        self._system.middleware.assert_is_supported_on_platform(self.get_platform_model())
 
     def read(self, file: str | dict) -> None:
         self._file = None
