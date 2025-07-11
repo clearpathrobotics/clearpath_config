@@ -85,7 +85,7 @@ class DrivetrainConfig(BaseConfig):
             }
         },
         Platform.DO100: {
-            CONTROL: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
+            CONTROL: [OMNI_4WD, DIFF_4WD],
             WHEELS: {
                 FRONT: [MECANUM],
                 REAR:  [MECANUM]
@@ -99,7 +99,7 @@ class DrivetrainConfig(BaseConfig):
             }
         },
         Platform.DO150: {
-            CONTROL: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
+            CONTROL: [OMNI_4WD, DIFF_4WD],
             WHEELS: {
                 FRONT: [MECANUM],
                 REAR:  [MECANUM]
@@ -113,7 +113,7 @@ class DrivetrainConfig(BaseConfig):
             }
         },
         Platform.R100: {
-            CONTROL: [OMNI_4WD, DIFF_4WD, DIFF_FWD, DIFF_RWD],
+            CONTROL: [OMNI_4WD, DIFF_4WD],
             WHEELS: {
                 FRONT: [MECANUM],
                 REAR:  [MECANUM]
