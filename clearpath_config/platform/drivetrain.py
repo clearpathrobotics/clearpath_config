@@ -64,7 +64,7 @@ class DrivetrainConfig(BaseConfig):
             }
         },
         Platform.A200: {
-            CONTROL: [DIFF_FWD],
+            CONTROL: [DIFF_4WD],
             WHEELS: {
                 FRONT: [OUTDOOR, INDOOR],
                 REAR:  [OUTDOOR, INDOOR]
@@ -106,7 +106,7 @@ class DrivetrainConfig(BaseConfig):
             }
         },
         Platform.J100: {
-            CONTROL: [DIFF_FWD],
+            CONTROL: [DIFF_4WD],
             WHEELS: {
                 FRONT: [OUTDOOR],
                 REAR:  [OUTDOOR]
@@ -120,7 +120,7 @@ class DrivetrainConfig(BaseConfig):
             }
         },
         Platform.W200: {
-            CONTROL: [DIFF_FWD],
+            CONTROL: [DIFF_4WD],
             WHEELS: {
                 FRONT: [OUTDOOR, TRACKS],
                 REAR:  [OUTDOOR, TRACKS]
