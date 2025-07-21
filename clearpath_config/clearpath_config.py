@@ -77,6 +77,8 @@ class ClearpathConfig(BaseConfig):
         # Read YAML
         if isinstance(config, str):
             config = self.read(config)
+        # Reset the global serial number variable
+        BaseConfig.set_serial_number('generic')
         # Initialization of Sub-Configs
         self._config = {}
         self._system = SystemConfig(self.DEFAULTS[self.SYSTEM])
