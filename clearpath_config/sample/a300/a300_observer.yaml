@@ -185,3 +185,15 @@ sensors:
           imu_port: 7503
           proc_mask: IMU|PCL|SCAN|IMG|RAW|TLM
           use_system_default_qos: false
+  lidar2d:
+    - model: hokuyo_ust
+      urdf_enabled: true
+      launch_enabled: true
+      parent: wireless_charger_lidar_mount
+      ros_parameters:
+        urg_node:
+          laser_frame_id: lidar2d_0_laser
+          ip_address: 192.168.131.22
+          ip_port: 10940
+          angle_min: -2.356
+          angle_max: 2.356
