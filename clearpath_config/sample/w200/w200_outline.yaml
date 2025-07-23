@@ -11,6 +11,11 @@ system:
     middleware:
       implementation: rmw_fastrtps_cpp
 platform:
+  drivetrain:
+        control: diff_4wd
+        wheels:
+          front: outdoor
+          rear: outdoor
   controller: ps4
   attachments: []
   extras:

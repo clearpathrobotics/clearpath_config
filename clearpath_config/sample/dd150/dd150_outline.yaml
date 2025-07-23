@@ -12,6 +12,11 @@ system:
       implementation: rmw_fastrtps_cpp
     workspaces: []
 platform:
+  drivetrain:
+      control: diff_fwd
+      wheels:
+        front: indoor
+        rear: caster
   controller: ps4
   battery:
     model: TLV1222

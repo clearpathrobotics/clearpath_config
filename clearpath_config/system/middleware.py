@@ -285,7 +285,7 @@ class MiddlewareConfig(BaseConfig):
         # returns None if the localhost is not listed in the server list
         return local_server
 
-    def assert_is_supported_on_patform(self, platform) -> None:
+    def assert_is_supported_on_platform(self, platform) -> None:
         """
         Make sure that the user's middleware is compatible.
 

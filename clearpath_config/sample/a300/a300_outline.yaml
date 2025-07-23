@@ -16,6 +16,11 @@ platform:
     model: S_24V20_U1
     configuration: S1P2
   controller: ps4
+  drivetrain:
+    control: diff_4wd
+    wheels:
+      front: outdoor
+      rear: outdoor
   attachments:
     - name: front_bumper
       type: a300.bumper
