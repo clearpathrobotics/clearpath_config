@@ -11,7 +11,7 @@ platform:
     model: S_24V20_U1
     configuration: S1P2
   drivetrain:
-    type: diff_rwd
+    control: diff_rwd
     wheels:
       front: caster
       rear: outdoor

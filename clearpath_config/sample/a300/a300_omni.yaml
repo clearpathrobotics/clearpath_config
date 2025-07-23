@@ -11,7 +11,7 @@ platform:
     model: S_24V20_U1
     configuration: S1P2
   drivetrain:
-    type: omni_4wd
+    control: omni_4wd
     wheels:
       front: mecanum
       rear: mecanum

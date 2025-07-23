@@ -17,7 +17,7 @@ platform:
     configuration: S1P2
   controller: ps4
   drivetrain:
-    type: diff_4wd
+    control: diff_4wd
     wheels:
       front: outdoor
       rear: outdoor
