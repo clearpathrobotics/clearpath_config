@@ -13,7 +13,7 @@ system:
     workspaces: []
 platform:
   drivetrain:
-      control: diff_2wd
+      control: diff_fwd
       wheels:
         front: indoor
         rear: caster
