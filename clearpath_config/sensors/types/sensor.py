@@ -217,7 +217,6 @@ class BaseSensor(IndexedAccessory):
             # If defined by user, do not overwrite
             if key not in d:
                 d[key] = self.getter(prop)()
-            # d[key] = self.getter(prop)()
         d = unflatten_dict(d)
         for node_name in d:
             d[node_name] = flatten_dict(d[node_name])
