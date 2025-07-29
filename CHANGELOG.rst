@@ -2,6 +2,14 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix: Overwrite defined values with ROS parameters (`#182 <https://github.com/clearpathrobotics/clearpath_config/issues/182>`_)
+  * Overwrite defined values with ROS parameters
+  * Remove comment
+* Changed sample username to robot.
+* Contributors: Tony Baltovski, luis-camero
+
 2.6.1 (2025-07-07)
 ------------------
 * Forward Fix: Add ur_type parameter to UniversalRobots manipulator (`#177 <https://github.com/clearpathrobotics/clearpath_config/issues/177>`_)
