@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.6.2 (2025-07-29)
+------------------
 * Fix: Overwrite defined values with ROS parameters (`#182 <https://github.com/clearpathrobotics/clearpath_config/issues/182>`_)
   * Overwrite defined values with ROS parameters
   * Remove comment
