@@ -230,7 +230,9 @@ class BaseSensor(IndexedAccessory):
     def ros_parameters(self) -> dict:
         d = flatten_dict(copy.deepcopy(self._ros_parameters))
         for key, prop in flatten_dict(self.ros_parameters_template).items():
-            d[key] = self.getter(prop)()
+            # If defined by user, do not overwrite
+            if key not in d:
+                d[key] = self.getter(prop)()
         d = unflatten_dict(d)
         for node_name in d:
             d[node_name] = flatten_dict(d[node_name])
