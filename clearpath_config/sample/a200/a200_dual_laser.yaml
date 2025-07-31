@@ -16,6 +16,7 @@ platform:
       parent: rear_bumper_mount
     - name: top_plate
       type: a200.top_plate
+      model: pacs
 sensors:
   imu:
   - model: microstrain_imu
