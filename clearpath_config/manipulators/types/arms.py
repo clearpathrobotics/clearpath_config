@@ -289,6 +289,7 @@ class UniversalRobots(BaseArm):
 
 class Franka(BaseArm):
     MANIPULATOR_MODEL = 'franka'
+    JOINT_COUNT = 7
     FER = 'fer'
     FP3 = 'fp3'
     FR3 = 'fr3'
