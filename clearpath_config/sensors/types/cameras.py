@@ -933,7 +933,8 @@ class LuxonisOAKD(BaseCamera):
             self.ROS_PARAMETER_KEYS.SERIAL: LuxonisOAKD.serial,
             self.ROS_PARAMETER_KEYS.HEIGHT: LuxonisOAKD.height,
             self.ROS_PARAMETER_KEYS.WIDTH: LuxonisOAKD.width,
-            self.ROS_PARAMETER_KEYS.IP_ADDRESS: LuxonisOAKD.ip_address
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: LuxonisOAKD.ip_address,
+            self.ROS_PARAMETER_KEYS.MX_ID: LuxonisOAKD.mx_id,
         }
         super().__init__(
             idx,
