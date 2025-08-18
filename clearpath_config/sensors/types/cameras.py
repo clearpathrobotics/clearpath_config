@@ -838,7 +838,7 @@ class StereolabsZed(BaseCamera):
 class LuxonisOAKD(BaseCamera):
     SENSOR_MODEL = 'luxonis_oakd'
 
-    SERIAL = None
+    SERIAL = ''
 
     PRO = 'pro'
     LITE = 'lite'
