@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.6.3 (2025-08-21)
+------------------
 * Ensure MX_ID is passed through (`#187 <https://github.com/clearpathrobotics/clearpath_config/issues/187>`_)
 * Fix: OAK-D Parameters (`#186 <https://github.com/clearpathrobotics/clearpath_config/issues/186>`_)
 * A200 lidar example requires pacs plate (`#184 <https://github.com/clearpathrobotics/clearpath_config/issues/184>`_)
