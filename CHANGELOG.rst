@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.7.0 (2025-08-25)
+------------------
 * Drivetrains (`#178 <https://github.com/clearpathrobotics/clearpath_config/issues/178>`_)
   * Added drivetrain support
   * Split 2wd into fwd and rwd
