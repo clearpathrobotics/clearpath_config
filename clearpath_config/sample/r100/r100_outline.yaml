@@ -12,6 +12,11 @@ system:
       implementation: rmw_fastrtps_cpp
     workspaces: []
 platform:
+  drivetrain:
+      control: omni_4wd
+      wheels:
+        front: mecanum
+        rear: mecanum
   controller: ps4
   battery:
     model: 8A31DTM
