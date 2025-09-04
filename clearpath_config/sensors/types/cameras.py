@@ -739,10 +739,6 @@ class StereolabsZed(BaseCamera):
             IMU: 'sensor_msgs/msg/Imu'
         }
 
-    @staticmethod
-    def assert_is_supported():
-        raise UnsupportedAccessoryException(f'Stereolabs Zed devices are not yet supported in {ROS_DISTRO}')  # noqa:E501
-
     def __init__(
             self,
             idx: int = None,
