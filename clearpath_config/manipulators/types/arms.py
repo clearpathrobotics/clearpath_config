@@ -27,9 +27,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from typing import List
 
-from clearpath_config.common.ros import ROS_DISTRO
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.exception import UnsupportedAccessoryException
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.port import Port
 from clearpath_config.manipulators.types.grippers import Gripper
