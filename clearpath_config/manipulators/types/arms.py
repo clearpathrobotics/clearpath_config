@@ -185,29 +185,17 @@ class KinovaGen3Dof6(BaseKinova):
     JOINT_COUNT = 6
     END_EFFECTOR_LINK = 'end_effector_link'
 
-    @staticmethod
-    def assert_is_supported():
-        raise UnsupportedAccessoryException(f'Kinova Gen3 is not yet supported in {ROS_DISTRO}')
-
 
 class KinovaGen3Dof7(BaseKinova):
     MANIPULATOR_MODEL = 'kinova_gen3_7dof'
     JOINT_COUNT = 7
     END_EFFECTOR_LINK = 'end_effector_link'
 
-    @staticmethod
-    def assert_is_supported():
-        raise UnsupportedAccessoryException(f'Kinova Gen3 is not yet supported in {ROS_DISTRO}')
-
 
 class KinovaGen3Lite(BaseKinova):
     MANIPULATOR_MODEL = 'kinova_gen3_lite'
     JOINT_COUNT = 6
     END_EFFECTOR_LINK = 'end_effector_link'
-
-    @staticmethod
-    def assert_is_supported():
-        raise UnsupportedAccessoryException(f'Kinova Gen3 Lite is not yet supported in {ROS_DISTRO}')  # noqa:501
 
 
 class UniversalRobots(BaseArm):
