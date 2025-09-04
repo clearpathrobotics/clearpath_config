@@ -28,10 +28,7 @@
 from math import pi
 from typing import List
 
-from clearpath_config.common.ros import ROS_DISTRO
-
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.exception import UnsupportedAccessoryException
 from clearpath_config.common.utils.dictionary import extend_flat_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
 
