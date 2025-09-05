@@ -103,12 +103,15 @@ class MoveItConfig(BaseConfig):
     def from_dict(self, d: dict) -> None:
         if self.ENABLE in d:
             self.enable = d[self.ENABLE]
+        if self.DELAY in d:
+            self.delay = d[self.DELAY]
         if self.ROS_PARAMETERS in d:
             self.ros_parameters = d[self.ROS_PARAMETERS]
 
     def to_dict(self) -> dict:
         return {
             self.ENABLE: self.enable,
+            self.DELAY: self.delay,
             self.ROS_PARAMETERS: self.ros_parameters
         }
 

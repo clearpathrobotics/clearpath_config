@@ -33,6 +33,19 @@ class BaseGripper(BaseManipulator):
     MANIPULATOR_TYPE = 'gripper'
 
 
+class FrankaGripper(BaseGripper):
+    MANIPULATOR_MODEL = 'franka_gripper'
+    JOINT_COUNT = 1
+
+    @property
+    def arm_id(self) -> str:
+        return self._arm_id
+
+    @arm_id.setter
+    def arm_id(self, value: str) -> None:
+        self._arm_id = value
+
+
 class Kinova2FLite(BaseGripper):
     MANIPULATOR_MODEL = 'kinova_2f_lite'
     JOINT_COUNT = 1
@@ -55,11 +68,13 @@ class Robotiq2F140(BaseGripper):
 
 
 class Gripper():
+    FRANKA_GRIPPER = FrankaGripper.MANIPULATOR_MODEL
     KINOVA_2F_LITE = Kinova2FLite.MANIPULATOR_MODEL
     ROBOTIQ_2F_140 = Robotiq2F140.MANIPULATOR_MODEL
     ROBOTIQ_2F_85 = Robotiq2F85.MANIPULATOR_MODEL
 
     MODEL = {
+        FRANKA_GRIPPER: FrankaGripper,
         KINOVA_2F_LITE: Kinova2FLite,
         ROBOTIQ_2F_140: Robotiq2F140,
         ROBOTIQ_2F_85: Robotiq2F85,

@@ -287,14 +287,110 @@ class UniversalRobots(BaseArm):
         self._ur_type = value
 
 
-class Arm():
+class Franka(BaseArm):
+    MANIPULATOR_MODEL = 'franka'
+    JOINT_COUNT = 7
+    FER = 'fer'
+    FP3 = 'fp3'
+    FR3 = 'fr3'
+    ARM_ID = 'arm_id'
+    ARM_IDS = [FER, FP3, FR3]
+    DEFAULT_ARM_ID = FR3
+    END_EFFECTOR_LINK = 'link8'
 
+    # Description Variables
+    JOINT_LIMITS = 'joint_limits'
+    JOINT_LIMITS_PARAMETERS_FILE = 'joint_limits_parameters_file'
+    INERTIALS = 'inertials'
+    INERTIALS_PARAMETERS_FILE = 'inertials_parameters_file'
+    KINEMATICS = 'kinematics'
+    KINEMATICS_PARAMETERS_FILE = 'kinematics_parameters_file'
+    DYNAMICS = 'dynamics'
+    DYNAMICS_PARAMETERS_FILE = 'dynamics_parameters_file'
+    GAZEBO = 'gazebo'
+    HAND = 'hand'
+    EE_ID = 'ee_id'
+    WITH_SC = 'with_sc'
+    ROS2_CONTROL = 'ros2_control'
+    IP_ADDRESS = 'robot_ip'
+    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    GAZEBO_EFFORT = 'gazebo_effort'
+    NO_PREFIX = 'no_prefix'
+    ARM_PREFIX = 'arm_prefix'
+    CONNECTED_TO = 'connected_to'
+
+    URDF_PARAMETERS = {
+        JOINT_LIMITS: '',
+        JOINT_LIMITS_PARAMETERS_FILE: '',
+        INERTIALS: '',
+        INERTIALS_PARAMETERS_FILE: '',
+        KINEMATICS: '',
+        KINEMATICS_PARAMETERS_FILE: '',
+        DYNAMICS: '',
+        DYNAMICS_PARAMETERS_FILE: '',
+        GAZEBO: '',
+        HAND: '',
+        EE_ID: '',
+        WITH_SC: '',
+        ROS2_CONTROL: '',
+        IP_ADDRESS: '',
+        USE_FAKE_HARDWARE: '',
+        FAKE_SENSOR_COMMANDS: '',
+        GAZEBO_EFFORT: '',
+        NO_PREFIX: '',
+        ARM_PREFIX: '',
+        CONNECTED_TO: '',
+    }
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            ip: str = BaseArm.DEFAULT_IP_ADDRESS,
+            port: int = BaseArm.DEFAULT_IP_PORT,
+            arm_id: str = DEFAULT_ARM_ID,
+            ros_parameters: dict = BaseManipulator.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseManipulator.ROS_PARAMETERS_TEMPLATE,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(
+            idx, name, ip, port, ros_parameters, ros_parameters_template, parent, xyz, rpy)
+        self.arm_id = arm_id
+
+    def from_dict(self, d: dict) -> None:
+        self.config = d
+        super().from_dict(d)
+        if 'gripper' in d:
+            self.gripper.arm_id = self.arm_id
+
+    @property
+    def arm_id(self) -> str:
+        return self._arm_id
+
+    @arm_id.setter
+    def arm_id(self, value: str) -> None:
+        assert value in self.ARM_IDS, (
+            f'Franka arm_id must be one of {self.ARM_IDS}, got: {value}')
+        self._arm_id = value
+
+    def set_idx(self, idx: int) -> None:
+        super().set_idx(idx)
+        if self.gripper:
+            self.gripper.parent = f'{self.name}_{self.arm_id}_{self.END_EFFECTOR_LINK}'
+
+
+class Arm():
+    FRANKA = Franka.MANIPULATOR_MODEL
     KINOVA_GEN3_6DOF = KinovaGen3Dof6.MANIPULATOR_MODEL
     KINOVA_GEN3_7DOF = KinovaGen3Dof7.MANIPULATOR_MODEL
     KINOVA_GEN3_LITE = KinovaGen3Lite.MANIPULATOR_MODEL
     UNIVERSAL_ROBOTS = UniversalRobots.MANIPULATOR_MODEL
 
     MODEL = {
+        FRANKA: Franka,
         KINOVA_GEN3_6DOF: KinovaGen3Dof6,
         KINOVA_GEN3_7DOF: KinovaGen3Dof7,
         KINOVA_GEN3_LITE: KinovaGen3Lite,
