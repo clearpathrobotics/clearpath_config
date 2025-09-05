@@ -28,10 +28,7 @@
 from math import pi
 from typing import List
 
-from clearpath_config.common.ros import ROS_DISTRO
-
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.exception import UnsupportedAccessoryException
 from clearpath_config.common.utils.dictionary import extend_flat_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
 
@@ -738,10 +735,6 @@ class StereolabsZed(BaseCamera):
             POINTCLOUD: 'sensor_msgs/msg/PointCloud2',
             IMU: 'sensor_msgs/msg/Imu'
         }
-
-    @staticmethod
-    def assert_is_supported():
-        raise UnsupportedAccessoryException(f'Stereolabs Zed devices are not yet supported in {ROS_DISTRO}')  # noqa:E501
 
     def __init__(
             self,
