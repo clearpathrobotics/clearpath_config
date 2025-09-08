@@ -124,6 +124,7 @@ class BaseArm(BaseManipulator):
         if self.IP_PORT in d:
             self.port = d[self.IP_PORT]
 
+
 class BaseKinova(BaseArm):
     MANIPULATOR_MODEL = 'base_kinova'
     END_EFFECTOR_LINK = 'end_effector_link'
