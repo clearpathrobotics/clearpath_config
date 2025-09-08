@@ -2,6 +2,19 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feature: Franka in Jazzy (`#189 <https://github.com/clearpathrobotics/clearpath_config/issues/189>`_)
+  * Forward from Humble: Feature Franka
+  * Initial Franka arm description
+  * Add arm_id property to franka manipulators
+  * Add joint count to Franka arm
+  * Pass MoveIt delay from config
+* Jazzy Feature: Zed (`#188 <https://github.com/clearpathrobotics/clearpath_config/issues/188>`_)
+  * Remove unsupported exception on StereolabsZed
+  * Remove unused imports
+* Contributors: luis-camero
+
 2.7.0 (2025-08-25)
 ------------------
 * Drivetrains (`#178 <https://github.com/clearpathrobotics/clearpath_config/issues/178>`_)
