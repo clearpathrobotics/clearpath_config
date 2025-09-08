@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.7.1 (2025-09-08)
+------------------
 * Feature: Franka in Jazzy (`#189 <https://github.com/clearpathrobotics/clearpath_config/issues/189>`_)
   * Forward from Humble: Feature Franka
   * Initial Franka arm description
