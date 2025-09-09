@@ -112,7 +112,7 @@ class BaseArm(BaseManipulator):
         self.config = d
         super().from_dict(d)
         if 'gripper' in d:
-            self.gripper = Gripper(d['gripper']['model'])
+            self.gripper = Gripper(self, d['gripper']['model'])
             self.gripper.from_dict(d['gripper'])
             self.gripper.set_name('%s_gripper' % self.get_name())
             if 'parent' not in d['gripper']:
