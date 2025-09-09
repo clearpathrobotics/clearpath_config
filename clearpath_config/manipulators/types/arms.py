@@ -125,7 +125,62 @@ class BaseArm(BaseManipulator):
             self.port = d[self.IP_PORT]
 
 
-class KinovaGen3Dof6(BaseArm):
+class BaseKinova(BaseArm):
+    MANIPULATOR_MODEL = 'base_kinova'
+    END_EFFECTOR_LINK = 'end_effector_link'
+    JOINT_COUNT = 6
+
+    TF_PREFIX = 'tf_prefix'
+    DOF = 'dof'
+    VISION = 'vision'
+    ROBOT_IP = 'robot_ip'
+    USERNAME = 'username'
+    PASSWORD = 'password'
+    PORT = 'port'
+    PORT_REALTIME = 'port_realtime'
+    SESSION_INACTIVITY_TIMEOUT_MS = 'session_inactivity_timeout_ms'
+    CONNECTION_INACTIVITY_TIMEOUT_MS = 'connection_inactivity_timeout_ms'
+    USE_INTERNAL_BUS_GRIPPER_COMM = 'use_internal_bus_gripper_comm'
+    GRIPPER_JOINT_NAME = 'gripper_joint_name'
+    GRIPPER_MAX_VELOCITY = 'gripper_max_velocity'
+    GRIPPER_MAX_FORCE = 'gripper_max_force'
+    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    USE_CONTROLLERS = 'use_controllers'
+    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    SIM_GAZEBO = 'sim_gazebo'
+    SIM_IGNITION = 'sim_ignition'
+    SIM_ISAAC = 'sim_isaac'
+    USE_EXTERNAL_CABLE = 'use_external_cable'
+    INITIAL_POSITIONS = 'initial_positions'
+
+    # URDF Parameters
+    URDF_PARAMETERS = {
+        TF_PREFIX: '',
+        DOF: '',
+        VISION: '',
+        ROBOT_IP: '',
+        USERNAME: '',
+        PASSWORD: '',
+        PORT: '',
+        PORT_REALTIME: '',
+        SESSION_INACTIVITY_TIMEOUT_MS: '',
+        CONNECTION_INACTIVITY_TIMEOUT_MS: '',
+        USE_INTERNAL_BUS_GRIPPER_COMM: '',
+        GRIPPER_JOINT_NAME: '',
+        GRIPPER_MAX_VELOCITY: '',
+        GRIPPER_MAX_FORCE: '',
+        USE_FAKE_HARDWARE: '',
+        USE_CONTROLLERS: '',
+        FAKE_SENSOR_COMMANDS: '',
+        SIM_GAZEBO: '',
+        SIM_IGNITION: '',
+        SIM_ISAAC: '',
+        USE_EXTERNAL_CABLE: '',
+        INITIAL_POSITIONS: '',
+    }
+
+
+class KinovaGen3Dof6(BaseKinova):
     MANIPULATOR_MODEL = 'kinova_gen3_6dof'
     JOINT_COUNT = 6
     END_EFFECTOR_LINK = 'end_effector_link'
@@ -135,7 +190,7 @@ class KinovaGen3Dof6(BaseArm):
         raise UnsupportedAccessoryException(f'Kinova Gen3 is not yet supported in {ROS_DISTRO}')
 
 
-class KinovaGen3Dof7(BaseArm):
+class KinovaGen3Dof7(BaseKinova):
     MANIPULATOR_MODEL = 'kinova_gen3_7dof'
     JOINT_COUNT = 7
     END_EFFECTOR_LINK = 'end_effector_link'
@@ -145,7 +200,7 @@ class KinovaGen3Dof7(BaseArm):
         raise UnsupportedAccessoryException(f'Kinova Gen3 is not yet supported in {ROS_DISTRO}')
 
 
-class KinovaGen3Lite(BaseArm):
+class KinovaGen3Lite(BaseKinova):
     MANIPULATOR_MODEL = 'kinova_gen3_lite'
     JOINT_COUNT = 6
     END_EFFECTOR_LINK = 'end_effector_link'
