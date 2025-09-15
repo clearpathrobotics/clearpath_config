@@ -78,7 +78,7 @@ class MiddlewareConfig(BaseConfig):
         RMW: RMWImplementation.DEFAULT,
         DISCOVERY: Discovery.DEFAULT,
         PROFILE: '',
-        AUTOMATIC_DISCOVERY_RANGE: DISCOVERY_RANGE_SUBNET,
+        AUTOMATIC_DISCOVERY_: DISCOVERY__SUBNET,
         STATIC_PEERS: [],
         OVERRIDE_SERVER_ID: False,
         SERVERS: [],
@@ -90,7 +90,7 @@ class MiddlewareConfig(BaseConfig):
             rmw_implementation: str | RMWImplementation = DEFAULTS[RMW],
             discovery: str | Discovery = DEFAULTS[DISCOVERY],
             profile: str = DEFAULTS[PROFILE],
-            automatic_discovery_range: str = DEFAULTS[AUTOMATIC_DISCOVERY_RANGE],
+            automatic_discovery_: str = DEFAULTS[AUTOMATIC_DISCOVERY_],
             static_peers: str = DEFAULTS[STATIC_PEERS],
             override_server_id: bool = DEFAULTS[OVERRIDE_SERVER_ID],
             servers: List[dict] | ServerListConfig = DEFAULTS[SERVERS],
@@ -104,7 +104,7 @@ class MiddlewareConfig(BaseConfig):
         self.rmw_implementation = rmw_implementation
         self.discovery = discovery
         self.profile = profile
-        self.automatic_discovery_range = automatic_discovery_range
+        self.automatic_discovery_ = automatic_discovery_
         self.static_peers = static_peers
         self.override_server_id = override_server_id
         if servers:
@@ -115,7 +115,7 @@ class MiddlewareConfig(BaseConfig):
             self.KEYS[self.RMW]: MiddlewareConfig.rmw_implementation,
             self.KEYS[self.DISCOVERY]: MiddlewareConfig.discovery,
             self.KEYS[self.PROFILE]: MiddlewareConfig.profile,
-            self.KEYS[self.AUTOMATIC_DISCOVERY_RANGE]: MiddlewareConfig.automatic_discovery_range,
+            self.KEYS[self.AUTOMATIC_DISCOVERY_]: MiddlewareConfig.automatic_discovery_,
             self.KEYS[self.STATIC_PEERS]: MiddlewareConfig.static_peers,
             self.KEYS[self.OVERRIDE_SERVER_ID]: MiddlewareConfig.override_server_id,
             self.KEYS[self.SERVERS]: MiddlewareConfig.servers,
@@ -299,9 +299,10 @@ class MiddlewareConfig(BaseConfig):
             value = 'off'
 
         # Check Type is valid
-        assert value in self.DISCOVERY_RANGES, f'Automatic discovery range {value} must be one of {self.DISCOVERY_RANGES}'  # noqa: E501
+        assert isinstance(value, str), f'Automatic discovery range {value} must be a string'
+        assert value.lower() in self.DISCOVERY_RANGES, f'Automatic discovery range {value} must be one of {self.DISCOVERY_RANGES}'  # noqa: E501
 
-        self._automatic_discovery_range = value
+        self._automatic_discovery_range = value.lower()
         return
 
     @property
