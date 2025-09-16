@@ -90,7 +90,7 @@ class MiddlewareConfig(BaseConfig):
             rmw_implementation: str | RMWImplementation = DEFAULTS[RMW],
             discovery: str | Discovery = DEFAULTS[DISCOVERY],
             profile: str = DEFAULTS[PROFILE],
-            automatic_discovery_: str = DEFAULTS[AUTOMATIC_DISCOVERY_RANGE],
+            automatic_discovery_range: str = DEFAULTS[AUTOMATIC_DISCOVERY_RANGE],
             static_peers: str = DEFAULTS[STATIC_PEERS],
             override_server_id: bool = DEFAULTS[OVERRIDE_SERVER_ID],
             servers: List[dict] | ServerListConfig = DEFAULTS[SERVERS],
@@ -104,7 +104,7 @@ class MiddlewareConfig(BaseConfig):
         self.rmw_implementation = rmw_implementation
         self.discovery = discovery
         self.profile = profile
-        self.automatic_discovery_ = automatic_discovery_
+        self.automatic_discovery_range = automatic_discovery_range
         self.static_peers = static_peers
         self.override_server_id = override_server_id
         if servers:
@@ -115,7 +115,7 @@ class MiddlewareConfig(BaseConfig):
             self.KEYS[self.RMW]: MiddlewareConfig.rmw_implementation,
             self.KEYS[self.DISCOVERY]: MiddlewareConfig.discovery,
             self.KEYS[self.PROFILE]: MiddlewareConfig.profile,
-            self.KEYS[self.AUTOMATIC_DISCOVERY_]: MiddlewareConfig.automatic_discovery_,
+            self.KEYS[self.AUTOMATIC_DISCOVERY_RANGE]: MiddlewareConfig.automatic_discovery_range,
             self.KEYS[self.STATIC_PEERS]: MiddlewareConfig.static_peers,
             self.KEYS[self.OVERRIDE_SERVER_ID]: MiddlewareConfig.override_server_id,
             self.KEYS[self.SERVERS]: MiddlewareConfig.servers,
