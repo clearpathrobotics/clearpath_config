@@ -319,7 +319,7 @@ class MiddlewareConfig(BaseConfig):
         for s in value:
             assert isinstance(s, str), f'Invalid static peer: {s}. Value must be a string.'
 
-        arr = [s for s in value]  # make a copy of the array to assign
+        arr = list(value)  # make a copy of the array to assign
         self._static_peers = arr
         return
 
