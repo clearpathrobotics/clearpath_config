@@ -2,6 +2,14 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Fix: URDF Parameters on Kinova and Grippers (`#190 <https://github.com/clearpathrobotics/clearpath_config/issues/190>`_)
+  * Add URDF parameters to Kinova and Grippers
+  * Lint: Add line
+  * Check empty string to allow false boolean
+* Contributors: luis-camero
+
 2.7.1 (2025-09-08)
 ------------------
 * Feature: Franka in Jazzy (`#189 <https://github.com/clearpathrobotics/clearpath_config/issues/189>`_)
