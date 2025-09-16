@@ -62,7 +62,7 @@ sensors:
       launch_enabled: true
       parent: sensor_arch_front_camera_mount
       ros_parameters:
-        oakd:
+        luxonis_oakd:
           device_type: pro_w_poe
           camera:
             i_enable_imu: false
@@ -93,7 +93,7 @@ sensors:
       launch_enabled: true
       parent: sensor_arch_rear_camera_mount
       ros_parameters:
-        oakd:
+        luxonis_oakd:
           device_type: pro_w_poe
           camera:
             i_enable_imu: false

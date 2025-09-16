@@ -849,20 +849,20 @@ class LuxonisOAKD(BaseCamera):
     FPS = 30.0
 
     class ROS_PARAMETER_KEYS:
-        DEVICE_TYPE = 'oakd.device_type'
+        DEVICE_TYPE = 'luxonis_oakd.device_type'
 
         # RGB parameters
-        FPS = 'oakd.rgb.i_fps'
-        HEIGHT = 'oakd.rgb.i_height'
-        WIDTH = 'oakd.rgb.i_width'
+        FPS = 'luxonis_oakd.rgb.i_fps'
+        HEIGHT = 'luxonis_oakd.rgb.i_height'
+        WIDTH = 'luxonis_oakd.rgb.i_width'
 
         # Stereo parameters
-        STEREO_FPS = 'oakd.stereo.i_fps'
+        STEREO_FPS = 'luxonis_oakd.stereo.i_fps'
 
         # General camera parameters
-        IP_ADDRESS = 'oakd.camera.i_ip'
-        MX_ID = 'oakd.camera.i_mx_id'
-        SERIAL = 'oakd.camera.i_usb_port_id'
+        IP_ADDRESS = 'luxonis_oakd.camera.i_ip'
+        MX_ID = 'luxonis_oakd.camera.i_mx_id'
+        SERIAL = 'luxonis_oakd.camera.i_usb_port_id'
 
     class TOPICS:
         COLOR_IMAGE = 'color_image'
