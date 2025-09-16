@@ -135,7 +135,7 @@ class BaseManipulator(IndexedAccessory):
         for pose in self.poses:
             d['poses'].append(pose.to_dict())
         for k, v in self.urdf_parameters.items():
-            if v:
+            if v != '':
                 d[k] = v
         return d
 
@@ -232,6 +232,6 @@ class BaseManipulator(IndexedAccessory):
     def get_urdf_parameters(self) -> dict:
         d = {}
         for k, v in self.urdf_parameters.items():
-            if v:
+            if v != '':
                 d[k] = v
         return d
