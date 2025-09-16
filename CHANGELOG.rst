@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.7.2 (2025-09-16)
+------------------
 * Fix: URDF Parameters on Kinova and Grippers (`#190 <https://github.com/clearpathrobotics/clearpath_config/issues/190>`_)
   * Add URDF parameters to Kinova and Grippers
   * Lint: Add line
