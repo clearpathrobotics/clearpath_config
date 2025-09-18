@@ -9,7 +9,7 @@ sensors:
     xyz: [0.0, 0.0, 0.0]
     rpy: [0.0, 0.0, 0.0]
     ros_parameters:
-      oakd:
+      luxonis_oakd:
         camera:
           i_enable_imu: false
           i_enable_ir: false
