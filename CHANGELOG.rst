@@ -2,6 +2,14 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feature: Kinova Jazzy Support (`#193 <https://github.com/clearpathrobotics/clearpath_config/issues/193>`_)
+  * Remove unsupported exception on Kinova
+  * Lint and remove unused imports
+  * Add arm reference from within arm's gripper
+* Contributors: luis-camero
+
 2.7.2 (2025-09-16)
 ------------------
 * Fix: URDF Parameters on Kinova and Grippers (`#190 <https://github.com/clearpathrobotics/clearpath_config/issues/190>`_)
