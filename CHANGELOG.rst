@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.3 (2025-09-18)
+------------------
 * Backport Fix: Ouster URDF Parameters (`#195 <https://github.com/clearpathrobotics/clearpath_config/issues/195>`_)
   * Base and Cap parameter to Ouster
   * Add 'cap_type' and 'base_type' in Ouster sample
