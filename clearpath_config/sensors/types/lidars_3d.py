@@ -285,6 +285,20 @@ class OusterOS1(BaseLidar3D):
     IP_PORT = 7502
     IP_COMPUTER_ADDRESS = '192.168.131.1'
 
+    BASE_TYPE_NONE = 'none'
+    BASE_TYPE_BASE = 'base'
+    BASE_TYPES = [
+        BASE_TYPE_NONE,
+        BASE_TYPE_BASE,
+    ]
+
+    CAP_TYPE_HALO = 'halo'
+    CAP_TYPE_FINS = 'fins'
+    CAP_TYPES = [
+        CAP_TYPE_HALO,
+        CAP_TYPE_FINS,
+    ]
+
     class ROS_PARAMETER_KEYS:
         FRAME_ID = 'ouster_driver.lidar_frame'
         SENSOR_FRAME_ID = 'ouster_driver.sensor_frame'
@@ -293,6 +307,8 @@ class OusterOS1(BaseLidar3D):
         IP_PORT = 'ouster_driver.lidar_port'
         IP_ADDRESS = 'ouster_driver.sensor_hostname'
         IP_COMPUTER = 'ouster_driver.udp_dest'
+        BASE_TYPE = 'ouster_driver.base_type'
+        CAP_TYPE = 'ouster_driver.cap_type'
 
     def __init__(
             self,
@@ -303,6 +319,8 @@ class OusterOS1(BaseLidar3D):
             ip: str = BaseLidar3D.IP_ADDRESS,
             port: int = IP_PORT,
             computer_ip: str = IP_COMPUTER_ADDRESS,
+            base_type: str = BASE_TYPE_BASE,
+            cap_type: str = CAP_TYPE_HALO,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: str = BaseSensor.ROS_PARAMETERS,
@@ -315,8 +333,12 @@ class OusterOS1(BaseLidar3D):
             self.ROS_PARAMETER_KEYS.IMU_FRAME_ID: OusterOS1.frame_id,
             self.ROS_PARAMETER_KEYS.SENSOR_FRAME_ID: OusterOS1.frame_id,
             self.ROS_PARAMETER_KEYS.PCL_FRAME_ID: OusterOS1.frame_id,
+            self.ROS_PARAMETER_KEYS.BASE_TYPE: OusterOS1.base_type,
+            self.ROS_PARAMETER_KEYS.CAP_TYPE: OusterOS1.cap_type,
         }
         self.computer_ip = computer_ip
+        self.base_type = base_type
+        self.cap_type = cap_type
         super().__init__(
             idx,
             name,
@@ -340,3 +362,21 @@ class OusterOS1(BaseLidar3D):
     @computer_ip.setter
     def computer_ip(self, ip: str) -> None:
         self._computer_ip = IP(str(ip))
+
+    @property
+    def base_type(self) -> str:
+        return self._base_type
+
+    @base_type.setter
+    def base_type(self, base: str) -> None:
+        assert base in self.BASE_TYPES, f'Base type {base} must be one of {self.BASE_TYPES}'
+        self._base_type = base
+
+    @property
+    def cap_type(self) -> str:
+        return self._cap_type
+
+    @cap_type.setter
+    def cap_type(self, cap):
+        assert cap in self.CAP_TYPES, f'Cap type {cap} must be one of {self.CAP_TYPES}'
+        self._cap_type = cap
