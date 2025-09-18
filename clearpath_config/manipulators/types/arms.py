@@ -27,9 +27,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from typing import List
 
-from clearpath_config.common.ros import ROS_DISTRO
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.exception import UnsupportedAccessoryException
 from clearpath_config.common.types.ip import IP
 from clearpath_config.common.types.port import Port
 from clearpath_config.manipulators.types.grippers import Gripper
@@ -114,7 +112,7 @@ class BaseArm(BaseManipulator):
         self.config = d
         super().from_dict(d)
         if 'gripper' in d:
-            self.gripper = Gripper(d['gripper']['model'])
+            self.gripper = Gripper(self, d['gripper']['model'])
             self.gripper.from_dict(d['gripper'])
             self.gripper.set_name('%s_gripper' % self.get_name())
             if 'parent' not in d['gripper']:
@@ -185,29 +183,17 @@ class KinovaGen3Dof6(BaseKinova):
     JOINT_COUNT = 6
     END_EFFECTOR_LINK = 'end_effector_link'
 
-    @staticmethod
-    def assert_is_supported():
-        raise UnsupportedAccessoryException(f'Kinova Gen3 is not yet supported in {ROS_DISTRO}')
-
 
 class KinovaGen3Dof7(BaseKinova):
     MANIPULATOR_MODEL = 'kinova_gen3_7dof'
     JOINT_COUNT = 7
     END_EFFECTOR_LINK = 'end_effector_link'
 
-    @staticmethod
-    def assert_is_supported():
-        raise UnsupportedAccessoryException(f'Kinova Gen3 is not yet supported in {ROS_DISTRO}')
-
 
 class KinovaGen3Lite(BaseKinova):
     MANIPULATOR_MODEL = 'kinova_gen3_lite'
     JOINT_COUNT = 6
     END_EFFECTOR_LINK = 'end_effector_link'
-
-    @staticmethod
-    def assert_is_supported():
-        raise UnsupportedAccessoryException(f'Kinova Gen3 Lite is not yet supported in {ROS_DISTRO}')  # noqa:501
 
 
 class UniversalRobots(BaseArm):

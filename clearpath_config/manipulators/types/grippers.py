@@ -25,12 +25,37 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
+from clearpath_config.common.types.accessory import Accessory
 from clearpath_config.manipulators.types.manipulator import BaseManipulator
 
 
 class BaseGripper(BaseManipulator):
     MANIPULATOR_MODEL = 'base'
     MANIPULATOR_TYPE = 'gripper'
+
+    def __init__(
+            self,
+            arm: BaseManipulator,
+            idx: int = None,
+            name: str = None,
+            ros_parameters: dict = BaseManipulator.ROS_PARAMETERS,
+            ros_parameters_template: dict = BaseManipulator.ROS_PARAMETERS_TEMPLATE,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        super().__init__(
+            idx,
+            name,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy,
+        )
+        self.arm = arm
 
 
 class FrankaGripper(BaseGripper):
@@ -138,6 +163,6 @@ class Gripper():
     def assert_model(cls, model: str) -> None:
         assert model in cls.MODEL, f'Gripper model "{model}" must be one of "{cls.MODEL.keys()}"'
 
-    def __new__(cls, model: str) -> BaseGripper:
+    def __new__(cls, arm: BaseManipulator, model: str) -> BaseGripper:
         cls.assert_model(model)
-        return cls.MODEL[model]()
+        return cls.MODEL[model](arm)
