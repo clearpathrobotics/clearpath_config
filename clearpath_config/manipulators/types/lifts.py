@@ -64,19 +64,13 @@ class BaseLift(BaseManipulator):
             if k in d:
                 self.urdf_parameters[k] = d[k]
 
-    def get_urdf_parameters(self) -> dict:
-        d = {}
-        for k, v in self.urdf_parameters.items():
-            if v:
-                d[k] = v
-        return d
-
 
 class Ewellix(BaseLift):
     MANIPULATOR_MODEL = 'ewellix'
 
     EWELLIX_TYPE = 'ewellix_type'
     ADD_PLATE = 'add_plate'
+    ADD_MOUNT = 'add_mount'
     PARAMETERS_FILE = 'parameters_file'
     INITIAL_POSITIONS = 'initial_positions'
     INITIAL_POSITIONS_FILE = 'initial_positions_file'
@@ -93,6 +87,7 @@ class Ewellix(BaseLift):
     URDF_PARAMETERS = {
         EWELLIX_TYPE: '',
         ADD_PLATE: '',
+        ADD_MOUNT: '',
         PARAMETERS_FILE: '',
         INITIAL_POSITIONS: '',
         INITIAL_POSITIONS_FILE: '',
