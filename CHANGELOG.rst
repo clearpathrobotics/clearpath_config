@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.7.3 (2025-09-18)
+------------------
 * Feature: Kinova Jazzy Support (`#193 <https://github.com/clearpathrobotics/clearpath_config/issues/193>`_)
   * Remove unsupported exception on Kinova
   * Lint and remove unused imports
