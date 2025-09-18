@@ -2,6 +2,14 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Backport Fix: Ouster URDF Parameters (`#195 <https://github.com/clearpathrobotics/clearpath_config/issues/195>`_)
+  * Base and Cap parameter to Ouster
+  * Add 'cap_type' and 'base_type' in Ouster sample
+* Fix: Lift URDF Parameters (`#194 <https://github.com/clearpathrobotics/clearpath_config/issues/194>`_)
+* Contributors: luis-camero
+
 1.3.2 (2025-07-29)
 ------------------
 * Backport Fix: Overwrite defined values with ROS parameters (`#183 <https://github.com/clearpathrobotics/clearpath_config/issues/183>`_)
