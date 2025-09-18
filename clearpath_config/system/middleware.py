@@ -44,14 +44,29 @@ class MiddlewareConfig(BaseConfig):
     RMW = 'implementation'
     DISCOVERY = 'discovery'
     PROFILE = 'profile'
+    AUTOMATIC_DISCOVERY_RANGE = 'automatic_discovery_range'
+    STATIC_PEERS = 'static_peers'
     OVERRIDE_SERVER_ID = 'override_server_id'
     SERVERS = 'servers'
+
+    DISCOVERY_RANGE_SUBNET = 'subnet'
+    DISCOVERY_RANGE_LOCALHOST = 'localhost'
+    DISCOVERY_RANGE_OFF = 'off'
+    DISCOVERY_RANGE_SYSTEM_DEFAULT = 'system_default'
+    DISCOVERY_RANGES = [
+        DISCOVERY_RANGE_SUBNET,
+        DISCOVERY_RANGE_LOCALHOST,
+        DISCOVERY_RANGE_OFF,
+        DISCOVERY_RANGE_SYSTEM_DEFAULT,
+    ]
 
     TEMPLATE = {
         MIDDLEWARE: {
             RMW: RMW,
             DISCOVERY: DISCOVERY,
             PROFILE: PROFILE,
+            AUTOMATIC_DISCOVERY_RANGE: AUTOMATIC_DISCOVERY_RANGE,
+            STATIC_PEERS: STATIC_PEERS,
             OVERRIDE_SERVER_ID: OVERRIDE_SERVER_ID,
             SERVERS: SERVERS,
         }
@@ -63,6 +78,8 @@ class MiddlewareConfig(BaseConfig):
         RMW: RMWImplementation.DEFAULT,
         DISCOVERY: Discovery.DEFAULT,
         PROFILE: '',
+        AUTOMATIC_DISCOVERY_RANGE: DISCOVERY_RANGE_SUBNET,
+        STATIC_PEERS: [],
         OVERRIDE_SERVER_ID: False,
         SERVERS: [],
     }
@@ -73,6 +90,8 @@ class MiddlewareConfig(BaseConfig):
             rmw_implementation: str | RMWImplementation = DEFAULTS[RMW],
             discovery: str | Discovery = DEFAULTS[DISCOVERY],
             profile: str = DEFAULTS[PROFILE],
+            automatic_discovery_range: str = DEFAULTS[AUTOMATIC_DISCOVERY_RANGE],
+            static_peers: str = DEFAULTS[STATIC_PEERS],
             override_server_id: bool = DEFAULTS[OVERRIDE_SERVER_ID],
             servers: List[dict] | ServerListConfig = DEFAULTS[SERVERS],
             hosts: HostListConfig = None,
@@ -85,6 +104,8 @@ class MiddlewareConfig(BaseConfig):
         self.rmw_implementation = rmw_implementation
         self.discovery = discovery
         self.profile = profile
+        self.automatic_discovery_range = automatic_discovery_range
+        self.static_peers = static_peers
         self.override_server_id = override_server_id
         if servers:
             self.servers = servers
@@ -94,6 +115,8 @@ class MiddlewareConfig(BaseConfig):
             self.KEYS[self.RMW]: MiddlewareConfig.rmw_implementation,
             self.KEYS[self.DISCOVERY]: MiddlewareConfig.discovery,
             self.KEYS[self.PROFILE]: MiddlewareConfig.profile,
+            self.KEYS[self.AUTOMATIC_DISCOVERY_RANGE]: MiddlewareConfig.automatic_discovery_range,
+            self.KEYS[self.STATIC_PEERS]: MiddlewareConfig.static_peers,
             self.KEYS[self.OVERRIDE_SERVER_ID]: MiddlewareConfig.override_server_id,
             self.KEYS[self.SERVERS]: MiddlewareConfig.servers,
         }
@@ -257,6 +280,48 @@ class MiddlewareConfig(BaseConfig):
         servers = ServerListConfig()
         servers.set_all(server_list)
         self._servers = servers
+
+    @property
+    def automatic_discovery_range(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.AUTOMATIC_DISCOVERY_RANGE],
+            value=self._automatic_discovery_range
+        )
+        return self._automatic_discovery_range
+
+    @automatic_discovery_range.setter
+    def automatic_discovery_range(self, value: str) -> None:
+        # YAML quirk: the keyword "off" resolves to False when robot.yaml is loaded
+        # Therefore, if we're passed False, assume the user entered
+        #   automatic_discovery_range: off
+        # in robot.yaml and convert the argument accordingly
+        if isinstance(value, bool) and not value:
+            value = 'off'
+
+        # Check Type is valid
+        assert isinstance(value, str), f'Automatic discovery range {value} must be a string'
+        assert value.lower() in self.DISCOVERY_RANGES, f'Automatic discovery range {value} must be one of {self.DISCOVERY_RANGES}'  # noqa: E501
+
+        self._automatic_discovery_range = value.lower()
+        return
+
+    @property
+    def static_peers(self) -> List[str]:
+        self.set_config_param(
+            key=self.KEYS[self.STATIC_PEERS],
+            value=self._static_peers
+        )
+        return self._static_peers
+
+    @static_peers.setter
+    def static_peers(self, value: List[str]) -> None:
+        # check all peers are strings
+        for s in value:
+            assert isinstance(s, str), f'Invalid static peer: {s}. Value must be a string.'
+
+        arr = list(value)  # make a copy of the array to assign
+        self._static_peers = arr
+        return
 
     def get_servers_string(self) -> str:
         server_list = self.servers.get_all()

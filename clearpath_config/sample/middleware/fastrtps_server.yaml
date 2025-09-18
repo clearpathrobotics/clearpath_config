@@ -1,0 +1,26 @@
+serial_number: a300-00000
+version: 0
+system:
+  hosts:
+    - hostname: cpr-a300-00000
+      ip: 192.168.131.1
+    - hostname: cpr-a300-00000-slam
+      ip: 192.168.131.5
+    - hostname: lab-workstation
+      ip: 192.168.131.242
+  ros2:
+    namespace: a300_00000
+    middleware:
+      implementation: rmw_fastrtps_cpp
+      discovery: server
+      profile: /path/to/profile.xml
+      servers:
+        - hostname: cpr-a300-00000
+          enabled: true
+          port: 11811
+        - hostname: cpr-a300-00000-slam
+          enabled: true
+          port: 11811
+        - hostname: lab-workstation
+          enabled: true
+          port: 11811
