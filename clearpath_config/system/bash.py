@@ -29,7 +29,6 @@ import os
 from typing import List
 
 from clearpath_config.common.types.config import BaseConfig
-from clearpath_config.common.types.file import File
 from clearpath_config.common.utils.dictionary import flip_dict
 
 
