@@ -1,5 +1,9 @@
 serial_number: a300-0000
 version: 0
+system:
+  bash:
+    env:
+      SPINNAKER_GENTL64_CTI: /opt/ros/jazzy/lib/spinnaker-gentl/Spinnaker_GenTL.cti
 sensors:
   camera:
     - model: flir_blackfly

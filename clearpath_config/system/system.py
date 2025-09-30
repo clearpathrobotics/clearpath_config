@@ -35,6 +35,7 @@ from clearpath_config.common.types.hostname import Hostname
 from clearpath_config.common.types.namespace import Namespace
 from clearpath_config.common.types.username import Username
 from clearpath_config.common.utils.dictionary import flip_dict
+from clearpath_config.system.bash import BashConfig
 from clearpath_config.system.hosts import HostConfig, HostListConfig
 from clearpath_config.system.middleware import MiddlewareConfig
 
@@ -51,6 +52,7 @@ class SystemConfig(BaseConfig):
     DOMAIN_ID = 'domain_id'
     MIDDLEWARE = MiddlewareConfig.MIDDLEWARE
     WORKSPACES = 'workspaces'
+    BASH = 'bash'
 
     TEMPLATE = {
         SYSTEM: {
@@ -63,7 +65,8 @@ class SystemConfig(BaseConfig):
                 DOMAIN_ID: DOMAIN_ID,
                 MIDDLEWARE: MIDDLEWARE,
                 WORKSPACES: WORKSPACES
-            }
+            },
+            BASH: BASH,
         }
     }
 
@@ -83,7 +86,9 @@ class SystemConfig(BaseConfig):
         # Discovery Server Disabled
         MIDDLEWARE: MiddlewareConfig.DEFAULTS,
         # Workpaces: empty list
-        WORKSPACES: []
+        WORKSPACES: [],
+        # additional bash environment
+        BASH: BashConfig.DEFAULTS,
     }
 
     def __init__(
@@ -95,7 +100,8 @@ class SystemConfig(BaseConfig):
             namespace: str | Namespace = DEFAULTS[NAMESPACE],
             domain_id: int | DomainID = DEFAULTS[DOMAIN_ID],
             middleware: dict | MiddlewareConfig = DEFAULTS[MIDDLEWARE],
-            workspaces: list = DEFAULTS[WORKSPACES]
+            workspaces: list = DEFAULTS[WORKSPACES],
+            bash: dict | BashConfig = DEFAULTS[BASH],
             ) -> None:
         # Initialization
         self._config = {}
@@ -106,6 +112,7 @@ class SystemConfig(BaseConfig):
         self.domain_id = domain_id
         self.middleware = middleware
         self.workspaces = workspaces
+        self.bash = bash
         # Setter Template
         setters = {
             self.KEYS[self.HOSTS]: SystemConfig.hosts,
@@ -115,6 +122,7 @@ class SystemConfig(BaseConfig):
             self.KEYS[self.DOMAIN_ID]: SystemConfig.domain_id,
             self.KEYS[self.MIDDLEWARE]: SystemConfig.middleware,
             self.KEYS[self.WORKSPACES]: SystemConfig.workspaces,
+            self.KEYS[self.BASH]: SystemConfig.bash,
         }
         # Set from Config
         super().__init__(setters, config, self.SYSTEM)
@@ -272,3 +280,20 @@ class SystemConfig(BaseConfig):
         assert all([isinstance(i, str) for i in value]), (  # noqa:C419
             'Workspaces must be "list" of "str"')
         self._workspaces = value
+
+    @property
+    def bash(self) -> BashConfig:
+        return self._bash
+
+    @bash.setter
+    def bash(self, bash: dict | BashConfig) -> None:
+        if isinstance(bash, dict):
+            self._bash = BashConfig(
+                source=bash.get('source', []),
+                env=bash.get('env', {}),
+            )
+        elif isinstance(bash, BashConfig):
+            self._bash = bash
+        else:
+            assert isinstance(bash, dict) or isinstance(bash, BashConfig), \
+                'Bash configuration must be of type "dict" or "BashConfig"'
