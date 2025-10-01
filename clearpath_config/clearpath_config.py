@@ -144,7 +144,8 @@ class ClearpathConfig(BaseConfig):
 
     @version.setter
     def version(self, v: int) -> None:
-        assert isinstance(v, int), 'version must be of type "int"'
+        if not isinstance(v, int):
+            raise ValueError(f'Version {v} must be of type "int" not "{type(v)}"')
         self._version = v
         # Add propagators here
 

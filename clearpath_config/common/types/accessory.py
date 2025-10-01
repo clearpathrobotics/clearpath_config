@@ -112,24 +112,32 @@ class Accessory():
     @staticmethod
     def assert_valid_link(link: str) -> None:
         # Link name must be a string
-        assert isinstance(link, str), f'Link name "{link}" must be string'
+        if not isinstance(link, str):
+            raise TypeError(f'Link name "{link}" must be string')
         # Link name must not be empty
-        assert link, f'Link name "{link}" must not be empty'
+        if not link:
+            raise ValueError(f'Link name "{link}" must not be empty')
         # Link name must not have spaces
-        assert ' ' not in link, f'Link name "{link}" must no have spaces'
+        if ' ' in link:
+            raise ValueError(f'Link name "{link}" must no have spaces')
         # Link name must not start with a digit
-        assert not link[0].isdigit(), f'Link name "{link} must not start with a digit'
+        if link[0].isdigit():
+            raise ValueError(f'Link name "{link} must not start with a digit')
 
     @staticmethod
     def assert_valid_triplet(tri: List[float], msg: str = None) -> None:
         if msg is None:
             msg = 'Triplet must be a list of three float values'
         # Triplet must be a list
-        assert isinstance(tri, list), msg
+        if not isinstance(tri, list):
+            raise TypeError(msg)
         # Triplet must have a length of 3
-        assert len(tri) == 3, msg
+        if len(tri) != 3:
+            raise ValueError(msg)
         # Triplet must be all floats
-        assert all([isinstance(i, float) for i in tri])  # noqa:C419
+        for i in tri:
+            if not isinstance(i, float):
+                raise TypeError(msg)
 
     @staticmethod
     def assert_is_supported():
@@ -203,6 +211,8 @@ class IndexedAccessory(Accessory):
         return self.idx
 
     def set_idx(self, idx: int) -> None:
-        assert isinstance(idx, int), 'Index must be an integer'
-        assert idx >= 0, 'Index must be a positive integer'
+        if not isinstance(idx, int):
+            raise TypeError(f'Index {idx} must be an integer')
+        if idx < 0:
+            raise ValueError(f'Index {idx} must be a positive integer')
         self.name = self.get_name_from_idx(idx)

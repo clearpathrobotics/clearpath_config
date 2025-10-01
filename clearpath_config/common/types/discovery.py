@@ -60,7 +60,7 @@ class Discovery:
 
     @classmethod
     def assert_valid(cls, mode: str) -> None:
-        assert cls.is_valid(mode), ('\n'.join([
-            f'Discovery mode "{mode}" not supported.'
-            f'Discovery mode must be one of: "{cls.ALL_SUPPORTED}"'
-        ]))
+        if not cls.is_valid(mode):
+            raise ValueError(
+                f'Discovery mode {mode} is not supported; must be one of {cls.ALL_SUPPORTED}'
+            )
