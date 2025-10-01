@@ -67,9 +67,11 @@ class Sphere(BaseLink):
             self.set_radius(d['radius'])
 
     def set_radius(self, radius: float) -> None:
-        msg = 'Radius must be a positive float value'
-        assert isinstance(radius, float), msg
-        assert radius >= 0.0, msg
+        msg = f'Radius {radius} must be a positive float value'
+        if not isinstance(radius, float):
+            raise TypeError(msg)
+        if radius < 0.0:
+            raise ValueError(msg)
         self.radius = radius
 
     def get_radius(self) -> float:

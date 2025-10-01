@@ -161,7 +161,8 @@ class Gripper():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Gripper model "{model}" must be one of "{cls.MODEL.keys()}"'
+        if model not in cls.MODEL:
+            raise ValueError(f'Gripper model "{model}" must be one of "{cls.MODEL.keys()}"')
 
     def __new__(cls, arm: BaseManipulator, model: str) -> BaseGripper:
         cls.assert_model(model)

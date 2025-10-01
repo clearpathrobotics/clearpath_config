@@ -94,7 +94,10 @@ def flip_dict(d: MutableMapping, parent_key: str = '', dlim: str = '.'):
     flat = flatten_dict(d, parent_key, dlim)
     flip = {}
     for k, v in flat.items():
-        assert isinstance(v, str), 'Flipping dictionary requires all values to be of type "str"'
+        if not isinstance(v, str):
+            raise TypeError(
+                'Flipping dictionary requires all values to be of type "str". Invalid key {v}'
+            )
         flip[v] = k
     return flip
 
