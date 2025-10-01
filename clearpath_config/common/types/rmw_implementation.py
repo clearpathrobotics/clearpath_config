@@ -61,7 +61,7 @@ class RMWImplementation:
 
     @classmethod
     def assert_valid(cls, rmw: str) -> None:
-        assert cls.is_valid(rmw), ('\n'.join([
-            'RMW "%s" not supported.' % rmw,
-            'RMW must be one of: "%s"' % cls.ALL_SUPPORTED
-        ]))
+        if not cls.is_valid(rmw):
+            raise ValueError(
+                f'RMW "{rmw}" is not supported. Must be one of {cls.ALL_SUPPORTED}'
+            )
