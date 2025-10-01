@@ -281,6 +281,9 @@ class ExtrasConfig(BaseConfig):
 
     @launch.setter
     def launch(self, value: List[LaunchConfig] | List[dict] | LaunchConfig | dict) -> None:
+        if value is None:
+            value = []
+
         # Previously only a single launch file was supported
         # For compatibility, transform the old format to the new one, but print a deprecation
         # notice, as this translation layer may be removed in the future

@@ -173,15 +173,19 @@ class MiddlewareConfig(BaseConfig):
 
     @profile.setter
     def profile(self, value: str) -> None:
+        """
+        Set the path to the middleware profile file.
+
+        :raises FileNotFoundError: if the specified path does not exist
+        """
         # Check Type
         assert isinstance(value, str), (
             f'Middleware profile {value} is invalid, must be a string'
         )
         # Valid file
         if value != self.DEFAULTS[self.PROFILE]:
-            assert os.path.exists(value), (
-                f'Middleware profile path {value} does not exist'
-            )
+            if not os.path.exists(value):
+                raise FileNotFoundError(f'Middleware profile path {value} does not exist')
         self._profile = value
         return
 
