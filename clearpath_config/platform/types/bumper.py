@@ -74,10 +74,8 @@ class Bumper(BaseAttachment):
     def set_extension(self, extension: float) -> None:
         try:
             extension = float(extension)
-        except ValueError as e:
-            raise AssertionError(e.args[0])
-        assert isinstance(
-            extension, float
-        ), f'Bumper extension must be of type float, unexpected type {type(extension)}'
-        assert extension >= 0, 'Bumper extension must be a positive value'
+        except ValueError:
+            raise TypeError(f'Bumper extension {extension} must be of type "float"')
+        if extension < 0:
+            raise ValueError(f'Bumper extension {extension} must be a positive value')
         self.extension = extension

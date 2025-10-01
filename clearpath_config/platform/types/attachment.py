@@ -80,7 +80,8 @@ class BaseAttachment(Accessory):
         return self.model
 
     def set_model(self, model: str) -> None:
-        assert model in self.MODELS, f'{self.ATTACHMENT_MODEL.title()} model "{model}" is not not of "{self.MODELS}"'  # noqa:E501
+        if model not in self.MODELS:
+            raise ValueError(f'{self.ATTACHMENT_MODEL.title()} model "{model}" is not not of "{self.MODELS}"')  # noqa:E501
         self.model = model
 
 
@@ -93,5 +94,6 @@ class PlatformAttachment(BaseAttachment):
         return _type in cls.TYPES
 
     def __new__(cls, _type: str) -> BaseAttachment:
-        assert cls.is_valid(_type), f'{cls.PLATFORM} does not have attachment "{_type}". Must be one of "{cls.TYPES}"'  # noqa:E501
+        if not cls.is_valid(_type):
+            raise ValueError(f'{cls.PLATFORM} does not have attachment "{_type}". Must be one of "{cls.TYPES}"')  # noqa:E501
         return cls.TYPES[_type]

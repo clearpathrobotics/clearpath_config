@@ -81,8 +81,10 @@ class BashConfig(BaseConfig):
     def additional_sources(self, sources: List[str]) -> None:
         self._source.clear()
         for f in sources:
-            assert isinstance(f, str), f'Bash source {f} must be a string'
-            assert os.path.exists(f), f'Bash source {f} does not exist'
+            if not isinstance(f, str):
+                raise TypeError(f'Bash source {f} must be a string')
+            if not os.path.exists(f):
+                raise FileNotFoundError(f'Bash source {f} does not exist')
             self._source.append(f)
 
     @property
@@ -93,5 +95,6 @@ class BashConfig(BaseConfig):
     def additional_envars(self, envars: dict) -> None:
         self._env.clear()
         for env in envars:
-            assert isinstance(env, str), f'Environment variable {env} must be a string'
+            if not isinstance(env, str):
+                raise TypeError(f'Environment variable {env}={envars[env]} must be a string')
             self._env[env] = str(envars[env])

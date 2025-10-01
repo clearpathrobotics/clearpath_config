@@ -56,7 +56,8 @@ class AttachmentsConfigMux:
 
     def __new__(cls, platform: str, attachments: dict = None) -> AttachmentsConfig:
         # Check Platform is Supported
-        assert platform in cls.PLATFORM, f'Platform "{platform}" must be one of "{cls.PLATFORM.keys()}"'  # noqa:E501
+        if platform not in cls.PLATFORM:
+            raise ValueError(f'Platform "{platform}" must be one of "{cls.PLATFORM.keys()}"')
         if not attachments:
             return cls.PLATFORM[platform]
         # Pre-Process Entries
@@ -71,9 +72,11 @@ class AttachmentsConfigMux:
     @staticmethod
     def preprocess(platform: str, attachments: dict):
         for i, a in enumerate(attachments):
-            assert 'name' in a, 'An attachment is missing "name"'
-            assert 'type' in a, 'An attachment is missing "type"'
+            if 'name' not in a:
+                raise ValueError(f'Attachment {a} is missing parameter "name"')
+            if 'type' not in a:
+                raise ValueError(f'Attachment {a} is missing parameter "type"')
             if '.' not in a['type']:
-                a['type'] = '%s.%s' % (platform, a['type'])
+                a['type'] = f'{platform}.{a["type"]}'
             attachments[i] = a
         return attachments

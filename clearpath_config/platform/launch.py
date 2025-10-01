@@ -93,7 +93,8 @@ class LaunchConfig(BaseConfig):
 
     @path.setter
     def path(self, path: str) -> None:
-        assert isinstance(path, str), f'Path {path} must be a string'
+        if not isinstance(path, str):
+            raise TypeError(f'Path {path} must be a string')
         self._path = path
 
     @property
@@ -102,7 +103,11 @@ class LaunchConfig(BaseConfig):
 
     @package.setter
     def package(self, package: str) -> None:
-        assert package is None or isinstance(package, str), f'Package {package} must be a string'
+        if (
+            package is not None
+            and not isinstance(package, str)
+        ):
+            raise TypeError(f'Package {package} must be null or a string')
         self._package = package
 
     @property
@@ -114,8 +119,10 @@ class LaunchConfig(BaseConfig):
         if args is None:
             args = {}
 
-        assert isinstance(args, dict), 'Arguments must be of type "dict"'
+        if not isinstance(args, dict):
+            raise TypeError(f'Arguments {args} must be of type "dict"')
         self._args = {}
         for arg in args:
-            assert isinstance(arg, str), f'Argument key {arg} must be of type "str"'
+            if not isinstance(arg, str):
+                raise TypeError(f'Argument key {arg} must be of type "str"')
             self._args[arg] = args[arg]
