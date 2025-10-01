@@ -68,7 +68,7 @@ class Username:
         if not isinstance(username, str):
             raise TypeError(f'Username {username} must be of type "str"')
         # Max 255 Characters
-        if len(username >= 256):
+        if len(username) >= 256:
             raise ValueError(f'Username {username} exceeds 255 ASCII character limit')
         # Username cannot start with digit
         if username[0].isdigit():
