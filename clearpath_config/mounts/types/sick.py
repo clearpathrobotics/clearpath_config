@@ -63,5 +63,8 @@ class SICKStand(BaseMount):
         return self.model
 
     def set_model(self, model: str) -> None:
-        assert model in self.MODELS, f'Unexpected SICK stand model "{model}".  It must be one of "{self.MODELS}"'  # noqa:E501
+        if model not in self.MODELS:
+            raise ValueError(
+                f'Unexpected SICK stand model "{model}".  It must be one of "{self.MODELS}"'
+            )
         self.model = model

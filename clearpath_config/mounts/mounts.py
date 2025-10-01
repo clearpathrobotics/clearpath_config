@@ -53,7 +53,8 @@ class Mount():
     }
 
     def __new__(cls, model: str) -> BaseMount:
-        assert model in Mount.MODEL, f'Model "{model}" must be one of "{Mount.MODEL.keys()}"'
+        if model not in Mount.MODEL:
+            raise ValueError(f'Model "{model}" must be one of "{Mount.MODEL.keys()}"')
         return Mount.MODEL[model]()
 
 
@@ -139,10 +140,11 @@ class MountsConfig(BaseConfig):
 
     @bracket.setter
     def bracket(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Mounts must be list of type "dict"')
-        assert all([isinstance(i, dict) for i in value]), (  # noqa:C419
-            'Mounts must be list of type "dict"')
+        if not isinstance(value, list):
+            raise TypeError(f'Brackets must be list of type "dict". Got {value}')
+        for i in value:
+            if not isinstance(i, dict):
+                raise TypeError(f'Bracket {i} must be of type "dict"')
         mounts = MountListConfig()
         mount_list = []
         for d in value:
@@ -162,10 +164,11 @@ class MountsConfig(BaseConfig):
 
     @riser.setter
     def riser(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Mounts must be list of "dict"')
-        assert all([isinstance(i, dict) for i in value]), (  # noqa:C419
-            'Mounts must be list of "dict"')
+        if not isinstance(value, list):
+            raise TypeError(f'Risers must be list of "dict". Got {value}')
+        for i in value:
+            if not isinstance(i, dict):
+                raise TypeError(f'Riser {i} must be of type "dict".')
         mounts = MountListConfig()
         mount_list = []
         for d in value:
@@ -185,10 +188,11 @@ class MountsConfig(BaseConfig):
 
     @fath_pivot.setter
     def fath_pivot(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Mounts must be list of "dict"')
-        assert all([isinstance(i, dict) for i in value]), (  # noqa:C419
-            'Mounts must be list of "dict"')
+        if not isinstance(value, list):
+            raise TypeError(f'Fath pivot mounts must be list of "dict". Got {value}')
+        for i in value:
+            if not isinstance(i, dict):
+                raise TypeError(f'Fath pivot mount {i} must be of type "dict"')
         mounts = MountListConfig()
         mount_list = []
         for d in value:
@@ -208,10 +212,11 @@ class MountsConfig(BaseConfig):
 
     @sick_stand.setter
     def sick_stand(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Mounts must be list of "dict"')
-        assert all([isinstance(i, dict) for i in value]), (  # noqa:C419
-            'Mounts must be list of "dict"')
+        if not isinstance(value, list):
+            raise TypeError(f'Sick stands must be list of "dict". Got {value}')
+        for i in value:
+            if not isinstance(i, dict):
+                raise TypeError('Sick stand {i} must be of type "dict"')
         mounts = MountListConfig()
         mount_list = []
         for d in value:
@@ -231,10 +236,11 @@ class MountsConfig(BaseConfig):
 
     @post.setter
     def post(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Mounts must be list of "dict"')
-        assert all([isinstance(i, dict) for i in value]), (  # noqa:C419
-            'Mounts must be list of "dict"')
+        if not isinstance(value, list):
+            raise TypeError(f'Posts must be list of "dict". Got {value}')
+        for i in value:
+            if not isinstance(i, dict):
+                raise TypeError(f'Post {i} must be of type "dict"')
         mounts = MountListConfig()
         mount_list = []
         for d in value:
@@ -254,10 +260,11 @@ class MountsConfig(BaseConfig):
 
     @disk.setter
     def disk(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Mounts must be list of "dict"')
-        assert all([isinstance(i, dict) for i in value]), (  # noqa:C419
-            'Mounts must be list of "dict"')
+        if not isinstance(value, list):
+            raise TypeError(f'Disks must be list of "dict". Got {value}')
+        for i in value:
+            if not isinstance(i, dict):
+                raise TypeError(f'Disk {i} must be of type "dict"')
         mounts = MountListConfig()
         mount_list = []
         for d in value:

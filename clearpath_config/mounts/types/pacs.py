@@ -83,34 +83,38 @@ class PACS:
             return self.rows
 
         def set_rows(self, rows: int) -> None:
-            assert isinstance(rows, int), (
-                'Riser rows must be an integer.'
-            )
-            assert 0 < rows <= PACS.MAX_ROWS, f'Riser rows must be between 0 and {PACS.MAX_ROWS}'
+            if not isinstance(rows, int):
+                raise TypeError(f'Riser rows {rows} must be of type "int"')
+            if rows <= 0 or rows > PACS.MAX_ROWS:
+                raise ValueError(f'Riser rows {rows} must be between 0 and {PACS.MAX_ROWS}')
             self.rows = rows
 
         def get_columns(self) -> int:
             return self.columns
 
         def set_columns(self, columns: int):
-            assert isinstance(columns, int), (
-                'Riser columns must be an integer.'
-            )
-            assert 0 < columns <= PACS.MAX_COLUMNS, f'Riser rows must be between 0 and {PACS.MAX_COLUMNS}'  # noqa:E501
+            if not isinstance(columns, int):
+                raise TypeError(f'Riser columns {columns} must be of type "int"')
+            if columns <= 0 or columns > PACS.MAX_COLUMNS:
+                raise ValueError(
+                    f'Riser columns {columns} must be between 0 and {PACS.MAX_COLUMNS}'
+                )
             self.columns = columns
 
         def get_height(self) -> float:
             return self.height
 
         def set_height(self, height: float) -> None:
-            assert height >= 0, 'Height must be at least 0'
+            if height < 0:
+                raise ValueError(f'Height {height} must be at least 0.0')
             self.height = height
 
         def get_thickness(self) -> None:
             return self.thickness
 
         def set_thickness(self, thickness: float) -> None:
-            assert thickness > 0, 'Thickness must be greater than 0'
+            if thickness <= 0:
+                raise ValueError(f'Thickness {thickness} must be greater than 0.0')
             self.thickness = thickness
 
     class Bracket(BaseMount):
@@ -154,5 +158,8 @@ class PACS:
             return self.model
 
         def set_model(self, model: str) -> None:
-            assert model in self.MODELS, f'Unexpected Bracket model "{model}". It must be one of "{self.MODELS}"'  # noqa:E501
+            if model not in self.MODELS:
+                raise ValueError(
+                    f'Unexpected Bracket model "{model}". It must be one of "{self.MODELS}"'
+                )
             self.model = model
