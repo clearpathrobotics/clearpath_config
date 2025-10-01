@@ -51,10 +51,10 @@ class DomainID:
     def assert_valid(_id: int) -> None:
         # Check Type
         if not isinstance(_id, int):
-            raise TypeError(f'Domain ID {id} must be an integer')
+            raise TypeError(f'Domain ID {_id} must be an integer')
         # 0 - 101 Range
-        if _id < DomainID.MIN_DOMAIN or id > DomainID.MAX_DOMAIN:
+        if _id < DomainID.MIN_DOMAIN or _id > DomainID.MAX_DOMAIN:
             raise ValueError(
-                f'Domain ID {id} must be in range {DomainID.MIN_DOMAIN} - {DomainID.MAX_DOMAIN}'
+                f'Domain ID {_id} must be in range {DomainID.MIN_DOMAIN} - {DomainID.MAX_DOMAIN}'
             )
         return
