@@ -264,7 +264,7 @@ class DrivetrainConfig(BaseConfig):
             raise ValueError(
                 f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID[self.WHEELS])}"'  # noqa:E501
             )
-        if self.config not in self.VALID[platform][self.CONTROL]:
+        if self.control not in self.VALID[platform][self.CONTROL]:
             raise ValueError(
                 f'Drivetrain control "{self.control}" is invalid. Drivetrain control for platform "{platform}" must be one of "{list(self.VALID[self.CONTROL][platform])}"'  # noqa: E501
             )
