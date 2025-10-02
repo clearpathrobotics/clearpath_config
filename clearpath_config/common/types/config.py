@@ -94,7 +94,7 @@ class BaseConfig:
         if value is None:
             return
         if not isinstance(value, dict):
-           raise TypeError(f'Config must be of type "dict", not "{type(value)}"')
+            raise TypeError(f'Config must be of type "dict", not "{type(value)}"')
         if self._parent_key is not None and self._parent_key not in value:
             value = {self._parent_key: value}
         value = unflatten_dict(value)
