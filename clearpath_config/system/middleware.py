@@ -137,9 +137,10 @@ class MiddlewareConfig(BaseConfig):
         elif isinstance(value, RMWImplementation):
             self._rmw_implementation = value
         else:
-            assert (isinstance(value, str)) or (isinstance(value, RMWImplementation)), (
-                f'RMW value of {value} is invalid, must be of type "str" or "RMWImplementation"'
-            )
+            if not (isinstance(value, str) or isinstance(value, RMWImplementation)):
+                raise TypeError(
+                    f'RMW value of {value} is invalid, must be of type "str" or "RMWImplementation"'  # noqa: E501
+                )
 
     @property
     def discovery(self) -> Discovery:
@@ -156,11 +157,10 @@ class MiddlewareConfig(BaseConfig):
         elif isinstance(value, Discovery):
             self._discovery = value
         else:
-            assert (
-                isinstance(value, str)) or (isinstance(value, Discovery)), (
-                f'Discovery mode value of {value} is invalid.'
-                f'Discovery mode must be of type "str" or "RMWImplementation"'
-            )
+            if not (isinstance(value, str) or isinstance(value, Discovery)):
+                raise TypeError(
+                    f'Discovery mode "{value}" must be of type "str" or "RMWImplementation"'
+                )
         self._discovery = value
 
     @property
@@ -179,9 +179,8 @@ class MiddlewareConfig(BaseConfig):
         :raises FileNotFoundError: if the specified path does not exist
         """
         # Check Type
-        assert isinstance(value, str), (
-            f'Middleware profile {value} is invalid, must be a string'
-        )
+        if not isinstance(value, str):
+            raise TypeError(f'Middleware profile {value} is invalid, must be a string')
         # Valid file
         if value != self.DEFAULTS[self.PROFILE]:
             if not os.path.exists(value):
@@ -199,8 +198,8 @@ class MiddlewareConfig(BaseConfig):
 
     @override_server_id.setter
     def override_server_id(self, value: bool) -> None:
-        assert isinstance(value, bool), (
-            f'Override server_id value of {value} is invalid, must be a boolean')
+        if not isinstance(value, bool):
+            raise TypeError(f'Override server_id value of {value} is invalid, must be a boolean')
         self._override_server_id = value
 
     @property
@@ -217,10 +216,10 @@ class MiddlewareConfig(BaseConfig):
         # Generate a list of ServerConfig Objects based on how the input was provided
         server_list = []
         if isinstance(value, list):
-            assert all([isinstance(i, dict) for i in value]), (  # noqa:C419
-                f'Server {value} is invalid, must be list of ' +
-                'type "dict" or of type "ServerListConfig"'
-            )
+            for i in value:
+                if not isinstance(i, dict):
+                    raise TypeError(f'Server {i} must be of type "dict"')
+
             # If the servers were not explicitly listed, assume every device in the hosts list
             # should have its own discovery server running
             if (not value) and (self.discovery == Discovery.SERVER):
@@ -228,39 +227,40 @@ class MiddlewareConfig(BaseConfig):
                 [value.append({ServerConfig.HOSTNAME: h.hostname}) for h in self.hosts.get_all()]
 
             for d in value:
-                assert isinstance(d, dict), (
-                    f'Server value of {d} is invalid, it must be of type "dict"'
-                )
+                if not isinstance(d, dict):
+                    raise TypeError(f'Server value of {d} is invalid, it must be of type "dict"')
                 server_list.append(ServerConfig(config=d))
-        else:
-            assert isinstance(value, ServerListConfig), (
-                f'Servers {value} is invalid, must be list of ' +
-                'type "dict" or of type "ServerListConfig"'
-            )
+        elif isinstance(value, ServerListConfig):
             server_list = value.get_all()
+        else:
+            raise TypeError(
+                f'Server list {value} must be of type "list[dict]" or "ServerListConfig", not "{type(value)}"'  # noqa: E501
+            )
 
         # set IP addresses based on the host names provided
         for server in server_list:
             # if a host name was provided, use the look up to determine the ip address
             if server.hostname:
-                assert any(server.hostname == s.hostname for s in self.hosts.get_all()), (
-                    f'Provided hostname: {server.hostname} is not listed in the hosts list'
-                )
+                if not any(server.hostname == s.hostname for s in self.hosts.get_all()):
+                    raise ValueError(
+                        f'Provided hostname: {server.hostname} is not listed in the hosts list'
+                    )
                 match = next((s for s in self.hosts.get_all() if s.hostname == server.hostname))
                 server.ip_address = match.ip_address
             else:
-                assert server.ip_address, (
-                    f'Server {server} is listed without a host name or IP address.'
-                )
+                if not server.ip_address:
+                    raise ValueError(
+                        f'Server {server} is listed without a host name or IP address.'
+                    )
 
         for server in server_list:
             # Ensure no duplicate server host/ip + port
             count = sum(((s.ip_address == server.ip_address) and (s.port == server.port))
                         for s in server_list)
-            assert count == 1, (
-                f'Discovery server {server} conflicts with another discovery server. ' +
-                'Each combination of host/ip and port number must be unique.'
-            )
+            if count != 1:
+                raise ValueError(
+                    f'Discovery server {server} conflicts with another discovery server. Each combination of host/ip and port number must be unique.'  # noqa: E501
+                )
 
         # sort the servers by host/ip address and then port
         # required for consistent server id numbering
@@ -276,10 +276,10 @@ class MiddlewareConfig(BaseConfig):
             # (unspecified ones will default and show up as duplicates)
             for server in server_list:
                 count = sum(s.server_id == server.server_id for s in server_list)
-                assert count == 1, (
-                    f'Server {server} does not have a unique server id. While ' +
-                    'override_server_id is true, each server must have a unique id specified.'
-                )
+                if count != 1:
+                    raise ValueError(
+                        f'Server {server} does not have a unique server id. While override_server_id is true, each server must have a unique id specified.'  # noqa: E501
+                    )
 
         servers = ServerListConfig()
         servers.set_all(server_list)
@@ -303,8 +303,12 @@ class MiddlewareConfig(BaseConfig):
             value = 'off'
 
         # Check Type is valid
-        assert isinstance(value, str), f'Automatic discovery range {value} must be a string'
-        assert value.lower() in self.DISCOVERY_RANGES, f'Automatic discovery range {value} must be one of {self.DISCOVERY_RANGES}'  # noqa: E501
+        if not isinstance(value, str):
+            raise TypeError(f'Automatic discovery range {value} must be a string')
+        if value.lower() not in self.DISCOVERY_RANGES:
+            raise ValueError(
+                f'Automatic discovery range {value} must be one of {self.DISCOVERY_RANGES}'
+            )
 
         self._automatic_discovery_range = value.lower()
         return
@@ -321,7 +325,8 @@ class MiddlewareConfig(BaseConfig):
     def static_peers(self, value: List[str]) -> None:
         # check all peers are strings
         for s in value:
-            assert isinstance(s, str), f'Invalid static peer: {s}. Value must be a string.'
+            if not isinstance(s, str):
+                raise TypeError(f'Invalid static peer: {s}. Value must be a string.')
 
         arr = list(value)  # make a copy of the array to assign
         self._static_peers = arr
