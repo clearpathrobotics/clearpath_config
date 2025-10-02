@@ -334,7 +334,7 @@ class OusterOS1(BaseLidar3D):
 
     @base_type.setter
     def base_type(self, base: str) -> None:
-        if  base not in self.BASE_TYPES:
+        if base not in self.BASE_TYPES:
             raise ValueError(f'Base type {base} must be one of {self.BASE_TYPES}')
         self._base_type = base
 
@@ -418,7 +418,7 @@ class SeyondLidar(BaseLidar3D):
 
     @device_type.setter
     def device_type(self, device_type: str) -> None:
-        if  device_type not in self.DEVICE_TYPES:
+        if device_type not in self.DEVICE_TYPES:
             raise ValueError(
                 f'Device type "{device_type}" is not one of "{self.DEVICE_TYPES}"'
             )

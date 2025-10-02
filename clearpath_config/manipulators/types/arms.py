@@ -324,7 +324,9 @@ class UniversalRobots(BaseArm):
     @ur_type.setter
     def ur_type(self, value: str) -> None:
         if value not in self.UR_TYPES:
-            raise ValueError(f'Universal Robot ur_type must be one of {self.UR_TYPES}, got: "{value}"')
+            raise ValueError(
+                f'Universal Robot ur_type must be one of {self.UR_TYPES}, got: "{value}"'
+            )
 
         self._ur_type = value
 

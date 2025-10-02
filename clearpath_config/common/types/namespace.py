@@ -84,14 +84,11 @@ class Namespace:
         # Allowed characters
         allowed = re.compile('[a-z|0-9|_|/|~]', re.IGNORECASE)
         if not all(allowed.match(c) for c in name):
-            raise ValueError(
-f"""Namespace "{name}" can only contain:
+            raise ValueError(f"""Namespace "{name}" can only contain:
  - [A-Z|a-z|0-9],
  - underscores (_),
  - forward slahes (/),
- - leading tilde (~)
-"""
-            )
+ - leading tilde (~)""")
         # Leading Tilde (~)
         if name[0] == '~':
             if name[1] != '/':

@@ -79,10 +79,8 @@ class Username:
         # Regex Convention
         allowed = re.compile(r'[-a-z0-9]')
         if not all(allowed.match(c) for c in username):
-            raise ValueError(
-f"""Username "{username} cannot contain characters other than:
+            raise ValueError(f"""Username "{username} cannot contain characters other than:
  - letters [a-z]
  - digits [0-9]
  - hyphen "-"
- """
-            )
+ """)

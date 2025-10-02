@@ -54,7 +54,9 @@ class SerialNumber:
             raise TypeError(f'Serial Number "{sn}" must be string')
         sn_tokens = sn.lower().strip().split('-')
         if len(sn_tokens) <= 0 or len(sn_tokens) >= 4:
-            raise ValueError(f'Serial number {sn}" must be delimited by hypens "-" and have 2 or 3 fields (e.g. cpr-a300-00001 or a300-00001), or 1 (generic) field')
+            raise ValueError(
+                f'Serial number {sn}" must be delimited by hypens "-" and have 2 or 3 fields (e.g. cpr-a300-00001 or a300-00001), or 1 (generic) field'  # noqa: E501
+            )
         # Remove CPR Prefix
         if len(sn_tokens) == 3:
             if sn_tokens[0] != 'cpr':

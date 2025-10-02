@@ -70,7 +70,9 @@ class ManipulatorPose():
         if not isinstance(joints, list):
             raise TypeError(f'Manipulator pose joints must be of type list. Got {joints}')
         if len(joints) != self.joint_count:
-            raise ValueError(f'Manipulator pose joints must of length {self.joint_count}, got {len(joints)}')
+            raise ValueError(
+                f'Manipulator pose joints must of length {self.joint_count}, got {len(joints)}'
+            )
         self._joints = joints
 
     def to_dict(self) -> dict:

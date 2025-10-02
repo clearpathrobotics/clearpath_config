@@ -56,7 +56,7 @@ class Link():
 
     @classmethod
     def assert_type(cls, _type: str) -> None:
-        if not _type in cls.TYPE:
+        if _type not in cls.TYPE:
             raise TypeError(f'Sensor type "{_type}" must be one of "{cls.TYPE.keys()}')
 
     def __new__(cls, _type: str, name: str) -> BaseLink:
