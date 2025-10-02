@@ -1449,7 +1449,7 @@ class AxisCamera(BaseCamera):
 
     @min_pan.setter
     def min_pan(self, pan: float) -> None:
-        if pan < pi or pan > pi:
+        if pan < -pi or pan > pi:
             raise ValueError(f'Min pan {pan} must be in range [-pi, pi]')
         self._min_pan = pan
 
