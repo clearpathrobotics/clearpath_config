@@ -74,7 +74,8 @@ class InsAntenna(Accessory):
 
     @antenna_type.setter
     def antenna_type(self, antenna_type: str) -> None:
-        assert antenna_type in InsAntenna.TYPES, f'{antenna_type} is not one of ({InsAntenna.TYPES})'  # noqa: E501
+        if antenna_type not in InsAntenna.TYPES:
+            raise TypeError(f'{antenna_type} is not one of ({InsAntenna.TYPES})')
         self._antenna_type = antenna_type
 
 
@@ -169,8 +170,10 @@ class BaseINS(BaseSensor):
         self._antennas = []
         for a in antennas:
             self._antennas.append(a)
-        assert len(self.antennas) >= 1, 'Must include at least 1 antenna'
-        assert len(self.antennas) <= 2, 'Cannot have more than 2 antennas'
+        if len(self.antennas) < 1:
+            raise ValueError('INS must include at least 1 antenna')
+        if len(self.antennas) > 2:
+            raise ValueError('INS cannot have more than 2 antennas')
 
     @property
     def frame_id(self) -> str:
@@ -287,9 +290,10 @@ class Fixposition(BaseINS):
 
     @device_type.setter
     def device_type(self, device_type: str) -> None:
-        assert device_type in self.DEVICE_TYPES, (
-            f'Device type "{device_type}" is not one of "{self.DEVICE_TYPES}"'
-        )
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(
+                f'Device type "{device_type}" is not one of "{self.DEVICE_TYPES}"'
+            )
         self._device_type = device_type
 
     @property
@@ -323,7 +327,8 @@ class Fixposition(BaseINS):
 
     @rate.setter
     def rate(self, rate: int) -> None:
-        assert rate >= 0, 'Rate cannot be negative'
+        if rate < 0:
+            raise ValueError(f'Rate {rate} must be positive')
         self._rate = rate
 
     @property
@@ -332,7 +337,8 @@ class Fixposition(BaseINS):
 
     @reconnect.setter
     def reconnect(self, reconnect: int) -> None:
-        assert reconnect >= 0, 'Reconnect timeout cannot be negative'
+        if reconnect < 0:
+            raise ValueError(f'Reconnect timeout {reconnect} must be positive')
         self._reconnect = reconnect
 
     @property

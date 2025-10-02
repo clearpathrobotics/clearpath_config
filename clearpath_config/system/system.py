@@ -155,29 +155,28 @@ class SystemConfig(BaseConfig):
         host_list = []
         if isinstance(value, list):
             for d in value:
-                assert isinstance(d, dict), (
-                    f'Host value of {d} is invalid, it must be of type "dict"'
-                )
+                if not isinstance(d, dict):
+                    raise TypeError(f'Host value of {d} is invalid, it must be of type "dict"')
                 host_list.append(HostConfig(config=d))
 
             for host in host_list:
                 # Ensure no duplicate hostname or IP
                 count = sum(((host.ip_address == h.ip_address) or (host.hostname == h.hostname))
                             for h in host_list)
-                assert count == 1, (
-                    f'Host {host} conflicts with another host. ' +
-                    'Each hostname and ip must be unique.'
-                )
+                if count != 1:
+                    raise ValueError(
+                        f'Host {host} conflicts with another host. Each hostname and ip must be unique.'  # noqa: E501
+                    )
 
             self._hosts = HostListConfig()
             self._hosts.set_all(host_list)
         elif isinstance(value, HostListConfig):
             self._hosts = value
         else:
-            assert isinstance(value, list) or isinstance(value, HostConfig), (
-                f'Hosts value of {value} is invalid, ' +
-                'it must be of type "List[dict]" or "HostListConfig"'
-            )
+            if not (isinstance(value, list) or isinstance(value, HostConfig)):
+                raise TypeError(
+                    f'Hosts value of {value} is invalid, it must be of type "List[dict]" or "HostListConfig"'  # noqa: E501
+                )
 
     @property
     def localhost(self) -> str:
@@ -189,9 +188,10 @@ class SystemConfig(BaseConfig):
 
     @localhost.setter
     def localhost(self, value: str | Hostname) -> None:
-        assert isinstance(value, str) or isinstance(value, Hostname), (
-            f'Localhost of {value} is invalid, must be of type "str" or "Hostname"'
-        )
+        if not (isinstance(value, str) or isinstance(value, Hostname)):
+            raise TypeError(
+                f'Localhost of {value} is invalid, must be of type "str" or "Hostname"'
+            )
         if isinstance(value, str):
             self._localhost = Hostname(value)
         elif isinstance(value, Hostname):
@@ -212,9 +212,8 @@ class SystemConfig(BaseConfig):
         elif isinstance(value, Username):
             self._username = value
         else:
-            assert isinstance(value, str) or isinstance(value, Username), (
-                'Username must be of type "str" or "Username"'
-            )
+            if not (isinstance(value, str) or isinstance(value, Username)):
+                raise TypeError(f'Username {value} must be of type "str" or "Username"')
 
     @property
     def namespace(self) -> str:
@@ -243,9 +242,8 @@ class SystemConfig(BaseConfig):
         elif isinstance(value, DomainID):
             self._domain_id = value
         else:
-            assert isinstance(value, int) or isinstance(value, DomainID), (
-                'Domain ID must be of type "int" or "DomainID"'
-            )
+            if not (isinstance(value, int) or isinstance(value, DomainID)):
+                raise TypeError(f'Domain ID {value} must be of type "int" or "DomainID"')
 
     @property
     def middleware(self) -> MiddlewareConfig:
@@ -264,10 +262,10 @@ class SystemConfig(BaseConfig):
         elif isinstance(value, MiddlewareConfig):
             self._middleware = value
         else:
-            assert isinstance(value, dict) or (
-                isinstance(value, MiddlewareConfig)), (
-                'Middleware configuration must be of type "dict" or "MiddlewareConfig"'
-            )
+            if not (isinstance(value, dict) or isinstance(value, MiddlewareConfig)):
+                raise TypeError(
+                    f'Middleware configuration {value} must be of type "dict" or "MiddlewareConfig"'  # noqa: E501
+                )
 
     @property
     def workspaces(self) -> list:
@@ -275,10 +273,11 @@ class SystemConfig(BaseConfig):
 
     @workspaces.setter
     def workspaces(self, value: list) -> None:
-        assert isinstance(value, list), (
-            'Workspaces must be "list" of "str"')
-        assert all([isinstance(i, str) for i in value]), (  # noqa:C419
-            'Workspaces must be "list" of "str"')
+        if not isinstance(value, list):
+            raise TypeError(f'Workspaces {value} must be "list" of "str"')
+        for i in value:
+            if not isinstance(i, str):
+                raise TypeError(f'Workspace {i} must be of type "str"')
         self._workspaces = value
 
     @property
@@ -295,5 +294,7 @@ class SystemConfig(BaseConfig):
         elif isinstance(bash, BashConfig):
             self._bash = bash
         else:
-            assert isinstance(bash, dict) or isinstance(bash, BashConfig), \
-                'Bash configuration must be of type "dict" or "BashConfig"'
+            if not (isinstance(bash, dict) or isinstance(bash, BashConfig)):
+                raise TypeError(
+                    f'Bash configuration {bash} must be of type "dict" or "BashConfig"'
+                )

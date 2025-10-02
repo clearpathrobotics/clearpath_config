@@ -91,7 +91,8 @@ class InertialMeasurementUnit():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Model "{model}" must be one of "{cls.MODEL.keys()}"'
+        if model not in cls.MODEL:
+            raise ValueError(f'Model "{model}" must be one of "{cls.MODEL.keys()}"')
 
     def __new__(cls, model: str) -> BaseIMU:
         cls.assert_model(model)
@@ -115,7 +116,8 @@ class Camera():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Model "{model}" must be one of "{cls.MODEL.keys()}"'
+        if model not in cls.MODEL:
+            raise ValueError(f'Model "{model}" must be one of "{cls.MODEL.keys()}"')
 
     def __new__(cls, model: str) -> BaseCamera:
         cls.assert_model(model)
@@ -131,7 +133,8 @@ class Charger():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Charger model "{model}" must be one of "{cls.MODEL.keys()}"'
+        if model not in cls.MODEL:
+            raise ValueError(f'Charger model "{model}" must be one of "{cls.MODEL.keys()}"')
 
     def __new__(cls, model: str) -> BaseCamera:
         cls.assert_model(model)
@@ -155,7 +158,8 @@ class GlobalPositioningSystem():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Model "{model}" must be one of "{cls.MODEL.keys()}"'
+        if model not in cls.MODEL:
+            raise ValueError(f'Model "{model}" must be one of "{cls.MODEL.keys()}"')
 
     def __new__(cls, model: str) -> BaseGPS:
         cls.assert_model(model)
@@ -173,7 +177,8 @@ class Lidar2D():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Model "{model}" must be one of "{cls.MODEL.keys()}"'
+        if model not in cls.MODEL:
+            raise ValueError(f'Model "{model}" must be one of "{cls.MODEL.keys()}"')
 
     def __new__(cls, model: str) -> BaseLidar2D:
         cls.assert_model(model)
@@ -193,7 +198,8 @@ class Lidar3D():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Model "{model}" must be one of "{cls.MODEL.keys()}"'
+        if model not in cls.MODEL:
+            raise ValueError(f'Model "{model}" must be one of "{cls.MODEL.keys()}"')
 
     def __new__(cls, model: str) -> BaseLidar3D:
         cls.assert_model(model)
@@ -209,7 +215,8 @@ class INS():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Model "{model}" must be one of "{cls.MODEL.keys()}"'
+        if model not in cls.MODEL:
+            raise ValueError(f'Model "{model}" must be one of "{cls.MODEL.keys()}"')
 
     def __new__(cls, model: str) -> BaseINS:
         cls.assert_model(model)
@@ -233,7 +240,8 @@ class Sensor():
 
     @classmethod
     def assert_type(cls, _type: str) -> None:
-        assert _type in cls.TYPE, f'Sensor type "{_type}" must be one of "{cls.TYPE.keys()}"'
+        if _type not in cls.TYPE:
+            raise ValueError(f'Sensor type "{_type}" must be one of "{cls.TYPE.keys()}"')
 
     def __new__(cls, _type: str, _model: str) -> BaseSensor:
         cls.assert_type(_type)
@@ -354,12 +362,13 @@ class SensorConfig(BaseConfig):
 
     @camera.setter
     def camera(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Sensors must be list of "dict"')
-        assert all([isinstance(d, dict) for d in value]), (  # noqa: C419
-            'Sensors must be list of "dict"')
-        assert all(['model' in d for d in value]), (  # noqa: C419
-            'Sensor "dict" must have "model" key')
+        if not isinstance(value, list):
+            raise TypeError(f'Camera must be list of "dict". Got {value}')
+        for d in value:
+            if not isinstance(d, dict):
+                raise TypeError(f'Camera {d} must be of type "dict"')
+            if 'model' not in d:
+                raise ValueError(f'Camera {d} does not have a "model" parameter')
         sensor_list = []
         for d in value:
             sensor = Camera(d['model'])
@@ -377,12 +386,13 @@ class SensorConfig(BaseConfig):
 
     @charger.setter
     def charger(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Sensors must be list of "dict"')
-        assert all([isinstance(d, dict) for d in value]), (  # noqa: C419
-            'Sensors must be list of "dict"')
-        assert all(['model' in d for d in value]), (  # noqa: C419
-            'Sensor "dict" must have "model" key')
+        if not isinstance(value, list):
+            raise TypeError(f'Chargers must be list of "dict". Got {value}')
+        for d in value:
+            if not isinstance(d, dict):
+                raise TypeError(f'Charger {d} must be of type "dict"')
+            if 'model' not in d:
+                raise ValueError(f'Charger {d} does not have a "model" parameter')
         sensor_list = []
         for d in value:
             sensor = Charger(d['model'])
@@ -400,12 +410,13 @@ class SensorConfig(BaseConfig):
 
     @gps.setter
     def gps(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Sensors must be list of "dict"')
-        assert all([isinstance(d, dict) for d in value]), (  # noqa: C419
-            'Sensors must be list of "dict"')
-        assert all(['model' in d for d in value]), (  # noqa: C419
-            'Sensor "dict" must have "model" key')
+        if not isinstance(value, list):
+            raise TypeError(f'GPS must be list of "dict". Got {value}')
+        for d in value:
+            if not isinstance(d, dict):
+                raise TypeError(f'GPS {d} must be of type "dict"')
+            if 'model' not in d:
+                raise ValueError(f'GPS {d} does not have a "model" parameter')
         sensor_list = []
         for d in value:
             sensor = GlobalPositioningSystem(d['model'])
@@ -423,12 +434,13 @@ class SensorConfig(BaseConfig):
 
     @imu.setter
     def imu(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Sensors must be list of "dict"')
-        assert all([isinstance(d, dict) for d in value]), (  # noqa: C419
-            'Sensors must be list of "dict"')
-        assert all(['model' in d for d in value]), (  # noqa: C419
-            'Sensor "dict" must have "model" key')
+        if not isinstance(value, list):
+            raise TypeError(f'IMUs must be list of "dict". Got {value}')
+        for d in value:
+            if not isinstance(d, dict):
+                raise TypeError(f'IMU {d} must be of type "dict"')
+            if 'model' not in d:
+                raise ValueError(f'IMU {d} does not have a "model" parameter')
         sensor_list = []
         for d in value:
             sensor = InertialMeasurementUnit(d['model'])
@@ -446,12 +458,13 @@ class SensorConfig(BaseConfig):
 
     @lidar2d.setter
     def lidar2d(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Sensors must be list of "dict"')
-        assert all([isinstance(d, dict) for d in value]), (  # noqa: C419
-            'Sensors must be list of "dict"')
-        assert all(['model' in d for d in value]), (  # noqa: C419
-            'Sensor "dict" must have "model" key')
+        if not isinstance(value, list):
+            raise TypeError(f'2D Lidars must be list of "dict". Got {value}')
+        for d in value:
+            if not isinstance(d, dict):
+                raise TypeError(f'2D Lidar {d} must be of type "dict"')
+            if 'model' not in d:
+                raise ValueError(f'2D Lidar {d} does not have a "model" parameter')
         sensor_list = []
         for d in value:
             sensor = Lidar2D(d['model'])
@@ -469,12 +482,13 @@ class SensorConfig(BaseConfig):
 
     @lidar3d.setter
     def lidar3d(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Sensors must be list of "dict"')
-        assert all([isinstance(d, dict) for d in value]), (  # noqa: C419
-            'Sensors must be list of "dict"')
-        assert all(['model' in d for d in value]), (  # noqa: C419
-            'Sensor "dict" must have "model" key')
+        if not isinstance(value, list):
+            raise TypeError(f'3D Lidars must be list of "dict". Got {value}')
+        for d in value:
+            if not isinstance(d, dict):
+                raise TypeError(f'3D Lidar {d} must be of type "dict"')
+            if 'model' not in d:
+                raise ValueError(f'3D Lidar {d} does not have a "model" parameter')
         sensor_list = []
         for d in value:
             sensor = Lidar3D(d['model'])
@@ -492,15 +506,13 @@ class SensorConfig(BaseConfig):
 
     @ins.setter
     def ins(self, value: List[dict]) -> None:
-        assert isinstance(value, list), (
-            'Sensors must be list of "dict"'
-        )
-        assert all([isinstance(d, dict) for d in value]), (  # noqa: C419
-            'Sensors must be list of "dict"'
-        )
-        assert all(['model' in d for d in value]), (  # noqa: C419
-            'Sensor "dict" must have "model" key'
-        )
+        if not isinstance(value, list):
+            raise TypeError(f'INS must be list of "dict". Got {value}')
+        for d in value:
+            if not isinstance(d, dict):
+                raise TypeError(f'INS {d} must be of type "dict"')
+            if 'model' not in d:
+                raise ValueError(f'INS {d} does not have a "model" parameter')
         sensor_list = []
         for d in value:
             sensor = INS(d['model'])
@@ -545,9 +557,8 @@ class SensorConfig(BaseConfig):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        assert lidar2d or model, (
-            'Lidar2D object or model must be passed.'
-        )
+        if not (lidar2d or model):
+            raise ValueError('Lidar2D object or model must be passed')
         if not lidar2d and model:
             lidar2d = Lidar2D(model)
             lidar2d.set_frame_id(frame_id)
@@ -592,9 +603,8 @@ class SensorConfig(BaseConfig):
                 xyz=xyz,
                 rpy=rpy
             )
-        assert isinstance(ust, HokuyoUST), (
-            'Lidar2D object must be of type UST'
-        )
+        if not isinstance(ust, HokuyoUST):
+            raise TypeError(f'Lidar2D object must be of type UST. Received {type(ust)}')
         self._lidar2d.add(ust)
 
     # Lidar2D: Add LMS1xx
@@ -627,9 +637,8 @@ class SensorConfig(BaseConfig):
                 xyz=xyz,
                 rpy=rpy
             )
-        assert isinstance(lms1xx, SickLMS1XX), (
-            'Lidar2D object must be of type LMS1XX'
-        )
+        if not isinstance(lms1xx, SickLMS1XX):
+            raise TypeError(f'Lidar2D object must be of type LMS1XX. Received {type(lms1xx)}')
         self._lidar2d.add(lms1xx)
 
     # Lidar2D: Remove Lidar2D by passing object or index
@@ -685,9 +694,8 @@ class SensorConfig(BaseConfig):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        assert lidar3d or model, (
-            'Lidar3D object or model must be passed.'
-        )
+        if not (lidar3d or model):
+            raise ValueError('Lidar3D object or model must be passed.')
         if not lidar3d and model:
             lidar3d = Lidar3D(model)
             lidar3d.set_frame_id(frame_id)
@@ -728,9 +736,10 @@ class SensorConfig(BaseConfig):
                 xyz=xyz,
                 rpy=rpy
             )
-        assert isinstance(velodyne, VelodyneLidar), (
-            'Lidar3D object must be of type VelodyneLidar'
-        )
+        if not isinstance(velodyne, VelodyneLidar):
+            raise TypeError(
+                f'Lidar3D object must be of type VelodyeLidar. Received {type(velodyne)}'
+            )
         self._lidar3d.add(velodyne)
 
     # Lidar3D: Remove Lidar3D by passing object or index
@@ -786,9 +795,8 @@ class SensorConfig(BaseConfig):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        assert camera or model, (
-            'Camera object or model must be passed.'
-        )
+        if not (camera or model):
+            raise ValueError('Camera object or model must be passed.')
         if not camera and model:
             camera = Camera(model)
             camera.fps = fps
@@ -829,9 +837,8 @@ class SensorConfig(BaseConfig):
                 xyz=xyz,
                 rpy=rpy,
             )
-        assert isinstance(blackfly, FlirBlackfly), (
-            'Blackfly object must be of type Blackfly'
-        )
+        if not isinstance(blackfly, FlirBlackfly):
+            raise TypeError(f'Blackfly object must be of type Blackfly. Received {type(blackfly)}')
         self._camera.add(blackfly)
 
     # Camera: Add Realsense
@@ -878,9 +885,10 @@ class SensorConfig(BaseConfig):
                 xyz=xyz,
                 rpy=rpy,
             )
-        assert isinstance(realsense, IntelRealsense), (
-            'Realsense object must be of type Realsense'
-        )
+        if not isinstance(realsense, IntelRealsense):
+            raise TypeError(
+                f'Realsense object must be of type IntelRealsense. Received {type(realsense)}'
+            )
         self._camera.add(realsense)
 
     # Camera: Remove
@@ -936,9 +944,8 @@ class SensorConfig(BaseConfig):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        assert imu or model, (
-            'IMU object or model must be passed.'
-        )
+        if not (imu or model):
+            raise ValueError('IMU object or model must be passed.')
         if not imu and model:
             imu = InertialMeasurementUnit(model)
             imu.set_frame_id(frame_id)
@@ -977,9 +984,8 @@ class SensorConfig(BaseConfig):
                 xyz=xyz,
                 rpy=rpy
             )
-        assert isinstance(imu, Microstrain), (
-            'IMU object must be of type Microstrain'
-        )
+        if not isinstance(imu, Microstrain):
+            raise TypeError(f'IMU object must be of type Microstrain. Received {type(imu)}')
         self._imu.add(imu)
 
     # IMU: Remove IMU by passing object or index
@@ -1030,9 +1036,8 @@ class SensorConfig(BaseConfig):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY
             ) -> None:
-        assert gps or model, (
-            'GPS object or model must be passed.'
-        )
+        if not (gps or model):
+            raise ValueError('GPS object or model must be passed.')
         if not gps and model:
             gps = GlobalPositioningSystem(model)
             gps.set_frame_id(frame_id)
@@ -1069,9 +1074,8 @@ class SensorConfig(BaseConfig):
                 xyz=xyz,
                 rpy=rpy
             )
-        assert isinstance(duro, SwiftNavDuro), (
-            'GPS object must be of type UST'
-        )
+        if not isinstance(duro, SwiftNavDuro):
+            raise TypeError(f'GPS object must be of type SwiftNavDuro. Received {type(duro)}')
         self._gps.add(duro)
 
     # GPS: Remove GPS by passing object or index
