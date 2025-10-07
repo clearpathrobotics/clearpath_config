@@ -905,8 +905,8 @@ class LuxonisOAKD(BaseCamera):
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
-            ip_address: str = None,  # only relevant for PoE models
-            mx_id: str = None,  # optional ID for multiple cameras
+            ip_address: str = '',  # only relevant for PoE models
+            mx_id: str = '',  # optional ID for multiple cameras
             ) -> None:
 
         # Resolution
