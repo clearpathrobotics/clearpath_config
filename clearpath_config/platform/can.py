@@ -163,7 +163,8 @@ class CANAdapter:
     }
 
     def __new__(cls, type_: str) -> PhysicalCANAdapter:
-        assert type_ in cls.TYPES, f'CANAdapter model, {type_}, not one of {cls.TYPES}'
+        if type_ not in cls.TYPES:
+            raise ValueError(f'CANAdapter model, {type_}, not one of {cls.TYPES}')
         return cls.TYPES[type_]()
 
 
@@ -227,7 +228,8 @@ class CANAdapterConfig:
     @config.setter
     def config(self, can_adapters: list):
         for d in can_adapters:
-            assert 'type' in d,  'CAN adapter must have "type" parameter defined'
+            if 'type' not in d:
+                raise ValueError(f'CAN adapter {d} must have "type" parameter defined')
             adapter = CANAdapter(d['type'])
             adapter.from_dict(d)
             self._can_adapters.set(adapter)

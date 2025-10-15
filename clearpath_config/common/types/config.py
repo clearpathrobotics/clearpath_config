@@ -72,13 +72,13 @@ class BaseConfig:
 
     @template.setter
     def template(self, value: dict) -> None:
-        assert isinstance(value, dict), 'template must be of type "dict"'
+        if not isinstance(value, dict):
+            raise TypeError(f'Template must be of type "dict" not "{type(value)}"')
         # Check that template has all properties
         flat_template = flatten_dict(d=value, dlim=BaseConfig.DLIM)
-        for _, val in flat_template.items():
-            assert isinstance(val, property), (
-                'All entries in template must be properties'
-            )
+        for key, val in flat_template.items():
+            if not isinstance(val, property):
+                raise ValueError(f'Template value at {key} must be a property')
         self._template = value
 
     @property
@@ -93,7 +93,8 @@ class BaseConfig:
     def config(self, value: dict) -> None:
         if value is None:
             return
-        assert isinstance(value, dict), 'config must be of type "dict"'
+        if not isinstance(value, dict):
+            raise TypeError(f'Config must be of type "dict", not "{type(value)}"')
         if self._parent_key is not None and self._parent_key not in value:
             value = {self._parent_key: value}
         value = unflatten_dict(value)
@@ -140,4 +141,5 @@ class BaseConfig:
         elif isinstance(namespace, str):
             BaseConfig._NAMESPACE = Namespace(namespace)
         else:
-            assert isinstance(namespace, str) or isinstance(namespace, Namespace), 'Namespace must be of type "str" or "Namespace"'  # noqa:E501
+            if not (isinstance(namespace, str) or isinstance(namespace, Namespace)):
+                raise TypeError('Namespace {namespace} must be of type "str" or "Namespace"')

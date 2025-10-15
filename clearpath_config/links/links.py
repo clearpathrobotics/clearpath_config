@@ -56,7 +56,8 @@ class Link():
 
     @classmethod
     def assert_type(cls, _type: str) -> None:
-        assert _type in cls.TYPE, f'Sensor type "{_type}" must be one of "{cls.TYPE.keys()}'
+        if _type not in cls.TYPE:
+            raise TypeError(f'Sensor type "{_type}" must be one of "{cls.TYPE.keys()}')
 
     def __new__(cls, _type: str, name: str) -> BaseLink:
         cls.assert_type(_type)
@@ -146,7 +147,9 @@ class LinksConfig(BaseConfig):
     @frame.setter
     def frame(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
-            assert all([isinstance(i, dict) for i in value]), 'Links must be of type "dict"'  # noqa:C419, E501
+            for i in value:
+                if not isinstance(i, dict):
+                    raise TypeError(f'Frame {i} must be of type "dict"')
             links = LinkListConfig()
             link_list = []
             for d in value:
@@ -156,7 +159,8 @@ class LinksConfig(BaseConfig):
             links.set_all(link_list)
             self._frame = links
         else:
-            assert isinstance(value, list), 'Links must be of type "dict"'
+            if not isinstance(value, list):
+                raise TypeError('Frames must be of type "list[dict]"')
 
     @property
     def box(self) -> LinkListConfig:
@@ -169,7 +173,9 @@ class LinksConfig(BaseConfig):
     @box.setter
     def box(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
-            assert all([isinstance(i, dict) for i in value]), 'Links must be of type "dict"'  # noqa:C419, E501
+            for i in value:
+                if not isinstance(i, dict):
+                    raise TypeError(f'Box {i} must be of type "dict"')
             links = LinkListConfig()
             link_list = []
             for d in value:
@@ -179,7 +185,8 @@ class LinksConfig(BaseConfig):
             links.set_all(link_list)
             self._box = links
         else:
-            assert isinstance(value, list), 'Links must be of type "dict"'
+            if not isinstance(value, list):
+                raise TypeError('Boxes must be of type "list[dict]"')
 
     @property
     def cylinder(self) -> LinkListConfig:
@@ -192,7 +199,9 @@ class LinksConfig(BaseConfig):
     @cylinder.setter
     def cylinder(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
-            assert all([isinstance(i, dict) for i in value]), 'Links must be of type "dict"'  # noqa:C419, E501
+            for i in value:
+                if not isinstance(i, dict):
+                    raise TypeError(f'Cylinder {i} must be of type "dict"')
             links = LinkListConfig()
             link_list = []
             for d in value:
@@ -202,7 +211,8 @@ class LinksConfig(BaseConfig):
             links.set_all(link_list)
             self._cylinder = links
         else:
-            assert isinstance(value, list), 'Links must be of type "dict"'
+            if not isinstance(value, list):
+                raise TypeError('Cylinders must be of type "list[dict]"')
 
     @property
     def mesh(self) -> LinkListConfig:
@@ -215,7 +225,9 @@ class LinksConfig(BaseConfig):
     @mesh.setter
     def mesh(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
-            assert all([isinstance(i, dict) for i in value]), 'Links must be of type "dict"'  # noqa:C419, E501
+            for i in value:
+                if not isinstance(i, dict):
+                    raise TypeError(f'Mesh {i} must be of type "dict"')
             links = LinkListConfig()
             link_list = []
             for d in value:
@@ -225,7 +237,8 @@ class LinksConfig(BaseConfig):
             links.set_all(link_list)
             self._mesh = links
         else:
-            assert isinstance(value, list), 'Links must be of type "dict"'
+            if not isinstance(value, list):
+                raise TypeError('Meshes must be of type "list[dict]"')
 
     @property
     def sphere(self) -> LinkListConfig:
@@ -238,7 +251,9 @@ class LinksConfig(BaseConfig):
     @sphere.setter
     def sphere(self, value: List[dict] | LinkListConfig) -> None:
         if isinstance(value, list):
-            assert all([isinstance(i, dict) for i in value]), 'Links must be of type "dict"'  # noqa:C419, E501
+            for i in value:
+                if not isinstance(i, dict):
+                    raise TypeError(f'Sphere {i} must be of type "dict"')
             links = LinkListConfig()
             link_list = []
             for d in value:
@@ -248,7 +263,8 @@ class LinksConfig(BaseConfig):
             links.set_all(link_list)
             self._sphere = links
         else:
-            assert isinstance(value, list), 'Links must be of type "dict"'
+            if not isinstance(value, list):
+                raise TypeError('Spheres must be of type "list[dict]"')
 
     def get_all_links(self) -> List[BaseLink]:
         links = []
@@ -277,9 +293,8 @@ class LinksConfig(BaseConfig):
             offset_xyz: List[float] = BaseLink.XYZ,
             offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
-        assert frame or name, (
-            'Frame object or name must be passed'
-        )
+        if not (frame or name):
+            raise ValueError('Frame object or name must be passed')
         if not frame and name:
             frame = Frame(
                 name=name,
@@ -332,9 +347,8 @@ class LinksConfig(BaseConfig):
             offset_xyz: List[float] = BaseLink.XYZ,
             offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
-        assert box or name, (
-            'Box object or name must be passed'
-        )
+        if not (box or name):
+            raise ValueError('Box object or name must be passed')
         if not box and name:
             box = Box(
                 name=name,
@@ -382,9 +396,8 @@ class LinksConfig(BaseConfig):
             offset_xyz: List[float] = BaseLink.XYZ,
             offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
-        assert cylinder or name, (
-            'Cylinder object or name must be passed'
-        )
+        if not (cylinder or name):
+            raise ValueError('Cylinder object or name must be passed')
         if not cylinder and name:
             cylinder = Cylinder(
                 name=name,
@@ -432,9 +445,8 @@ class LinksConfig(BaseConfig):
             offset_xyz: List[float] = BaseLink.XYZ,
             offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
-        assert sphere or name, (
-            'Sphere object or name must be passed'
-        )
+        if not (sphere or name):
+            raise ValueError('Sphere object or name must be passed')
         if not sphere and name:
             sphere = Sphere(
                 name=name,
@@ -481,9 +493,8 @@ class LinksConfig(BaseConfig):
             offset_xyz: List[float] = BaseLink.XYZ,
             offset_rpy: List[float] = BaseLink.RPY
             ) -> None:
-        assert mesh or name, (
-            'Mesh object or name must be passed'
-        )
+        if not (mesh or name):
+            raise ValueError('Mesh object or name must be passed')
         if not mesh and name:
             mesh = Mesh(
                 name=name,

@@ -27,6 +27,9 @@
 # POSSIBILITY OF SUCH DAMAGE.
 class DomainID:
 
+    MIN_DOMAIN = 0
+    MAX_DOMAIN = 101
+
     def __init__(self, _id: int = 0) -> None:
         self.assert_valid(_id)
         self.id = _id
@@ -47,11 +50,11 @@ class DomainID:
     @staticmethod
     def assert_valid(_id: int) -> None:
         # Check Type
-        assert isinstance(_id, int), (
-            'Domain ID must be an integer'
-        )
+        if not isinstance(_id, int):
+            raise TypeError(f'Domain ID {_id} must be an integer')
         # 0 - 101 Range
-        assert 0 <= _id <= 101, (
-            'Domain ID must be in range 0 - 101'
-        )
+        if _id < DomainID.MIN_DOMAIN or _id > DomainID.MAX_DOMAIN:
+            raise ValueError(
+                f'Domain ID {_id} must be in range {DomainID.MIN_DOMAIN} - {DomainID.MAX_DOMAIN}'
+            )
         return

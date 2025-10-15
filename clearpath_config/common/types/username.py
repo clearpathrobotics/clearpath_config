@@ -65,21 +65,22 @@ class Username:
     @staticmethod
     def assert_valid(username: str):
         # Check Type
-        assert isinstance(username, str), (
-            'Username "%s" must of type "str"' % username
-        )
+        if not isinstance(username, str):
+            raise TypeError(f'Username {username} must be of type "str"')
         # Max 255 Characters
-        assert len(username) < 256, (
-            'Username "%s" exceeds 255 ASCII character limit.' % username
-        )
+        if len(username) >= 256:
+            raise ValueError(f'Username {username} exceeds 255 ASCII character limit')
+        # Username cannot start with digit
+        if username[0].isdigit():
+            raise ValueError(f'Username {username} cannot start with a digit')
+        # Username cannot start with hyphen
+        if username[0] == '-':
+            raise ValueError(f'Username {username} cannot start with a hyphen')
         # Regex Convention
-        allowed = re.compile(r'[-a-z0-9_]')
-        assert all(allowed.match(c) for c in username), (
-            'Username "%s" cannot contain characters other than: %s, %s, %s, %s' % (
-                username,
-                'lowercase letters',
-                'digits',
-                'underscores',
-                'dashes'
-            )
-        )
+        allowed = re.compile(r'[-a-z0-9]')
+        if not all(allowed.match(c) for c in username):
+            raise ValueError(f"""Username "{username} cannot contain characters other than:
+ - letters [a-z]
+ - digits [0-9]
+ - hyphen "-"
+ """)

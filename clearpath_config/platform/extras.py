@@ -162,7 +162,8 @@ class ROSParameterDefaults:
     }
 
     def __new__(cls, platform: str) -> dict:
-        assert platform in Platform.ALL
+        if platform not in Platform.ALL:
+            raise ValueError(f'Platform {platform} must be one of {Platform.ALL}')
         return cls.DEFAULTS[platform]
 
 
@@ -271,9 +272,14 @@ class ExtrasConfig(BaseConfig):
             self._urdf = value
         else:
             self._urdf = self.DEFAULTS[self.URDF]
-            assert not value or isinstance(value, dict) or (isinstance(value, PackagePath)), (
-                'Extras URDF must be null or of type `dict` or `PackagePath`'
-            )
+            if (
+                value
+                and not isinstance(value, dict)
+                and not isinstance(value, PackagePath)
+            ):
+                raise TypeError(
+                    f'Extras URDF {value} must be null, or of type "dict" or "PackagePath'
+                )
 
     @property
     def launch(self) -> List[LaunchConfig]:
@@ -300,9 +306,13 @@ class ExtrasConfig(BaseConfig):
             elif isinstance(path, LaunchConfig) and path.path:
                 self._launch.append(path)
             else:
-                assert not path or isinstance(path, dict) or isinstance(path, LaunchConfig), (
-                    'Extras LAUNCH must be list of type "dict" or "LaunchConfig"'
-                )
+                if (
+                    not isinstance(path, dict)
+                    and not isinstance(path, LaunchConfig)
+                ):
+                    raise TypeError(
+                        f'Extras Launch {path} must be list of type "dict" or "LaunchConfig"'
+                    )
 
     def _is_ros_parameter(self, key) -> bool:
         return any([key in i for i in self._ros_parameters_setters])  # noqa:C419

@@ -96,9 +96,10 @@ class HostConfig(BaseConfig):
         elif isinstance(value, Hostname):
             self._hostname = value
         else:
-            assert isinstance(value, str) or isinstance(value, Hostname), (
-                f'Hostname of {value} is invalid, must be of type "str" or "Hostname"'
-            )
+            if not (isinstance(value, str) or isinstance(value, Hostname)):
+                raise TypeError(
+                    f'Hostname of {value} is invalid, must be of type "str" or "Hostname"'
+                )
 
     # IP Address:
     # - the IP address at which the computer can be accessed
@@ -117,9 +118,10 @@ class HostConfig(BaseConfig):
         elif isinstance(value, IP):
             self._ip = value
         else:
-            assert isinstance(value, dict) or isinstance(value, IP), (
-                f'IP address of {value} is invalid, must be of type "str" or "IP"'
-            )
+            if not (isinstance(value, dict) or isinstance(value, IP)):
+                raise TypeError(
+                    f'IP address of {value} is invalid, must be of type "str" or "IP"'
+                )
 
 
 # HostListConfig

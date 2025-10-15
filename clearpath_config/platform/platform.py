@@ -249,7 +249,8 @@ class PlatformConfig(BaseConfig):
 
     @controller.setter
     def controller(self, value: str) -> None:
-        assert value.lower() in self.CONTROLLERS, f'"{value.lower()}" controller is invalid. Must be one of "{self.CONTROLLERS}"'  # noqa:501
+        if value.lower() not in self.CONTROLLERS:
+            raise ValueError(f'"{value.lower()}" controller is invalid. Must be one of "{self.CONTROLLERS}"')  # noqa:501
         self._controller = value.lower()
 
     @property
@@ -308,10 +309,8 @@ class PlatformConfig(BaseConfig):
         elif isinstance(value, ExtrasConfig):
             self._extras = value
         else:
-            assert isinstance(value, dict) or (
-                    isinstance(value, ExtrasConfig)), (
-                'Extras must be of type "dict" or "ExtrasConfig"'
-            )
+            if not (isinstance(value, dict) or isinstance(value, ExtrasConfig)):
+                raise TypeError(f'Extras {value} must be of type "dict" or "ExtrasConfig"')
 
     def get_controller(self) -> str:
         return self.controller
@@ -376,8 +375,8 @@ class PlatformConfig(BaseConfig):
         elif isinstance(value, BatteryConfig):
             self._battery = value
         else:
-            assert isinstance(value, dict) or (
-                isinstance(value, BatteryConfig)), 'Battery configuration must be of type "dict" or "BatteryConfig"'  # noqa:E501
+            if not (isinstance(value, dict) or isinstance(value, BatteryConfig)):
+                raise TypeError(f'Battery configuration {value} must be of type "dict" or "BatteryConfig"')  # noqa:E501
 
     @property
     def drivetrain(self) -> DrivetrainConfig:
@@ -394,8 +393,8 @@ class PlatformConfig(BaseConfig):
         elif isinstance(value, DrivetrainConfig):
             self._drivetrain = value
         else:
-            assert isinstance(value, dict) or (
-                isinstance(value, DrivetrainConfig)), 'Drivetrain configuration must be of type "dict" or "DrivetrainConfig"'  # noqa:E501
+            if not (isinstance(value, dict) or isinstance(value, DrivetrainConfig)):
+                raise TypeError(f'Drivetrain configuration {value} must be of type "dict" or "DrivetrainConfig"')  # noqa:E501
 
     @property
     def enable_ekf(self) -> bool:

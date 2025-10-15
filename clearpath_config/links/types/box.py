@@ -67,9 +67,11 @@ class Box(BaseLink):
             self.set_size(d['size'])
 
     def set_size(self, size: List[float]) -> None:
-        msg = 'Box size must be a list of three positive floats'
+        msg = f'Box size {size} must be a list of three positive floats'
         Accessory.assert_valid_triplet(size, msg)
-        assert all([i >= 0.0 for i in size]), msg  # noqa:C419
+        for i in size:
+            if i < 0.0:
+                raise ValueError(msg)
         self.size = size
 
     def get_size(self) -> List[float]:

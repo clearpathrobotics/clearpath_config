@@ -187,8 +187,14 @@ class BatteryConfig(BaseConfig):
     @model.setter
     def model(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID, f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID)}"'  # noqa:E501
-        assert value in self.VALID[platform], f'Battery model "{value}" is invalid. Battery model for platform "{platform}" must be one of "{list(self.VALID[platform])}"'  # noqa:E501
+        if platform not in self.VALID:
+            raise ValueError(
+                f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID)}"'
+            )
+        if value not in self.VALID[platform]:
+            raise ValueError(
+                f'Battery model "{value}" is invalid. Battery model for platform "{platform}" must be one of "{list(self.VALID[platform])}"'  # noqa:E501
+            )
         self._model = value
 
     @property
@@ -202,12 +208,18 @@ class BatteryConfig(BaseConfig):
     @configuration.setter
     def configuration(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID, ((
-            'Platform %s is invalid. ' % platform +
-            'Platform must be one of: %s' % list(self.VALID)
-        ))
-        assert self.model in self.VALID[platform], f'Battery model "{self.model}" is invalid. Battery model for platform "{platform}" it must be one of "{list(self.VALID[platform])}"'  # noqa:E501
-        assert value in self.VALID[platform][self.model], f'Battery configuration "{value}" is invalid. For platform "{platform}" and battery model "{self.model}" it must be one of "{list(self.VALID[platform][self.model])}"'  # noqa:E501
+        if platform not in self.VALID:
+            raise ValueError(
+                f'Platform {platform} is invalid. Must be one of: {list(self.VALID)}'
+            )
+        if self.model not in self.VALID[platform]:
+            raise ValueError(
+                f'Battery model "{self.model}" is invalid. Battery model for platform "{platform}" it must be one of "{list(self.VALID[platform])}"'  # noqa:E501
+            )
+        if value not in self.VALID[platform][self.model]:
+            raise ValueError(
+                f'Battery configuration "{value}" is invalid. For platform "{platform}" and battery model "{self.model}" it must be one of "{list(self.VALID[platform][self.model])}"'  # noqa:E501
+            )
         self._configuration = value
 
     @property
@@ -220,8 +232,6 @@ class BatteryConfig(BaseConfig):
 
     @launch_args.setter
     def launch_args(self, value: dict) -> None:
-        assert isinstance(value, dict), ((
-            'Battery Launch args %s are invalid. ' % value +
-            'They must be in the format of a dictionary.'
-        ))
+        if not isinstance(value, dict):
+            raise TypeError(f'Battery Launch args {value} must be of type "dict"')
         self._launch_args = value

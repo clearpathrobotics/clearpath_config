@@ -226,14 +226,14 @@ class DrivetrainConfig(BaseConfig):
     @control.setter
     def control(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID, (
-            f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID)}"'
-        )  # noqa:E501
-        assert value in self.VALID[platform][self.CONTROL], (
-            f'Drivetrain control "{value}" is invalid. '
-            f'Drivetrain control for platform "{platform}" must be '
-            f'one of "{list(self.VALID[platform][self.CONTROL])}"'
-        )  # noqa:E501
+        if platform not in self.VALID:
+            raise ValueError(
+                f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID)}"'
+            )
+        if value not in self.VALID[platform][self.CONTROL]:
+            raise ValueError(
+                f'Drivetrain control "{value}" is invalid. Drivetrain control for platform "{platform}" must be one of "{list(self.VALID[platform][self.CONTROL])}"'  # noqa:E501
+            )
         self._control = value
         # Check that front wheels are valid with updated control
         if self.front_wheels not in list(
@@ -260,21 +260,21 @@ class DrivetrainConfig(BaseConfig):
     @front_wheels.setter
     def front_wheels(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID, (
-            f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID[self.WHEELS])}"'
-        )  # noqa:E501
-        assert self.control in self.VALID[platform][self.CONTROL], (
-            f'Drivetrain control "{self.control}" is invalid. '
-            f'Drivetrain control for platform "{platform}" must be '
-            f'one of "{list(self.VALID[self.CONTROL][platform])}"'
-        )  # noqa:E501
-        assert value in self.VALID[platform][self.WHEELS][self.FRONT] and \
-               value in self.VALID_WHEELS[self.control][self.FRONT], (
-            f'Front wheel type "{value}" is invalid. '
-            f'For platform "{platform}" and drivetrain "{self.control}" it must be '
-            f'one of "{list(set(self.VALID[platform][self.WHEELS][self.FRONT]).intersection(
-                 self.VALID_WHEELS[self.control][self.FRONT]))}"'
-        )  # noqa:E501
+        if platform not in self.VALID:
+            raise ValueError(
+                f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID[self.WHEELS])}"'  # noqa:E501
+            )
+        if self.control not in self.VALID[platform][self.CONTROL]:
+            raise ValueError(
+                f'Drivetrain control "{self.control}" is invalid. Drivetrain control for platform "{platform}" must be one of "{list(self.VALID[self.CONTROL][platform])}"'  # noqa: E501
+            )
+        if (
+            value not in self.VALID[platform][self.WHEELS][self.FRONT]
+            or value not in self.VALID_WHEELS[self.control][self.FRONT]
+        ):
+            raise ValueError(
+                f'Front wheel type "{value}" is invalid. For platform "{platform}" and drivetrain "{self.control}" it must be one of "{list(set(self.VALID[platform][self.WHEELS][self.FRONT]).intersection(self.VALID_WHEELS[self.control][self.FRONT]))}"'  # noqa:E501
+            )
         self._front_wheels = value
 
     @property
@@ -287,19 +287,19 @@ class DrivetrainConfig(BaseConfig):
     @rear_wheels.setter
     def rear_wheels(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        assert platform in self.VALID, (
-            f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID[self.WHEELS])}"'
-        )  # noqa:E501
-        assert self.control in self.VALID[platform][self.CONTROL], (
-            f'Drivetrain control "{self.control}" is invalid. '
-            f'Drivetrain control for platform "{platform}" must be '
-            f'one of "{list(self.VALID[self.CONTROL][platform])}"'
-        )  # noqa:E501
-        assert value in self.VALID[platform][self.WHEELS][self.REAR] and \
-               value in self.VALID_WHEELS[self.control][self.REAR], (
-            f'Rear wheel type "{value}" is invalid. '
-            f'For platform "{platform}" and drivetrain "{self.control}" it must be '
-            f'one of "{list(set(self.VALID[platform][self.WHEELS][self.REAR]).intersection(
-                 self.VALID_WHEELS[self.control][self.REAR]))}"'
-        )  # noqa:E501
+        if platform not in self.VALID:
+            raise ValueError(
+                f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID[self.WHEELS])}"'  # noqa: E501
+            )
+        if self.control not in self.VALID[platform][self.CONTROL]:
+            raise ValueError(
+                f'Drivetrain control "{self.control}" is invalid. Drivetrain control for platform "{platform}" must be one of "{list(self.VALID[self.CONTROL][platform])}"'  # noqa: E501
+            )
+        if (
+            value not in self.VALID[platform][self.WHEELS][self.REAR]
+            or value not in self.VALID_WHEELS[self.control][self.REAR]
+        ):
+            raise ValueError(
+                f'Rear wheel type "{value}" is invalid. For platform "{platform}" and drivetrain "{self.control}" it must be one of "{list(set(self.VALID[platform][self.WHEELS][self.REAR]).intersection(self.VALID_WHEELS[self.control][self.REAR]))}"'  # noqa:E501
+            )
         self._rear_wheels = value

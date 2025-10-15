@@ -124,18 +124,17 @@ class BaseSensor(IndexedAccessory):
 
     @staticmethod
     def assert_valid_rate(rate: float | int) -> None:
-        assert isinstance(rate, (float, int)), (
-            'Rate "%s" is invalid, must be an integer or float.' % rate
-        )
-        assert 0 <= rate, (
-            'Rate "%s" must be a positive integer or float.' % rate
-        )
+        if not isinstance(rate, (float, int)):
+            raise TypeError(f'Rate "{rate}" must of type "int" or "float"')
+        if rate < 0:
+            raise ValueError('Rate "{rate}" must be positive')
 
     @staticmethod
     def assert_is_ipv4_address(addr: str) -> None:
         import re
         ipv4_re = re.compile(r'^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$')
-        assert re.match(ipv4_re, addr) is not None
+        if re.match(ipv4_re, addr) is None:
+            raise ValueError(f'Address "{addr}" is not a valid IPv4 address')
 
     @classmethod
     def get_sensor_type(cls) -> str:
@@ -164,7 +163,8 @@ class BaseSensor(IndexedAccessory):
         self.topic = self.get_topic_from_idx(idx)
 
     def get_topic_name(self, topic: str, local=False) -> str:
-        assert topic in self.TOPICS.NAME, f'Topic must be one of {self.TOPICS.NAME.keys()}'
+        if topic not in self.TOPICS.NAME:
+            raise ValueError(f'Topic name must be one of {self.TOPICS.NAME.keys()}')
         if local:
             return os.path.join('sensors', self.name, self.TOPICS.NAME[topic])
         else:
@@ -172,19 +172,23 @@ class BaseSensor(IndexedAccessory):
             return os.path.join(ns, 'sensors', self.name, self.TOPICS.NAME[topic])
 
     def get_topic_type(self, topic: str) -> str:
-        assert topic in self.TOPICS.TYPE, f'Topic must be one of {self.TOPICS.TYPE.keys()}'
+        if topic not in self.TOPICS.TYPE:
+            raise ValueError(f'Topic type must be one of {self.TOPICS.TYPE.keys()}')
         return self.TOPICS.TYPE[topic]
 
     def get_topic_rate(self, topic: str) -> float | int:
-        assert topic in self.rates, f'Topic must be one of {self.rates.keys()}'
+        if topic not in self.rates:
+            raise ValueError(f'Topic rate must be one of {self.rates.keys()}')
         if isinstance(self.rates[topic], property):
             return self.rates[topic].fget.__get__(self)()
         else:
             return self.rates[topic]
 
     def set_topic(self, topic: str) -> None:  # TODO: Should this be removed?
-        assert isinstance(topic, str), f'Topic "{topic}" is of type "{type(topic)}", expected "str"'  # noqa:501
-        assert ' ' not in topic, f'Topic "{topic}" contains whitespace'
+        if not isinstance(topic, str):
+            raise TypeError(f'Topic "{topic}" is of type "{type(topic)}", expected "str"')
+        if ' ' in topic:
+            raise ValueError(f'Topic "{topic}" contains whitespace')
         self.topic = topic
 
     def enable_urdf(self) -> None:
@@ -217,13 +221,15 @@ class BaseSensor(IndexedAccessory):
 
     @ros_parameters_template.setter
     def ros_parameters_template(self, d: dict) -> None:
-        assert isinstance(d, dict), ('Template must be of type "dict"')
+        if not isinstance(d, dict):
+            raise TypeError(f'Template {d} must be of type "dict"')
         # Check that template has all properties
         flat = flatten_dict(d)
         for _, val in flat.items():
-            assert isinstance(val, property), (
-                'All entries in template must be properties.'
-            )
+            if not isinstance(val, property):
+                raise TypeError(
+                    f'Template value {val} must be "property" not "{type(val)}"'
+                )
         self._ros_parameters_template = d
 
     @property
@@ -240,7 +246,8 @@ class BaseSensor(IndexedAccessory):
 
     @ros_parameters.setter
     def ros_parameters(self, d: dict) -> None:
-        assert isinstance(d, dict), ('ROS parameters must be a dictionary')
+        if not isinstance(d, dict):
+            raise TypeError(f'ROS parameters {d} must be a dictionary')
         for d_k, d_v in flatten_dict(d).items():
             for key, prop in flatten_dict(self.ros_parameters_template).items():
                 if d_k == key:

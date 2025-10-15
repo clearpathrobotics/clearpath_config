@@ -77,7 +77,8 @@ class Post(BaseMount):
         return self.model
 
     def set_model(self, model: str) -> None:
-        assert model in self.MODELS, f'Unexpected Post model "{model}". It must be one of "{self.MODELS}"'  # noqa:E501
+        if model not in self.MODELS:
+            raise ValueError(f'Unexpected Post model "{model}". It must be one of "{self.MODELS}"')
         self.model = model
 
     @property
@@ -86,8 +87,8 @@ class Post(BaseMount):
 
     @height.setter
     def height(self, height: float) -> None:
-        assert height > 0, (
-            'Height must be positive "float"')
+        if height <= 0.0:
+            raise ValueError(f'Height {height} must be greater than 0.0')
         self._height = height
 
     @property
@@ -96,6 +97,6 @@ class Post(BaseMount):
 
     @spacing.setter
     def spacing(self, spacing: float) -> None:
-        assert spacing > 0, (
-            'Spacing must be positive "float"')
+        if spacing <= 0.0:
+            raise ValueError(f'Spacing {spacing} must be greater than 0.0')
         self._spacing = spacing

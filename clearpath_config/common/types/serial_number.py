@@ -42,51 +42,52 @@ class SerialNumber:
         return self.get_serial()
 
     def from_dict(self, config: dict) -> None:
-        assert isinstance(config, dict), 'Config must be of type "dict"'
-        assert self.SERIAL_NUMBER in config, f'Key "{self.SERIAL_NUMBER}" must be in config'
+        if not isinstance(config, dict):
+            raise TypeError('Config must be of type "dict"')
+        if self.SERIAL_NUMBER not in config:
+            raise ValueError(f'Key "{self.SERIAL_NUMBER}" must be in config')
         self.model, self.unit = SerialNumber.parse(config[self.SERIAL_NUMBER])
 
     @staticmethod
     def parse(sn: str) -> tuple:
-        assert isinstance(sn, str), 'Serial Number must be string'
-        sn = sn.lower().strip().split('-')
-        assert (
-            0 < len(sn) < 4
-        ), 'Serial Number must be delimited by hyphens ('-') \
-            and only have 3 (cpr-j100-0001) entries, \
-            2 (j100-0001) entries, \
-            or 1 (generic) entry'
-        # Remove CPR Prefix
-        if len(sn) == 3:
-            assert (
-                sn[0] == 'cpr'
-            ), 'Serial Number with three fields (%s) must start with cpr' % (
-                'cpr-j100-0001',
+        if not isinstance(sn, str):
+            raise TypeError(f'Serial Number "{sn}" must be string')
+        sn_tokens = sn.lower().strip().split('-')
+        if len(sn_tokens) <= 0 or len(sn_tokens) >= 4:
+            raise ValueError(
+                f'Serial number {sn}" must be delimited by hypens "-" and have 2 or 3 fields (e.g. cpr-a300-00001 or a300-00001), or 1 (generic) field'  # noqa: E501
             )
-            sn = sn[1:]
+        # Remove CPR Prefix
+        if len(sn_tokens) == 3:
+            if sn_tokens[0] != 'cpr':
+                raise ValueError(
+                    f'Serial number with 3 fields must start with "cpr" not "{sn_tokens[0]}"'
+                )
+            sn_tokens = sn_tokens[1:]
         # Silently replace A201 prefix with A200
         # Mechanically both are effectively identical, and re-use the same options & payloads
-        if sn[0] == 'a201':
-            sn[0] = 'a200'
+        if sn_tokens[0] == 'a201':
+            sn_tokens[0] = 'a200'
         # Match to Robot
-        assert sn[0] in Platform.ALL, (
-            'Serial Number model entry must match one of %s' % Platform.ALL
-        )
+        if sn_tokens[0] not in Platform.ALL:
+            raise ValueError(
+                f'Serial number model entry {sn_tokens[0]} must be one of {Platform.ALL}'
+            )
 
         # Verify that the platform is well-supported and not deprecated
-        Platform.assert_is_supported(sn[0])
-        Platform.notify_if_deprecated(sn[0])
+        Platform.assert_is_supported(sn_tokens[0])
+        Platform.notify_if_deprecated(sn_tokens[0])
 
         # Generic Robot
-        if sn[0] == Platform.GENERIC:
+        if sn_tokens[0] == Platform.GENERIC:
             if len(sn) > 1:
-                return (sn[0], sn[1])
+                return (sn_tokens[0], sn[1])
             else:
-                return (sn[0], 'xxxx')
+                return (sn_tokens[0], 'xxxx')
         # Check Number
-        assert sn[1].isdecimal(), (
-            'Serial Number unit entry must be an integer value')
-        return (sn[0], sn[1])
+        if not sn_tokens[1].isdecimal():
+            raise ValueError(f'Serial number unit entry "{sn_tokens[1]}" must be an integer')
+        return (sn_tokens[0], sn_tokens[1])
 
     def get_model(self) -> str:
         return self.model

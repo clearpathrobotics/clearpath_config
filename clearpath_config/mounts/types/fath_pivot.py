@@ -67,5 +67,6 @@ class FathPivot(BaseMount):
         return self.angle
 
     def set_angle(self, angle: float) -> None:
-        assert -pi < angle <= pi, f'Angle "{angle}" must be in radian and  between -pi and pi'
+        if angle <= -pi or angle > pi:
+            raise ValueError(f'Angle {angle} must be in radians between -pi and +pi')
         self.angle = angle
