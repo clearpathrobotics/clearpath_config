@@ -29,6 +29,7 @@ from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.sensors.types.sensor import BaseSensor
 
+
 class BaseRouter():
     """
     Generic configuration parameters for a router we can install on the robot.
@@ -75,6 +76,7 @@ class PeplinkRouter(BaseRouter):
 
     These use the peplink_router_driver package to run the actual node
     """
+
     MODEL = 'peplink'
 
     USERNAME = 'username'
@@ -225,7 +227,7 @@ class WirelessConfig(BaseConfig):
         if self.BASE_STATION in value:
             router_cfg = value[self.BASE_STATION]
             if 'model' not in router_cfg:
-                raise ValueError(f'Base station configuration {router_cfg} must contain a "model" key')
+                raise ValueError(f'Base station configuration {router_cfg} must contain a "model" key')  # noqa: E501
             self.base_station = Router(router_cfg['model'])
             self.base_station.from_dict(router_cfg)
 
