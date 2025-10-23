@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.8.0 (2025-10-23)
+------------------
 * Add a new `platform.wireless` section to config (`#201 <https://github.com/clearpathrobotics/clearpath_config/issues/201>`_)
 * Replace `assert` with `raise` + relevant Exception (`#200 <https://github.com/clearpathrobotics/clearpath_config/issues/200>`_)
 * Fix: OakD Parameters (`#202 <https://github.com/clearpathrobotics/clearpath_config/issues/202>`_)
