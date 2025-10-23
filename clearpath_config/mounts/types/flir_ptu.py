@@ -47,6 +47,9 @@ class FlirPTU(BaseMount):
     # TCP (uses ip_addr and tcp_port)
     CONNECTION_TYPES = [TTY, TCP]
 
+    MIN_PORT = 1024
+    MAX_PORT = 65535
+
     def __init__(
         self,
         parent: str = Accessory.PARENT,
@@ -90,7 +93,12 @@ class FlirPTU(BaseMount):
         return self.tcp_port
 
     def set_tcp_port(self, tcp_port: int) -> None:
-        assert 1024 < tcp_port < 65536, f'TCP port "{tcp_port}" must be in range 1024 to 65536'
+        if not isinstance(tcp_port, int):
+            raise TypeError(f'TCP port {tcp_port} must be of type "int"')
+        if tcp_port < self.MIN_PORT or tcp_port > self.MAX_PORT:
+            raise ValueError(
+                f'TCP port {tcp_port} must be in range {self.MIN_PORT} to {self.MAX_PORT}'
+            )
         self.tcp_port = tcp_port
 
     def get_ip(self) -> str:
@@ -103,7 +111,10 @@ class FlirPTU(BaseMount):
         return self.connection_type
 
     def set_connection_type(self, connection_type: str) -> None:
-        assert connection_type in self.CONNECTION_TYPES, f'Connection type "{connection_type}" must be one of "{self.CONNECTION_TYPES}"'  # noqa:E501
+        if connection_type not in self.CONNECTION_TYPES:
+            raise ValueError(
+                f'Connection type "{connection_type}" must be one of "{self.CONNECTION_TYPES}"'
+            )
         self.connection_type = connection_type
 
     def get_limits_enabled(self) -> bool:

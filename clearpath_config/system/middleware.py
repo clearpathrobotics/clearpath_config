@@ -44,14 +44,29 @@ class MiddlewareConfig(BaseConfig):
     RMW = 'implementation'
     DISCOVERY = 'discovery'
     PROFILE = 'profile'
+    AUTOMATIC_DISCOVERY_RANGE = 'automatic_discovery_range'
+    STATIC_PEERS = 'static_peers'
     OVERRIDE_SERVER_ID = 'override_server_id'
     SERVERS = 'servers'
+
+    DISCOVERY_RANGE_SUBNET = 'subnet'
+    DISCOVERY_RANGE_LOCALHOST = 'localhost'
+    DISCOVERY_RANGE_OFF = 'off'
+    DISCOVERY_RANGE_SYSTEM_DEFAULT = 'system_default'
+    DISCOVERY_RANGES = [
+        DISCOVERY_RANGE_SUBNET,
+        DISCOVERY_RANGE_LOCALHOST,
+        DISCOVERY_RANGE_OFF,
+        DISCOVERY_RANGE_SYSTEM_DEFAULT,
+    ]
 
     TEMPLATE = {
         MIDDLEWARE: {
             RMW: RMW,
             DISCOVERY: DISCOVERY,
             PROFILE: PROFILE,
+            AUTOMATIC_DISCOVERY_RANGE: AUTOMATIC_DISCOVERY_RANGE,
+            STATIC_PEERS: STATIC_PEERS,
             OVERRIDE_SERVER_ID: OVERRIDE_SERVER_ID,
             SERVERS: SERVERS,
         }
@@ -63,6 +78,8 @@ class MiddlewareConfig(BaseConfig):
         RMW: RMWImplementation.DEFAULT,
         DISCOVERY: Discovery.DEFAULT,
         PROFILE: '',
+        AUTOMATIC_DISCOVERY_RANGE: DISCOVERY_RANGE_SUBNET,
+        STATIC_PEERS: [],
         OVERRIDE_SERVER_ID: False,
         SERVERS: [],
     }
@@ -73,6 +90,8 @@ class MiddlewareConfig(BaseConfig):
             rmw_implementation: str | RMWImplementation = DEFAULTS[RMW],
             discovery: str | Discovery = DEFAULTS[DISCOVERY],
             profile: str = DEFAULTS[PROFILE],
+            automatic_discovery_range: str = DEFAULTS[AUTOMATIC_DISCOVERY_RANGE],
+            static_peers: str = DEFAULTS[STATIC_PEERS],
             override_server_id: bool = DEFAULTS[OVERRIDE_SERVER_ID],
             servers: List[dict] | ServerListConfig = DEFAULTS[SERVERS],
             hosts: HostListConfig = None,
@@ -85,6 +104,8 @@ class MiddlewareConfig(BaseConfig):
         self.rmw_implementation = rmw_implementation
         self.discovery = discovery
         self.profile = profile
+        self.automatic_discovery_range = automatic_discovery_range
+        self.static_peers = static_peers
         self.override_server_id = override_server_id
         if servers:
             self.servers = servers
@@ -94,6 +115,8 @@ class MiddlewareConfig(BaseConfig):
             self.KEYS[self.RMW]: MiddlewareConfig.rmw_implementation,
             self.KEYS[self.DISCOVERY]: MiddlewareConfig.discovery,
             self.KEYS[self.PROFILE]: MiddlewareConfig.profile,
+            self.KEYS[self.AUTOMATIC_DISCOVERY_RANGE]: MiddlewareConfig.automatic_discovery_range,
+            self.KEYS[self.STATIC_PEERS]: MiddlewareConfig.static_peers,
             self.KEYS[self.OVERRIDE_SERVER_ID]: MiddlewareConfig.override_server_id,
             self.KEYS[self.SERVERS]: MiddlewareConfig.servers,
         }
@@ -114,9 +137,10 @@ class MiddlewareConfig(BaseConfig):
         elif isinstance(value, RMWImplementation):
             self._rmw_implementation = value
         else:
-            assert (isinstance(value, str)) or (isinstance(value, RMWImplementation)), (
-                f'RMW value of {value} is invalid, must be of type "str" or "RMWImplementation"'
-            )
+            if not (isinstance(value, str) or isinstance(value, RMWImplementation)):
+                raise TypeError(
+                    f'RMW value of {value} is invalid, must be of type "str" or "RMWImplementation"'  # noqa: E501
+                )
 
     @property
     def discovery(self) -> Discovery:
@@ -133,11 +157,10 @@ class MiddlewareConfig(BaseConfig):
         elif isinstance(value, Discovery):
             self._discovery = value
         else:
-            assert (
-                isinstance(value, str)) or (isinstance(value, Discovery)), (
-                f'Discovery mode value of {value} is invalid.'
-                f'Discovery mode must be of type "str" or "RMWImplementation"'
-            )
+            if not (isinstance(value, str) or isinstance(value, Discovery)):
+                raise TypeError(
+                    f'Discovery mode "{value}" must be of type "str" or "RMWImplementation"'
+                )
         self._discovery = value
 
     @property
@@ -150,15 +173,18 @@ class MiddlewareConfig(BaseConfig):
 
     @profile.setter
     def profile(self, value: str) -> None:
+        """
+        Set the path to the middleware profile file.
+
+        :raises FileNotFoundError: if the specified path does not exist
+        """
         # Check Type
-        assert isinstance(value, str), (
-            f'Middleware profile {value} is invalid, must be a string'
-        )
+        if not isinstance(value, str):
+            raise TypeError(f'Middleware profile {value} is invalid, must be a string')
         # Valid file
         if value != self.DEFAULTS[self.PROFILE]:
-            assert os.path.exists(value), (
-                f'Middleware profile path {value} does not exist'
-            )
+            if not os.path.exists(value):
+                raise FileNotFoundError(f'Middleware profile path {value} does not exist')
         self._profile = value
         return
 
@@ -172,8 +198,8 @@ class MiddlewareConfig(BaseConfig):
 
     @override_server_id.setter
     def override_server_id(self, value: bool) -> None:
-        assert isinstance(value, bool), (
-            f'Override server_id value of {value} is invalid, must be a boolean')
+        if not isinstance(value, bool):
+            raise TypeError(f'Override server_id value of {value} is invalid, must be a boolean')
         self._override_server_id = value
 
     @property
@@ -190,10 +216,10 @@ class MiddlewareConfig(BaseConfig):
         # Generate a list of ServerConfig Objects based on how the input was provided
         server_list = []
         if isinstance(value, list):
-            assert all([isinstance(i, dict) for i in value]), (  # noqa:C419
-                f'Server {value} is invalid, must be list of ' +
-                'type "dict" or of type "ServerListConfig"'
-            )
+            for i in value:
+                if not isinstance(i, dict):
+                    raise TypeError(f'Server {i} must be of type "dict"')
+
             # If the servers were not explicitly listed, assume every device in the hosts list
             # should have its own discovery server running
             if (not value) and (self.discovery == Discovery.SERVER):
@@ -201,39 +227,40 @@ class MiddlewareConfig(BaseConfig):
                 [value.append({ServerConfig.HOSTNAME: h.hostname}) for h in self.hosts.get_all()]
 
             for d in value:
-                assert isinstance(d, dict), (
-                    f'Server value of {d} is invalid, it must be of type "dict"'
-                )
+                if not isinstance(d, dict):
+                    raise TypeError(f'Server value of {d} is invalid, it must be of type "dict"')
                 server_list.append(ServerConfig(config=d))
-        else:
-            assert isinstance(value, ServerListConfig), (
-                f'Servers {value} is invalid, must be list of ' +
-                'type "dict" or of type "ServerListConfig"'
-            )
+        elif isinstance(value, ServerListConfig):
             server_list = value.get_all()
+        else:
+            raise TypeError(
+                f'Server list {value} must be of type "list[dict]" or "ServerListConfig", not "{type(value)}"'  # noqa: E501
+            )
 
         # set IP addresses based on the host names provided
         for server in server_list:
             # if a host name was provided, use the look up to determine the ip address
             if server.hostname:
-                assert any(server.hostname == s.hostname for s in self.hosts.get_all()), (
-                    f'Provided hostname: {server.hostname} is not listed in the hosts list'
-                )
+                if not any(server.hostname == s.hostname for s in self.hosts.get_all()):
+                    raise ValueError(
+                        f'Provided hostname: {server.hostname} is not listed in the hosts list'
+                    )
                 match = next((s for s in self.hosts.get_all() if s.hostname == server.hostname))
                 server.ip_address = match.ip_address
             else:
-                assert server.ip_address, (
-                    f'Server {server} is listed without a host name or IP address.'
-                )
+                if not server.ip_address:
+                    raise ValueError(
+                        f'Server {server} is listed without a host name or IP address.'
+                    )
 
         for server in server_list:
             # Ensure no duplicate server host/ip + port
             count = sum(((s.ip_address == server.ip_address) and (s.port == server.port))
                         for s in server_list)
-            assert count == 1, (
-                f'Discovery server {server} conflicts with another discovery server. ' +
-                'Each combination of host/ip and port number must be unique.'
-            )
+            if count != 1:
+                raise ValueError(
+                    f'Discovery server {server} conflicts with another discovery server. Each combination of host/ip and port number must be unique.'  # noqa: E501
+                )
 
         # sort the servers by host/ip address and then port
         # required for consistent server id numbering
@@ -249,14 +276,61 @@ class MiddlewareConfig(BaseConfig):
             # (unspecified ones will default and show up as duplicates)
             for server in server_list:
                 count = sum(s.server_id == server.server_id for s in server_list)
-                assert count == 1, (
-                    f'Server {server} does not have a unique server id. While ' +
-                    'override_server_id is true, each server must have a unique id specified.'
-                )
+                if count != 1:
+                    raise ValueError(
+                        f'Server {server} does not have a unique server id. While override_server_id is true, each server must have a unique id specified.'  # noqa: E501
+                    )
 
         servers = ServerListConfig()
         servers.set_all(server_list)
         self._servers = servers
+
+    @property
+    def automatic_discovery_range(self) -> str:
+        self.set_config_param(
+            key=self.KEYS[self.AUTOMATIC_DISCOVERY_RANGE],
+            value=self._automatic_discovery_range
+        )
+        return self._automatic_discovery_range
+
+    @automatic_discovery_range.setter
+    def automatic_discovery_range(self, value: str) -> None:
+        # YAML quirk: the keyword "off" resolves to False when robot.yaml is loaded
+        # Therefore, if we're passed False, assume the user entered
+        #   automatic_discovery_range: off
+        # in robot.yaml and convert the argument accordingly
+        if isinstance(value, bool) and not value:
+            value = 'off'
+
+        # Check Type is valid
+        if not isinstance(value, str):
+            raise TypeError(f'Automatic discovery range {value} must be a string')
+        if value.lower() not in self.DISCOVERY_RANGES:
+            raise ValueError(
+                f'Automatic discovery range {value} must be one of {self.DISCOVERY_RANGES}'
+            )
+
+        self._automatic_discovery_range = value.lower()
+        return
+
+    @property
+    def static_peers(self) -> List[str]:
+        self.set_config_param(
+            key=self.KEYS[self.STATIC_PEERS],
+            value=self._static_peers
+        )
+        return self._static_peers
+
+    @static_peers.setter
+    def static_peers(self, value: List[str]) -> None:
+        # check all peers are strings
+        for s in value:
+            if not isinstance(s, str):
+                raise TypeError(f'Invalid static peer: {s}. Value must be a string.')
+
+        arr = list(value)  # make a copy of the array to assign
+        self._static_peers = arr
+        return
 
     def get_servers_string(self) -> str:
         server_list = self.servers.get_all()

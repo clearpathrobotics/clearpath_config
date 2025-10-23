@@ -57,8 +57,8 @@ class ManipulatorPose():
 
     @name.setter
     def name(self, name: str) -> None:
-        assert isinstance(name, str), (
-            'Manipulator pose name must be of type str')
+        if not isinstance(name, str):
+            raise TypeError(f'Manipulator pose name must be of type "str". Got {name}')
         self._name = name
 
     @property
@@ -67,10 +67,12 @@ class ManipulatorPose():
 
     @joints.setter
     def joints(self, joints: List) -> None:
-        assert isinstance(joints, list), (
-            'Manipulator pose joints must be of type list')
-        assert len(joints) == self.joint_count, (
-            f'Manipulator pose joints must of length {self.joint_count}, got {len(joints)}')
+        if not isinstance(joints, list):
+            raise TypeError(f'Manipulator pose joints must be of type list. Got {joints}')
+        if len(joints) != self.joint_count:
+            raise ValueError(
+                f'Manipulator pose joints must of length {self.joint_count}, got {len(joints)}'
+            )
         self._joints = joints
 
     def to_dict(self) -> dict:
@@ -80,9 +82,12 @@ class ManipulatorPose():
         }
 
     def from_dict(self, d: dict) -> None:
-        assert isinstance(d, dict), ('Poses in list must be of type dict.')
-        assert 'name' in d, ('Pose must have a name entry.')
-        assert 'joints' in d, ('Pose must have a joints entry.')
+        if not isinstance(d, dict):
+            raise TypeError(f'Poses in list must be of type dict. Got {d}')
+        if 'name' not in d:
+            raise ValueError('Pose must have a name entry.')
+        if 'joints' not in d:
+            raise ValueError('Pose must have a joints entry.')
         self.name = d['name']
         self.joints = d['joints']
 
@@ -175,13 +180,13 @@ class BaseManipulator(IndexedAccessory):
 
     @ros_parameters_template.setter
     def ros_parameters_template(self, d: dict) -> None:
-        assert isinstance(d, dict), ('Template must be of type "dict"')
+        if not isinstance(d, dict):
+            raise TypeError(f'Template must be of type "dict". Got {d}')
         # Check that template has all properties
         flat = flatten_dict(d)
-        for _, val in flat.items():
-            assert isinstance(val, property), (
-                'All entries in template must be properties.'
-            )
+        for key, val in flat.items():
+            if not isinstance(val, property):
+                raise TypeError(f'Entry {key} is not a property')
         self._ros_parameters_template = d
 
     @property
@@ -196,7 +201,8 @@ class BaseManipulator(IndexedAccessory):
 
     @ros_parameters.setter
     def ros_parameters(self, d: dict) -> None:
-        assert isinstance(d, dict), ('ROS paramaters must be a dictionary')
+        if not isinstance(d, dict):
+            raise TypeError(f'ROS paramaters must be of type "dict". Got {d}')
         for d_k, d_v in flatten_dict(d).items():
             for key, prop in flatten_dict(self.ros_parameters_template).items():
                 if d_k == key:
@@ -221,7 +227,8 @@ class BaseManipulator(IndexedAccessory):
 
     @poses.setter
     def poses(self, pose_list: List) -> None:
-        assert isinstance(pose_list, list), ('List of poses must be of type list.')
+        if not isinstance(pose_list, list):
+            raise TypeError(f'List of poses must be of type list. Got {pose_list}')
         poses_ = []
         for pose in pose_list:
             manipulator_pose = ManipulatorPose(self.JOINT_COUNT)

@@ -79,39 +79,32 @@ class Namespace:
     @staticmethod
     def assert_valid(name: str) -> None:
         # Empty
-        assert name != '', (
-            'Namespace cannot be empty'
-        )
+        if not name:
+            raise ValueError('Namespace cannot be empty')
         # Allowed characters
         allowed = re.compile('[a-z|0-9|_|/|~]', re.IGNORECASE)
-        assert all(allowed.match(c) for c in name), ('\n'.join([
-            'Namespace can only contain:',
-            ' - [A-Z|a-z|0-9]',
-            ' - underscores (_)',
-            ' - forward slahes (/)',
-            ' - leading tilde (~)'
-        ]))
+        if not all(allowed.match(c) for c in name):
+            raise ValueError(f"""Namespace "{name}" can only contain:
+ - [A-Z|a-z|0-9],
+ - underscores (_),
+ - forward slahes (/),
+ - leading tilde (~)""")
         # Leading Tilde (~)
         if name[0] == '~':
-            assert name[1] == '/', (
-                'Namespace starting with (~) must be followed by (/)'
-            )
+            if name[1] != '/':
+                raise ValueError('Namespace starting with "~" must be followed by "/"')
         # Leading Digit
-        assert not str(name[0]).isdigit(), (
-            'Namespace may not start with a digit'
-        )
+        if str(name[0]).isdigit():
+            raise ValueError(f'Namespace "{name}" may not start with a digit')
         # Ending Forward Slash (/)
-        assert len(name) == 1 or name[-1] != '/', (
-            'Namespace may not end with a forward slash (/)'
-        )
+        if len(name) != 1 and name[-1] == '/':
+            raise ValueError(f'Namespace "{name}" may not end with a forward slash (/)')
         # Repeated Forward Slash (/)
-        assert '//' not in name, (
-            'Namespace may not contain repeated forward slashes (/)'
-        )
+        if '//' in name:
+            raise ValueError(f'Namespace "{name}" may not contain repeated forward slashes (/)')
         # Repeated Underscores (/)
-        assert '__' not in name, (
-            'Namespace may not contain repeated underscores (_)'
-        )
+        if '__' in name:
+            raise ValueError(f'Namespace "{name}" may not contain repeated underscores (_)')
 
     @staticmethod
     def clean(name: str) -> str:

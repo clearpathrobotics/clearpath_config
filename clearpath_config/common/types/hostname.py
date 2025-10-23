@@ -64,26 +64,20 @@ class Hostname:
 
     @staticmethod
     def assert_valid(hostname: str):
-        assert isinstance(hostname, str), (
-            'Hostname "%s" must be of type "str"' % hostname
-        )
+        if not isinstance(hostname, str):
+            raise TypeError(f'Hostname {hostname} most be of type "str"')
         # Min 1 ASCII Characters
-        assert len(hostname) > 0, (
-            'Hostname "%s" is blank.' % hostname
-        )
+        if len(hostname) == 0:
+            raise ValueError('Hostname cannot be blank')
         # Max 253 ASCII Characters
-        assert len(hostname) < 254, (
-            'Hostname "%s" exceeds 253 ASCII character limit.' % hostname
-        )
+        if len(hostname) >= 254:
+            raise ValueError(f'Hostname "{hostname}" exceeds 253 ASCII character limit.')
         # No Trailing Dots
-        assert hostname[-1] != '.', (
-            'Hostname "%s" should not end with a "." period.' % hostname
-        )
+        if hostname.endswith('.'):
+            raise ValueError(f'Hostname "{hostname}" cannot end with a "." (period).')
         # Only [A-Z][0-9] and '-' Allowed
         allowed = re.compile(r'(?!-)[A-Z\d-]{1,63}(?<!-)$', re.IGNORECASE)
-        assert all(allowed.match(x) for x in hostname.split('.')), (
-            'Hostname "%s" cannot contain characters other than %s.' % (
-                hostname,
-                '[A-Z][0-9] and hypens ('-')'
+        if not all(allowed.match(x) for x in hostname.split('.')):
+            raise ValueError(
+                f'Hostname {hostname} cannot contain characters other than [A-Z][a-z][0-9] and -'
             )
-        )

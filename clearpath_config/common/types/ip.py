@@ -66,13 +66,17 @@ class IP:
     @staticmethod
     def assert_valid(ip: str) -> None:
         # Must be String
-        assert isinstance(ip, str), f'IP "{ip}" must be of type "str"'
+        if not isinstance(ip, str):
+            raise TypeError(f'IP "{ip}" must be of type "str"')
         # Must have Four Fields Delimited by '.'
         fields = ip.split('.')
-        assert len(fields) == 4, f'IP "{ip}" must have 4 fields'
+        if len(fields) != 4:
+            raise ValueError(f'IP "{ip}" must have 4 fields')
         for field in fields:
             # Fields Must be Integer
-            assert field.isdecimal(), f'IP "{ip}" fields must be integers'
+            if not field.isdecimal():
+                raise ValueError(f'IP "{ip}" fields must be integers')
             # Fields Must be 8-Bits Wide
             field_int = int(field)
-            assert 0 <= field_int < 256, f'IP "{ip} fields must be in range 0 to 255'
+            if field_int < 0 or field_int > 255:
+                raise ValueError(f'IP {ip} fields must be in range 0 to 255')

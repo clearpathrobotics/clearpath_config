@@ -25,6 +25,8 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
+from typing import List
+
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.package_path import PackagePath
 from clearpath_config.common.types.platform import Platform
@@ -33,6 +35,8 @@ from clearpath_config.common.utils.dictionary import (
     flip_dict,
     unflatten_dict,
 )
+
+from clearpath_config.platform.launch import LaunchConfig
 
 
 class ROSParameterDefaults:
@@ -158,7 +162,8 @@ class ROSParameterDefaults:
     }
 
     def __new__(cls, platform: str) -> dict:
-        assert platform in Platform.ALL
+        if platform not in Platform.ALL:
+            raise ValueError(f'Platform {platform} must be one of {Platform.ALL}')
         return cls.DEFAULTS[platform]
 
 
@@ -207,7 +212,7 @@ class ExtrasConfig(BaseConfig):
 
     DEFAULTS = {
         URDF: None,
-        LAUNCH: None,
+        LAUNCH: [],
         ROS_PARAMETERS: ROSParameterDefaults(BaseConfig.get_platform_model()),
     }
 
@@ -267,34 +272,47 @@ class ExtrasConfig(BaseConfig):
             self._urdf = value
         else:
             self._urdf = self.DEFAULTS[self.URDF]
-            assert not value or isinstance(value, dict) or (isinstance(value, PackagePath)), (
-                'Extras URDF must be null or of type `dict` or `PackagePath`'
-            )
+            if (
+                value
+                and not isinstance(value, dict)
+                and not isinstance(value, PackagePath)
+            ):
+                raise TypeError(
+                    f'Extras URDF {value} must be null, or of type "dict" or "PackagePath'
+                )
 
     @property
-    def launch(self) -> dict:
-        if (self._launch == self.DEFAULTS[self.LAUNCH]):
-            launch = None
-        else:
-            launch = dict(self._launch.to_dict())
-        self.set_config_param(
-            key=self.KEYS[self.LAUNCH],
-            value=launch,
-        )
-        return launch
+    def launch(self) -> List[LaunchConfig]:
+        return self._launch
 
     @launch.setter
-    def launch(self, value: dict | PackagePath) -> None:
-        if isinstance(value, dict) and PackagePath.PATH in value and value[PackagePath.PATH]:
-            self._launch = PackagePath()
-            self._launch.from_dict(value)
-        elif isinstance(value, PackagePath) and value.path:
-            self._launch = value
-        else:
-            self._launch = self.DEFAULTS[self.LAUNCH]
-            assert not value or isinstance(value, dict) or (isinstance(value, PackagePath)), (
-                'Extras LAUNCH must be null or of type `dict` or `PackagePath`'
-            )
+    def launch(self, value: List[LaunchConfig] | List[dict] | LaunchConfig | dict) -> None:
+        if value is None:
+            value = []
+
+        # Previously only a single launch file was supported
+        # For compatibility, transform the old format to the new one, but print a deprecation
+        # notice, as this translation layer may be removed in the future
+        if isinstance(value, dict) or isinstance(value, LaunchConfig):
+            print('Deprecation notice: platform.extras.launch should be a list')
+            value = [value]
+
+        self._launch = []
+        for path in value:
+            if isinstance(path, dict) and path.get(LaunchConfig.PATH, ''):
+                pp = LaunchConfig()
+                pp.from_dict(path)
+                self._launch.append(pp)
+            elif isinstance(path, LaunchConfig) and path.path:
+                self._launch.append(path)
+            else:
+                if (
+                    not isinstance(path, dict)
+                    and not isinstance(path, LaunchConfig)
+                ):
+                    raise TypeError(
+                        f'Extras Launch {path} must be list of type "dict" or "LaunchConfig"'
+                    )
 
     def _is_ros_parameter(self, key) -> bool:
         return any([key in i for i in self._ros_parameters_setters])  # noqa:C419

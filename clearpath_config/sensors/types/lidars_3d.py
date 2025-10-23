@@ -236,12 +236,10 @@ class VelodyneLidar(BaseLidar3D):
 
     @device_type.setter
     def device_type(self, device_type) -> None:
-        assert device_type in self.DEVICE_TYPES, (
-            'Device type "%s" is not one of "%s"' % (
-                device_type,
-                self.DEVICE_TYPES
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(
+                f'Device type "{device_type}" must be one of {self.DEVICE_TYPES}'
             )
-        )
         self._device_type = device_type
 
 
@@ -336,7 +334,8 @@ class OusterOS1(BaseLidar3D):
 
     @base_type.setter
     def base_type(self, base: str) -> None:
-        assert base in self.BASE_TYPES, f'Base type {base} must be one of {self.BASE_TYPES}'
+        if base not in self.BASE_TYPES:
+            raise ValueError(f'Base type {base} must be one of {self.BASE_TYPES}')
         self._base_type = base
 
     @property
@@ -345,7 +344,8 @@ class OusterOS1(BaseLidar3D):
 
     @cap_type.setter
     def cap_type(self, cap):
-        assert cap in self.CAP_TYPES, f'Cap type {cap} must be one of {self.CAP_TYPES}'
+        if cap not in self.CAP_TYPES:
+            raise ValueError(f'Cap type {cap} must be one of {self.CAP_TYPES}')
         self._cap_type = cap
 
 
@@ -418,7 +418,8 @@ class SeyondLidar(BaseLidar3D):
 
     @device_type.setter
     def device_type(self, device_type: str) -> None:
-        assert device_type in self.DEVICE_TYPES, (
-            f'Device type "{device_type}" is not one of "{self.DEVICE_TYPES}"'
-        )
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(
+                f'Device type "{device_type}" is not one of "{self.DEVICE_TYPES}"'
+            )
         self._device_type = device_type

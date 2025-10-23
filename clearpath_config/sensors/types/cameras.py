@@ -100,8 +100,10 @@ class Republisher():
     }
 
     def __new__(self, config: dict) -> None:
-        assert self.TYPE in config, f'Republisher must have "{self.TYPE}" specified'
-        assert config[self.TYPE] in self.TYPES, f'Republisher "{self.TYPE}" must be one of "{self.TYPES.keys()}"'  # noqa:E501
+        if self.TYPE not in config:
+            raise ValueError(f'Republisher {config} must have "{self.TYPE}" specified')
+        if config[self.TYPE] not in self.TYPES:
+            raise ValueError(f'Republisher "{self.TYPE}" must be one of "{self.TYPES.keys()}"')
         return self.TYPES[config[self.TYPE]](config)
 
 
@@ -210,10 +212,13 @@ class BaseCamera(BaseSensor):
 
     @republishers.setter
     def republishers(self, republishers: list) -> None:
-        assert isinstance(republishers, list), (
-            'Camera republishers must be a list of dictionaries')
-        assert all([isinstance(i, dict) for i in republishers]), (  # noqa: C419
-            'Camera republishers must be a list of dictionaries')
+        if not isinstance(republishers, list):
+            raise TypeError(
+                f'Camera republishers must be a list of dictionaries. Got {republishers}'
+            )
+        for i in republishers:
+            if not isinstance(i, dict):
+                raise TypeError(f'Republisher {i} must be of type "dict"')
         self._republishers = []
         for republisher in republishers:
             self._republishers.append(Republisher(republisher))
@@ -371,30 +376,28 @@ class IntelRealsense(BaseCamera):
     def clean_profile(profile: str | list) -> list:
         if isinstance(profile, str):
             profile = profile.split(',')
-            assert len(profile) == 3, (
-                'Profile "%s" is not three comma separated values')
+            if len(profile) != 3:
+                raise ValueError(f'Profile "{profile}" must be 3 comma separated values')
             try:
                 profile = [int(entry) for entry in profile]
             except ValueError:
-                raise AssertionError(
-                    'Profile "%s" cannot be cast to integer')
+                raise TypeError(f'Profile "{profile}" must be 3 integers')
         else:
-            assert len(profile) == 3, (
-                'Profile "%s" is not three integer values')
-            assert all([isinstance(entry, int) for entry in profile]), (  # noqa: C419
-                'Profile "%s" is not three integer values')
+            if len(profile) != 3:
+                raise ValueError(f'Profile "{profile}" must be 3 integers')
+            for entry in profile:
+                if not isinstance(entry, int):
+                    raise TypeError(f'Profile {profile} contains {entry}, which must be an int')
         return profile
 
     def assert_pixel_length(
             self,
             length: int
             ) -> None:
-        assert isinstance(length, int), (
-            'Pixel value must be integer'
-        )
-        assert length >= 0, (
-            'Pixel length must be positive'
-        )
+        if not isinstance(length, int):
+            raise TypeError(f'Pixel value {length} must be integer')
+        if length < 0:
+            raise ValueError(f'Pixel length {length} must be positive')
 
     @property
     def device_type(self) -> str:
@@ -402,12 +405,10 @@ class IntelRealsense(BaseCamera):
 
     @device_type.setter
     def device_type(self, device_type: str) -> None:
-        assert device_type in self.DEVICE_TYPES, (
-            'Device type "%s" is not one of "%s"' % (
-                device_type,
-                self.DEVICE_TYPES
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(
+                f'Device type "{device_type}" must be one of "{self.DEVICE_TYPES}"'
             )
-        )
         self._device_type = device_type
 
     @property
@@ -656,7 +657,8 @@ class FlirBlackfly(BaseCamera):
 
     @connection_type.setter
     def connection_type(self, _type: str) -> None:
-        assert _type in FlirBlackfly.CONNECTION_TYPES
+        if _type not in FlirBlackfly.CONNECTION_TYPES:
+            raise ValueError(f'Connection type {_type} must be one of {FlirBlackfly.CONNECTION_TYPES}')  # noqa: E501
         self._connection_type = _type
 
     @property
@@ -665,11 +667,10 @@ class FlirBlackfly(BaseCamera):
 
     @encoding.setter
     def encoding(self, encoding: str) -> None:
-        assert encoding in FlirBlackfly.ENCODINGS, (
-            'Encoding "%s" not found in support encodings: "%s"' % (
-                encoding, FlirBlackfly.ENCODINGS
+        if encoding not in FlirBlackfly.ENCODINGS:
+            raise ValueError(
+                f'Encoding "{encoding}" must be one of {FlirBlackfly.ENCODINGS}'
             )
-        )
         self._encoding = encoding
 
 
@@ -797,12 +798,10 @@ class StereolabsZed(BaseCamera):
 
     @device_type.setter
     def device_type(self, device_type: str) -> None:
-        assert device_type in self.DEVICE_TYPES, (
-            'Device type "%s" is not one of "%s"' % (
-                device_type,
-                self.DEVICE_TYPES
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(
+                f'Device type "{device_type}" must be one of {self.DEVICE_TYPES}'
             )
-        )
         self._device_type = device_type
 
     @property
@@ -811,12 +810,10 @@ class StereolabsZed(BaseCamera):
 
     @resolution.setter
     def resolution(self, resolution: str) -> None:
-        assert resolution in self.RESOLUTION_PRESETS, (
-            'Resolution preset "%s" is not one oserial_numberf "%s"' % (
-                resolution,
-                self.RESOLUTION_PRESETS
+        if resolution not in self.RESOLUTION_PRESETS:
+            raise ValueError(
+                f'Resolution preset "{resolution}" must be one of {self.RESOLUTION_PRESETS}'
             )
-        )
         self._resolution = resolution
 
     @property
@@ -849,20 +846,20 @@ class LuxonisOAKD(BaseCamera):
     FPS = 30.0
 
     class ROS_PARAMETER_KEYS:
-        DEVICE_TYPE = 'oakd.device_type'
+        DEVICE_TYPE = 'luxonis_oakd.device_type'
 
         # RGB parameters
-        FPS = 'oakd.rgb.i_fps'
-        HEIGHT = 'oakd.rgb.i_height'
-        WIDTH = 'oakd.rgb.i_width'
+        FPS = 'luxonis_oakd.rgb.i_fps'
+        HEIGHT = 'luxonis_oakd.rgb.i_height'
+        WIDTH = 'luxonis_oakd.rgb.i_width'
 
         # Stereo parameters
-        STEREO_FPS = 'oakd.stereo.i_fps'
+        STEREO_FPS = 'luxonis_oakd.stereo.i_fps'
 
         # General camera parameters
-        IP_ADDRESS = 'oakd.camera.i_ip'
-        MX_ID = 'oakd.camera.i_mx_id'
-        SERIAL = 'oakd.camera.i_usb_port_id'
+        IP_ADDRESS = 'luxonis_oakd.camera.i_ip'
+        MX_ID = 'luxonis_oakd.camera.i_mx_id'
+        SERIAL = 'luxonis_oakd.camera.i_usb_port_id'
 
     class TOPICS:
         COLOR_IMAGE = 'color_image'
@@ -905,8 +902,8 @@ class LuxonisOAKD(BaseCamera):
             parent: str = Accessory.PARENT,
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
-            ip_address: str = None,  # only relevant for PoE models
-            mx_id: str = None,  # optional ID for multiple cameras
+            ip_address: str = '',  # only relevant for PoE models
+            mx_id: str = '',  # optional ID for multiple cameras
             ) -> None:
 
         # Resolution
@@ -960,12 +957,10 @@ class LuxonisOAKD(BaseCamera):
 
     @device_type.setter
     def device_type(self, device_type: str) -> None:
-        assert device_type in self.DEVICE_TYPES, (
-            'Device type "%s" is not one of "%s"' % (
-                device_type,
-                self.DEVICE_TYPES
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(
+                f'Device type "{device_type}" must be one of {self.DEVICE_TYPES}'
             )
-        )
         self._device_type = device_type
 
     @property
@@ -1344,12 +1339,10 @@ class AxisCamera(BaseCamera):
 
     @device_type.setter
     def device_type(self, device_type: str) -> None:
-        assert device_type in self.DEVICE_TYPES, (
-            'Device type "%s" is not one of "%s"' % (
-                device_type,
-                self.DEVICE_TYPES
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(
+                f'Device type "{device_type}" must be one of {self.DEVICE_TYPES}'
             )
-        )
         self._device_type = device_type
 
     @property
@@ -1374,9 +1367,8 @@ class AxisCamera(BaseCamera):
 
     @http_port.setter
     def http_port(self, port: int) -> None:
-        assert port >= 0 and port <= 65535, (
-            f'Port {port} must be in range [0, 65535]'
-        )
+        if port < 0 or port > 65535:
+            raise ValueError(f'HTTP port {port} must be in range [0, 65535]')
         self._http_port = port
 
     @property
@@ -1393,7 +1385,8 @@ class AxisCamera(BaseCamera):
 
     @username.setter
     def username(self, username: str) -> None:
-        assert len(username) > 0, 'Username cannot be empty'
+        if len(username) <= 0:
+            raise ValueError('Username cannot be empty')
         self._username = username
 
     @property
@@ -1418,7 +1411,8 @@ class AxisCamera(BaseCamera):
 
     @camera.setter
     def camera(self, num: int) -> None:
-        assert num >= 0, f'Camera number {num} cannot be negative'
+        if num < 0:
+            raise ValueError(f'Camera number {num} cannot be negative')
         self._camera = num
 
     @property
@@ -1427,7 +1421,8 @@ class AxisCamera(BaseCamera):
 
     @width.setter
     def width(self, width: int) -> None:
-        assert width > 0, f'Frame width {width} must be positive'
+        if width <= 0:
+            raise ValueError(f'Frame width {width} must be positive')
         self._width = width
 
     @property
@@ -1436,7 +1431,8 @@ class AxisCamera(BaseCamera):
 
     @height.setter
     def height(self, height: int) -> None:
-        assert height > 0, f'Frame height {height} must be positive'
+        if height <= 0:
+            raise ValueError(f'Frame height {height} must be positive')
         self._height = height
 
     @property
@@ -1453,7 +1449,8 @@ class AxisCamera(BaseCamera):
 
     @min_pan.setter
     def min_pan(self, pan: float) -> None:
-        assert pan >= -pi and pan <= pi, f'Min pan {pan} must be in range [-pi, pi]'
+        if pan < -pi or pan > pi:
+            raise ValueError(f'Min pan {pan} must be in range [-pi, pi]')
         self._min_pan = pan
 
     @property
@@ -1462,7 +1459,8 @@ class AxisCamera(BaseCamera):
 
     @max_pan.setter
     def max_pan(self, pan: float) -> None:
-        assert pan >= -pi and pan <= pi, f'Max pan {pan} must be in range [-pi, pi]'
+        if pan < -pi or pan > pi:
+            raise ValueError(f'Max pan {pan} must be in range [-pi, pi]')
         self._max_pan = pan
 
     @property
@@ -1471,7 +1469,8 @@ class AxisCamera(BaseCamera):
 
     @min_tilt.setter
     def min_tilt(self, tilt: float) -> None:
-        assert tilt >= -pi/2 and tilt <= pi/2, f'Min tilt {tilt} must be in range [-pi/2, pi/2]'
+        if tilt < -pi/2 or tilt > pi/2:
+            raise ValueError(f'Min tilt {tilt} must be in range [-pi/2, pi/2]')
         self._min_tilt = tilt
 
     @property
@@ -1480,7 +1479,8 @@ class AxisCamera(BaseCamera):
 
     @max_tilt.setter
     def max_tilt(self, tilt: float) -> None:
-        assert tilt >= -pi/2 and tilt <= pi/2, f'Max tilt {tilt} must be in range [-pi/2, pi/2]'
+        if tilt < -pi/2 or tilt > pi/2:
+            raise ValueError(f'Max tilt {tilt} must be in range [-pi/2, pi/2]')
         self._max_tilt = tilt
 
     @property
@@ -1489,7 +1489,8 @@ class AxisCamera(BaseCamera):
 
     @min_zoom.setter
     def min_zoom(self, zoom: float) -> None:
-        assert zoom > 0, f'Min zoom {zoom} must be positive'
+        if zoom <= 0:
+            raise ValueError(f'Min zoom {zoom} must be positive')
         self._min_zoom = zoom
 
     @property
@@ -1498,7 +1499,8 @@ class AxisCamera(BaseCamera):
 
     @max_zoom.setter
     def max_zoom(self, zoom: float) -> None:
-        assert zoom > 0, f'Max zoom {zoom} must be positive'
+        if zoom <= 0:
+            raise ValueError(f'Max zoom {zoom} must be positive')
         self._max_zoom = zoom
 
     @property
@@ -1507,7 +1509,8 @@ class AxisCamera(BaseCamera):
 
     @max_pan_speed.setter
     def max_pan_speed(self, speed: float) -> None:
-        assert speed > 0, f'Max pan speed {speed} must be positive'
+        if speed <= 0:
+            raise ValueError(f'Max pan speed {speed} must be positive')
         self._max_pan_speed = speed
 
     @property
@@ -1516,7 +1519,8 @@ class AxisCamera(BaseCamera):
 
     @max_tilt_speed.setter
     def max_tilt_speed(self, speed: float) -> None:
-        assert speed > 0, f'Max tilt speed {speed} must be positive'
+        if speed <= 0:
+            raise ValueError(f'Max tilt speed {speed} must be positive')
         self._max_tilt_speed = speed
 
     @property

@@ -100,13 +100,11 @@ class ServerConfig(BaseConfig):
     @server_id.setter
     def server_id(self, value: int) -> None:
         # Check Type
-        assert isinstance(value, int), (
-            f'Remote Server ID {value} is invalid, must be an integer'
-        )
+        if not isinstance(value, int):
+            raise TypeError(f'Remote Server ID {value} is invalid, must be an integer')
         # [0-255] Range
-        assert 0 <= value < 255, (
-            f'Discovery Server ID {value} is invalid, must be in range 0 - 254'
-        )
+        if value < 0 or value > 255:
+            raise ValueError(f'Discovery Server ID {value} is invalid, must be in range 0 - 255')
         self._server_id = value
         return
 
@@ -127,9 +125,10 @@ class ServerConfig(BaseConfig):
         elif isinstance(value, Hostname):
             self._hostname = value
         else:
-            assert isinstance(value, str) or isinstance(value, Hostname), (
-                f'Hostname of {value} is invalid, must be of type "str" or "Hostname"'
-            )
+            if not (isinstance(value, str) or isinstance(value, Hostname)):
+                raise TypeError(
+                    f'Hostname of {value} is invalid, must be of type "str" or "Hostname"'
+                )
         return
 
     @property
@@ -149,9 +148,10 @@ class ServerConfig(BaseConfig):
         elif isinstance(value, IP):
             self._ip_address = value
         else:
-            assert isinstance(value, dict) or isinstance(value, IP), (
-                f'IP address of {value} is invalid, must be of type "str" or "IP"'
-            )
+            if not (isinstance(value, dict) or isinstance(value, IP)):
+                raise TypeError(
+                    f'IP address of {value} is invalid, must be of type "str" or "IP"'
+                )
         return
 
     @property
@@ -169,9 +169,10 @@ class ServerConfig(BaseConfig):
         elif isinstance(value, Port):
             self._port = value
         else:
-            assert isinstance(value, dict) or isinstance(value, Port), (
-                f'Port of {value} is invalid, must be of type "str" or "Port"'
-            )
+            if not (isinstance(value, dict) or isinstance(value, Port)):
+                raise TypeError(
+                    f'Port of {value} is invalid, must be of type "str" or "Port"'
+                )
         return
 
     @property
@@ -185,9 +186,8 @@ class ServerConfig(BaseConfig):
     @enabled.setter
     def enabled(self, value: bool) -> None:
         # Check Type
-        assert (isinstance(value, bool)), (
-            f'Enabled {value} is invalid, must be a boolean'
-        )
+        if not (isinstance(value, bool)):
+            raise TypeError(f'Enabled {value} is invalid, must be a boolean')
         self._enabled = value
         return
 

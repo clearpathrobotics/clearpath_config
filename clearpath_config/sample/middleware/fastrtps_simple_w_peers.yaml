@@ -1,0 +1,17 @@
+serial_number: a300-00000
+version: 0
+system:
+  hosts:
+    - hostname: cpr-a300-00000
+      ip: 192.168.131.1
+    - hostname: lab-workstation
+      ip: 192.168.141.242
+  ros2:
+    namespace: a300_00000
+    middleware:
+      implementation: rmw_fastrtps_cpp
+      discovery: simple
+      profile: /path/to/profile.xml
+      automatic_discovery_range: subnet
+      static_peers:
+        - 192.168.131.242

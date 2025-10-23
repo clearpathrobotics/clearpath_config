@@ -98,10 +98,10 @@ class IMUFilter():
     }
 
     def __new__(self, config: dict) -> None:
-        assert self.TYPE in config, (
-            f'IMU filter must have "{self.TYPE}" specified.')
-        assert config[self.TYPE] in self.TYPES, (
-            f'IMU filter "{self.TYPE}" must be one of: "{self.TYPES}"')
+        if self.TYPE not in config:
+            raise ValueError(f'IMU filter {config} does not have parameter "{self.TYPE}"')
+        if config[self.TYPE] not in self.TYPES:
+            raise ValueError(f'IMU filter {config} "{self.TYPE}" must be one of: "{self.TYPES}"')
         return self.TYPES[config[self.TYPE]](config)
 
 

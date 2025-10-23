@@ -35,6 +35,7 @@ from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
 from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.extras import ExtrasConfig
+from clearpath_config.platform.wireless import WirelessConfig
 
 
 class DescriptionPackagePath(PackagePath):
@@ -117,6 +118,9 @@ class PlatformConfig(BaseConfig):
     # Drivetrain
     DRIVETRAIN = 'drivetrain'
 
+    # Wireless
+    WIRELESS = 'wireless'
+
     # Enable/disable EKF
     ENABLE_EKF = 'enable_ekf'
     # Enable/disable Foxglove bridge
@@ -136,6 +140,7 @@ class PlatformConfig(BaseConfig):
             CONTROL: CONTROL,
             BATTERY: BATTERY,
             DRIVETRAIN: DRIVETRAIN,
+            WIRELESS: WIRELESS,
             ENABLE_EKF: ENABLE_EKF,
             ENABLE_FOXGLOVE_BRIDGE: ENABLE_FOXGLOVE_BRIDGE,
             ENABLE_WIRELESS_WATCHER: ENABLE_WIRELESS_WATCHER
@@ -156,9 +161,10 @@ class PlatformConfig(BaseConfig):
         CONTROL: '',
         BATTERY: BatteryConfig.DEFAULTS,
         DRIVETRAIN: DrivetrainConfig.DEFAULTS,
+        WIRELESS: WirelessConfig.DEFAULTS,
         ENABLE_EKF: True,
         ENABLE_FOXGLOVE_BRIDGE: True,
-        ENABLE_WIRELESS_WATCHER: True
+        ENABLE_WIRELESS_WATCHER: None,
     }
 
     def __init__(
@@ -171,6 +177,7 @@ class PlatformConfig(BaseConfig):
             battery: dict = DEFAULTS[BATTERY],
             extras: dict = DEFAULTS[EXTRAS],
             drivetrain: dict = DEFAULTS[DRIVETRAIN],
+            wireless: dict = DEFAULTS[WIRELESS],
             enable_ekf: bool = DEFAULTS[ENABLE_EKF],
             enable_foxglove_bridge: bool = DEFAULTS[ENABLE_FOXGLOVE_BRIDGE],
             enable_wireless_watcher: bool = DEFAULTS[ENABLE_WIRELESS_WATCHER],
@@ -187,9 +194,14 @@ class PlatformConfig(BaseConfig):
         self.launch = self.DEFAULTS[self.LAUNCH]
         self.control = self.DEFAULTS[self.CONTROL]
         self._drivetrain = DrivetrainConfig(drivetrain)
+        self._wireless = WirelessConfig(wireless)
         self.enable_ekf = enable_ekf
         self.enable_foxglove_bridge = enable_foxglove_bridge
-        self.enable_wireless_watcher = enable_wireless_watcher
+
+        # Deprecated; this has moved to wireless.enable_wireless_watcher
+        # only set it if the user has the legacy field
+        if enable_wireless_watcher is not None:
+            self.enable_wireless_watcher = enable_wireless_watcher
 
         # Setter Template
         setters = {
@@ -200,6 +212,7 @@ class PlatformConfig(BaseConfig):
             self.KEYS[self.BATTERY]: PlatformConfig.battery,
             self.KEYS[self.EXTRAS]: PlatformConfig.extras,
             self.KEYS[self.DRIVETRAIN]: PlatformConfig.drivetrain,
+            self.KEYS[self.WIRELESS]: PlatformConfig.wireless,
             self.KEYS[self.ENABLE_EKF]: PlatformConfig.enable_ekf,
             self.KEYS[self.ENABLE_FOXGLOVE_BRIDGE]: PlatformConfig.enable_foxglove_bridge,
             self.KEYS[self.ENABLE_WIRELESS_WATCHER]: PlatformConfig.enable_wireless_watcher
@@ -249,7 +262,8 @@ class PlatformConfig(BaseConfig):
 
     @controller.setter
     def controller(self, value: str) -> None:
-        assert value.lower() in self.CONTROLLERS, f'"{value.lower()}" controller is invalid. Must be one of "{self.CONTROLLERS}"'  # noqa:501
+        if value.lower() not in self.CONTROLLERS:
+            raise ValueError(f'"{value.lower()}" controller is invalid. Must be one of "{self.CONTROLLERS}"')  # noqa:501
         self._controller = value.lower()
 
     @property
@@ -308,10 +322,8 @@ class PlatformConfig(BaseConfig):
         elif isinstance(value, ExtrasConfig):
             self._extras = value
         else:
-            assert isinstance(value, dict) or (
-                    isinstance(value, ExtrasConfig)), (
-                'Extras must be of type "dict" or "ExtrasConfig"'
-            )
+            if not (isinstance(value, dict) or isinstance(value, ExtrasConfig)):
+                raise TypeError(f'Extras {value} must be of type "dict" or "ExtrasConfig"')
 
     def get_controller(self) -> str:
         return self.controller
@@ -376,8 +388,8 @@ class PlatformConfig(BaseConfig):
         elif isinstance(value, BatteryConfig):
             self._battery = value
         else:
-            assert isinstance(value, dict) or (
-                isinstance(value, BatteryConfig)), 'Battery configuration must be of type "dict" or "BatteryConfig"'  # noqa:E501
+            if not (isinstance(value, dict) or isinstance(value, BatteryConfig)):
+                raise TypeError(f'Battery configuration {value} must be of type "dict" or "BatteryConfig"')  # noqa:E501
 
     @property
     def drivetrain(self) -> DrivetrainConfig:
@@ -394,8 +406,21 @@ class PlatformConfig(BaseConfig):
         elif isinstance(value, DrivetrainConfig):
             self._drivetrain = value
         else:
-            assert isinstance(value, dict) or (
-                isinstance(value, DrivetrainConfig)), 'Drivetrain configuration must be of type "dict" or "DrivetrainConfig"'  # noqa:E501
+            if not (isinstance(value, dict) or isinstance(value, DrivetrainConfig)):
+                raise TypeError(f'Drivetrain configuration {value} must be of type "dict" or "DrivetrainConfig"')  # noqa:E501
+
+    @property
+    def wireless(self) -> WirelessConfig:
+        return self._wireless
+
+    @wireless.setter
+    def wireless(self, value: dict | WirelessConfig) -> None:
+        if isinstance(value, dict):
+            self._wireless.config = value
+        elif isinstance(value, WirelessConfig):
+            self._wireless = value
+        else:
+            raise TypeError(f'Wireless configuration must be of type "dict" or "WirelessConfig". Got {value}')  # noqa: E501
 
     @property
     def enable_ekf(self) -> bool:
@@ -423,12 +448,10 @@ class PlatformConfig(BaseConfig):
 
     @property
     def enable_wireless_watcher(self) -> bool:
-        self.set_config_param(
-            key=self.KEYS[self.ENABLE_WIRELESS_WATCHER],
-            value=self._enable_wireless_watcher
-        )
-        return self._enable_wireless_watcher
+        return self.wireless.enable_wireless_watcher
 
     @enable_wireless_watcher.setter
     def enable_wireless_watcher(self, value: bool) -> None:
-        self._enable_wireless_watcher = value
+        if value is not None:
+            print('Deprecation notice: platform.enable_wireless_watcher has moved to platform.wireless.enable_wireless_watcher (b)')  # noqa: E501
+            self.wireless.enable_wireless_watcher = value

@@ -323,8 +323,11 @@ class UniversalRobots(BaseArm):
 
     @ur_type.setter
     def ur_type(self, value: str) -> None:
-        assert value in self.UR_TYPES, (
-            f'Universal Robot ur_type must be one of {self.UR_TYPES}, got: {value}')
+        if value not in self.UR_TYPES:
+            raise ValueError(
+                f'Universal Robot ur_type must be one of {self.UR_TYPES}, got: "{value}"'
+            )
+
         self._ur_type = value
 
 
@@ -413,8 +416,8 @@ class Franka(BaseArm):
 
     @arm_id.setter
     def arm_id(self, value: str) -> None:
-        assert value in self.ARM_IDS, (
-            f'Franka arm_id must be one of {self.ARM_IDS}, got: {value}')
+        if value not in self.ARM_IDS:
+            raise ValueError(f'Franka arm_id must be one of {self.ARM_IDS}, got: {value}')
         self._arm_id = value
 
     def set_idx(self, idx: int) -> None:
@@ -440,7 +443,8 @@ class Arm():
 
     @classmethod
     def assert_model(cls, model: str) -> None:
-        assert model in cls.MODEL, f'Arm model "{model}" must be one of "{cls.MODEL.keys()}"'
+        if model not in cls.MODEL:
+            raise ValueError(f'Arm model "{model}" must be one of "{cls.MODEL.keys()}"')
 
     def __new__(cls, model: str) -> BaseArm:
         cls.assert_model(model)
