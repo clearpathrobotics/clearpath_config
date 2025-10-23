@@ -2,6 +2,23 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add a new `platform.wireless` section to config (`#201 <https://github.com/clearpathrobotics/clearpath_config/issues/201>`_)
+* Replace `assert` with `raise` + relevant Exception (`#200 <https://github.com/clearpathrobotics/clearpath_config/issues/200>`_)
+* Fix: OakD Parameters (`#202 <https://github.com/clearpathrobotics/clearpath_config/issues/202>`_)
+  - Use empty strings as defaults
+* Raise a FileNotFound exception instead of an assertion error if the middleware config path doesn't exist; this makes it easier to catch those exceptions in CI tests. Fix a bug where setting the extra launch to None raises an unintended exception (`#199 <https://github.com/clearpathrobotics/clearpath_config/issues/199>`_)
+* Add `system.bash` support (`#196 <https://github.com/clearpathrobotics/clearpath_config/issues/196>`_)
+  * Add `system.bash` section to robot.yaml with `source` and `env` sub-fields for adding additional bash sources and envars
+  * Add new envar to Flir camera sample
+* Allow multiple launch files to be listed in platform.extras.launch, add launch arguments field (`#197 <https://github.com/clearpathrobotics/clearpath_config/issues/197>`_)
+* Add support for automatic discovery range (`#191 <https://github.com/clearpathrobotics/clearpath_config/issues/191>`_)
+  * Add ROS_STATIC_PEERS and ROS_AUTOMATIC_DISCOVERY_RANGE setters to middleware
+  * Add middleware samples
+* Rename `oakd` namespace in robot.yaml to `luxonis_oakd` (`#192 <https://github.com/clearpathrobotics/clearpath_config/issues/192>`_)
+* Contributors: Chris Iverach-Brereton, luis-camero
+
 2.7.3 (2025-09-18)
 ------------------
 * Feature: Kinova Jazzy Support (`#193 <https://github.com/clearpathrobotics/clearpath_config/issues/193>`_)
