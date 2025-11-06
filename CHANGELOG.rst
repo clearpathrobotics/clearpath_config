@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.8.1 (2025-11-06)
+------------------
 * Fix: Ewellix Parameters (`#203 <https://github.com/clearpathrobotics/clearpath_config/issues/203>`_)
   Add mount parameter and remove redefinition of urdf functions
 * Contributors: luis-camero
