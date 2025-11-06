@@ -49,28 +49,6 @@ class BaseLift(BaseManipulator):
             ) -> None:
         super().__init__(
             idx, name, ros_parameters, ros_parameters_template, parent, xyz, rpy)
-        self.urdf_parameters = dict(self.URDF_PARAMETERS)
-
-    def to_dict(self) -> dict:
-        d = super().to_dict()
-        for k, v in self.urdf_parameters.items():
-            if v:
-                d[k] = v
-        return d
-
-    def from_dict(self, d: dict) -> None:
-        self.config = d
-        super().from_dict(d)
-        for k in self.urdf_parameters:
-            if k in d:
-                self.urdf_parameters[k] = d[k]
-
-    def get_urdf_parameters(self) -> dict:
-        d = {}
-        for k, v in self.urdf_parameters.items():
-            if v:
-                d[k] = v
-        return d
 
 
 class Ewellix(BaseLift):
@@ -78,6 +56,7 @@ class Ewellix(BaseLift):
 
     EWELLIX_TYPE = 'ewellix_type'
     ADD_PLATE = 'add_plate'
+    ADD_MOUNT = 'add_mount'
     PARAMETERS_FILE = 'parameters_file'
     INITIAL_POSITIONS = 'initial_positions'
     INITIAL_POSITIONS_FILE = 'initial_positions_file'
@@ -93,6 +72,7 @@ class Ewellix(BaseLift):
 
     URDF_PARAMETERS = {
         EWELLIX_TYPE: '',
+        ADD_MOUNT: '',
         ADD_PLATE: '',
         PARAMETERS_FILE: '',
         INITIAL_POSITIONS: '',
