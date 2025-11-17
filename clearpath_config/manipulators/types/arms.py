@@ -407,8 +407,15 @@ class Franka(BaseArm):
     def from_dict(self, d: dict) -> None:
         self.config = d
         super().from_dict(d)
+        if 'arm_id' in d:
+            self.arm_id = d['arm_id']
         if 'gripper' in d:
             self.gripper.arm_id = self.arm_id
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['arm_id'] = self.arm_id
+        return d
 
     @property
     def arm_id(self) -> str:
