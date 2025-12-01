@@ -9,15 +9,15 @@ platform:
 links:
   frame:
     - name: disk_row
-      xyz: [0.0, -0.5, 0.0]
+      xyz: [0.0, -1.0, 0.0]
     - name: fath_pivot_row
-      xyz: [0.0, -0.25, 0.0]
+      xyz: [0.0, -0.5, 0.0]
     - name: post_row
       xyz: [0.0, 0.0, 0.0]
     - name: sick_row
-      xyz: [0.0, 0.25, 0.0]
-    - name: bracket_row
       xyz: [0.0, 0.5, 0.0]
+    - name: bracket_row
+      xyz: [0.0, 1.0, 0.0]
 mounts:
   bracket:
     - parent: bracket_row_link
@@ -45,11 +45,11 @@ mounts:
       rpy: [0.0, 0.0, 0.0]
       model: large
   fath_pivot:
-    - parent: fath_pivot_link
+    - parent: fath_pivot_row_link
       xyz: [0.0, 0.0, 0.0]
       rpy: [0.0, 0.0, 0.0]
       angle: 0.0 # in radian
-    - parent: fath_pivot_link
+    - parent: fath_pivot_row_link
       xyz: [0.0, 0.0, 0.25]
       rpy: [0.0, 0.0, 0.0]
       angle: 0.0 # in radian
