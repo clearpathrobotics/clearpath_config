@@ -25,8 +25,8 @@ Changelog for package clearpath_config
 * Rename `oakd` namespace in robot.yaml to `luxonis_oakd` (`#192 <https://github.com/clearpathrobotics/clearpath_config/issues/192>`_)
 * Contributors: Chris Iverach-Brereton, luis-camero
 
-Forthcoming
------------
+2.8.2 (2025-12-16)
+------------------
 * Fix reading arm_id (`#204 <https://github.com/clearpathrobotics/clearpath_config/issues/204>`_)
 * 2.8.1
 * Changes.
