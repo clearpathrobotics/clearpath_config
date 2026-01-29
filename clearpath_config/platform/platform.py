@@ -35,6 +35,7 @@ from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
 from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.extras import ExtrasConfig
+from clearpath_config.platform.mcu import MCUConfig
 from clearpath_config.platform.wireless import WirelessConfig
 
 
@@ -118,6 +119,9 @@ class PlatformConfig(BaseConfig):
     # Drivetrain
     DRIVETRAIN = 'drivetrain'
 
+    # MCU
+    MCU = 'mcu'
+
     # Wireless
     WIRELESS = 'wireless'
 
@@ -140,6 +144,7 @@ class PlatformConfig(BaseConfig):
             CONTROL: CONTROL,
             BATTERY: BATTERY,
             DRIVETRAIN: DRIVETRAIN,
+            MCU: MCU,
             WIRELESS: WIRELESS,
             ENABLE_EKF: ENABLE_EKF,
             ENABLE_FOXGLOVE_BRIDGE: ENABLE_FOXGLOVE_BRIDGE,
@@ -161,6 +166,7 @@ class PlatformConfig(BaseConfig):
         CONTROL: '',
         BATTERY: BatteryConfig.DEFAULTS,
         DRIVETRAIN: DrivetrainConfig.DEFAULTS,
+        MCU: MCUConfig.DEFAULTS,
         WIRELESS: WirelessConfig.DEFAULTS,
         ENABLE_EKF: True,
         ENABLE_FOXGLOVE_BRIDGE: True,
@@ -177,6 +183,7 @@ class PlatformConfig(BaseConfig):
             battery: dict = DEFAULTS[BATTERY],
             extras: dict = DEFAULTS[EXTRAS],
             drivetrain: dict = DEFAULTS[DRIVETRAIN],
+            mcu: dict = DEFAULTS[MCU],
             wireless: dict = DEFAULTS[WIRELESS],
             enable_ekf: bool = DEFAULTS[ENABLE_EKF],
             enable_foxglove_bridge: bool = DEFAULTS[ENABLE_FOXGLOVE_BRIDGE],
@@ -194,6 +201,7 @@ class PlatformConfig(BaseConfig):
         self.launch = self.DEFAULTS[self.LAUNCH]
         self.control = self.DEFAULTS[self.CONTROL]
         self._drivetrain = DrivetrainConfig(drivetrain)
+        self._mcu = MCUConfig(mcu)
         self._wireless = WirelessConfig(wireless)
         self.enable_ekf = enable_ekf
         self.enable_foxglove_bridge = enable_foxglove_bridge
@@ -212,6 +220,7 @@ class PlatformConfig(BaseConfig):
             self.KEYS[self.BATTERY]: PlatformConfig.battery,
             self.KEYS[self.EXTRAS]: PlatformConfig.extras,
             self.KEYS[self.DRIVETRAIN]: PlatformConfig.drivetrain,
+            self.KEYS[self.MCU]: PlatformConfig.mcu,
             self.KEYS[self.WIRELESS]: PlatformConfig.wireless,
             self.KEYS[self.ENABLE_EKF]: PlatformConfig.enable_ekf,
             self.KEYS[self.ENABLE_FOXGLOVE_BRIDGE]: PlatformConfig.enable_foxglove_bridge,
@@ -408,6 +417,24 @@ class PlatformConfig(BaseConfig):
         else:
             if not (isinstance(value, dict) or isinstance(value, DrivetrainConfig)):
                 raise TypeError(f'Drivetrain configuration {value} must be of type "dict" or "DrivetrainConfig"')  # noqa:E501
+
+    @property
+    def mcu(self) -> MCUConfig:
+        self.set_config_param(
+            key=self.KEYS[self.MCU],
+            value=self._mcu.config[self.MCU]
+        )
+        return self._mcu
+
+    @mcu.setter
+    def mcu(self, value: dict | MCUConfig) -> None:
+        if isinstance(value, dict):
+            self._mcu.config = value
+        elif isinstance(value, MCUConfig):
+            self._mcu = value
+        else:
+            if not (isinstance(value, dict) or isinstance(value, MCUConfig)):
+                raise TypeError(f'MCU protocol configuration {value} must be of type "dict" or "MCUConfig"')  # noqa:E501
 
     @property
     def wireless(self) -> WirelessConfig:
