@@ -34,9 +34,9 @@ class MCUConfig(BaseConfig):
     MCU = 'mcu'
 
     PROTOCOL = 'protocol'
-    MICRO_ROS = 'micro_ros'
+    UROS = 'uros'
     PROTON = 'proton'
-    PROTOCOLS = [MICRO_ROS, PROTON]
+    PROTOCOLS = [UROS, PROTON]
 
     PROFILE = 'profile'
 
@@ -50,7 +50,7 @@ class MCUConfig(BaseConfig):
     KEYS = flip_dict(TEMPLATE)
 
     DEFAULTS = {
-        PROTOCOL: MICRO_ROS,
+        PROTOCOL: UROS,
         PROFILE: '',
     }
 
