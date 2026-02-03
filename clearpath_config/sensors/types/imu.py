@@ -334,6 +334,10 @@ class Microstrain(BaseIMU):
         self._mag_rate = int(rate)
 
 
+class MicrostrainGV7(Microstrain):
+    SENSOR_MODEL = 'microstrain_gv7'
+
+
 class CHRoboticsUM6(BaseIMU):
     SENSOR_MODEL = 'chrobotics_um6'
 
