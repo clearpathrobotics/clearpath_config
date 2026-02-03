@@ -30,9 +30,7 @@ from typing import List
 
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.discovery import Discovery
-from clearpath_config.common.types.exception import UnsupportedMiddlewareException
 from clearpath_config.common.types.hostname import Hostname
-from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.types.rmw_implementation import RMWImplementation
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.system.hosts import HostListConfig
