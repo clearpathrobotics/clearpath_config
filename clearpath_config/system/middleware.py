@@ -358,20 +358,3 @@ class MiddlewareConfig(BaseConfig):
                                                         s.enabled)), None)
         # returns None if the localhost is not listed in the server list
         return local_server
-
-    def assert_is_supported_on_platform(self, platform) -> None:
-        """
-        Make sure that the user's middleware is compatible.
-
-        FastDDS is supported on everything.
-
-        Zenoh is only supported on platforms that do not use MicroROS.
-
-        @param platform  The type of platform we're running on
-
-        @exception  Raises an UnsupportedMiddlewareException if the platform cannot use
-                    this middleware
-        """
-        if self.rmw_implementation == RMWImplementation.ZENOH_DDS:
-            if (platform != Platform.A200 and platform != Platform.GENERIC):
-                raise UnsupportedMiddlewareException(f'Cannot use {self.rmw_implementation} on platform {platform}')  # noqa: E501
