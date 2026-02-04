@@ -56,7 +56,6 @@ from clearpath_config.sensors.types.imu import (
     BaseIMU,
     CHRoboticsUM6,
     Microstrain,
-    MicrostrainGV7,
     PhidgetsSpatial,
     RedshiftUM7,
 )
@@ -80,13 +79,11 @@ from clearpath_config.sensors.types.sensor import BaseSensor
 
 class InertialMeasurementUnit():
     MICROSTRAIN_IMU = Microstrain.SENSOR_MODEL
-    MICROSTRAIN_GV7 = MicrostrainGV7.SENSOR_MODEL
     CHROBOTICS_UM6 = CHRoboticsUM6.SENSOR_MODEL
     PHIDGETS_SPATIAL = PhidgetsSpatial.SENSOR_MODEL
     REDSHIFT_UM7 = RedshiftUM7.SENSOR_MODEL
     MODEL = {
         MICROSTRAIN_IMU: Microstrain,
-        MICROSTRAIN_GV7: MicrostrainGV7,
         CHROBOTICS_UM6: CHRoboticsUM6,
         PHIDGETS_SPATIAL: PhidgetsSpatial,
         REDSHIFT_UM7: RedshiftUM7,

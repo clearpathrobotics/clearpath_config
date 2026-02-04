@@ -143,6 +143,7 @@ class BaseIMU(BaseSensor):
             use_enu: bool = USE_ENU,
             update_rate: int = UPDATE_RATE,
             imu_filter: IMUFilter = IMU_FILTER_DEFAULT,
+            device_type: str = GX5,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -260,6 +261,24 @@ class Microstrain(BaseIMU):
     IMU_RATE = 100
     MAG_RATE = 0
 
+    GX3 = 'GX3'
+    GX4 = 'GX4'
+    GX5 = 'GX5'
+    CX5 = 'CX5'
+    RQ1 = 'RQ1'
+    GQ7 = 'GQ7'
+    GV7 = 'GV7'
+    DEVICE_TYPE = 'device_type'
+    DEVICE_TYPES = [
+        GX3,
+        GX4,
+        GX5,
+        CX5,
+        RQ1,
+        GQ7,
+        GV7,
+    ]
+
     class ROS_PARAMETER_KEYS:
         PORT = 'microstrain_inertial_driver.port'
         FRAME_ID = 'microstrain_inertial_driver.frame_id'
@@ -277,6 +296,7 @@ class Microstrain(BaseIMU):
             use_enu: bool = USE_ENU,
             imu_rate: int = IMU_RATE,
             mag_rate: int = MAG_RATE,
+            device_type: str = GX5,
             imu_filter: str = BaseIMU.IMU_FILTER_DEFAULT,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
@@ -287,6 +307,8 @@ class Microstrain(BaseIMU):
             ) -> None:
         # Initialization
         self.mag_rate = mag_rate
+        # Device Type
+        self.device_type = device_type
         # ROS Parameters Template
         ros_parameters_template = {
             self.ROS_PARAMETER_KEYS.FRAME_ID: Microstrain.frame_id,
@@ -333,9 +355,27 @@ class Microstrain(BaseIMU):
     def mag_rate(self, rate: int) -> None:
         self._mag_rate = int(rate)
 
+    @property
+    def device_type(self) -> str:
+        return self._device_type
 
-class MicrostrainGV7(Microstrain):
-    SENSOR_MODEL = 'microstrain_gv7'
+    @device_type.setter
+    def device_type(self, device_type: str) -> None:
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(
+                f'Device type "{device_type}" must be one of "{self.DEVICE_TYPES}"'
+            )
+        self._device_type = device_type
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d['device_type'] = self.device_type
+        return d
+
+    def from_dict(self, d: dict) -> None:
+        super().from_dict(d)
+        if self.DEVICE_TYPE in d:
+            self.device_type = d[self.DEVICE_TYPE]
 
 
 class CHRoboticsUM6(BaseIMU):
