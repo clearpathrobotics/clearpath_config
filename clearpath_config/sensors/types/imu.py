@@ -143,7 +143,6 @@ class BaseIMU(BaseSensor):
             use_enu: bool = USE_ENU,
             update_rate: int = UPDATE_RATE,
             imu_filter: IMUFilter = IMU_FILTER_DEFAULT,
-            device_type: str = GX5,
             urdf_enabled: bool = BaseSensor.URDF_ENABLED,
             launch_enabled: bool = BaseSensor.LAUNCH_ENABLED,
             ros_parameters: dict = BaseSensor.ROS_PARAMETERS,
@@ -261,13 +260,13 @@ class Microstrain(BaseIMU):
     IMU_RATE = 100
     MAG_RATE = 0
 
-    GX3 = 'GX3'
-    GX4 = 'GX4'
-    GX5 = 'GX5'
-    CX5 = 'CX5'
-    RQ1 = 'RQ1'
-    GQ7 = 'GQ7'
-    GV7 = 'GV7'
+    GX3 = 'gx3'
+    GX4 = 'gx4'
+    GX5 = 'gx5'
+    CX5 = 'cx5'
+    RQ1 = 'rq1'
+    GQ7 = 'gq7'
+    GV7 = 'gv7'
     DEVICE_TYPE = 'device_type'
     DEVICE_TYPES = [
         GX3,
@@ -361,7 +360,7 @@ class Microstrain(BaseIMU):
 
     @device_type.setter
     def device_type(self, device_type: str) -> None:
-        if device_type not in self.DEVICE_TYPES:
+        if device_type.lower() not in self.DEVICE_TYPES:
             raise ValueError(
                 f'Device type "{device_type}" must be one of "{self.DEVICE_TYPES}"'
             )

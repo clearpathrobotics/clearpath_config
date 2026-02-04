@@ -2,7 +2,8 @@ serial_number: a300-0000
 version: 0
 sensors:
   imu:
-    - model: microstrain_gv7
+    - model: microstrain_imu
+      device_type: gv7
       urdf_enabled: true
       launch_enabled: true
       parent: base_link
