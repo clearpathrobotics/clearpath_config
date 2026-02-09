@@ -10,11 +10,6 @@ platform:
   battery:
     model: S_24V20_U1
     configuration: S1P2
-  drivetrain:
-    control: omni_4wd
-    wheels:
-      front: mecanum
-      rear: mecanum
   attachments:
     - name: front_bumper
       type: a300.bumper
@@ -25,7 +20,7 @@ platform:
     - name: top_plate
       type: a300.top_plate
   mcu:
-    protocol: proton
+    protocol: uros
 sensors:
   imu:
     - model: phidgets_spatial

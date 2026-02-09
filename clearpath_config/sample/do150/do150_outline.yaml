@@ -25,6 +25,8 @@ platform:
   extras:
     urdf: null
     ros_parameters: {}
+  mcu:
+    protocol: proton
 links:
   box: []
   cylinder: []
