@@ -8,7 +8,7 @@ system:
     namespace: r100_0000
 platform:
   mcu:
-    protocol: proton
+    protocol: uros
 sensors:
   lidar2d:
     - model: hokuyo_ust

@@ -8,4 +8,4 @@ system:
     namespace: w200_0000
 platform:
   mcu:
-    protocol: proton
+    protocol: uros
