@@ -26,4 +26,4 @@ system:
           port: 11811
 platform:
   mcu:
-    protocol: uros
+    protocol: proton

@@ -12,4 +12,4 @@ system:
       profile: /path/to/profile.xml
       automatic_discovery_range: subnet
   mcu:
-    protocol: uros
+    protocol: proton

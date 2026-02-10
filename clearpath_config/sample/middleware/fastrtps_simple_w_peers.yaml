@@ -17,4 +17,4 @@ system:
         - 192.168.131.242
 platform:
   mcu:
-    protocol: uros
+    protocol: proton
