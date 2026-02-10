@@ -8,13 +8,9 @@ system:
     namespace: r100_0000
 platform:
   mcu:
-    protocol: proton
+    protocol: uros
 sensors:
   lidar2d:
-    - model: sick_lms1xx
+    - model: hokuyo_ust
       parent: chassis_link
-      xyz: [0.3455, 0.0, 0.1977]
-    - model: sick_lms1xx
-      parent: chassis_link
-      xyz: [-0.3455, 0.0, 0.1977]
-      rpy: [0.0, 0.0, 3.14159]
+      xyz: [0.3922, 0.0, 0.1856]

@@ -6,6 +6,9 @@ system:
       ip: 192.168.131.1
   ros2:
     namespace: do150_0000
+platform:
+  mcu:
+    protocol: proton
 mounts:
   bracket:
     - parent: front_1_mount

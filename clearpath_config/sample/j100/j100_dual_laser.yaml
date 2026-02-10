@@ -13,6 +13,8 @@ platform:
     - name: rear_fender
       type: j100.fender
       rpy: [0.0, 0.0, 3.1415]
+  mcu:
+    protocol: proton
 sensors:
   lidar2d:
   - model: hokuyo_ust

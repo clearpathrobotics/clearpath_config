@@ -15,3 +15,6 @@ system:
       automatic_discovery_range: subnet
       static_peers:
         - 192.168.131.242
+platform:
+  mcu:
+    protocol: proton

@@ -1,5 +1,8 @@
 serial_number: a300-0000
 version: 0
+platform:
+  mcu:
+    protocol: proton
 sensors:
   imu:
     - model: microstrain_imu

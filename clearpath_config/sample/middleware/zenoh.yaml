@@ -9,3 +9,6 @@ system:
     middleware:
       implementation: rmw_zenoh_cpp
       profile: /path/to/router_configuration.json5
+platform:
+  mcu:
+    protocol: proton

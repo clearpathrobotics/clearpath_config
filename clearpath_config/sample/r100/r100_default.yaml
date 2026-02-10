@@ -6,6 +6,9 @@ system:
       ip: 192.168.131.1
   ros2:
     namespace: r100_0000
+platform:
+  mcu:
+    protocol: proton
 sensors:
   lidar2d:
     - model: hokuyo_ust

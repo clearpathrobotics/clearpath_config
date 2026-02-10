@@ -11,3 +11,5 @@ system:
       discovery: simple
       profile: /path/to/profile.xml
       automatic_discovery_range: subnet
+  mcu:
+    protocol: proton
