@@ -6,6 +6,9 @@ system:
       ip: 192.168.131.1
   ros2:
     namespace: dd150_0000
+platform:
+  mcu:
+    protocol: proton
 links:
   cylinder:
     - name: leg_0

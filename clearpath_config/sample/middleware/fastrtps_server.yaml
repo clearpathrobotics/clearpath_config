@@ -24,3 +24,6 @@ system:
         - hostname: lab-workstation
           enabled: true
           port: 11811
+platform:
+  mcu:
+    protocol: proton

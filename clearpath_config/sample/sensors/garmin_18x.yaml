@@ -1,5 +1,8 @@
 serial_number: a300-0000
 version: 0
+platform:
+  mcu:
+    protocol: proton
 sensors:
   gps:
     - model: garmin_18x

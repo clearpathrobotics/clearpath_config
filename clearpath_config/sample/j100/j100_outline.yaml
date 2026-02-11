@@ -43,6 +43,8 @@ platform:
             min_velocity: -4.0
             max_acceleration: 25.0
             min_acceleration: -25.0
+  mcu:
+    protocol: proton
 links:
   box: []
   cylinder: []

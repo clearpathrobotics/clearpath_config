@@ -4,15 +4,16 @@ platform:
   mcu:
     protocol: proton
 sensors:
-  lidar2d:
-    - model: sick_lms1xx
+  imu:
+    - model: microstrain_imu
+      device_type: gv7
       urdf_enabled: true
       launch_enabled: true
       parent: base_link
       xyz: [0.0, 0.0, 0.0]
       rpy: [0.0, 0.0, 0.0]
       ros_parameters:
-        lms1xx:
-          frame_id: lidar2d_0_laser
-          host: 192.168.131.20
-          port: 2111
+        microstrain_inertial_driver:
+          imu_frame_id: imu_0_link
+          port: /dev/microstrain_main
+          use_enu_frame: true

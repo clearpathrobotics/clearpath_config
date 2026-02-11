@@ -14,4 +14,4 @@ platform:
       type: j100.fender
       rpy: [0.0, 0.0, 3.1415]
   mcu:
-    protocol: proton
+    protocol: uros

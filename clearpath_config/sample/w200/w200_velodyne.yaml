@@ -6,6 +6,9 @@ system:
       ip: 192.168.131.1
   ros2:
     namespace: w200_0000
+platform:
+  mcu:
+    protocol: proton
 links:
   box:
     - name: structure

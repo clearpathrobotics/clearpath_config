@@ -39,6 +39,8 @@ platform:
       parent: sensor_arch_rear_right_corner_mount
       xyz: [0.0, 0.0, -0.08]
       rpy: [0.0, 0.5235987755982988, 0.5235987755982988]
+  mcu:
+    protocol: proton
 sensors:
   imu:
     - model: phidgets_spatial

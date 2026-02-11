@@ -4,6 +4,9 @@ system:
   bash:
     env:
       SPINNAKER_GENTL64_CTI: /opt/ros/jazzy/lib/spinnaker-gentl/Spinnaker_GenTL.cti
+platform:
+  mcu:
+    protocol: proton
 sensors:
   camera:
     - model: flir_blackfly

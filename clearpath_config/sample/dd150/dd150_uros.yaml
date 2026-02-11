@@ -8,4 +8,4 @@ system:
     namespace: dd150_0000
 platform:
   mcu:
-    protocol: proton
+    protocol: uros

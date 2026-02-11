@@ -33,7 +33,7 @@ class RMWImplementation:
     GURUM_DDS = 'rmw_gurumdds_cpp'
     ZENOH_DDS = 'rmw_zenoh_cpp'
 
-    ALL_SUPPORTED = [FAST_RTPS, ZENOH_DDS]
+    ALL_SUPPORTED = [FAST_RTPS, ZENOH_DDS, CYCLONE_DDS]
 
     DEFAULT = FAST_RTPS
 

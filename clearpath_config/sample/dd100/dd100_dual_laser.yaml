@@ -11,6 +11,9 @@ mounts:
     - parent: front_2_mount
     - parent: rear_2_mount
       rpy: [0.0, 0.0, 3.1415]
+platform:
+  mcu:
+    protocol: proton
 sensors:
   lidar2d:
     - model: hokuyo_ust
