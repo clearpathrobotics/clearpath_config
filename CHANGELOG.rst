@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.9.0 (2026-02-11)
+------------------
 * CI in container (`#213 <https://github.com/clearpathrobotics/clearpath_config/issues/213>`_)
 * Feature: Proton Samples (`#212 <https://github.com/clearpathrobotics/clearpath_config/issues/212>`_)
 * Feature: Other Middleware  (`#210 <https://github.com/clearpathrobotics/clearpath_config/issues/210>`_)
