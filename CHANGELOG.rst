@@ -2,6 +2,31 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* CI in container (`#213 <https://github.com/clearpathrobotics/clearpath_config/issues/213>`_)
+* Feature: Proton Samples (`#212 <https://github.com/clearpathrobotics/clearpath_config/issues/212>`_)
+* Feature: Other Middleware  (`#210 <https://github.com/clearpathrobotics/clearpath_config/issues/210>`_)
+* Feature: Proton (`#206 <https://github.com/clearpathrobotics/clearpath_config/issues/206>`_)
+* Added mergify and auto-label. (`#207 <https://github.com/clearpathrobotics/clearpath_config/issues/207>`_)
+* Contributors: Tony Baltovski, Luis Camero
+
+2.8.2 (2025-12-16)
+------------------
+* Fix reading arm_id (`#204 <https://github.com/clearpathrobotics/clearpath_config/issues/204>`_)
+* Fix: Ewellix Parameters (`#203 <https://github.com/clearpathrobotics/clearpath_config/issues/203>`_)
+* Add a new `platform.wireless` section to config (`#201 <https://github.com/clearpathrobotics/clearpath_config/issues/201>`_)
+* Replace `assert` with `raise` + relevant Exception (`#200 <https://github.com/clearpathrobotics/clearpath_config/issues/200>`_)
+* Fix: OakD Parameters (`#202 <https://github.com/clearpathrobotics/clearpath_config/issues/202>`_)
+* Raise a FileNotFound exception instead of an assertion error if the middleware config path doesn't exist; this makes it easier to catch those exceptions in CI tests. Fix a bug where setting the extra launch to None raises an unintended exception (`#199 <https://github.com/clearpathrobotics/clearpath_config/issues/199>`_)
+* Add `system.bash` support (`#196 <https://github.com/clearpathrobotics/clearpath_config/issues/196>`_)
+  * Add `system.bash` section to robot.yaml with `source` and `env` sub-fields for adding additional bash sources and envars
+  * Add new envar to Flir camera sample
+* Allow multiple launch files to be listed in platform.extras.launch, add launch arguments field (`#197 <https://github.com/clearpathrobotics/clearpath_config/issues/197>`_)
+* Add support for automatic discovery range (`#191 <https://github.com/clearpathrobotics/clearpath_config/issues/191>`_)
+* Rename `oakd` namespace in robot.yaml to `luxonis_oakd` (`#192 <https://github.com/clearpathrobotics/clearpath_config/issues/192>`_)
+* Contributors: Chris Iverach-Brereton, Tony Baltovski, Luis Camero
+
 2.8.1 (2025-11-06)
 ------------------
 * Fix: Ewellix Parameters (`#203 <https://github.com/clearpathrobotics/clearpath_config/issues/203>`_)
@@ -24,51 +49,6 @@ Changelog for package clearpath_config
   * Add middleware samples
 * Rename `oakd` namespace in robot.yaml to `luxonis_oakd` (`#192 <https://github.com/clearpathrobotics/clearpath_config/issues/192>`_)
 * Contributors: Chris Iverach-Brereton, luis-camero
-
-2.8.2 (2025-12-16)
-------------------
-* Fix reading arm_id (`#204 <https://github.com/clearpathrobotics/clearpath_config/issues/204>`_)
-* 2.8.1
-* Changes.
-* Fix: Ewellix Parameters (`#203 <https://github.com/clearpathrobotics/clearpath_config/issues/203>`_)
-  Add mount parameter and remove redefinition of urdf functions
-* 2.8.0
-* Changes.
-* Add a new `platform.wireless` section to config (`#201 <https://github.com/clearpathrobotics/clearpath_config/issues/201>`_)
-  * Add a new `platform.wireless` section to contain router, base station, wireless_watcher parameters
-  * Fixed linting.
-  ---------
-  Co-authored-by: Tony Baltovski <tbaltovski@clearpathrobotics.com>
-* Replace `assert` with `raise` + relevant Exception (`#200 <https://github.com/clearpathrobotics/clearpath_config/issues/200>`_)
-  * Raise a FileNotFound exception instead of an assertion error if the middleware config path doesn't exist; this makes it easier to catch those exceptions in CI tests. Fix a bug where setting the extra launch to None raises an unintended exception
-  * Start replacing all `assert CONDITION[, 'error message']` instances with `if` + `raise` with more precise exceptions (generally PermissionError, FileNotFoundError, ValueError, or TypeError)
-  * Replace more asserts
-  * Replace asserts in username. Don't allow underscores; these are not valid in Linux usernames. Verify that the first character is not a digit or hyphen
-  * More asserts
-  * More asserts
-  * More asserts
-  * More asserts
-  * Fix length check
-  * id -> _id
-  * .config -> .control
-  * UR_TYPE -> UR_TYPES
-  * More asserts
-  * Finish first pass removing all asserts
-  * Missing negative sign
-  * Fix wonky indent
-  * Fix formatting issues
-* Fix: OakD Parameters (`#202 <https://github.com/clearpathrobotics/clearpath_config/issues/202>`_)
-  - Use empty strings as defaults
-* Raise a FileNotFound exception instead of an assertion error if the middleware config path doesn't exist; this makes it easier to catch those exceptions in CI tests. Fix a bug where setting the extra launch to None raises an unintended exception (`#199 <https://github.com/clearpathrobotics/clearpath_config/issues/199>`_)
-* Add `system.bash` support (`#196 <https://github.com/clearpathrobotics/clearpath_config/issues/196>`_)
-  * Add `system.bash` section to robot.yaml with `source` and `env` sub-fields for adding additional bash sources and envars
-  * Add new envar to Flir camera sample
-* Allow multiple launch files to be listed in platform.extras.launch, add launch arguments field (`#197 <https://github.com/clearpathrobotics/clearpath_config/issues/197>`_)
-* Add support for automatic discovery range (`#191 <https://github.com/clearpathrobotics/clearpath_config/issues/191>`_)
-  * Add ROS_STATIC_PEERS and ROS_AUTOMATIC_DISCOVERY_RANGE setters to middleware
-  * Add middleware samples
-* Rename `oakd` namespace in robot.yaml to `luxonis_oakd` (`#192 <https://github.com/clearpathrobotics/clearpath_config/issues/192>`_)
-* Contributors: Chris Iverach-Brereton, Tony Baltovski, luis-camero
 
 2.7.3 (2025-09-18)
 ------------------
