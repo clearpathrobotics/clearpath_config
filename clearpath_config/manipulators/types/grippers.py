@@ -133,6 +133,7 @@ class Robotiq2F140(BaseGripper):
     ISAAC_JOINT_COMMANDS = 'isaac_joint_commands'
     ISAAC_JOINT_STATES = 'isaac_joint_states'
     COM_PORT = 'com_port'
+    PADDING = 'padding'
     URDF_PARAMETERS = {
         USE_FAKE_HARDWARE: '',
         USE_CONTROLLERS: '',
@@ -143,6 +144,7 @@ class Robotiq2F140(BaseGripper):
         ISAAC_JOINT_COMMANDS: '',
         ISAAC_JOINT_STATES: '',
         COM_PORT: '',
+        PADDING: '',
     }
 
 
