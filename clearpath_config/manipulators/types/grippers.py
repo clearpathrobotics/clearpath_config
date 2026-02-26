@@ -62,8 +62,32 @@ class Robotiq2F85(BaseGripper):
 class Robotiq2F140(BaseGripper):
     MANIPULATOR_MODEL = "robotiq_2f_140"
     JOINT_COUNT = 1
+<<<<<<< HEAD
     URDF_PARAMETERS = {
         'com_port': ''
+=======
+    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    USE_CONTROLLERS = 'use_controllers'
+    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    SIM_IGNITION = 'sim_ignition'
+    SIM_GAZEBO = 'sim_gazebo'
+    SIM_ISAAC = 'sim_isaac'
+    ISAAC_JOINT_COMMANDS = 'isaac_joint_commands'
+    ISAAC_JOINT_STATES = 'isaac_joint_states'
+    COM_PORT = 'com_port'
+    PADDING = 'padding'
+    URDF_PARAMETERS = {
+        USE_FAKE_HARDWARE: '',
+        USE_CONTROLLERS: '',
+        FAKE_SENSOR_COMMANDS: '',
+        SIM_IGNITION: '',
+        SIM_GAZEBO: '',
+        SIM_ISAAC: '',
+        ISAAC_JOINT_COMMANDS: '',
+        ISAAC_JOINT_STATES: '',
+        COM_PORT: '',
+        PADDING: '',
+>>>>>>> 28eb30c (Add padding as parameter (#214))
     }
 
 
