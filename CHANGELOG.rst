@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Add padding as parameter (`#214 <https://github.com/clearpathrobotics/clearpath_config/issues/214>`_)
+* Contributors: luis-camero
+
 2.9.0 (2026-02-11)
 ------------------
 * CI in container (`#213 <https://github.com/clearpathrobotics/clearpath_config/issues/213>`_)
