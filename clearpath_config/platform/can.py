@@ -204,7 +204,7 @@ class CANAdapterConfig:
         Platform.GENERIC: [],
         Platform.J100: [],
         Platform.R100: [VCAN0_DEFAULT],
-        Platform.W200: [],
+        Platform.W200: [VCAN0_DEFAULT],
     }
 
     def __init__(
