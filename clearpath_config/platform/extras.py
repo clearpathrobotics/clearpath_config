@@ -53,7 +53,7 @@ class ROSParameterDefaults:
     }
 
     A300 = {
-        'platform_velocity_controller.wheel_radius': 0.1625,
+        'platform_velocity_controller.wheel_radius': 1.0,
         'platform_velocity_controller.linear.x.max_velocity': 2.0,
         'platform_velocity_controller.linear.x.min_velocity': -2.0,
         'platform_velocity_controller.linear.x.max_acceleration': 4.0,
