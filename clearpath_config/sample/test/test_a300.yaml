@@ -21,7 +21,7 @@ platform:
       type: a300.bumper
       parent: rear_bumper_mount
       model: default
-      extension: 0.2
+      extension: 0.1
     # Top Plate
     - name: top_plate_default
       type: a300.top_plate
