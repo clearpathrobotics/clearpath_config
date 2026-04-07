@@ -33,43 +33,43 @@ import pytest
 class TestNamespace:
 
     def test_empty_namespace_is_valid(self):
-        assert Namespace.is_valid("")
+        assert Namespace.is_valid('')
 
     def test_empty_namespace_construction(self):
-        ns = Namespace("")
-        assert str(ns) == ""
+        ns = Namespace('')
+        assert str(ns) == ''
 
     def test_empty_namespace_equality(self):
-        ns = Namespace("")
-        assert ns == ""
+        ns = Namespace('')
+        assert ns == ''
 
     def test_default_namespace(self):
         ns = Namespace()
-        assert str(ns) == "/"
+        assert str(ns) == '/'
 
     def test_valid_namespaces(self):
-        valid = ["my_robot", "a0", "robot/sensor", "/"]
+        valid = ['my_robot', 'a0', 'robot/sensor', '/']
         for name in valid:
             ns = Namespace(name)
             assert str(ns) == name
 
     def test_invalid_namespaces(self):
-        invalid = ["0bad", "bad//path", "bad__name", "bad@char"]
+        invalid = ['0bad', 'bad//path', 'bad__name', 'bad@char']
         for name in invalid:
             with pytest.raises(ValueError):
                 Namespace(name)
 
     def test_set_namespace_empty_string(self):
-        BaseConfig.set_namespace("test_ns")
-        assert BaseConfig.get_namespace() == "test_ns"
-        BaseConfig.set_namespace("")
-        assert BaseConfig.get_namespace() == ""
+        BaseConfig.set_namespace('test_ns')
+        assert BaseConfig.get_namespace() == 'test_ns'
+        BaseConfig.set_namespace('')
+        assert BaseConfig.get_namespace() == ''
         # Reset to default
-        BaseConfig.set_namespace("/")
+        BaseConfig.set_namespace('/')
 
     def test_set_namespace_object(self):
-        ns = Namespace("robot_1")
+        ns = Namespace('robot_1')
         BaseConfig.set_namespace(ns)
-        assert BaseConfig.get_namespace() == "robot_1"
+        assert BaseConfig.get_namespace() == 'robot_1'
         # Reset to default
-        BaseConfig.set_namespace("/")
+        BaseConfig.set_namespace('/')
