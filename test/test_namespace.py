@@ -25,10 +25,9 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-import pytest
-
-from clearpath_config.common.types.namespace import Namespace
 from clearpath_config.common.types.config import BaseConfig
+from clearpath_config.common.types.namespace import Namespace
+import pytest
 
 
 class TestNamespace:
