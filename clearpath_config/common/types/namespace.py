@@ -75,6 +75,7 @@ class Namespace:
         # Must not contain any number of repeated underscores (_)
         if '__' in name:
             return False
+        return True
 
     @staticmethod
     def assert_valid(name: str) -> None:
