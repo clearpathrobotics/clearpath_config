@@ -18,3 +18,15 @@ cd .../clearpath_config
 python3 -m pytest
 ```
 > **PyTest** will automatically search for the suffix `_test` throughout the current directory and run the tests.
+
+## Generator Tests
+
+Changes to `clearpath_config` (e.g. adding or modifying test samples, config structure, or
+defaults) may affect the output of the Clearpath generators. The
+[clearpath_generator_tests](https://github.com/clearpathrobotics/clearpath_generator_tests)
+repository versions the expected generator output and validates it through CI.
+
+Before merging, ensure a corresponding branch with the **same name** exists in
+`clearpath_generator_tests` with regenerated samples. See the
+[Development Workflow](https://github.com/clearpathrobotics/clearpath_generator_tests#development-workflow)
+section of `clearpath_generator_tests` for the full process.
