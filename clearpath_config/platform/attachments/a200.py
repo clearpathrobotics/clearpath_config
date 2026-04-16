@@ -29,13 +29,13 @@
 from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.platform import Platform
+
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 from clearpath_config.platform.types.bumper import Bumper
 
 
 class A200TopPlate(BaseAttachment):
-    PLATFORM = Platform.A200
+    PLATFORM = 'a200'
     ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
     DEFAULT = 'default'
     LARGE = 'large'
@@ -56,7 +56,7 @@ class A200TopPlate(BaseAttachment):
 
 
 class A200Bumper(Bumper):
-    PLATFORM = Platform.A200
+    PLATFORM = 'a200'
     ATTACHMENT_MODEL = '%s.bumper' % PLATFORM
     EXTENSION = 0.0
     DEFAULT = 'default'
@@ -77,7 +77,7 @@ class A200Bumper(Bumper):
 
 
 class A200SensorArch(BaseAttachment):
-    PLATFORM = Platform.A200
+    PLATFORM = 'a200'
     ATTACHMENT_MODEL = '%s.sensor_arch' % PLATFORM
     ARCH_300 = 'sensor_arch_300'
     ARCH_510 = 'sensor_arch_510'
@@ -98,7 +98,7 @@ class A200SensorArch(BaseAttachment):
 
 
 class A200ObserverBackpack(BaseAttachment):
-    PLATFORM = Platform.A200
+    PLATFORM = 'a200'
     ATTACHMENT_MODEL = '%s.observer_backpack' % PLATFORM
     OBSERVER_BACKPACK = 'observer_backpack'
     MODELS = [OBSERVER_BACKPACK]
@@ -118,7 +118,7 @@ class A200ObserverBackpack(BaseAttachment):
 
 
 class A200Attachment(PlatformAttachment):
-    PLATFORM = Platform.A200
+    PLATFORM = 'a200'
     # Top Plates
     TOP_PLATE = A200TopPlate.ATTACHMENT_MODEL
     # Bumper

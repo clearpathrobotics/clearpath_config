@@ -27,12 +27,12 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from typing import List
 
-from clearpath_config.common.types.platform import Platform
+
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 
 
 class W200Generator(BaseAttachment):
-    PLATFORM = Platform.W200
+    PLATFORM = 'w200'
     ATTACHMENT_MODEL = '%s.generator' % PLATFORM
     DEFAULT = 'default'
     MODELS = [DEFAULT]
@@ -53,7 +53,7 @@ class W200Generator(BaseAttachment):
 
 
 class W200Bulkhead(BaseAttachment):
-    PLATFORM = Platform.W200
+    PLATFORM = 'w200'
     ATTACHMENT_MODEL = '%s.bulkhead' % PLATFORM
     DEFAULT = 'default'
     ARM_PLATE = 'arm_plate'
@@ -75,7 +75,7 @@ class W200Bulkhead(BaseAttachment):
 
 
 class W200ArmPlate(BaseAttachment):
-    PLATFORM = Platform.W200
+    PLATFORM = 'w200'
     ATTACHMENT_MODEL = '%s.arm_plate' % PLATFORM
     DEFAULT = 'default'
     MODELS = [DEFAULT]
@@ -97,7 +97,7 @@ class W200ArmPlate(BaseAttachment):
 
 # W200 Attachments
 class W200Attachment(PlatformAttachment):
-    PLATFORM = Platform.W200
+    PLATFORM = 'w200'
     # Generator
     GENERATOR = W200Generator.ATTACHMENT_MODEL
     # Bulkhead

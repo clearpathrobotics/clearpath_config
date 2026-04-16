@@ -29,13 +29,13 @@
 from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.platform import Platform
+
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 from clearpath_config.platform.types.bumper import Bumper
 
 
 class A300TopPlate(BaseAttachment):
-    PLATFORM = Platform.A300
+    PLATFORM = 'a300'
     ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
     DEFAULT = 'default'
     PACS = 'pacs'
@@ -55,7 +55,7 @@ class A300TopPlate(BaseAttachment):
 
 
 class A300Bumper(Bumper):
-    PLATFORM = Platform.A300
+    PLATFORM = 'a300'
     ATTACHMENT_MODEL = '%s.bumper' % PLATFORM
     EXTENSION = 0.0
     DEFAULT = 'default'
@@ -76,7 +76,7 @@ class A300Bumper(Bumper):
 
 
 class A300WirelessCharger(BaseAttachment):
-    PLATFORM = Platform.A300
+    PLATFORM = 'a300'
     ATTACHMENT_MODEL = f'{PLATFORM}.wireless_charger'
     DEFAULT = 'default'
     MODELS = [DEFAULT]
@@ -95,7 +95,7 @@ class A300WirelessCharger(BaseAttachment):
 
 
 class A300AmpEnclosure(BaseAttachment):
-    PLATFORM = Platform.A300
+    PLATFORM = 'a300'
     ATTACHMENT_MODEL = f'{PLATFORM}.amp_enclosure'
     AMP_ENCLOSURE = 'amp_enclosure'
     MODELS = [AMP_ENCLOSURE]
@@ -115,7 +115,7 @@ class A300AmpEnclosure(BaseAttachment):
 
 
 class A300AmpSensorArch(BaseAttachment):
-    PLATFORM = Platform.A300
+    PLATFORM = 'a300'
     ATTACHMENT_MODEL = f'{PLATFORM}.amp_sensor_arch'
     AMP_SENSOR_ARCH = 'amp_sensor_arch'
     MODELS = [AMP_SENSOR_ARCH]
@@ -135,7 +135,7 @@ class A300AmpSensorArch(BaseAttachment):
 
 
 class A300Spotlight(BaseAttachment):
-    PLATFORM = Platform.A300
+    PLATFORM = 'a300'
     ATTACHMENT_MODEL = f'{PLATFORM}.spotlight'
     SPOTLIGHT = 'spotlight'
     MODELS = [SPOTLIGHT]
@@ -155,7 +155,7 @@ class A300Spotlight(BaseAttachment):
 
 
 class A300Attachment(PlatformAttachment):
-    PLATFORM = Platform.A300
+    PLATFORM = 'a300'
     # Top Plates
     TOP_PLATE = A300TopPlate.ATTACHMENT_MODEL
     # Bumper

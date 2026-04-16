@@ -25,51 +25,15 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from typing import List
 
-from clearpath_config.common.types.accessory import Accessory
-
-from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
-
-
-class DD100TopPlate(BaseAttachment):
-    PLATFORM = 'dd100'
-    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
-    PACS = 'pacs'
-    MODELS = [PACS]
-    PARENT = 'default_mount'
-    HEIGHT = 0.1
-
-    def __init__(
-            self,
-            name: str = ATTACHMENT_MODEL,
-            model: str = PACS,
-            enabled: bool = BaseAttachment.ENABLED,
-            height: float = HEIGHT,
-            parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
-        self.height = height
-
-    def to_dict(self) -> dict:
-        d = super().to_dict()
-        d['height'] = self.height
-        return d
-
-    def from_dict(self, d: dict) -> None:
-        super().from_dict(d)
-        if 'height' in d:
-            self.height = d['height']
-
-
-# DD100 Attachments
-class DD100Attachment(PlatformAttachment):
-    PLATFORM = 'dd100'
-    # Top Plates
-    TOP_PLATE = DD100TopPlate.ATTACHMENT_MODEL
-
-    TYPES = {
-        TOP_PLATE: DD100TopPlate,
-    }
+# Import all concrete platform definitions so they auto-register
+from clearpath_config.platform.definitions.a200 import A200PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.a300 import A300PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.dd100 import DD100PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.dd150 import DD150PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.do100 import DO100PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.do150 import DO150PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.generic import GenericPlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.j100 import J100PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.r100 import R100PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.w200 import W200PlatformConfig  # noqa: F401

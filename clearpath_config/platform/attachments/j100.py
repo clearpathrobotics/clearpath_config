@@ -29,12 +29,12 @@
 from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.platform import Platform
+
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 
 
 class J100Fender(BaseAttachment):
-    PLATFORM = Platform.J100
+    PLATFORM = 'j100'
     ATTACHMENT_MODEL = '%s.fender' % PLATFORM
     DEFAULT = 'default'
     SENSOR = 'sensor'
@@ -54,7 +54,7 @@ class J100Fender(BaseAttachment):
 
 
 class J100TopPlate(BaseAttachment):
-    PLATFORM = Platform.J100
+    PLATFORM = 'j100'
     ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
     ARK_ENCLOSURE = 'ark_enclosure'
     DEFAULT = ARK_ENCLOSURE
@@ -75,7 +75,7 @@ class J100TopPlate(BaseAttachment):
 
 # J100 Jackal Attachments
 class J100Attachment(PlatformAttachment):
-    PLATFORM = Platform.J100
+    PLATFORM = 'j100'
     TOP_PLATE = J100TopPlate.ATTACHMENT_MODEL
     FENDER = J100Fender.ATTACHMENT_MODEL
     TYPES = {

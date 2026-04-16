@@ -25,51 +25,34 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from typing import List
-
-from clearpath_config.common.types.accessory import Accessory
-
-from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
-
-
-class DD100TopPlate(BaseAttachment):
-    PLATFORM = 'dd100'
-    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
-    PACS = 'pacs'
-    MODELS = [PACS]
-    PARENT = 'default_mount'
-    HEIGHT = 0.1
-
-    def __init__(
-            self,
-            name: str = ATTACHMENT_MODEL,
-            model: str = PACS,
-            enabled: bool = BaseAttachment.ENABLED,
-            height: float = HEIGHT,
-            parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
-        self.height = height
-
-    def to_dict(self) -> dict:
-        d = super().to_dict()
-        d['height'] = self.height
-        return d
-
-    def from_dict(self, d: dict) -> None:
-        super().from_dict(d)
-        if 'height' in d:
-            self.height = d['height']
+from clearpath_config.common.types.platform import (
+    IndexingProfile,
+    PACSProfile,
+    Platform,
+)
+from clearpath_config.platform.attachments.dd150 import DD150Attachment
+from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
+from clearpath_config.platform.platform import BasePlatformConfig
 
 
-# DD100 Attachments
-class DD100Attachment(PlatformAttachment):
-    PLATFORM = 'dd100'
-    # Top Plates
-    TOP_PLATE = DD100TopPlate.ATTACHMENT_MODEL
-
-    TYPES = {
-        TOP_PLATE: DD100TopPlate,
+class DD150PlatformConfig(BasePlatformConfig):
+    NAME = 'dd150'
+    PACS = PACSProfile(rows=100, columns=100)
+    INDEXING = IndexingProfile(imu=1)
+    VALID_BATTERIES = {
+        'TLV1222': ['S1P1'],
+        'RB20': ['S1P1'],
     }
+    VALID_DRIVETRAIN = {
+        'control': ['diff_fwd'],
+        'wheels': {
+            'front': ['indoor'],
+            'rear': ['caster'],
+        },
+    }
+    DEFAULT_CAN_ADAPTERS = [CANAdapterConfig.VCAN0_DEFAULT]
+    DEFAULT_CAN_BRIDGES = CANBridgeConfig.SINGLE_VCAN_DEFAULT
+    ATTACHMENT_CLASS = DD150Attachment
+
+
+Platform.register(DD150PlatformConfig)

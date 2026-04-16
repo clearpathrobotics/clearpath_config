@@ -28,13 +28,13 @@
 from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.platform import Platform
+
 from clearpath_config.platform.attachments.dd100 import DD100TopPlate
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 
 
 class DD150TopPlate(DD100TopPlate):
-    PLATFORM = Platform.DD150
+    PLATFORM = 'dd150'
     ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
 
     def __init__(
@@ -52,7 +52,7 @@ class DD150TopPlate(DD100TopPlate):
 
 # DD150 Attachments
 class DD150Attachment(PlatformAttachment):
-    PLATFORM = Platform.DD150
+    PLATFORM = 'dd150'
     # Top Plates
     TOP_PLATE = DD150TopPlate.ATTACHMENT_MODEL
 

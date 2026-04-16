@@ -28,12 +28,12 @@
 from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.platform import Platform
+
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 
 
 class R100FAMS(BaseAttachment):
-    PLATFORM = Platform.R100
+    PLATFORM = 'r100'
     ATTACHMENT_MODEL = '%s.fams' % PLATFORM
     DEFAULT = 'default'
     MODELS = [DEFAULT]
@@ -66,7 +66,7 @@ class R100FAMS(BaseAttachment):
 
 
 class R100HAMS(BaseAttachment):
-    PLATFORM = Platform.R100
+    PLATFORM = 'r100'
     ATTACHMENT_MODEL = '%s.hams' % PLATFORM
     DEFAULT = 'default'
     MODELS = [DEFAULT]
@@ -105,7 +105,7 @@ class R100HAMS(BaseAttachment):
 
 
 class R100Tower(BaseAttachment):
-    PLATFORM = Platform.R100
+    PLATFORM = 'r100'
     ATTACHMENT_MODEL = '%s.tower' % PLATFORM
     DEFAULT = 'default'
     MODELS = [DEFAULT]
@@ -143,7 +143,7 @@ class R100Tower(BaseAttachment):
 
 # R100 Attachments
 class R100Attachment(PlatformAttachment):
-    PLATFORM = Platform.R100
+    PLATFORM = 'r100'
     # Arm Mount
     HAMS = R100HAMS.ATTACHMENT_MODEL
     FAMS = R100FAMS.ATTACHMENT_MODEL

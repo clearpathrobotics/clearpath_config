@@ -26,47 +26,30 @@
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.platform import Platform
-from clearpath_config.platform.attachments.a200 import A200Attachment
-from clearpath_config.platform.attachments.a300 import A300Attachment
 from clearpath_config.platform.attachments.config import AttachmentsConfig
-from clearpath_config.platform.attachments.dd100 import DD100Attachment
-from clearpath_config.platform.attachments.dd150 import DD150Attachment
-from clearpath_config.platform.attachments.do100 import DO100Attachment
-from clearpath_config.platform.attachments.do150 import DO150Attachment
-from clearpath_config.platform.attachments.generic import GENERICAttachment
-from clearpath_config.platform.attachments.j100 import J100Attachment
-from clearpath_config.platform.attachments.r100 import R100Attachment
-from clearpath_config.platform.attachments.w200 import W200Attachment
 from clearpath_config.platform.types.attachment import BaseAttachment
 
 
 class AttachmentsConfigMux:
-    PLATFORM = {
-        Platform.A200: AttachmentsConfig(A200Attachment),
-        Platform.A300: AttachmentsConfig(A300Attachment),
-        Platform.DD100: AttachmentsConfig(DD100Attachment),
-        Platform.DO100: AttachmentsConfig(DO100Attachment),
-        Platform.DD150: AttachmentsConfig(DD150Attachment),
-        Platform.DO150: AttachmentsConfig(DO150Attachment),
-        Platform.GENERIC: AttachmentsConfig(GENERICAttachment),
-        Platform.J100: AttachmentsConfig(J100Attachment),
-        Platform.W200: AttachmentsConfig(W200Attachment),
-        Platform.R100: AttachmentsConfig(R100Attachment),
-    }
 
     def __new__(cls, platform: str, attachments: dict = None) -> AttachmentsConfig:
-        # Check Platform is Supported
-        if platform not in cls.PLATFORM:
-            raise ValueError(f'Platform "{platform}" must be one of "{cls.PLATFORM.keys()}"')
+        # Look up the platform's attachment class from the registry
+        platform_cls = Platform.get(platform)
+        attachment_cls = platform_cls.ATTACHMENT_CLASS
+        if attachment_cls is None:
+            return AttachmentsConfig(BaseAttachment)
         if not attachments:
-            return cls.PLATFORM[platform]
+            return AttachmentsConfig(attachment_cls)
         # Pre-Process Entries
         attachments = AttachmentsConfigMux.preprocess(platform, attachments)
-        # Add All Attachments
+        # Add All Attachments from all registered platforms
         attachments_config = AttachmentsConfig(BaseAttachment)
-        for p in cls.PLATFORM:
-            cls.PLATFORM[p].config = attachments
-            attachments_config += cls.PLATFORM[p]
+        for name in Platform.all_names():
+            pcls = Platform.get(name)
+            if pcls.ATTACHMENT_CLASS is not None:
+                ac = AttachmentsConfig(pcls.ATTACHMENT_CLASS)
+                ac.config = attachments
+                attachments_config += ac
         return attachments_config
 
     @staticmethod

@@ -25,51 +25,33 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-from typing import List
-
-from clearpath_config.common.types.accessory import Accessory
-
-from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
-
-
-class DD100TopPlate(BaseAttachment):
-    PLATFORM = 'dd100'
-    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
-    PACS = 'pacs'
-    MODELS = [PACS]
-    PARENT = 'default_mount'
-    HEIGHT = 0.1
-
-    def __init__(
-            self,
-            name: str = ATTACHMENT_MODEL,
-            model: str = PACS,
-            enabled: bool = BaseAttachment.ENABLED,
-            height: float = HEIGHT,
-            parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
-        self.height = height
-
-    def to_dict(self) -> dict:
-        d = super().to_dict()
-        d['height'] = self.height
-        return d
-
-    def from_dict(self, d: dict) -> None:
-        super().from_dict(d)
-        if 'height' in d:
-            self.height = d['height']
+from clearpath_config.common.types.platform import (
+    IndexingProfile,
+    PACSProfile,
+    Platform,
+)
+from clearpath_config.platform.attachments.a300 import A300Attachment
+from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
+from clearpath_config.platform.platform import BasePlatformConfig
 
 
-# DD100 Attachments
-class DD100Attachment(PlatformAttachment):
-    PLATFORM = 'dd100'
-    # Top Plates
-    TOP_PLATE = DD100TopPlate.ATTACHMENT_MODEL
-
-    TYPES = {
-        TOP_PLATE: DD100TopPlate,
+class A300PlatformConfig(BasePlatformConfig):
+    NAME = 'a300'
+    PACS = PACSProfile(rows=9, columns=5)
+    INDEXING = IndexingProfile()
+    VALID_BATTERIES = {
+        'S_24V20_U1': ['S1P2', 'S1P4', 'S1P6'],
     }
+    VALID_DRIVETRAIN = {
+        'control': ['diff_4wd', 'diff_fwd', 'diff_rwd', 'omni_4wd'],
+        'wheels': {
+            'front': ['outdoor', 'caster', 'mecanum'],
+            'rear': ['outdoor', 'caster', 'mecanum'],
+        },
+    }
+    DEFAULT_CAN_ADAPTERS = [CANAdapterConfig.VCAN0_DEFAULT, CANAdapterConfig.VCAN1_DEFAULT]
+    DEFAULT_CAN_BRIDGES = CANBridgeConfig.A300_DEFAULT
+    ATTACHMENT_CLASS = A300Attachment
+
+
+Platform.register(A300PlatformConfig)
