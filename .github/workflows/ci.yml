@@ -68,4 +68,4 @@ jobs:
         id: action_ros_ci_step
         with:
           target-ros2-distro: jazzy
-          vcs-repo-file-url: update_downstream.repos
+          vcs-repo-file-url: updated_downstream.repos
