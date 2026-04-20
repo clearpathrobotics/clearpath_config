@@ -240,6 +240,9 @@ class UniversalRobots(BaseArm):
     MOCK_SENSOR_COMMANDS = 'mock_sensor_commands'
     SIM_GAZEBO = 'sim_gazebo'
     SIM_IGNITION = 'sim_ignition'
+    # Controller Parameters
+    GPIO_CONTROLLER = 'gpio_controller'
+    DEFAULT_GPIO_CONTROLLER = False
     # UR Type
     UR3 = 'ur3'
     UR3E = 'ur3e'
@@ -302,6 +305,7 @@ class UniversalRobots(BaseArm):
             ip: str = BaseArm.DEFAULT_IP_ADDRESS,
             port: int = BaseArm.DEFAULT_IP_PORT,
             ur_type: str = DEFAULT_UR_TYPE,
+            gpio_controller: bool = DEFAULT_GPIO_CONTROLLER,
             ros_parameters: dict = BaseManipulator.ROS_PARAMETERS,
             ros_parameters_template: dict = BaseManipulator.ROS_PARAMETERS_TEMPLATE,
             parent: str = Accessory.PARENT,
@@ -311,11 +315,19 @@ class UniversalRobots(BaseArm):
         super().__init__(
             idx, name, ip, port, ros_parameters, ros_parameters_template, parent, xyz, rpy)
         self.ur_type = ur_type
+        self.gpio_controller = gpio_controller
 
     def from_dict(self, d: dict) -> None:
         super().from_dict(d)
         if self.UR_TYPE in d:
             self.ur_type = d[self.UR_TYPE]
+        if self.GPIO_CONTROLLER in d:
+            self.gpio_controller = d[self.GPIO_CONTROLLER]
+
+    def to_dict(self) -> dict:
+        d = super().to_dict()
+        d[self.GPIO_CONTROLLER] = self.gpio_controller
+        return d
 
     @property
     def ur_type(self) -> str:
@@ -329,6 +341,14 @@ class UniversalRobots(BaseArm):
             )
 
         self._ur_type = value
+
+    @property
+    def gpio_controller(self) -> bool:
+        return self._gpio_controller
+
+    @gpio_controller.setter
+    def gpio_controller(self, value: bool) -> None:
+        self._gpio_controller = bool(value)
 
 
 class Franka(BaseArm):
