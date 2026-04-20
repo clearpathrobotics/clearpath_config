@@ -25,6 +25,8 @@ links:
       xyz: [0.0, -1.25, 0.0]
     - name: lidar3d_row
       xyz: [0.0, -1.5, 0.0]
+    - name: ptu_row
+      xyz: [0.0, -1.75, 0.0]
 sensors:
   camera:
     # Axis Camera
@@ -549,3 +551,30 @@ sensors:
           model: VLP16
         velodyne_transform_node:
           model: VLP16
+  ptu:
+    # FLIR PTU-5
+    - model: flir_ptu
+      urdf_enabled: true
+      launch_enabled: true
+      parent: ptu_row_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ptu_model: ptu5
+      ros_parameters:
+        ptu_driver:
+          connection_type: tcp
+          ip_addr: 192.168.131.10
+          tcp_port: 4000
+    # FLIR PTU D46
+    - model: flir_ptu
+      urdf_enabled: true
+      launch_enabled: true
+      parent: ptu_row_link
+      xyz: [0.0, 0.0, 0.25]
+      rpy: [0.0, 0.0, 0.0]
+      ptu_model: d46
+      ros_parameters:
+        ptu_driver:
+          connection_type: tcp
+          ip_addr: 192.168.131.11
+          tcp_port: 4000

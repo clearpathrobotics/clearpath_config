@@ -32,7 +32,6 @@ from clearpath_config.common.types.list import OrderedListConfig
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.mounts.types.disk import Disk
 from clearpath_config.mounts.types.fath_pivot import FathPivot
-from clearpath_config.mounts.types.flir_ptu import FlirPTU
 from clearpath_config.mounts.types.mount import BaseMount
 from clearpath_config.mounts.types.pacs import PACS
 from clearpath_config.mounts.types.post import Post
@@ -41,13 +40,11 @@ from clearpath_config.mounts.types.sick import SICKStand
 
 class Mount():
     FATH_PIVOT = FathPivot.MOUNT_MODEL
-    FLIR_PTU = FlirPTU.MOUNT_MODEL
     PACS_RISER = PACS.Riser.MOUNT_MODEL
     PACS_BRACKET = PACS.Bracket.MOUNT_MODEL
 
     MODEL = {
         FATH_PIVOT: FathPivot,
-        FLIR_PTU: FlirPTU,
         PACS_RISER: PACS.Riser,
         PACS_BRACKET: PACS.Bracket
     }

@@ -45,6 +45,7 @@ class IndexingProfile:
             lidar2d: int = 0,
             lidar3d: int = 0,
             ins: int = 0,
+            ptu: int = 0,
             ) -> None:
         self.camera = camera
         self.gps = gps
@@ -52,6 +53,7 @@ class IndexingProfile:
         self.lidar2d = lidar2d
         self.lidar3d = lidar3d
         self.ins = ins
+        self.ptu = ptu
 
 
 # Platform
