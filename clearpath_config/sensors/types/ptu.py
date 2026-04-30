@@ -108,6 +108,9 @@ class FlirPTU(BasePTU):
         TCP_PORT = 'ptu_driver.tcp_port'
         IP_ADDRESS = 'ptu_driver.ip_addr'
         LIMITS_ENABLED = 'ptu_driver.limits_enabled'
+        JOINT_NAME_PREFIX = 'ptu_driver.joint_name_prefix'
+
+    JOINT_NAME_PREFIX = 'ptu_'
 
     def __init__(
             self,
@@ -128,6 +131,8 @@ class FlirPTU(BasePTU):
             xyz: List[float] = Accessory.XYZ,
             rpy: List[float] = Accessory.RPY,
             ) -> None:
+        # Joint name prefix
+        self.joint_name_prefix = self.JOINT_NAME_PREFIX
         # Hardware model
         self.ptu_model = ptu_model
         # Connection type
@@ -147,6 +152,7 @@ class FlirPTU(BasePTU):
             self.ROS_PARAMETER_KEYS.TCP_PORT: FlirPTU.tcp_port,
             self.ROS_PARAMETER_KEYS.IP_ADDRESS: FlirPTU.ip,
             self.ROS_PARAMETER_KEYS.LIMITS_ENABLED: FlirPTU.limits_enabled,
+            self.ROS_PARAMETER_KEYS.JOINT_NAME_PREFIX: FlirPTU.joint_name_prefix,
         }
         ros_parameters_template = extend_flat_dict(template, ros_parameters_template)
         super().__init__(
@@ -233,3 +239,19 @@ class FlirPTU(BasePTU):
     @limits_enabled.setter
     def limits_enabled(self, value: bool) -> None:
         self._limits_enabled = bool(value)
+
+    @classmethod
+    def get_joint_name_prefix_from_idx(cls, idx: int) -> str:
+        return f'ptu_{idx}_'
+
+    def set_idx(self, idx: int) -> None:
+        super().set_idx(idx)
+        self.joint_name_prefix = self.get_joint_name_prefix_from_idx(idx)
+
+    @property
+    def joint_name_prefix(self) -> str:
+        return self._joint_name_prefix
+
+    @joint_name_prefix.setter
+    def joint_name_prefix(self, prefix: str) -> None:
+        self._joint_name_prefix = prefix
