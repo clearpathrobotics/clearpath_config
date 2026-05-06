@@ -74,6 +74,10 @@ from clearpath_config.sensors.types.lidars_3d import (
     SeyondLidar,
     VelodyneLidar,
 )
+from clearpath_config.sensors.types.ptu import (
+    BasePTU,
+    FlirPTU,
+)
 from clearpath_config.sensors.types.sensor import BaseSensor
 
 
@@ -223,12 +227,30 @@ class INS():
         return cls.MODEL[model]()
 
 
+class PanTiltUnit():
+    FLIR_PTU = FlirPTU.SENSOR_MODEL
+
+    MODEL = {
+        FLIR_PTU: FlirPTU,
+    }
+
+    @classmethod
+    def assert_model(cls, model: str) -> None:
+        if model not in cls.MODEL:
+            raise ValueError(f'PTU model "{model}" must be one of "{cls.MODEL.keys()}"')
+
+    def __new__(cls, model: str) -> BasePTU:
+        cls.assert_model(model)
+        return cls.MODEL[model]()
+
+
 class Sensor():
     CAMERA = BaseCamera.SENSOR_TYPE
     LIDAR2D = BaseLidar2D.SENSOR_TYPE
     LIDAR3D = BaseLidar3D.SENSOR_TYPE
     IMU = BaseIMU.SENSOR_TYPE
     GPS = BaseGPS.SENSOR_TYPE
+    PTU = BasePTU.SENSOR_TYPE
 
     TYPE = {
         CAMERA: Camera,
@@ -236,6 +258,7 @@ class Sensor():
         LIDAR3D: Lidar3D,
         IMU: InertialMeasurementUnit,
         GPS: GlobalPositioningSystem,
+        PTU: PanTiltUnit,
     }
 
     @classmethod
@@ -277,6 +300,7 @@ class SensorConfig(BaseConfig):
     LIDAR2D = BaseLidar2D.SENSOR_TYPE
     LIDAR3D = BaseLidar3D.SENSOR_TYPE
     INS = BaseINS.SENSOR_TYPE
+    PTU = BasePTU.SENSOR_TYPE
 
     TEMPLATE = {
         SENSORS: {
@@ -287,6 +311,7 @@ class SensorConfig(BaseConfig):
             LIDAR2D: LIDAR2D,
             LIDAR3D: LIDAR3D,
             INS: INS,
+            PTU: PTU,
         }
     }
 
@@ -300,6 +325,7 @@ class SensorConfig(BaseConfig):
         LIDAR2D: [],
         LIDAR3D: [],
         INS: [],
+        PTU: [],
     }
 
     def __init__(
@@ -312,6 +338,7 @@ class SensorConfig(BaseConfig):
             lidar2d: List[BaseLidar2D] = DEFAULTS[LIDAR2D],
             lidar3d: List[BaseLidar3D] = DEFAULTS[LIDAR3D],
             ins: List[BaseINS] = DEFAULTS[INS],
+            ptu: List[BasePTU] = DEFAULTS[PTU],
             ) -> None:
         # List Initialization
         self._camera = SensorListConfig()
@@ -321,6 +348,7 @@ class SensorConfig(BaseConfig):
         self._lidar2d = SensorListConfig()
         self._lidar3d = SensorListConfig()
         self._ins = SensorListConfig()
+        self._ptu = SensorListConfig()
         # Initialization
         self.camera = camera
         self.charger = charger
@@ -329,6 +357,7 @@ class SensorConfig(BaseConfig):
         self.lidar2d = lidar2d
         self.lidar3d = lidar3d
         self.ins = ins
+        self.ptu = ptu
         # Template
         template = {
             self.KEYS[self.CAMERA]: SensorConfig.camera,
@@ -338,6 +367,7 @@ class SensorConfig(BaseConfig):
             self.KEYS[self.LIDAR2D]: SensorConfig.lidar2d,
             self.KEYS[self.LIDAR3D]: SensorConfig.lidar3d,
             self.KEYS[self.INS]: SensorConfig.ins,
+            self.KEYS[self.PTU]: SensorConfig.ptu,
         }
         super().__init__(template, config, self.SENSORS)
 
@@ -351,6 +381,7 @@ class SensorConfig(BaseConfig):
             self._lidar2d.set_index_offset(index.lidar2d)
             self._lidar3d.set_index_offset(index.lidar3d)
             self._ins.set_index_offset(index.ins)
+            self._ptu.set_index_offset(index.ptu)
 
     @property
     def camera(self) -> OrderedListConfig:
@@ -520,6 +551,30 @@ class SensorConfig(BaseConfig):
             sensor_list.append(sensor)
         self._ins.set_all(sensor_list)
 
+    @property
+    def ptu(self) -> OrderedListConfig:
+        self.set_config_param(
+            key=self.KEYS[self.PTU],
+            value=self._ptu.to_dict()
+        )
+        return self._ptu
+
+    @ptu.setter
+    def ptu(self, value: List[dict]) -> None:
+        if not isinstance(value, list):
+            raise TypeError(f'PTU must be list of "dict". Got {value}')
+        for d in value:
+            if not isinstance(d, dict):
+                raise TypeError(f'PTU {d} must be of type "dict"')
+            if 'model' not in d:
+                raise ValueError(f'PTU {d} does not have a "model" parameter')
+        sensor_list = []
+        for d in value:
+            sensor = PanTiltUnit(d['model'])
+            sensor.from_dict(d)
+            sensor_list.append(sensor)
+        self._ptu.set_all(sensor_list)
+
     # Get All Sensors
     def get_all_sensors(self) -> List[BaseSensor]:
         sensors = []
@@ -537,6 +592,8 @@ class SensorConfig(BaseConfig):
         sensors.extend(self.get_all_gps())
         # INS
         sensors.extend(self.get_all_ins())
+        # PTU
+        sensors.extend(self.get_all_ptu())
         return sensors
 
     # Lidar2D: Add Lidar2D by Object or Common Lidar2D Parameters
@@ -1140,3 +1197,32 @@ class SensorConfig(BaseConfig):
     # INS: Set All INS Objects
     def set_all_ins(self, all_ins: List[BaseINS]) -> None:
         self._ins.set_all(all_ins)
+
+    # PTU: Remove PTU by passing object or index
+    def remove_ptu(self, ptu: BasePTU | int) -> None:
+        self._ptu.remove(ptu)
+
+    # PTU: Get Single Object
+    def get_ptu(self, idx: int) -> BasePTU:
+        return self._ptu.get(idx)
+
+    # PTU: Get All Objects
+    def get_all_ptu(self) -> List[BasePTU]:
+        return self._ptu.get_all()
+
+    # PTU: Get All Objects of a Specified Model
+    def get_all_ptu_by_model(self, model: str) -> List[BasePTU]:
+        PanTiltUnit.assert_model(model)
+        all_model_ptu = []
+        for ptu in self.get_all_ptu():
+            if ptu.SENSOR_MODEL == model:
+                all_model_ptu.append(ptu)
+        return all_model_ptu
+
+    # PTU: Set PTU Object
+    def set_ptu(self, ptu: BasePTU) -> None:
+        self._ptu.set(ptu)
+
+    # PTU: Set All PTU Objects
+    def set_all_ptu(self, all_ptu: List[BasePTU]) -> None:
+        self._ptu.set_all(all_ptu)
