@@ -31,7 +31,9 @@ from clearpath_config.common.types.platform import (
     Platform,
 )
 from clearpath_config.platform.attachments.dd100 import DD100Attachment
+from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
 
 
@@ -40,14 +42,14 @@ class DD100PlatformConfig(BasePlatformConfig):
     PACS = PACSProfile(rows=100, columns=100)
     INDEXING = IndexingProfile(imu=1)
     VALID_BATTERIES = {
-        'TLV1222': ['S1P1'],
-        'PH3054': ['S1P1'],
+        BatteryConfig.TLV1222: [BatteryConfig.S1P1],
+        BatteryConfig.PH3054: [BatteryConfig.S1P1],
     }
     VALID_DRIVETRAIN = {
-        'control': ['diff_fwd'],
-        'wheels': {
-            'front': ['indoor'],
-            'rear': ['caster'],
+        DrivetrainConfig.CONTROL: [DrivetrainConfig.DIFF_FWD],
+        DrivetrainConfig.WHEELS: {
+            DrivetrainConfig.FRONT: [DrivetrainConfig.INDOOR],
+            DrivetrainConfig.REAR: [DrivetrainConfig.CASTER],
         },
     }
     DEFAULT_CAN_ADAPTERS = [CANAdapterConfig.VCAN0_DEFAULT]

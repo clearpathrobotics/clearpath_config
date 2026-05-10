@@ -31,6 +31,8 @@ from clearpath_config.common.types.platform import (
     Platform,
 )
 from clearpath_config.platform.attachments.generic import GENERICAttachment
+from clearpath_config.platform.battery import BatteryConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
 
 
@@ -39,13 +41,24 @@ class GenericPlatformConfig(BasePlatformConfig):
     PACS = PACSProfile(rows=100, columns=100)
     INDEXING = IndexingProfile()
     VALID_BATTERIES = {
-        'unknown': ['unknown'],
+        BatteryConfig.UNKNOWN: [BatteryConfig.UNKNOWN],
     }
     VALID_DRIVETRAIN = {
-        'control': ['diff_fwd', 'diff_rwd', 'diff_4wd', 'omni_4wd'],
-        'wheels': {
-            'front': ['outdoor', 'indoor', 'mecanum', 'tracks', 'caster'],
-            'rear': ['outdoor', 'indoor', 'mecanum', 'tracks', 'caster'],
+        DrivetrainConfig.CONTROL: [
+            DrivetrainConfig.DIFF_FWD, DrivetrainConfig.DIFF_RWD,
+            DrivetrainConfig.DIFF_4WD, DrivetrainConfig.OMNI_4WD,
+        ],
+        DrivetrainConfig.WHEELS: {
+            DrivetrainConfig.FRONT: [
+                DrivetrainConfig.OUTDOOR, DrivetrainConfig.INDOOR,
+                DrivetrainConfig.MECANUM, DrivetrainConfig.TRACKS,
+                DrivetrainConfig.CASTER,
+            ],
+            DrivetrainConfig.REAR: [
+                DrivetrainConfig.OUTDOOR, DrivetrainConfig.INDOOR,
+                DrivetrainConfig.MECANUM, DrivetrainConfig.TRACKS,
+                DrivetrainConfig.CASTER,
+            ],
         },
     }
     DEFAULT_CAN_ADAPTERS = []

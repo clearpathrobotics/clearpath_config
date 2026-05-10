@@ -31,6 +31,8 @@ from clearpath_config.common.types.platform import (
     Platform,
 )
 from clearpath_config.platform.attachments.j100 import J100Attachment
+from clearpath_config.platform.battery import BatteryConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
 
 
@@ -39,15 +41,15 @@ class J100PlatformConfig(BasePlatformConfig):
     PACS = PACSProfile(rows=4, columns=2)
     INDEXING = IndexingProfile(gps=1, imu=1)
     VALID_BATTERIES = {
-        'HE2613': ['S1P1'],
-        'HE2411': ['S1P1'],
-        'HE2410': ['S1P1'],
+        BatteryConfig.HE2613: [BatteryConfig.S1P1],
+        BatteryConfig.HE2411: [BatteryConfig.S1P1],
+        BatteryConfig.HE2410: [BatteryConfig.S1P1],
     }
     VALID_DRIVETRAIN = {
-        'control': ['diff_4wd'],
-        'wheels': {
-            'front': ['outdoor'],
-            'rear': ['outdoor'],
+        DrivetrainConfig.CONTROL: [DrivetrainConfig.DIFF_4WD],
+        DrivetrainConfig.WHEELS: {
+            DrivetrainConfig.FRONT: [DrivetrainConfig.OUTDOOR],
+            DrivetrainConfig.REAR: [DrivetrainConfig.OUTDOOR],
         },
     }
     DEFAULT_CAN_ADAPTERS = []

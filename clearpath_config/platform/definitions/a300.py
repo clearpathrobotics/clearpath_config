@@ -31,7 +31,9 @@ from clearpath_config.common.types.platform import (
     Platform,
 )
 from clearpath_config.platform.attachments.a300 import A300Attachment
+from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
 
 
@@ -40,13 +42,16 @@ class A300PlatformConfig(BasePlatformConfig):
     PACS = PACSProfile(rows=9, columns=5)
     INDEXING = IndexingProfile()
     VALID_BATTERIES = {
-        'S_24V20_U1': ['S1P2', 'S1P4', 'S1P6'],
+        BatteryConfig.S_24V20_U1: [BatteryConfig.S1P2, BatteryConfig.S1P4, BatteryConfig.S1P6],
     }
     VALID_DRIVETRAIN = {
-        'control': ['diff_4wd', 'diff_fwd', 'diff_rwd', 'omni_4wd'],
-        'wheels': {
-            'front': ['outdoor', 'caster', 'mecanum'],
-            'rear': ['outdoor', 'caster', 'mecanum'],
+        DrivetrainConfig.CONTROL: [
+            DrivetrainConfig.DIFF_4WD, DrivetrainConfig.DIFF_FWD,
+            DrivetrainConfig.DIFF_RWD, DrivetrainConfig.OMNI_4WD,
+        ],
+        DrivetrainConfig.WHEELS: {
+            DrivetrainConfig.FRONT: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.CASTER, DrivetrainConfig.MECANUM],
+            DrivetrainConfig.REAR: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.CASTER, DrivetrainConfig.MECANUM],
         },
     }
     DEFAULT_CAN_ADAPTERS = [CANAdapterConfig.VCAN0_DEFAULT, CANAdapterConfig.VCAN1_DEFAULT]

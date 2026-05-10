@@ -31,6 +31,8 @@ from clearpath_config.common.types.platform import (
     Platform,
 )
 from clearpath_config.platform.attachments.w200 import W200Attachment
+from clearpath_config.platform.battery import BatteryConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
 
 
@@ -39,16 +41,16 @@ class W200PlatformConfig(BasePlatformConfig):
     PACS = PACSProfile(rows=100, columns=100)
     INDEXING = IndexingProfile(imu=1)
     VALID_BATTERIES = {
-        'U1_35': ['S4P3'],
-        'NEC_ALM12V35': ['S4P3'],
-        'VALENCE_U24_12XP': ['S4P1'],
-        'VALENCE_U27_12XP': ['S4P1'],
+        BatteryConfig.U1_35: [BatteryConfig.S4P3],
+        BatteryConfig.NEC_ALM12V35: [BatteryConfig.S4P3],
+        BatteryConfig.VALENCE_U24_12XP: [BatteryConfig.S4P1],
+        BatteryConfig.VALENCE_U27_12XP: [BatteryConfig.S4P1],
     }
     VALID_DRIVETRAIN = {
-        'control': ['diff_4wd'],
-        'wheels': {
-            'front': ['outdoor', 'tracks'],
-            'rear': ['outdoor', 'tracks'],
+        DrivetrainConfig.CONTROL: [DrivetrainConfig.DIFF_4WD],
+        DrivetrainConfig.WHEELS: {
+            DrivetrainConfig.FRONT: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.TRACKS],
+            DrivetrainConfig.REAR: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.TRACKS],
         },
     }
     DEFAULT_CAN_ADAPTERS = []

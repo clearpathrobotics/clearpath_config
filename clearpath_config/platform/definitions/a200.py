@@ -31,6 +31,8 @@ from clearpath_config.common.types.platform import (
     Platform,
 )
 from clearpath_config.platform.attachments.a200 import A200Attachment
+from clearpath_config.platform.battery import BatteryConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
 
 
@@ -39,16 +41,16 @@ class A200PlatformConfig(BasePlatformConfig):
     PACS = PACSProfile(rows=8, columns=7)
     INDEXING = IndexingProfile()
     VALID_BATTERIES = {
-        'ES20_12C': ['S2P1'],
-        'HE2613': ['S1P3', 'S1P4'],
-        'HE2411': ['S1P3', 'S1P4'],
-        'HE2410': ['S1P3', 'S1P4'],
+        BatteryConfig.ES20_12C: [BatteryConfig.S2P1],
+        BatteryConfig.HE2613: [BatteryConfig.S1P3, BatteryConfig.S1P4],
+        BatteryConfig.HE2411: [BatteryConfig.S1P3, BatteryConfig.S1P4],
+        BatteryConfig.HE2410: [BatteryConfig.S1P3, BatteryConfig.S1P4],
     }
     VALID_DRIVETRAIN = {
-        'control': ['diff_4wd'],
-        'wheels': {
-            'front': ['outdoor', 'indoor'],
-            'rear': ['outdoor', 'indoor'],
+        DrivetrainConfig.CONTROL: [DrivetrainConfig.DIFF_4WD],
+        DrivetrainConfig.WHEELS: {
+            DrivetrainConfig.FRONT: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.INDOOR],
+            DrivetrainConfig.REAR: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.INDOOR],
         },
     }
     DEFAULT_CAN_ADAPTERS = []
