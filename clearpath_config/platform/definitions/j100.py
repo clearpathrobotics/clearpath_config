@@ -56,7 +56,7 @@ class J100PlatformConfig(BasePlatformConfig):
     DEFAULT_CAN_BRIDGES = []
     DEFAULT_ATTACHMENTS = [
         {'name': 'front_fender', 'type': 'j100.fender'},
-        {'name': 'rear_fender', 'type': 'j100.fender', 'rpy': [0, 0, 3.1415]},
+        {'name': 'rear_fender', 'type': 'j100.fender', 'rpy': [0.0, 0.0, 3.1415]},
     ]
 
 
