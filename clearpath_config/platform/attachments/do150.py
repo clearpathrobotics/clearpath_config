@@ -34,12 +34,11 @@ from clearpath_config.platform.types.attachment import BaseAttachment, PlatformA
 
 
 class DO150TopPlate(DD100TopPlate):
-    PLATFORM = 'do150'
-    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
+    TYPE = 'top_plate'
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DD100TopPlate.PACS,
             enabled: bool = BaseAttachment.ENABLED,
             height: float = DD100TopPlate.HEIGHT,
@@ -54,7 +53,7 @@ class DO150TopPlate(DD100TopPlate):
 class DO150Attachment(PlatformAttachment):
     PLATFORM = 'do100'
     # Top Plates
-    TOP_PLATE = DO150TopPlate.ATTACHMENT_MODEL
+    TOP_PLATE = f'{PLATFORM}.{DO150TopPlate.TYPE}'
 
     TYPES = {
         TOP_PLATE: DO150TopPlate,

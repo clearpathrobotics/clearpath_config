@@ -103,8 +103,49 @@ class BasePlatformConfig(BaseConfig):
     }
     DEFAULT_CAN_ADAPTERS = []
     DEFAULT_CAN_BRIDGES = []
-    ATTACHMENT_CLASS = None  # set by concrete subclass
+    _ATTACHMENT_TYPES = {}
+    DEFAULT_ATTACHMENTS = []
     DESCRIPTION_PACKAGE = 'clearpath_platform_description'
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        # Each subclass gets its own attachment registry
+        cls._ATTACHMENT_TYPES = {}
+
+    @classmethod
+    def register_attachment(cls, attachment_cls):
+        """Register an attachment type for this platform."""
+        type_key = attachment_cls.TYPE
+        attachment_cls.ATTACHMENT_MODEL = f'{cls.NAME}.{type_key}'
+        cls._ATTACHMENT_TYPES[type_key] = attachment_cls
+
+    @classmethod
+    def get_attachment_class(cls, type_key: str):
+        """Look up an attachment class by type key."""
+        if '.' in type_key:
+            prefix, bare_key = type_key.split('.', 1)
+            if prefix != cls.NAME:
+                # Cross-platform lookup
+                from clearpath_config.common.types.platform import Platform
+                foreign_cls = Platform.get(prefix)
+                return foreign_cls.get_attachment_class(bare_key)
+            type_key = bare_key
+
+        if type_key not in cls._ATTACHMENT_TYPES:
+            raise KeyError(
+                f'{cls.NAME} has no attachment "{type_key}". '
+                f'Available: {list(cls._ATTACHMENT_TYPES.keys())}'
+            )
+        return cls._ATTACHMENT_TYPES[type_key]
+
+    @classmethod
+    def is_valid_attachment(cls, type_key: str) -> bool:
+        """Return True if type_key resolves to a registered attachment."""
+        try:
+            cls.get_attachment_class(type_key)
+            return True
+        except (KeyError, Exception):
+            return False
 
     PLATFORM = 'platform'
 

@@ -30,7 +30,6 @@ from clearpath_config.common.types.platform import (
     PACSProfile,
     Platform,
 )
-from clearpath_config.platform.attachments.generic import GENERICAttachment
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
@@ -63,7 +62,7 @@ class GenericPlatformConfig(BasePlatformConfig):
     }
     DEFAULT_CAN_ADAPTERS = []
     DEFAULT_CAN_BRIDGES = []
-    ATTACHMENT_CLASS = GENERICAttachment
+    DEFAULT_ATTACHMENTS = []
 
 
 Platform.register(GenericPlatformConfig)

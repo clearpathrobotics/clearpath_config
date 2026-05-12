@@ -30,7 +30,7 @@ from clearpath_config.common.types.platform import (
     PACSProfile,
     Platform,
 )
-from clearpath_config.platform.attachments.j100 import J100Attachment
+from clearpath_config.platform.attachments.j100 import J100Fender, J100TopPlate
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
@@ -54,7 +54,12 @@ class J100PlatformConfig(BasePlatformConfig):
     }
     DEFAULT_CAN_ADAPTERS = []
     DEFAULT_CAN_BRIDGES = []
-    ATTACHMENT_CLASS = J100Attachment
+    DEFAULT_ATTACHMENTS = [
+        {'name': 'front_fender', 'type': 'j100.fender'},
+        {'name': 'rear_fender', 'type': 'j100.fender', 'rpy': [0, 0, 3.1415]},
+    ]
 
 
 Platform.register(J100PlatformConfig)
+J100PlatformConfig.register_attachment(J100TopPlate)
+J100PlatformConfig.register_attachment(J100Fender)

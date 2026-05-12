@@ -30,7 +30,14 @@ from clearpath_config.common.types.platform import (
     PACSProfile,
     Platform,
 )
-from clearpath_config.platform.attachments.a300 import A300Attachment
+from clearpath_config.platform.attachments.a300 import (
+    A300AmpEnclosure,
+    A300AmpSensorArch,
+    A300Bumper,
+    A300Spotlight,
+    A300TopPlate,
+    A300WirelessCharger,
+)
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
 from clearpath_config.platform.drivetrain import DrivetrainConfig
@@ -50,13 +57,27 @@ class A300PlatformConfig(BasePlatformConfig):
             DrivetrainConfig.DIFF_RWD, DrivetrainConfig.OMNI_4WD,
         ],
         DrivetrainConfig.WHEELS: {
-            DrivetrainConfig.FRONT: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.CASTER, DrivetrainConfig.MECANUM],
-            DrivetrainConfig.REAR: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.CASTER, DrivetrainConfig.MECANUM],
+            DrivetrainConfig.FRONT: [DrivetrainConfig.OUTDOOR,
+                                     DrivetrainConfig.CASTER,
+                                     DrivetrainConfig.MECANUM],
+            DrivetrainConfig.REAR: [DrivetrainConfig.OUTDOOR,
+                                    DrivetrainConfig.CASTER,
+                                    DrivetrainConfig.MECANUM],
         },
     }
     DEFAULT_CAN_ADAPTERS = [CANAdapterConfig.VCAN0_DEFAULT, CANAdapterConfig.VCAN1_DEFAULT]
     DEFAULT_CAN_BRIDGES = CANBridgeConfig.A300_DEFAULT
-    ATTACHMENT_CLASS = A300Attachment
+    DEFAULT_ATTACHMENTS = [
+        {'name': 'front_bumper', 'type': 'a300.bumper', 'parent': 'front_bumper_mount'},
+        {'name': 'rear_bumper', 'type': 'a300.bumper', 'parent': 'rear_bumper_mount'},
+        {'name': 'top_plate', 'type': 'a300.top_plate'},
+    ]
 
 
 Platform.register(A300PlatformConfig)
+A300PlatformConfig.register_attachment(A300TopPlate)
+A300PlatformConfig.register_attachment(A300Bumper)
+A300PlatformConfig.register_attachment(A300WirelessCharger)
+A300PlatformConfig.register_attachment(A300AmpEnclosure)
+A300PlatformConfig.register_attachment(A300AmpSensorArch)
+A300PlatformConfig.register_attachment(A300Spotlight)

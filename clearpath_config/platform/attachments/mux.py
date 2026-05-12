@@ -27,39 +27,34 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.platform import Platform
 from clearpath_config.platform.attachments.config import AttachmentsConfig
-from clearpath_config.platform.types.attachment import BaseAttachment
 
 
 class AttachmentsConfigMux:
 
     def __new__(cls, platform: str, attachments: dict = None) -> AttachmentsConfig:
-        # Look up the platform's attachment class from the registry
         platform_cls = Platform.get(platform)
-        attachment_cls = platform_cls.ATTACHMENT_CLASS
-        if attachment_cls is None:
-            return AttachmentsConfig(BaseAttachment)
-        if not attachments:
-            return AttachmentsConfig(attachment_cls)
-        # Pre-Process Entries
+
+        # If attachments is left as empty list, do not load default attachments
+        if attachments is None:
+            # Use default attachments defined by the platform
+            attachments = [dict(a) for a in platform_cls.DEFAULT_ATTACHMENTS]
+
         attachments = AttachmentsConfigMux.preprocess(platform, attachments)
-        # Add All Attachments from all registered platforms
-        attachments_config = AttachmentsConfig(BaseAttachment)
-        for name in Platform.all_names():
-            pcls = Platform.get(name)
-            if pcls.ATTACHMENT_CLASS is not None:
-                ac = AttachmentsConfig(pcls.ATTACHMENT_CLASS)
-                ac.config = attachments
-                attachments_config += ac
-        return attachments_config
+
+        config = AttachmentsConfig(platform_cls)
+        config.config = attachments
+        return config
 
     @staticmethod
-    def preprocess(platform: str, attachments: dict):
-        for i, a in enumerate(attachments):
+    def preprocess(platform: str, attachments: list):
+        result = []
+        for a in attachments:
+            a = dict(a)
             if 'name' not in a:
                 raise ValueError(f'Attachment {a} is missing parameter "name"')
             if 'type' not in a:
                 raise ValueError(f'Attachment {a} is missing parameter "type"')
             if '.' not in a['type']:
                 a['type'] = f'{platform}.{a["type"]}'
-            attachments[i] = a
-        return attachments
+            result.append(a)
+        return result

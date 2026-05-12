@@ -30,7 +30,11 @@ from clearpath_config.common.types.platform import (
     PACSProfile,
     Platform,
 )
-from clearpath_config.platform.attachments.w200 import W200Attachment
+from clearpath_config.platform.attachments.w200 import (
+    W200ArmPlate,
+    W200Bulkhead,
+    W200Generator,
+)
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
@@ -55,7 +59,10 @@ class W200PlatformConfig(BasePlatformConfig):
     }
     DEFAULT_CAN_ADAPTERS = []
     DEFAULT_CAN_BRIDGES = []
-    ATTACHMENT_CLASS = W200Attachment
+    DEFAULT_ATTACHMENTS = []
 
 
 Platform.register(W200PlatformConfig)
+W200PlatformConfig.register_attachment(W200Generator)
+W200PlatformConfig.register_attachment(W200Bulkhead)
+W200PlatformConfig.register_attachment(W200ArmPlate)

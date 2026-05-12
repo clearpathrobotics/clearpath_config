@@ -30,7 +30,12 @@ from clearpath_config.common.types.platform import (
     PACSProfile,
     Platform,
 )
-from clearpath_config.platform.attachments.a200 import A200Attachment
+from clearpath_config.platform.attachments.a200 import (
+    A200Bumper,
+    A200ObserverBackpack,
+    A200SensorArch,
+    A200TopPlate,
+)
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.drivetrain import DrivetrainConfig
 from clearpath_config.platform.platform import BasePlatformConfig
@@ -55,7 +60,15 @@ class A200PlatformConfig(BasePlatformConfig):
     }
     DEFAULT_CAN_ADAPTERS = []
     DEFAULT_CAN_BRIDGES = []
-    ATTACHMENT_CLASS = A200Attachment
+    DEFAULT_ATTACHMENTS = [
+        {'name': 'front_bumper', 'type': 'a200.bumper', 'parent': 'front_bumper_mount'},
+        {'name': 'rear_bumper', 'type': 'a200.bumper', 'parent': 'rear_bumper_mount'},
+        {'name': 'top_plate', 'type': 'a200.top_plate'},
+    ]
 
 
 Platform.register(A200PlatformConfig)
+A200PlatformConfig.register_attachment(A200TopPlate)
+A200PlatformConfig.register_attachment(A200Bumper)
+A200PlatformConfig.register_attachment(A200SensorArch)
+A200PlatformConfig.register_attachment(A200ObserverBackpack)

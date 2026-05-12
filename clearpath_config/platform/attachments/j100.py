@@ -34,8 +34,7 @@ from clearpath_config.platform.types.attachment import BaseAttachment, PlatformA
 
 
 class J100Fender(BaseAttachment):
-    PLATFORM = 'j100'
-    ATTACHMENT_MODEL = '%s.fender' % PLATFORM
+    TYPE = 'fender'
     DEFAULT = 'default'
     SENSOR = 'sensor'
     MODELS = [DEFAULT, SENSOR]
@@ -43,7 +42,7 @@ class J100Fender(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -54,8 +53,7 @@ class J100Fender(BaseAttachment):
 
 
 class J100TopPlate(BaseAttachment):
-    PLATFORM = 'j100'
-    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
+    TYPE = 'top_plate'
     ARK_ENCLOSURE = 'ark_enclosure'
     DEFAULT = ARK_ENCLOSURE
     MODELS = [DEFAULT]
@@ -63,7 +61,7 @@ class J100TopPlate(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = Accessory.PARENT,
@@ -76,8 +74,8 @@ class J100TopPlate(BaseAttachment):
 # J100 Jackal Attachments
 class J100Attachment(PlatformAttachment):
     PLATFORM = 'j100'
-    TOP_PLATE = J100TopPlate.ATTACHMENT_MODEL
-    FENDER = J100Fender.ATTACHMENT_MODEL
+    TOP_PLATE = f'{PLATFORM}.{J100TopPlate.TYPE}'
+    FENDER = f'{PLATFORM}.{J100Fender.TYPE}'
     TYPES = {
         TOP_PLATE: J100TopPlate,
         FENDER: J100Fender,

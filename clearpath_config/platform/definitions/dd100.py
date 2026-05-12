@@ -30,7 +30,7 @@ from clearpath_config.common.types.platform import (
     PACSProfile,
     Platform,
 )
-from clearpath_config.platform.attachments.dd100 import DD100Attachment
+from clearpath_config.platform.attachments.dd100 import DD100TopPlate
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
 from clearpath_config.platform.drivetrain import DrivetrainConfig
@@ -54,7 +54,8 @@ class DD100PlatformConfig(BasePlatformConfig):
     }
     DEFAULT_CAN_ADAPTERS = [CANAdapterConfig.VCAN0_DEFAULT]
     DEFAULT_CAN_BRIDGES = CANBridgeConfig.SINGLE_VCAN_DEFAULT
-    ATTACHMENT_CLASS = DD100Attachment
+    DEFAULT_ATTACHMENTS = []
 
 
 Platform.register(DD100PlatformConfig)
+DD100PlatformConfig.register_attachment(DD100TopPlate)

@@ -32,8 +32,7 @@ from clearpath_config.platform.types.attachment import BaseAttachment, PlatformA
 
 
 class W200Generator(BaseAttachment):
-    PLATFORM = 'w200'
-    ATTACHMENT_MODEL = '%s.generator' % PLATFORM
+    TYPE = 'generator'
     DEFAULT = 'default'
     MODELS = [DEFAULT]
     PARENT = 'default_mount'
@@ -42,7 +41,7 @@ class W200Generator(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -53,8 +52,7 @@ class W200Generator(BaseAttachment):
 
 
 class W200Bulkhead(BaseAttachment):
-    PLATFORM = 'w200'
-    ATTACHMENT_MODEL = '%s.bulkhead' % PLATFORM
+    TYPE = 'bulkhead'
     DEFAULT = 'default'
     ARM_PLATE = 'arm_plate'
     MODELS = [DEFAULT, ARM_PLATE]
@@ -64,7 +62,7 @@ class W200Bulkhead(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -75,8 +73,7 @@ class W200Bulkhead(BaseAttachment):
 
 
 class W200ArmPlate(BaseAttachment):
-    PLATFORM = 'w200'
-    ATTACHMENT_MODEL = '%s.arm_plate' % PLATFORM
+    TYPE = 'arm_plate'
     DEFAULT = 'default'
     MODELS = [DEFAULT]
     PARENT = 'default_mount'
@@ -85,7 +82,7 @@ class W200ArmPlate(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -99,11 +96,11 @@ class W200ArmPlate(BaseAttachment):
 class W200Attachment(PlatformAttachment):
     PLATFORM = 'w200'
     # Generator
-    GENERATOR = W200Generator.ATTACHMENT_MODEL
+    GENERATOR = f'{PLATFORM}.{W200Generator.TYPE}'
     # Bulkhead
-    BULKHEAD = W200Bulkhead.ATTACHMENT_MODEL
+    BULKHEAD = f'{PLATFORM}.{W200Bulkhead.TYPE}'
     # ArmPlate
-    ARM_PLATE = W200ArmPlate.ATTACHMENT_MODEL
+    ARM_PLATE = f'{PLATFORM}.{W200ArmPlate.TYPE}'
 
     TYPES = {
         GENERATOR: W200Generator,

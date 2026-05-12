@@ -30,7 +30,7 @@ from clearpath_config.common.types.platform import (
     PACSProfile,
     Platform,
 )
-from clearpath_config.platform.attachments.do150 import DO150Attachment
+from clearpath_config.platform.attachments.do150 import DO150TopPlate
 from clearpath_config.platform.battery import BatteryConfig
 from clearpath_config.platform.can import CANAdapterConfig, CANBridgeConfig
 from clearpath_config.platform.drivetrain import DrivetrainConfig
@@ -54,7 +54,8 @@ class DO150PlatformConfig(BasePlatformConfig):
     }
     DEFAULT_CAN_ADAPTERS = [CANAdapterConfig.VCAN0_DEFAULT]
     DEFAULT_CAN_BRIDGES = CANBridgeConfig.SINGLE_VCAN_DEFAULT
-    ATTACHMENT_CLASS = DO150Attachment
+    DEFAULT_ATTACHMENTS = []
 
 
 Platform.register(DO150PlatformConfig)
+DO150PlatformConfig.register_attachment(DO150TopPlate)

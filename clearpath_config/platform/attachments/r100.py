@@ -33,8 +33,7 @@ from clearpath_config.platform.types.attachment import BaseAttachment, PlatformA
 
 
 class R100FAMS(BaseAttachment):
-    PLATFORM = 'r100'
-    ATTACHMENT_MODEL = '%s.fams' % PLATFORM
+    TYPE = 'fams'
     DEFAULT = 'default'
     MODELS = [DEFAULT]
     PARENT = 'default_mount'
@@ -42,7 +41,7 @@ class R100FAMS(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             table_height: float = TABLE_HEIGHT,
             enabled: bool = BaseAttachment.ENABLED,
@@ -66,8 +65,7 @@ class R100FAMS(BaseAttachment):
 
 
 class R100HAMS(BaseAttachment):
-    PLATFORM = 'r100'
-    ATTACHMENT_MODEL = '%s.hams' % PLATFORM
+    TYPE = 'hams'
     DEFAULT = 'default'
     MODELS = [DEFAULT]
     PARENT = 'default_mount'
@@ -76,7 +74,7 @@ class R100HAMS(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             table_height: float = TABLE_HEIGHT,
             mount_height: float = MOUNT_HEIGHT,
@@ -105,8 +103,7 @@ class R100HAMS(BaseAttachment):
 
 
 class R100Tower(BaseAttachment):
-    PLATFORM = 'r100'
-    ATTACHMENT_MODEL = '%s.tower' % PLATFORM
+    TYPE = 'tower'
     DEFAULT = 'default'
     MODELS = [DEFAULT]
     PARENT = 'default_mount'
@@ -115,7 +112,7 @@ class R100Tower(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -145,9 +142,9 @@ class R100Tower(BaseAttachment):
 class R100Attachment(PlatformAttachment):
     PLATFORM = 'r100'
     # Arm Mount
-    HAMS = R100HAMS.ATTACHMENT_MODEL
-    FAMS = R100FAMS.ATTACHMENT_MODEL
-    TOWER = R100Tower.ATTACHMENT_MODEL
+    HAMS = f'{PLATFORM}.{R100HAMS.TYPE}'
+    FAMS = f'{PLATFORM}.{R100FAMS.TYPE}'
+    TOWER = f'{PLATFORM}.{R100Tower.TYPE}'
 
     TYPES = {
         HAMS: R100HAMS,

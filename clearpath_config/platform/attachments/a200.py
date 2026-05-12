@@ -35,8 +35,7 @@ from clearpath_config.platform.types.bumper import Bumper
 
 
 class A200TopPlate(BaseAttachment):
-    PLATFORM = 'a200'
-    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
+    TYPE = 'top_plate'
     DEFAULT = 'default'
     LARGE = 'large'
     PACS = 'pacs'
@@ -45,7 +44,7 @@ class A200TopPlate(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -56,8 +55,7 @@ class A200TopPlate(BaseAttachment):
 
 
 class A200Bumper(Bumper):
-    PLATFORM = 'a200'
-    ATTACHMENT_MODEL = '%s.bumper' % PLATFORM
+    TYPE = 'bumper'
     EXTENSION = 0.0
     DEFAULT = 'default'
     MODELS = [DEFAULT]
@@ -65,7 +63,7 @@ class A200Bumper(Bumper):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             extension: float = EXTENSION,
@@ -77,8 +75,7 @@ class A200Bumper(Bumper):
 
 
 class A200SensorArch(BaseAttachment):
-    PLATFORM = 'a200'
-    ATTACHMENT_MODEL = '%s.sensor_arch' % PLATFORM
+    TYPE = 'sensor_arch'
     ARCH_300 = 'sensor_arch_300'
     ARCH_510 = 'sensor_arch_510'
     DEFAULT = ARCH_300
@@ -87,7 +84,7 @@ class A200SensorArch(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -98,8 +95,7 @@ class A200SensorArch(BaseAttachment):
 
 
 class A200ObserverBackpack(BaseAttachment):
-    PLATFORM = 'a200'
-    ATTACHMENT_MODEL = '%s.observer_backpack' % PLATFORM
+    TYPE = 'observer_backpack'
     OBSERVER_BACKPACK = 'observer_backpack'
     MODELS = [OBSERVER_BACKPACK]
     DEFAULT = OBSERVER_BACKPACK
@@ -107,7 +103,7 @@ class A200ObserverBackpack(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -120,13 +116,13 @@ class A200ObserverBackpack(BaseAttachment):
 class A200Attachment(PlatformAttachment):
     PLATFORM = 'a200'
     # Top Plates
-    TOP_PLATE = A200TopPlate.ATTACHMENT_MODEL
+    TOP_PLATE = f'{PLATFORM}.{A200TopPlate.TYPE}'
     # Bumper
-    BUMPER = A200Bumper.ATTACHMENT_MODEL
+    BUMPER = f'{PLATFORM}.{A200Bumper.TYPE}'
     # Archs
-    SENSOR_ARCH = A200SensorArch.ATTACHMENT_MODEL
+    SENSOR_ARCH = f'{PLATFORM}.{A200SensorArch.TYPE}'
     # Observer Backpack
-    OBSERVER_BACKPACK = A200ObserverBackpack.ATTACHMENT_MODEL
+    OBSERVER_BACKPACK = f'{PLATFORM}.{A200ObserverBackpack.TYPE}'
 
     TYPES = {
         TOP_PLATE: A200TopPlate,
