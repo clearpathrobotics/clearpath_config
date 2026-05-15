@@ -27,7 +27,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.package_path import PackagePath
-from clearpath_config.common.types.platform import Platform
+from clearpath_config.common.types.platform import (
+    IndexingProfile,
+    PACSProfile,
+)
 from clearpath_config.common.utils.dictionary import flip_dict
 from clearpath_config.platform.attachments.config import AttachmentsConfig
 from clearpath_config.platform.attachments.mux import AttachmentsConfigMux
@@ -84,7 +87,65 @@ class DescriptionPackagePath(PackagePath):
         self._parameters = value
 
 
-class PlatformConfig(BaseConfig):
+class BasePlatformConfig(BaseConfig):
+
+    # --- Platform-specific data (override in concrete subclasses) ---
+    NAME = 'generic'
+    PACS = PACSProfile(rows=100, columns=100)
+    INDEXING = IndexingProfile()
+    VALID_BATTERIES = {'unknown': ['unknown']}
+    VALID_DRIVETRAIN = {
+        'control': ['diff_fwd', 'diff_rwd', 'diff_4wd', 'omni_4wd'],
+        'wheels': {
+            'front': ['outdoor', 'indoor', 'mecanum', 'tracks', 'caster'],
+            'rear': ['outdoor', 'indoor', 'mecanum', 'tracks', 'caster'],
+        },
+    }
+    DEFAULT_CAN_ADAPTERS = []
+    DEFAULT_CAN_BRIDGES = []
+    _ATTACHMENT_TYPES = {}
+    DEFAULT_ATTACHMENTS = []
+    DESCRIPTION_PACKAGE = 'clearpath_platform_description'
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        # Each subclass gets its own attachment registry
+        cls._ATTACHMENT_TYPES = {}
+
+    @classmethod
+    def register_attachment(cls, attachment_cls):
+        """Register an attachment type for this platform."""
+        type_key = attachment_cls.TYPE
+        attachment_cls.ATTACHMENT_MODEL = f'{cls.NAME}.{type_key}'
+        cls._ATTACHMENT_TYPES[type_key] = attachment_cls
+
+    @classmethod
+    def get_attachment_class(cls, type_key: str):
+        """Look up an attachment class by type key."""
+        if '.' in type_key:
+            prefix, bare_key = type_key.split('.', 1)
+            if prefix != cls.NAME:
+                # Cross-platform lookup
+                from clearpath_config.common.types.platform import Platform
+                foreign_cls = Platform.get(prefix)
+                return foreign_cls.get_attachment_class(bare_key)
+            type_key = bare_key
+
+        if type_key not in cls._ATTACHMENT_TYPES:
+            raise KeyError(
+                f'{cls.NAME} has no attachment "{type_key}". '
+                f'Available: {list(cls._ATTACHMENT_TYPES.keys())}'
+            )
+        return cls._ATTACHMENT_TYPES[type_key]
+
+    @classmethod
+    def is_valid_attachment(cls, type_key: str) -> bool:
+        """Return True if type_key resolves to a registered attachment."""
+        try:
+            cls.get_attachment_class(type_key)
+            return True
+        except (KeyError, Exception):
+            return False
 
     PLATFORM = 'platform'
 
@@ -213,18 +274,18 @@ class PlatformConfig(BaseConfig):
 
         # Setter Template
         setters = {
-            self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
-            self.KEYS[self.ATTACHMENTS]: PlatformConfig.attachments,
-            self.KEYS[self.CAN_ADAPTERS]: PlatformConfig.can_adapters,
-            self.KEYS[self.CAN_BRIDGES]: PlatformConfig.can_bridges,
-            self.KEYS[self.BATTERY]: PlatformConfig.battery,
-            self.KEYS[self.EXTRAS]: PlatformConfig.extras,
-            self.KEYS[self.DRIVETRAIN]: PlatformConfig.drivetrain,
-            self.KEYS[self.MCU]: PlatformConfig.mcu,
-            self.KEYS[self.WIRELESS]: PlatformConfig.wireless,
-            self.KEYS[self.ENABLE_EKF]: PlatformConfig.enable_ekf,
-            self.KEYS[self.ENABLE_FOXGLOVE_BRIDGE]: PlatformConfig.enable_foxglove_bridge,
-            self.KEYS[self.ENABLE_WIRELESS_WATCHER]: PlatformConfig.enable_wireless_watcher
+            self.KEYS[self.CONTROLLER]: BasePlatformConfig.controller,
+            self.KEYS[self.ATTACHMENTS]: BasePlatformConfig.attachments,
+            self.KEYS[self.CAN_ADAPTERS]: BasePlatformConfig.can_adapters,
+            self.KEYS[self.CAN_BRIDGES]: BasePlatformConfig.can_bridges,
+            self.KEYS[self.BATTERY]: BasePlatformConfig.battery,
+            self.KEYS[self.EXTRAS]: BasePlatformConfig.extras,
+            self.KEYS[self.DRIVETRAIN]: BasePlatformConfig.drivetrain,
+            self.KEYS[self.MCU]: BasePlatformConfig.mcu,
+            self.KEYS[self.WIRELESS]: BasePlatformConfig.wireless,
+            self.KEYS[self.ENABLE_EKF]: BasePlatformConfig.enable_ekf,
+            self.KEYS[self.ENABLE_FOXGLOVE_BRIDGE]: BasePlatformConfig.enable_foxglove_bridge,
+            self.KEYS[self.ENABLE_WIRELESS_WATCHER]: BasePlatformConfig.enable_wireless_watcher
         }
         super().__init__(setters, config, self.PLATFORM)
 
@@ -236,15 +297,15 @@ class PlatformConfig(BaseConfig):
             # Reload extras
             self.extras.update(serial_number=serial_number)
             # Generic Robot Launch and URDF
-            if BaseConfig.get_platform_model() == Platform.GENERIC:
+            if BaseConfig.get_platform_model() == 'generic':
                 # Add to Template
                 template = self.template
                 if self.KEYS[self.DESCRIPTION] not in template:
-                    template[self.KEYS[self.DESCRIPTION]] = PlatformConfig.description
+                    template[self.KEYS[self.DESCRIPTION]] = BasePlatformConfig.description
                 if self.KEYS[self.LAUNCH] not in template:
-                    template[self.KEYS[self.LAUNCH]] = PlatformConfig.launch
+                    template[self.KEYS[self.LAUNCH]] = BasePlatformConfig.launch
                 if self.KEYS[self.CONTROL] not in template:
-                    template[self.KEYS[self.CONTROL]] = PlatformConfig.control
+                    template[self.KEYS[self.CONTROL]] = BasePlatformConfig.control
                 self.template = template
             else:
                 template = self.template

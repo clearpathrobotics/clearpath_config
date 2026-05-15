@@ -49,8 +49,8 @@ INVALID = {
 }
 
 VALID = {
-    SERIAL_NUMBER: ['cpr-%s-0001' % robot for robot in Platform.ALL] + [
-        '%s-0001' % robot for robot in Platform.ALL],
+    SERIAL_NUMBER: ['cpr-%s-0001' % robot for robot in Platform.all_names()] + [
+        '%s-0001' % robot for robot in Platform.all_names()],
     BUMPER_MODEL: Bumper.MODELS,
     BUMPER_EXTENSION:  [0, '12.3', 12.3],
 }

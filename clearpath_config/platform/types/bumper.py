@@ -32,14 +32,14 @@ from clearpath_config.platform.types.attachment import BaseAttachment
 
 
 class Bumper(BaseAttachment):
-    ATTACHMENT_MODEL = 'bumper'
+    TYPE = 'bumper'
     EXTENSION = 0.0
     DEFAULT = 'default'
     MODELS = [DEFAULT]
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             enabled: bool = BaseAttachment.ENABLED,
             model: str = DEFAULT,
             extension: float = EXTENSION,

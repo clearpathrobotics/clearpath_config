@@ -25,58 +25,41 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-# J100 Jackal Platform Configuration
-from typing import List
-
-from clearpath_config.common.types.accessory import Accessory
-
-from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
-
-
-class J100Fender(BaseAttachment):
-    TYPE = 'fender'
-    DEFAULT = 'default'
-    SENSOR = 'sensor'
-    MODELS = [DEFAULT, SENSOR]
-    PARENT = 'base_link'
-
-    def __init__(
-            self,
-            name: str = TYPE,
-            model: str = DEFAULT,
-            enabled: bool = BaseAttachment.ENABLED,
-            parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY,
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
+from clearpath_config.common.types.platform import (
+    IndexingProfile,
+    PACSProfile,
+    Platform,
+)
+from clearpath_config.platform.attachments.j100 import J100Fender, J100TopPlate
+from clearpath_config.platform.battery import BatteryConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
+from clearpath_config.platform.platform import BasePlatformConfig
 
 
-class J100TopPlate(BaseAttachment):
-    TYPE = 'top_plate'
-    ARK_ENCLOSURE = 'ark_enclosure'
-    DEFAULT = ARK_ENCLOSURE
-    MODELS = [DEFAULT]
-    PARENT = 'default_mount'
-
-    def __init__(
-            self,
-            name: str = TYPE,
-            model: str = DEFAULT,
-            enabled: bool = BaseAttachment.ENABLED,
-            parent: str = Accessory.PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY,
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
-
-
-# J100 Jackal Attachments
-class J100Attachment(PlatformAttachment):
-    PLATFORM = 'j100'
-    TOP_PLATE = f'{PLATFORM}.{J100TopPlate.TYPE}'
-    FENDER = f'{PLATFORM}.{J100Fender.TYPE}'
-    TYPES = {
-        TOP_PLATE: J100TopPlate,
-        FENDER: J100Fender,
+class J100PlatformConfig(BasePlatformConfig):
+    NAME = 'j100'
+    PACS = PACSProfile(rows=4, columns=2)
+    INDEXING = IndexingProfile(gps=1, imu=1)
+    VALID_BATTERIES = {
+        BatteryConfig.HE2613: [BatteryConfig.S1P1],
+        BatteryConfig.HE2411: [BatteryConfig.S1P1],
+        BatteryConfig.HE2410: [BatteryConfig.S1P1],
     }
+    VALID_DRIVETRAIN = {
+        DrivetrainConfig.CONTROL: [DrivetrainConfig.DIFF_4WD],
+        DrivetrainConfig.WHEELS: {
+            DrivetrainConfig.FRONT: [DrivetrainConfig.OUTDOOR],
+            DrivetrainConfig.REAR: [DrivetrainConfig.OUTDOOR],
+        },
+    }
+    DEFAULT_CAN_ADAPTERS = []
+    DEFAULT_CAN_BRIDGES = []
+    DEFAULT_ATTACHMENTS = [
+        {'name': 'front_fender', 'type': 'j100.fender'},
+        {'name': 'rear_fender', 'type': 'j100.fender', 'rpy': [0.0, 0.0, 3.1415]},
+    ]
+
+
+Platform.register(J100PlatformConfig)
+J100PlatformConfig.register_attachment(J100TopPlate)
+J100PlatformConfig.register_attachment(J100Fender)

@@ -28,18 +28,17 @@
 from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.platform import Platform
+
 from clearpath_config.platform.attachments.dd100 import DD100TopPlate
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 
 
 class DD150TopPlate(DD100TopPlate):
-    PLATFORM = Platform.DD150
-    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
+    TYPE = 'top_plate'
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DD100TopPlate.PACS,
             enabled: bool = BaseAttachment.ENABLED,
             height: float = DD100TopPlate.HEIGHT,
@@ -52,9 +51,9 @@ class DD150TopPlate(DD100TopPlate):
 
 # DD150 Attachments
 class DD150Attachment(PlatformAttachment):
-    PLATFORM = Platform.DD150
+    PLATFORM = 'dd150'
     # Top Plates
-    TOP_PLATE = DD150TopPlate.ATTACHMENT_MODEL
+    TOP_PLATE = f'{PLATFORM}.{DD150TopPlate.TYPE}'
 
     TYPES = {
         TOP_PLATE: DD150TopPlate,

@@ -32,7 +32,6 @@ from clearpath_config.common.types.exception import (
     UnsupportedAccessoryException,
     UnsupportedPlatformException,
 )
-from clearpath_config.common.types.platform import Platform
 from clearpath_config.tests.test_utils import assert_not_errors
 
 
@@ -78,10 +77,10 @@ class TestPlatformSamples:
             except AssertionError as ae:
                 errors.append('A200 sample failed to load: %s' % ae.args[0])
             else:
-                if cc.get_platform_model() != Platform.A200:
+                if cc.get_platform_model() != 'a200':
                     errors.append('Platform model does not match. %s =/= %s' % (
                         cc.get_platform_model(),
-                        Platform.A200
+                        'a200'
                     ))
         assert_not_errors(errors)
 
@@ -99,9 +98,9 @@ class TestPlatformSamples:
             except AssertionError as ae:
                 errors.append('J100 sample failed to load: %s' % ae.args[0])
             else:
-                if cc.get_platform_model() != Platform.J100:
+                if cc.get_platform_model() != 'j100':
                     errors.append('Platform model does not match. %s =/= %s' % (
                         cc.get_model(),
-                        Platform.J100
+                        'j100'
                     ))
         assert_not_errors(errors)

@@ -25,58 +25,44 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-# J100 Jackal Platform Configuration
-from typing import List
-
-from clearpath_config.common.types.accessory import Accessory
-
-from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
-
-
-class J100Fender(BaseAttachment):
-    TYPE = 'fender'
-    DEFAULT = 'default'
-    SENSOR = 'sensor'
-    MODELS = [DEFAULT, SENSOR]
-    PARENT = 'base_link'
-
-    def __init__(
-            self,
-            name: str = TYPE,
-            model: str = DEFAULT,
-            enabled: bool = BaseAttachment.ENABLED,
-            parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY,
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
+from clearpath_config.common.types.platform import (
+    IndexingProfile,
+    PACSProfile,
+    Platform,
+)
+from clearpath_config.platform.attachments.w200 import (
+    W200ArmPlate,
+    W200Bulkhead,
+    W200Generator,
+)
+from clearpath_config.platform.battery import BatteryConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
+from clearpath_config.platform.platform import BasePlatformConfig
 
 
-class J100TopPlate(BaseAttachment):
-    TYPE = 'top_plate'
-    ARK_ENCLOSURE = 'ark_enclosure'
-    DEFAULT = ARK_ENCLOSURE
-    MODELS = [DEFAULT]
-    PARENT = 'default_mount'
-
-    def __init__(
-            self,
-            name: str = TYPE,
-            model: str = DEFAULT,
-            enabled: bool = BaseAttachment.ENABLED,
-            parent: str = Accessory.PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY,
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
-
-
-# J100 Jackal Attachments
-class J100Attachment(PlatformAttachment):
-    PLATFORM = 'j100'
-    TOP_PLATE = f'{PLATFORM}.{J100TopPlate.TYPE}'
-    FENDER = f'{PLATFORM}.{J100Fender.TYPE}'
-    TYPES = {
-        TOP_PLATE: J100TopPlate,
-        FENDER: J100Fender,
+class W200PlatformConfig(BasePlatformConfig):
+    NAME = 'w200'
+    PACS = PACSProfile(rows=100, columns=100)
+    INDEXING = IndexingProfile(imu=1)
+    VALID_BATTERIES = {
+        BatteryConfig.U1_35: [BatteryConfig.S4P3],
+        BatteryConfig.NEC_ALM12V35: [BatteryConfig.S4P3],
+        BatteryConfig.VALENCE_U24_12XP: [BatteryConfig.S4P1],
+        BatteryConfig.VALENCE_U27_12XP: [BatteryConfig.S4P1],
     }
+    VALID_DRIVETRAIN = {
+        DrivetrainConfig.CONTROL: [DrivetrainConfig.DIFF_4WD],
+        DrivetrainConfig.WHEELS: {
+            DrivetrainConfig.FRONT: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.TRACKS],
+            DrivetrainConfig.REAR: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.TRACKS],
+        },
+    }
+    DEFAULT_CAN_ADAPTERS = []
+    DEFAULT_CAN_BRIDGES = []
+    DEFAULT_ATTACHMENTS = []
+
+
+Platform.register(W200PlatformConfig)
+W200PlatformConfig.register_attachment(W200Generator)
+W200PlatformConfig.register_attachment(W200Bulkhead)
+W200PlatformConfig.register_attachment(W200ArmPlate)

@@ -25,58 +25,15 @@
 # CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 # ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
-# J100 Jackal Platform Configuration
-from typing import List
 
-from clearpath_config.common.types.accessory import Accessory
-
-from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
-
-
-class J100Fender(BaseAttachment):
-    TYPE = 'fender'
-    DEFAULT = 'default'
-    SENSOR = 'sensor'
-    MODELS = [DEFAULT, SENSOR]
-    PARENT = 'base_link'
-
-    def __init__(
-            self,
-            name: str = TYPE,
-            model: str = DEFAULT,
-            enabled: bool = BaseAttachment.ENABLED,
-            parent: str = PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY,
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
-
-
-class J100TopPlate(BaseAttachment):
-    TYPE = 'top_plate'
-    ARK_ENCLOSURE = 'ark_enclosure'
-    DEFAULT = ARK_ENCLOSURE
-    MODELS = [DEFAULT]
-    PARENT = 'default_mount'
-
-    def __init__(
-            self,
-            name: str = TYPE,
-            model: str = DEFAULT,
-            enabled: bool = BaseAttachment.ENABLED,
-            parent: str = Accessory.PARENT,
-            xyz: List[float] = Accessory.XYZ,
-            rpy: List[float] = Accessory.RPY,
-            ) -> None:
-        super().__init__(name, model, enabled, parent, xyz, rpy)
-
-
-# J100 Jackal Attachments
-class J100Attachment(PlatformAttachment):
-    PLATFORM = 'j100'
-    TOP_PLATE = f'{PLATFORM}.{J100TopPlate.TYPE}'
-    FENDER = f'{PLATFORM}.{J100Fender.TYPE}'
-    TYPES = {
-        TOP_PLATE: J100TopPlate,
-        FENDER: J100Fender,
-    }
+# Import all concrete platform definitions so they auto-register
+from clearpath_config.platform.definitions.a200 import A200PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.a300 import A300PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.dd100 import DD100PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.dd150 import DD150PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.do100 import DO100PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.do150 import DO150PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.generic import GenericPlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.j100 import J100PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.r100 import R100PlatformConfig  # noqa: F401
+from clearpath_config.platform.definitions.w200 import W200PlatformConfig  # noqa: F401
