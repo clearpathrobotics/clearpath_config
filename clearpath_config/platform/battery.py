@@ -71,50 +71,13 @@ class BatteryConfig(BaseConfig):
     S4P1 = 'S4P1'
     S4P3 = 'S4P3'
 
-    VALID = {
-        Platform.GENERIC: {
-            UNKNOWN: [UNKNOWN]
-        },
-        Platform.A200: {
-            ES20_12C: [S2P1],
-            HE2613: [S1P3, S1P4],
-            HE2411: [S1P3, S1P4],
-            HE2410: [S1P3, S1P4],
-        },
-        Platform.A300: {
-            S_24V20_U1: [S1P2, S1P4, S1P6],
-        },
-        Platform.DD100: {
-            TLV1222: [S1P1],
-            PH3054: [S1P1],
-        },
-        Platform.DO100: {
-            TLV1222: [S1P1, S1P2, S1P3],
-            PH3054: [S1P1, S1P2, S1P3],
-        },
-        Platform.DD150: {
-            TLV1222: [S1P1],
-            RB20: [S1P1],
-        },
-        Platform.DO150: {
-            TLV1222: [S1P1, S1P2, S1P3],
-            RB20: [S1P1, S1P2, S1P3],
-        },
-        Platform.J100: {
-            HE2613: [S1P1],
-            HE2411: [S1P1],
-            HE2410: [S1P1],
-        },
-        Platform.R100: {
-            DTM8A31: [S1P2],
-        },
-        Platform.W200: {
-            U1_35: [S4P3],
-            NEC_ALM12V35: [S4P3],
-            VALENCE_U24_12XP: [S4P1],
-            VALENCE_U27_12XP: [S4P1],
-        },
-    }
+    VALID = {}  # Populated dynamically from platform registry
+
+    @staticmethod
+    def _get_valid_batteries(platform=None):
+        if platform is None:
+            platform = BaseConfig.get_platform_model()
+        return Platform.get(platform).VALID_BATTERIES
 
     TEMPLATE = {
         BATTERY: {
@@ -166,9 +129,10 @@ class BatteryConfig(BaseConfig):
 
     def update_defaults(self) -> None:
         platform = BaseConfig.get_platform_model()
-        self.DEFAULTS[self.MODEL] = list(self.VALID[platform])[0]
+        valid = self._get_valid_batteries(platform)
+        self.DEFAULTS[self.MODEL] = list(valid)[0]
         self.DEFAULTS[self.CONFIGURATION] = list(
-            self.VALID[platform][self.DEFAULTS[self.MODEL]])[0]
+            valid[self.DEFAULTS[self.MODEL]])[0]
 
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
@@ -187,13 +151,10 @@ class BatteryConfig(BaseConfig):
     @model.setter
     def model(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        if platform not in self.VALID:
+        valid = self._get_valid_batteries(platform)
+        if value not in valid:
             raise ValueError(
-                f'Platform "{platform}" is invalid. Must be one of "{list(self.VALID)}"'
-            )
-        if value not in self.VALID[platform]:
-            raise ValueError(
-                f'Battery model "{value}" is invalid. Battery model for platform "{platform}" must be one of "{list(self.VALID[platform])}"'  # noqa:E501
+                f'Battery model "{value}" is invalid. Battery model for platform "{platform}" must be one of "{list(valid)}"'  # noqa:E501
             )
         self._model = value
 
@@ -208,17 +169,14 @@ class BatteryConfig(BaseConfig):
     @configuration.setter
     def configuration(self, value: str) -> None:
         platform = BaseConfig.get_platform_model()
-        if platform not in self.VALID:
+        valid = self._get_valid_batteries(platform)
+        if self.model not in valid:
             raise ValueError(
-                f'Platform {platform} is invalid. Must be one of: {list(self.VALID)}'
+                f'Battery model "{self.model}" is invalid. Battery model for platform "{platform}" it must be one of "{list(valid)}"'  # noqa:E501
             )
-        if self.model not in self.VALID[platform]:
+        if value not in valid[self.model]:
             raise ValueError(
-                f'Battery model "{self.model}" is invalid. Battery model for platform "{platform}" it must be one of "{list(self.VALID[platform])}"'  # noqa:E501
-            )
-        if value not in self.VALID[platform][self.model]:
-            raise ValueError(
-                f'Battery configuration "{value}" is invalid. For platform "{platform}" and battery model "{self.model}" it must be one of "{list(self.VALID[platform][self.model])}"'  # noqa:E501
+                f'Battery configuration "{value}" is invalid. For platform "{platform}" and battery model "{self.model}" it must be one of "{list(valid[self.model])}"'  # noqa:E501
             )
         self._configuration = value
 

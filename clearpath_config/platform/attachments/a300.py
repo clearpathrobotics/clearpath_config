@@ -29,14 +29,13 @@
 from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.platform import Platform
+
 from clearpath_config.platform.types.attachment import BaseAttachment, PlatformAttachment
 from clearpath_config.platform.types.bumper import Bumper
 
 
 class A300TopPlate(BaseAttachment):
-    PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = '%s.top_plate' % PLATFORM
+    TYPE = 'top_plate'
     DEFAULT = 'default'
     PACS = 'pacs'
     MODELS = [DEFAULT, PACS]
@@ -44,7 +43,7 @@ class A300TopPlate(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -55,8 +54,7 @@ class A300TopPlate(BaseAttachment):
 
 
 class A300Bumper(Bumper):
-    PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = '%s.bumper' % PLATFORM
+    TYPE = 'bumper'
     EXTENSION = 0.0
     DEFAULT = 'default'
     MODELS = [DEFAULT]
@@ -64,7 +62,7 @@ class A300Bumper(Bumper):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             extension: float = EXTENSION,
@@ -76,15 +74,14 @@ class A300Bumper(Bumper):
 
 
 class A300WirelessCharger(BaseAttachment):
-    PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = f'{PLATFORM}.wireless_charger'
+    TYPE = 'wireless_charger'
     DEFAULT = 'default'
     MODELS = [DEFAULT]
     PARENT = 'base_link'
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -95,8 +92,7 @@ class A300WirelessCharger(BaseAttachment):
 
 
 class A300AmpEnclosure(BaseAttachment):
-    PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = f'{PLATFORM}.amp_enclosure'
+    TYPE = 'amp_enclosure'
     AMP_ENCLOSURE = 'amp_enclosure'
     MODELS = [AMP_ENCLOSURE]
     DEFAULT = AMP_ENCLOSURE
@@ -104,7 +100,7 @@ class A300AmpEnclosure(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -115,8 +111,7 @@ class A300AmpEnclosure(BaseAttachment):
 
 
 class A300AmpSensorArch(BaseAttachment):
-    PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = f'{PLATFORM}.amp_sensor_arch'
+    TYPE = 'amp_sensor_arch'
     AMP_SENSOR_ARCH = 'amp_sensor_arch'
     MODELS = [AMP_SENSOR_ARCH]
     DEFAULT = AMP_SENSOR_ARCH
@@ -124,7 +119,7 @@ class A300AmpSensorArch(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -135,8 +130,7 @@ class A300AmpSensorArch(BaseAttachment):
 
 
 class A300Spotlight(BaseAttachment):
-    PLATFORM = Platform.A300
-    ATTACHMENT_MODEL = f'{PLATFORM}.spotlight'
+    TYPE = 'spotlight'
     SPOTLIGHT = 'spotlight'
     MODELS = [SPOTLIGHT]
     DEFAULT = SPOTLIGHT
@@ -144,7 +138,7 @@ class A300Spotlight(BaseAttachment):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = BaseAttachment.ENABLED,
             parent: str = PARENT,
@@ -155,18 +149,18 @@ class A300Spotlight(BaseAttachment):
 
 
 class A300Attachment(PlatformAttachment):
-    PLATFORM = Platform.A300
+    PLATFORM = 'a300'
     # Top Plates
-    TOP_PLATE = A300TopPlate.ATTACHMENT_MODEL
+    TOP_PLATE = f'{PLATFORM}.{A300TopPlate.TYPE}'
     # Bumper
-    BUMPER = A300Bumper.ATTACHMENT_MODEL
+    BUMPER = f'{PLATFORM}.{A300Bumper.TYPE}'
     # Observer/AMP attachments
-    AMP_ENCLOSURE = A300AmpEnclosure.ATTACHMENT_MODEL
-    AMP_SENSOR_ARCH = A300AmpSensorArch.ATTACHMENT_MODEL
+    AMP_ENCLOSURE = f'{PLATFORM}.{A300AmpEnclosure.TYPE}'
+    AMP_SENSOR_ARCH = f'{PLATFORM}.{A300AmpSensorArch.TYPE}'
     # Spotlight
-    SPOTLIGHT = A300Spotlight.ATTACHMENT_MODEL
+    SPOTLIGHT = f'{PLATFORM}.{A300Spotlight.TYPE}'
     # Wireless charger
-    WIRELESS_CHARGER = A300WirelessCharger.ATTACHMENT_MODEL
+    WIRELESS_CHARGER = f'{PLATFORM}.{A300WirelessCharger.TYPE}'
 
     TYPES = {
         TOP_PLATE: A300TopPlate,

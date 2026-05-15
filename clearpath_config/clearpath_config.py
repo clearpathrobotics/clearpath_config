@@ -30,7 +30,7 @@ from clearpath_config.common.utils.yaml import read_yaml, write_yaml
 from clearpath_config.links.links import LinksConfig
 from clearpath_config.manipulators.manipulators import ManipulatorConfig
 from clearpath_config.mounts.mounts import MountsConfig
-from clearpath_config.platform.platform import PlatformConfig
+from clearpath_config.platform.platform import BasePlatformConfig
 from clearpath_config.sensors.sensors import SensorConfig
 from clearpath_config.system.system import SystemConfig
 
@@ -66,7 +66,7 @@ class ClearpathConfig(BaseConfig):
         SERIAL_NUMBER: 'generic',
         VERSION: 0,
         SYSTEM: SystemConfig.DEFAULTS,
-        PLATFORM: PlatformConfig.DEFAULTS,
+        PLATFORM: BasePlatformConfig.DEFAULTS,
         LINKS: LinksConfig.DEFAULTS,
         MANIPULATORS: ManipulatorConfig.DEFAULTS,
         MOUNTS: MountsConfig.DEFAULTS,
@@ -82,7 +82,7 @@ class ClearpathConfig(BaseConfig):
         # Initialization of Sub-Configs
         self._config = {}
         self._system = SystemConfig(self.DEFAULTS[self.SYSTEM])
-        self._platform = PlatformConfig(self.DEFAULTS[self.PLATFORM])
+        self._platform = BasePlatformConfig(self.DEFAULTS[self.PLATFORM])
         self._links = LinksConfig(self.DEFAULTS[self.LINKS])
         self._manipulators = ManipulatorConfig(self.DEFAULTS[self.MANIPULATORS])
         self._mounts = MountsConfig(self.DEFAULTS[self.MOUNTS])
@@ -155,7 +155,7 @@ class ClearpathConfig(BaseConfig):
         self._system.config = config
 
     @property
-    def platform(self) -> PlatformConfig:
+    def platform(self) -> BasePlatformConfig:
         self.set_config_param(
             self.PLATFORM,
             self._platform.config[self.PLATFORM])

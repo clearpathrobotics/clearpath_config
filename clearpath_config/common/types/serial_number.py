@@ -68,22 +68,23 @@ class SerialNumber:
         # Mechanically both are effectively identical, and re-use the same options & payloads
         if sn_tokens[0] == 'a201':
             sn_tokens[0] = 'a200'
+        # Generic Robot (check before platform validation to avoid circular import
+        # at class-body time when BaseConfig._SERIAL_NUMBER = SerialNumber('generic'))
+        if sn_tokens[0] == 'generic':
+            if len(sn_tokens) > 1:
+                return (sn_tokens[0], sn_tokens[1])
+            else:
+                return (sn_tokens[0], 'e')
         # Match to Robot
-        if sn_tokens[0] not in Platform.ALL:
+        if sn_tokens[0] not in Platform.all_names():
             raise ValueError(
-                f'Serial number model entry {sn_tokens[0]} must be one of {Platform.ALL}'
+                f'Serial number model entry {sn_tokens[0]} must be one of {Platform.all_names()}'
             )
 
         # Verify that the platform is well-supported and not deprecated
         Platform.assert_is_supported(sn_tokens[0])
         Platform.notify_if_deprecated(sn_tokens[0])
 
-        # Generic Robot
-        if sn_tokens[0] == Platform.GENERIC:
-            if len(sn) > 1:
-                return (sn_tokens[0], sn[1])
-            else:
-                return (sn_tokens[0], 'xxxx')
         # Check Number
         if not sn_tokens[1].isdecimal():
             raise ValueError(f'Serial number unit entry "{sn_tokens[1]}" must be an integer')

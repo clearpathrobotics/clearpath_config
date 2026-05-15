@@ -194,18 +194,7 @@ class CANAdapterConfig:
         VirtualCANAdapter.SERIAL_DEV: '/dev/ttycan1',
         VirtualCANAdapter.PORT: 11413
     }
-    DEFAULTS = {
-        Platform.A200: [],
-        Platform.A300: [VCAN0_DEFAULT, VCAN1_DEFAULT],
-        Platform.DD100: [VCAN0_DEFAULT],
-        Platform.DD150: [VCAN0_DEFAULT],
-        Platform.DO100: [VCAN0_DEFAULT],
-        Platform.DO150: [VCAN0_DEFAULT],
-        Platform.GENERIC: [],
-        Platform.J100: [],
-        Platform.R100: [VCAN0_DEFAULT],
-        Platform.W200: [],
-    }
+    DEFAULTS = {}  # Populated dynamically from platform registry
 
     def __init__(
             self,
@@ -236,7 +225,8 @@ class CANAdapterConfig:
 
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
-            self.config = self.DEFAULTS[BaseConfig.get_platform_model()]
+            platform = BaseConfig.get_platform_model()
+            self.config = Platform.get(platform).DEFAULT_CAN_ADAPTERS
 
 
 class CANBridge:
@@ -397,18 +387,7 @@ class CANBridgeConfig:
         # }
     ]
 
-    DEFAULTS = {
-        Platform.A200: [],
-        Platform.A300: A300_DEFAULT,
-        Platform.DD100: SINGLE_VCAN_DEFAULT,
-        Platform.DD150: SINGLE_VCAN_DEFAULT,
-        Platform.DO100: SINGLE_VCAN_DEFAULT,
-        Platform.DO150: SINGLE_VCAN_DEFAULT,
-        Platform.GENERIC: [],
-        Platform.J100: [],
-        Platform.R100: SINGLE_VCAN_DEFAULT,
-        Platform.W200: [],
-    }
+    DEFAULTS = {}  # Populated dynamically from platform registry
 
     def __init__(
             self,
@@ -437,4 +416,5 @@ class CANBridgeConfig:
 
     def update(self, serial_number: bool = False) -> None:
         if serial_number:
-            self.config = self.DEFAULTS[BaseConfig.get_platform_model()]
+            platform = BaseConfig.get_platform_model()
+            self.config = Platform.get(platform).DEFAULT_CAN_BRIDGES

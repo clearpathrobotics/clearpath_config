@@ -57,71 +57,47 @@ class IndexingProfile:
 
 
 # Platform
-# - all supported platforms
+# - registry of platform configurations
+# - concrete platform data is defined in BasePlatformConfig subclasses
+#   under clearpath_config.platform.definitions
 class Platform:
-    # Dingo D V1
-    DD100 = 'dd100'
-    # Dingo O V1
-    DO100 = 'do100'
-    # Dingo D V1.5
-    DD150 = 'dd150'
-    # Dingo D V1.5
-    DO150 = 'do150'
-    # Jackal V1
-    J100 = 'j100'
-    # Husky V2
-    A200 = 'a200'
-    # Husky V3
-    A300 = 'a300'
-    # Ridgeback V1
-    R100 = 'r100'
-    # Warthog V2
-    W200 = 'w200'
-    # Genric Robot
-    GENERIC = 'generic'
+    _REGISTRY = {}
+    _LOADED = False
 
-    ALL = [
-        DD100,
-        DO100,
-        DD150,
-        DO150,
-        J100,
-        A200,
-        A300,
-        R100,
-        W200,
-        GENERIC
-    ]
+    @classmethod
+    def register(cls, platform_config_cls) -> None:
+        """Register a concrete BasePlatformConfig subclass."""
+        cls._REGISTRY[platform_config_cls.NAME] = platform_config_cls
 
-    PACS = {
-        GENERIC: PACSProfile(rows=100, columns=100),
-        A200: PACSProfile(rows=8, columns=7),
-        A300: PACSProfile(rows=9, columns=5),
-        J100: PACSProfile(rows=4, columns=2),
-        W200: PACSProfile(rows=100, columns=100),
-        R100: PACSProfile(rows=100, columns=100),
-    }
+    @classmethod
+    def get(cls, name: str):
+        """Return the registered BasePlatformConfig subclass for the given name."""
+        cls._ensure_loaded()
+        if name not in cls._REGISTRY:
+            raise KeyError(
+                f'No platform registered for "{name}". '
+                f'Available: {list(cls._REGISTRY.keys())}'
+            )
+        return cls._REGISTRY[name]
 
-    INDEX = {
-        GENERIC: IndexingProfile(),
-        A200: IndexingProfile(),
-        A300: IndexingProfile(),
-        DD100: IndexingProfile(imu=1),
-        DO100: IndexingProfile(imu=1),
-        DD150: IndexingProfile(imu=1),
-        DO150: IndexingProfile(imu=1),
-        J100: IndexingProfile(gps=1, imu=1),
-        R100: IndexingProfile(imu=1),
-        W200: IndexingProfile(imu=1),
-    }
+    @classmethod
+    def all_names(cls) -> list:
+        """Return list of all registered platform names."""
+        cls._ensure_loaded()
+        return list(cls._REGISTRY.keys())
+
+    @classmethod
+    def _ensure_loaded(cls):
+        """Lazily import built-in platform definitions on first access."""
+        if cls._LOADED:
+            return
+        cls._LOADED = True
+        import clearpath_config.platform.definitions  # noqa: F401
 
     @staticmethod
     def assert_is_supported(platform):
         """
         Raise an exception if the platform is not presently supported/usable.
-
-        Unsupported platforms may become supported in a future release, and there are no plans
-        to remove it; it simply is not (yet) compatible with the current ROS release.
 
         @param platform  The platform-identifying serial number prefix (e.g. 'a200', 'j100')
 
@@ -134,8 +110,6 @@ class Platform:
     def notify_if_deprecated(platform):
         """
         Print a notification that the selected platform is deprecated.
-
-        Deprecated platforms may have their support removed in a future version
 
         @param platform  The platform-identifying serial number prefix (e.g. 'a200', 'j100')
         """
