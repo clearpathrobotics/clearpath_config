@@ -2,6 +2,22 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feature: PTU (`#222 <https://github.com/clearpathrobotics/clearpath_config/issues/222>`_)
+  * Added support for Flir PTU-5.
+  * Se the joint_name_prefix based on the ID of the PTU
+  ---------
+  Co-authored-by: Luis Camero <lcamero@clearpathrobotics.com>
+* Feature: Generator Sample Tests (`#219 <https://github.com/clearpathrobotics/clearpath_config/issues/219>`_)
+  * Add testing samples
+  * Add Warthog and mounts sample test
+  * Disable testing on Zed
+  * Remove franka from tests
+  * Updated README with generator tests
+* Changed to rostooling/setup-ros-docker:ubuntu-noble-latest for CI image. (`#216 <https://github.com/clearpathrobotics/clearpath_config/issues/216>`_)
+* Contributors: Tony Baltovski, luis-camero
+
 2.9.1 (2026-02-26)
 ------------------
 * Add padding as parameter (`#214 <https://github.com/clearpathrobotics/clearpath_config/issues/214>`_)
