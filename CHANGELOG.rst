@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.9.2 (2026-05-21)
+------------------
 * Feature: PTU (`#222 <https://github.com/clearpathrobotics/clearpath_config/issues/222>`_)
   * Added support for Flir PTU-5.
   * Se the joint_name_prefix based on the ID of the PTU
