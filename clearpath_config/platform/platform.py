@@ -93,11 +93,13 @@ class PlatformConfig(BaseConfig):
     PS5 = 'ps5'
     LOGITECH = 'logitech'
     XBOX = 'xbox'
+    FORT_VSC = 'fort_vsc'
     CONTROLLERS = [
         PS4,
         PS5,
         LOGITECH,
-        XBOX
+        XBOX,
+        FORT_VSC,
     ]
 
     CONTROLLER = 'controller'
