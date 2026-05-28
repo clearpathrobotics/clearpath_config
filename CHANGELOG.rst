@@ -2,6 +2,11 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added support for Fort VSC joy. (`#225 <https://github.com/clearpathrobotics/clearpath_config/issues/225>`_)
+* Contributors: Tony Baltovski
+
 2.9.2 (2026-05-21)
 ------------------
 * Feature: PTU (`#222 <https://github.com/clearpathrobotics/clearpath_config/issues/222>`_)
