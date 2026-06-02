@@ -6,9 +6,6 @@ system:
       ip: 192.168.131.1
   ros2:
     namespace: dd100_0000
-<<<<<<< HEAD
-=======
 platform:
   mcu:
-    protocol: proton
->>>>>>> 86143e3 (Added dependabot and pre-commit. (#228))
+    protocol: uros

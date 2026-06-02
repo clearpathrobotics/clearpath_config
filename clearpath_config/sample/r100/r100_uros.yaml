@@ -6,14 +6,11 @@ system:
       ip: 192.168.131.1
   ros2:
     namespace: r100_0000
-<<<<<<< HEAD
-=======
 platform:
   mcu:
-    protocol: proton
+    protocol: uros
 sensors:
   lidar2d:
     - model: hokuyo_ust
       parent: chassis_link
       xyz: [0.3922, 0.0, 0.1856]
->>>>>>> 86143e3 (Added dependabot and pre-commit. (#228))
