@@ -2,6 +2,61 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Bump actions/checkout from 3 to 6 (`#234 <https://github.com/clearpathrobotics/clearpath_config/issues/234>`_)
+  Bumps [actions/checkout](https://github.com/actions/checkout) from 3 to 6.
+  - [Release notes](https://github.com/actions/checkout/releases)
+  - [Changelog](https://github.com/actions/checkout/blob/main/CHANGELOG.md)
+  - [Commits](https://github.com/actions/checkout/compare/v3...v6)
+  ---
+  updated-dependencies:
+  - dependency-name: actions/checkout
+  dependency-version: '6'
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+  ...
+  Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+* Bump actions/setup-python from 3 to 6 (`#233 <https://github.com/clearpathrobotics/clearpath_config/issues/233>`_)
+  Bumps [actions/setup-python](https://github.com/actions/setup-python) from 3 to 6.
+  - [Release notes](https://github.com/actions/setup-python/releases)
+  - [Commits](https://github.com/actions/setup-python/compare/v3...v6)
+  ---
+  updated-dependencies:
+  - dependency-name: actions/setup-python
+  dependency-version: '6'
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+  ...
+  Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+* Bump ros-tooling/action-ros-ci from 0.3 to 0.4 (`#232 <https://github.com/clearpathrobotics/clearpath_config/issues/232>`_)
+  Bumps [ros-tooling/action-ros-ci](https://github.com/ros-tooling/action-ros-ci) from 0.3 to 0.4.
+  - [Release notes](https://github.com/ros-tooling/action-ros-ci/releases)
+  - [Commits](https://github.com/ros-tooling/action-ros-ci/compare/v0.3...v0.4)
+  ---
+  updated-dependencies:
+  - dependency-name: ros-tooling/action-ros-ci
+  dependency-version: '0.4'
+  dependency-type: direct:production
+  update-type: version-update:semver-minor
+  ...
+  Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+* Bump actions/github-script from 7 to 9 (`#231 <https://github.com/clearpathrobotics/clearpath_config/issues/231>`_)
+  Bumps [actions/github-script](https://github.com/actions/github-script) from 7 to 9.
+  - [Release notes](https://github.com/actions/github-script/releases)
+  - [Commits](https://github.com/actions/github-script/compare/v7...v9)
+  ---
+  updated-dependencies:
+  - dependency-name: actions/github-script
+  dependency-version: '9'
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+  ...
+  Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+* Added dependabot and pre-commit. (`#228 <https://github.com/clearpathrobotics/clearpath_config/issues/228>`_)
+* Fixed missing directory creation in write_yaml. (`#227 <https://github.com/clearpathrobotics/clearpath_config/issues/227>`_)
+* Contributors: Tony Baltovski, dependabot[bot]
+
 2.9.3 (2026-05-28)
 ------------------
 * Added support for Fort VSC joy. (`#225 <https://github.com/clearpathrobotics/clearpath_config/issues/225>`_)
