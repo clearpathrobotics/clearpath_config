@@ -28,7 +28,7 @@ jobs:
       image: rostooling/setup-ros-docker:ubuntu-noble-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: ros-tooling/action-ros-ci@v0.3
+      - uses: ros-tooling/action-ros-ci@v0.4
         id: action_ros_ci_step
         with:
           target-ros2-distro: jazzy
