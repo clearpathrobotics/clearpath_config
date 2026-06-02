@@ -272,7 +272,8 @@ class BatteryConfig(BaseConfig):
         self._ros_parameters = value
 
     def _validate_consistency(self) -> None:
-        """Enforce that param_file is set if and only if model == CUSTOM.
+        """
+        Enforce that param_file is set if and only if model == CUSTOM.
 
         PackagePath itself accepts either a (package, relative path) pair or
         an absolute path with no package; only the existence of a path entry
