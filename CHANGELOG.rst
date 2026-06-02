@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.9.4 (2026-06-02)
+------------------
 * Bump actions/checkout from 3 to 6 (`#234 <https://github.com/clearpathrobotics/clearpath_config/issues/234>`_)
   Bumps [actions/checkout](https://github.com/actions/checkout) from 3 to 6.
   - [Release notes](https://github.com/actions/checkout/releases)
