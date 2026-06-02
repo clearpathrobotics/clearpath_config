@@ -69,6 +69,7 @@ def read_yaml(path: str) -> dict:
 
 
 def write_yaml(path: str, config: dict) -> None:
+    os.makedirs(os.path.dirname(path), exist_ok=True)
     yaml_file = open(path, 'w+')
     yaml.Dumper.ignore_aliases = lambda *args: True
     yaml.dump(
