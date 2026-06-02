@@ -72,7 +72,12 @@ def read_yaml(path: str) -> dict:
 
 
 def write_yaml(path: str, config: dict) -> None:
+<<<<<<< HEAD
     yaml_file = open(path, "w+")
+=======
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    yaml_file = open(path, 'w+')
+>>>>>>> 0fd761e (Fixed missing directory creation in write_yaml. (#227))
     yaml.Dumper.ignore_aliases = lambda *args: True
     yaml.dump(
         config,
