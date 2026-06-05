@@ -154,7 +154,7 @@ class BatteryConfig(BaseConfig):
         }
         super().__init__(setters, config, self.BATTERY)
 
-        self._validate_consistency()
+        self._validate()
 
     def update_defaults(self) -> None:
         platform = BaseConfig.get_platform_model()
@@ -271,7 +271,7 @@ class BatteryConfig(BaseConfig):
             raise TypeError(f'Battery ros_parameters {value!r} must be of type "dict"')
         self._ros_parameters = value
 
-    def _validate_consistency(self) -> None:
+    def _validate(self) -> None:
         """
         Enforce that param_file is set if and only if model == CUSTOM.
 
