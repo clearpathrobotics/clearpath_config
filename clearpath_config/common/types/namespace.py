@@ -49,9 +49,9 @@ class Namespace:
 
     @staticmethod
     def is_valid(name: str) -> bool:
-        # Must not be Empty
+        # Empty is valid (no namespace)
         if name == '':
-            return False
+            return True
         # Must Contain:
         #  - [0-9|a-z|A-Z]
         #  - Underscores (_)
@@ -75,12 +75,13 @@ class Namespace:
         # Must not contain any number of repeated underscores (_)
         if '__' in name:
             return False
+        return True
 
     @staticmethod
     def assert_valid(name: str) -> None:
-        # Empty
-        if not name:
-            raise ValueError('Namespace cannot be empty')
+        # Empty is valid (no namespace)
+        if name == '':
+            return
         # Allowed characters
         allowed = re.compile('[a-z|0-9|_|/|~]', re.IGNORECASE)
         if not all(allowed.match(c) for c in name):
