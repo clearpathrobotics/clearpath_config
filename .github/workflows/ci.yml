@@ -17,7 +17,11 @@ jobs:
       fail-fast: false
     runs-on: ubuntu-22.04
     steps:
+<<<<<<< HEAD
       - uses: actions/checkout@v3
+=======
+      - uses: actions/checkout@v7
+>>>>>>> 5c58f7c (Bump actions/checkout from 6 to 7 (#237))
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{matrix.env}}
 
@@ -27,8 +31,13 @@ jobs:
     container:
       image: rostooling/setup-ros-docker:ubuntu-jammy-latest
     steps:
+<<<<<<< HEAD
       - uses: actions/checkout@v3
       - uses: ros-tooling/action-ros-ci@v0.3
+=======
+      - uses: actions/checkout@v7
+      - uses: ros-tooling/action-ros-ci@v0.4
+>>>>>>> 5c58f7c (Bump actions/checkout from 6 to 7 (#237))
         id: action_ros_ci_step
         with:
           target-ros2-distro: humble
