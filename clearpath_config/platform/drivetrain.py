@@ -73,8 +73,8 @@ class DrivetrainConfig(BaseConfig):
         Platform.A300: {
             CONTROL: [DIFF_4WD, DIFF_FWD, DIFF_RWD, OMNI_4WD],
             WHEELS: {
-                FRONT: [OUTDOOR, CASTER, MECANUM],
-                REAR:  [OUTDOOR, CASTER, MECANUM]
+                FRONT: [OUTDOOR, INDOOR, CASTER, MECANUM],
+                REAR:  [OUTDOOR, INDOOR, CASTER, MECANUM]
             }
         },
         Platform.DD100: {
