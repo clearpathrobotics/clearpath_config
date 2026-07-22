@@ -2,6 +2,14 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Added support for A300 with indoor tires. (`#240 <https://github.com/clearpathrobotics/clearpath_config/issues/240>`_)
+* Bump actions/checkout from 6 to 7 (`#237 <https://github.com/clearpathrobotics/clearpath_config/issues/237>`_)
+  ...
+  Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+* Contributors: Tony Baltovski, dependabot[bot]
+
 2.9.4 (2026-06-02)
 ------------------
 * Bump actions/checkout from 3 to 6 (`#234 <https://github.com/clearpathrobotics/clearpath_config/issues/234>`_)
