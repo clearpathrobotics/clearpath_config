@@ -337,9 +337,9 @@ class Franka(BaseArm):
     FER = 'fer'
     FP3 = 'fp3'
     FR3 = 'fr3'
-    ARM_ID = 'arm_id'
-    ARM_IDS = [FER, FP3, FR3]
-    DEFAULT_ARM_ID = FR3
+    ROBOT_TYPE = 'robot_type'
+    ROBOT_TYPES = [FER, FP3, FR3]
+    DEFAULT_ROBOT_TYPE = FR3
     END_EFFECTOR_LINK = 'link8'
 
     # Description Variables
@@ -351,20 +351,21 @@ class Franka(BaseArm):
     KINEMATICS_PARAMETERS_FILE = 'kinematics_parameters_file'
     DYNAMICS = 'dynamics'
     DYNAMICS_PARAMETERS_FILE = 'dynamics_parameters_file'
+    ACCELEROMETER_CONFIG = 'accelerometer_config'
     GAZEBO = 'gazebo'
-    HAND = 'hand'
-    EE_ID = 'ee_id'
-    WITH_SC = 'with_sc'
     ROS2_CONTROL = 'ros2_control'
     IP_ADDRESS = 'robot_ip'
     USE_FAKE_HARDWARE = 'use_fake_hardware'
     FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
     GAZEBO_EFFORT = 'gazebo_effort'
-    NO_PREFIX = 'no_prefix'
-    ARM_PREFIX = 'arm_prefix'
-    CONNECTED_TO = 'connected_to'
+    SAFETY_DISTANCE = 'safety_distance'
+    WITH_SC = 'with_sc'
+    IS_ASYNC = 'is_async'
+    THREAD_PRIORITY = 'thread_priority'
+    DESCRIPTION_PKG = 'description_pkg'
 
     URDF_PARAMETERS = {
+        ROBOT_TYPE: '',
         JOINT_LIMITS: '',
         JOINT_LIMITS_PARAMETERS_FILE: '',
         INERTIALS: '',
@@ -373,18 +374,18 @@ class Franka(BaseArm):
         KINEMATICS_PARAMETERS_FILE: '',
         DYNAMICS: '',
         DYNAMICS_PARAMETERS_FILE: '',
-        GAZEBO: '',
-        HAND: '',
-        EE_ID: '',
-        WITH_SC: '',
+        ACCELEROMETER_CONFIG: '',
         ROS2_CONTROL: '',
         IP_ADDRESS: '',
         USE_FAKE_HARDWARE: '',
         FAKE_SENSOR_COMMANDS: '',
+        GAZEBO: '',
         GAZEBO_EFFORT: '',
-        NO_PREFIX: '',
-        ARM_PREFIX: '',
-        CONNECTED_TO: '',
+        SAFETY_DISTANCE: '',
+        WITH_SC: '',
+        IS_ASYNC: '',
+        THREAD_PRIORITY: '',
+        DESCRIPTION_PKG: '',
     }
 
     def __init__(
@@ -393,7 +394,7 @@ class Franka(BaseArm):
             name: str = None,
             ip: str = BaseArm.DEFAULT_IP_ADDRESS,
             port: int = BaseArm.DEFAULT_IP_PORT,
-            arm_id: str = DEFAULT_ARM_ID,
+            robot_type: str = DEFAULT_ROBOT_TYPE,
             ros_parameters: dict = BaseManipulator.ROS_PARAMETERS,
             ros_parameters_template: dict = BaseManipulator.ROS_PARAMETERS_TEMPLATE,
             parent: str = Accessory.PARENT,
@@ -402,35 +403,35 @@ class Franka(BaseArm):
             ) -> None:
         super().__init__(
             idx, name, ip, port, ros_parameters, ros_parameters_template, parent, xyz, rpy)
-        self.arm_id = arm_id
+        self.robot_type = robot_type
 
     def from_dict(self, d: dict) -> None:
         self.config = d
         super().from_dict(d)
-        if 'arm_id' in d:
-            self.arm_id = d['arm_id']
+        if 'robot_type' in d:
+            self.robot_type = d['robot_type']
         if 'gripper' in d:
-            self.gripper.arm_id = self.arm_id
+            self.gripper.robot_type = self.robot_type
 
     def to_dict(self) -> dict:
         d = super().to_dict()
-        d['arm_id'] = self.arm_id
+        d['robot_type'] = self.robot_type
         return d
 
     @property
-    def arm_id(self) -> str:
-        return self._arm_id
+    def robot_type(self) -> str:
+        return self._robot_type
 
-    @arm_id.setter
-    def arm_id(self, value: str) -> None:
-        if value not in self.ARM_IDS:
-            raise ValueError(f'Franka arm_id must be one of {self.ARM_IDS}, got: {value}')
-        self._arm_id = value
+    @robot_type.setter
+    def robot_type(self, value: str) -> None:
+        if value not in self.ROBOT_TYPES:
+            raise ValueError(f'Franka robot_type must be one of {self.ROBOT_TYPES}, got: {value}')
+        self._robot_type = value
 
     def set_idx(self, idx: int) -> None:
         super().set_idx(idx)
         if self.gripper:
-            self.gripper.parent = f'{self.name}_{self.arm_id}_{self.END_EFFECTOR_LINK}'
+            self.gripper.parent = f'{self.name}_{self.robot_type}_{self.END_EFFECTOR_LINK}'
 
 
 class Arm():

@@ -63,12 +63,12 @@ class FrankaGripper(BaseGripper):
     JOINT_COUNT = 1
 
     @property
-    def arm_id(self) -> str:
-        return self._arm_id
+    def robot_type(self) -> str:
+        return self._robot_type
 
-    @arm_id.setter
-    def arm_id(self, value: str) -> None:
-        self._arm_id = value
+    @robot_type.setter
+    def robot_type(self, value: str) -> None:
+        self._robot_type = value
 
 
 class Kinova2FLite(BaseGripper):
