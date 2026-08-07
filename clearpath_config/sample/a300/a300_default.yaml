@@ -7,6 +7,7 @@ system:
   ros2:
     namespace: a300_00000
 platform:
+  controller: ps4
   battery:
     model: S_24V20_U1
     configuration: S1P2

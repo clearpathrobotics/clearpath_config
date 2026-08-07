@@ -7,5 +7,6 @@ system:
   ros2:
     namespace: do150_0000
 platform:
+  controller: ps4
   mcu:
     protocol: proton
