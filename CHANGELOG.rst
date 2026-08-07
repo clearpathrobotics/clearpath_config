@@ -2,6 +2,23 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Updated default robot.yaml samples to include the joy controller. (`#243 <https://github.com/clearpathrobotics/clearpath_config/issues/243>`_)
+* Bump actions/setup-python from 6 to 7 (`#241 <https://github.com/clearpathrobotics/clearpath_config/issues/241>`_)
+  Bumps [actions/setup-python](https://github.com/actions/setup-python) from 6 to 7.
+  - [Release notes](https://github.com/actions/setup-python/releases)
+  - [Commits](https://github.com/actions/setup-python/compare/v6...v7)
+  ---
+  updated-dependencies:
+  - dependency-name: actions/setup-python
+  dependency-version: '7'
+  dependency-type: direct:production
+  update-type: version-update:semver-major
+  ...
+  Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
+* Contributors: Tony Baltovski, dependabot[bot]
+
 2.9.5 (2026-07-22)
 ------------------
 * Added support for A300 with indoor tires. (`#240 <https://github.com/clearpathrobotics/clearpath_config/issues/240>`_)
