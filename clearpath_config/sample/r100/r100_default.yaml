@@ -6,3 +6,15 @@ system:
       ip: 192.168.131.1
   ros2:
     namespace: r100_0000
+<<<<<<< HEAD
+=======
+platform:
+  controller: ps4
+  mcu:
+    protocol: proton
+sensors:
+  lidar2d:
+    - model: hokuyo_ust
+      parent: chassis_link
+      xyz: [0.3922, 0.0, 0.1856]
+>>>>>>> 302abe5 (Updated default robot.yaml samples to include the joy controller. (#243))

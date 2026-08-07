@@ -6,3 +6,10 @@ system:
       ip: 192.168.131.1
   ros2:
     namespace: do150_0000
+<<<<<<< HEAD
+=======
+platform:
+  controller: ps4
+  mcu:
+    protocol: proton
+>>>>>>> 302abe5 (Updated default robot.yaml samples to include the joy controller. (#243))
