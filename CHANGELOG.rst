@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.9.6 (2026-08-07)
+------------------
 * Updated default robot.yaml samples to include the joy controller. (`#243 <https://github.com/clearpathrobotics/clearpath_config/issues/243>`_)
 * Bump actions/setup-python from 6 to 7 (`#241 <https://github.com/clearpathrobotics/clearpath_config/issues/241>`_)
   Bumps [actions/setup-python](https://github.com/actions/setup-python) from 6 to 7.
