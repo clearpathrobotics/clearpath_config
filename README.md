@@ -56,7 +56,7 @@ consistent with the generators.
 
 ## Configuration Examples
 
-Under the **_sample_** folder there are example configurations that can be used as the starting point of your `robot.yaml`. Sample files whose names contain `test` (e.g. `test_a300.yaml`) are also the fixtures consumed by [clearpath_generator_tests](https://github.com/clearpathrobotics/clearpath_generator_tests); adding or renaming one changes what CI validates.
+Under the ***sample*** folder there are example configurations that can be used as the starting point of your `robot.yaml`. Sample files whose names contain `test` (e.g. `test_a300.yaml`) are also the fixtures consumed by [clearpath_generator_tests](https://github.com/clearpathrobotics/clearpath_generator_tests); adding or renaming one changes what CI validates.
 
 ## Contributing
 
