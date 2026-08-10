@@ -1,10 +1,15 @@
-**Description**
+# Pull Request
+
+## Description
+
 A clear and concise description of what this pull request changes and why.
 
-**Related issue**
+## Related issue
+
 Link any related issues (e.g. `Fixes #123`).
 
-**Related pull requests**
+## Related pull requests
+
 Link any related pull requests in other affected repositories:
 
 - [clearpath_common](https://github.com/clearpathrobotics/clearpath_common)
@@ -17,17 +22,20 @@ Link any related pull requests in other affected repositories:
 - [clearpath_generator_tests](https://github.com/clearpathrobotics/clearpath_generator_tests)
 - [cpr-documentation](https://github.com/clearpathrobotics/cpr-documentation)
 
-**Type of change**
+## Type of change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation
 - [ ] Other (please describe):
 
-**How has this been tested?**
+## How has this been tested?
+
 Describe how you verified the change, including whether you used real hardware or the simulator, the platform, and the ROS 2 distro.
 
-**Checklist**
+## Checklist
+
 - [ ] I have read and followed the [contributing guidelines](CONTRIBUTING.md)
 - [ ] The workspace builds (`colcon build`)
 - [ ] Tests pass (`colcon test`)
