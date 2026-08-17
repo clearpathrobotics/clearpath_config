@@ -236,6 +236,7 @@ class BaseCamera(BaseSensor):
 class IntelRealsense(BaseCamera):
     SENSOR_MODEL = 'intel_realsense'
 
+    D405 = 'd405'
     D415 = 'd415'
     D435 = 'd435'
     D435i = 'd435i'
@@ -243,6 +244,7 @@ class IntelRealsense(BaseCamera):
     D456 = 'd456'
     DEVICE_TYPE = D435
     DEVICE_TYPES = (
+        D405,
         D415,
         D435,
         D435i,
