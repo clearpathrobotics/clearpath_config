@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Provide a report for that the issue is
+about: Report a bug so we can reproduce and fix it
 title: ''
 labels: bug
 assignees: clearpathrobotics/clearpath-platform-team
@@ -14,6 +14,7 @@ assignees: clearpathrobotics/clearpath-platform-team
 - Built from source or installed:
 - Package version: (if from repository, give version from `sudo dpkg -s ros-$ROS_DISTRO-clearpath-config`, if from source, give commit hash)
 - Real hardware or simulation:
+- RMW implementation and networking setup: (e.g. `rmw_fastrtps_cpp`, `ROS_DOMAIN_ID`, discovery server)
 
 **Expected behaviour**
 A clear and concise description of what you expected to happen.
@@ -22,7 +23,6 @@ A clear and concise description of what you expected to happen.
 A clear and concise description of what you encountered.
 
 **To Reproduce**
-
 Provide the steps to reproduce:
 
 1. run something

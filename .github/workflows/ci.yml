@@ -21,7 +21,7 @@ jobs:
       - uses: 'ros-industrial/industrial_ci@master'
         env: ${{matrix.env}}
 
-  clearpath_config_src_ci:
+  source_build:
     name: Jazzy Clearpath Source
     runs-on: ubuntu-latest
     container:
@@ -32,3 +32,5 @@ jobs:
         id: action_ros_ci_step
         with:
           target-ros2-distro: jazzy
+          package-name: |
+            clearpath_config
