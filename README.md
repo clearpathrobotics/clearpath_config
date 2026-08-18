@@ -39,9 +39,9 @@ section and exposes typed accessors:
 | `system`        | `system/system.py`             | Hosts, networking, ROS domain, middleware.            |
 | `platform`      | `platform/platform.py`         | Base platform model, controllers, extras.             |
 | `links`         | `links/links.py`               | Static coordinate frames added by the user.           |
-| `manipulators`  | `manipulators/manipulators.py` | Arms, grippers, and lifts.                             |
+| `manipulators`  | `manipulators/manipulators.py` | Arms, grippers, and lifts.                            |
 | `mounts`        | `mounts/mounts.py`             | Physical mounting hardware for sensors/accessories.   |
-| `sensors`       | `sensors/sensors.py`           | Cameras, lidars, IMUs, GPS, etc.                       |
+| `sensors`       | `sensors/sensors.py`           | Cameras, lidars, IMUs, GPS, etc.                      |
 
 Shared plumbing (base classes, YAML read/write, type helpers) lives under
 [`clearpath_config/common/`](clearpath_config/common). Use `read_yaml`/`write_yaml` from
