@@ -241,11 +241,29 @@ class BaseCamera(BaseSensor):
 class IntelRealsense(BaseCamera):
     SENSOR_MODEL = "intel_realsense"
 
+<<<<<<< HEAD
     D415 = "d415"
     D435 = "d435"
     D435i = "d435i"
     DEVICE_TYPE = D435
     DEVICE_TYPES = [D415, D435, D435i]
+=======
+    D405 = 'd405'
+    D415 = 'd415'
+    D435 = 'd435'
+    D435i = 'd435i'
+    D455 = 'd455'
+    D456 = 'd456'
+    DEVICE_TYPE = D435
+    DEVICE_TYPES = (
+        D405,
+        D415,
+        D435,
+        D435i,
+        D455,
+        D456,
+    )
+>>>>>>> 3972c6c (Add Realsense d405 as option (#251))
 
     COLOR_ENABLED = True
     COLOR_FPS = 30
