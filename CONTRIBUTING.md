@@ -88,6 +88,23 @@ Before merging, ensure a corresponding branch with the **same name** exists in
 [Development Workflow](https://github.com/clearpathrobotics/clearpath_generator_tests#development-workflow)
 section of that repository for the full process.
 
+## Continuous integration
+
+Two workflows run on every pull request:
+
+- [`clearpath_config_ci`](.github/workflows/ci.yml) — a ROS build/test (`build_and_test` against
+  the released `testing`/`main` repos, plus a `source_build` of `clearpath_config`).
+- [`Clearpath Config Python Package`](.github/workflows/python-package.yml) — `flake8` linting and
+  `pytest`.
+
+`clearpath_config` sits at the **root** of the stack, so its own CI does not pull in upstream source
+branches — every job here depends only on this repository and should pass on its own. Upstream
+changes matter **downstream**: a change to config structure, defaults, or samples can alter the
+output of the Clearpath generators. That is validated by the `clearpath_generator_tests` CI, which
+pulls the matching-named branch from this repository. Expect those downstream generator tests to
+**fail** until a branch with the **same name** and regenerated samples exists in
+`clearpath_generator_tests` (see [Generator tests](#generator-tests) above).
+
 ## Submitting a pull request
 
 1. Make sure `pre-commit run --all-files` and `python3 -m pytest` both pass.
