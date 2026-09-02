@@ -380,3 +380,152 @@ class OusterOS1(BaseLidar3D):
     def cap_type(self, cap):
         assert cap in self.CAP_TYPES, f'Cap type {cap} must be one of {self.CAP_TYPES}'
         self._cap_type = cap
+<<<<<<< HEAD
+=======
+
+
+class SeyondLidar(BaseLidar3D):
+    """
+    The Seyond Robin W.
+
+    At present this lidar us URDF-only; launch files are handled by OutdoorNav
+    """
+
+    SENSOR_MODEL = 'seyond_lidar'
+
+    FRAME_ID = 'seyond'
+    IP_PORT = 0  # not used at present
+
+    ROBIN_W = 'robin_w'
+    DEVICE_TYPE = ROBIN_W
+    DEVICE_TYPES = (
+        ROBIN_W
+    )
+
+    class ROS_PARAMETER_KEYS:
+        FRAME_ID = 'seyond_driver.frame_id'
+        IP_ADDRESS = 'seyond_driver.device_ip'
+        IP_PORT = 'seyond_driver.port'
+
+    def __init__(
+            self,
+            idx: int = None,
+            name: str = None,
+            topic: str = BaseLidar3D.TOPIC,
+            frame_id: str = FRAME_ID,
+            ip: str = BaseLidar3D.IP_ADDRESS,  # not used
+            port: int = IP_PORT,  # not used
+            device_type: str = DEVICE_TYPE,
+            urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+            launch_enabled: bool = False,  # URDF-only for now
+            ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+            parent: str = Accessory.PARENT,
+            xyz: List[float] = Accessory.XYZ,
+            rpy: List[float] = Accessory.RPY
+            ) -> None:
+        # Device Type:
+        self.device_type = device_type
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: SeyondLidar.frame_id,
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: SeyondLidar.ip,
+            self.ROS_PARAMETER_KEYS.IP_PORT: SeyondLidar.port,
+        }
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            ip,
+            port,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy
+        )
+
+    @property
+    def device_type(self) -> str:
+        return self._device_type
+
+    @device_type.setter
+    def device_type(self, device_type: str) -> None:
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(f'Device type "{device_type}" is not one of "{self.DEVICE_TYPES}"')
+        self._device_type = device_type
+
+
+class HesaiLidar(BaseLidar3D):
+    """
+    The Hesai Lidar.
+
+    At present only the XT32 model is supported.
+    """
+
+    SENSOR_MODEL = 'hesai_lidar'
+
+    FRAME_ID = 'hesai'
+    IP_PORT = 0  # not used at present
+
+    XT32 = 'xt32'
+    DEVICE_TYPE = XT32
+    DEVICE_TYPES = XT32
+
+    class ROS_PARAMETER_KEYS:
+        FRAME_ID = 'hesai_driver.frame_id'
+        IP_ADDRESS = 'hesai_driver.device_ip'
+        IP_PORT = 'hesai_driver.port'
+
+    def __init__(
+        self,
+        idx: int = None,
+        name: str = None,
+        topic: str = BaseLidar3D.TOPIC,
+        frame_id: str = FRAME_ID,
+        ip: str = BaseLidar3D.IP_ADDRESS,  # not used
+        port: int = IP_PORT,  # not used
+        device_type: str = DEVICE_TYPE,
+        urdf_enabled: bool = BaseSensor.URDF_ENABLED,
+        launch_enabled: bool = False,  # URDF-only for now
+        ros_parameters: str = BaseSensor.ROS_PARAMETERS,
+        parent: str = Accessory.PARENT,
+        xyz: list[float] = Accessory.XYZ,
+        rpy: list[float] = Accessory.RPY,
+    ) -> None:
+        # Device Type:
+        self.device_type = device_type
+        # ROS Parameter Template
+        ros_parameters_template = {
+            self.ROS_PARAMETER_KEYS.FRAME_ID: HesaiLidar.frame_id,
+            self.ROS_PARAMETER_KEYS.IP_ADDRESS: HesaiLidar.ip,
+            self.ROS_PARAMETER_KEYS.IP_PORT: HesaiLidar.port,
+        }
+        super().__init__(
+            idx,
+            name,
+            topic,
+            frame_id,
+            ip,
+            port,
+            urdf_enabled,
+            launch_enabled,
+            ros_parameters,
+            ros_parameters_template,
+            parent,
+            xyz,
+            rpy,
+        )
+
+    @property
+    def device_type(self) -> str:
+        return self._device_type
+
+    @device_type.setter
+    def device_type(self, device_type: str) -> None:
+        if device_type not in self.DEVICE_TYPES:
+            raise ValueError(f'Device type "{device_type}" is not one of "{self.DEVICE_TYPES}"')
+        self._device_type = device_type
+>>>>>>> a5f9101 (Feature: Add Support for Hesai Lidar (#250))

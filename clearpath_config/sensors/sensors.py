@@ -61,6 +61,7 @@ from clearpath_config.sensors.types.lidars_2d import (
 )
 from clearpath_config.sensors.types.lidars_3d import (
     BaseLidar3D,
+    HesaiLidar,
     OusterOS1,
     VelodyneLidar,
 )
@@ -177,11 +178,19 @@ class Lidar2D():
 
 class Lidar3D():
     VELODYNE_LIDAR = VelodyneLidar.SENSOR_MODEL
+<<<<<<< HEAD
     OUSTER_OS1 = OusterOS1.SENSOR_MODEL
+=======
+    HESAI_LIDAR = HesaiLidar.SENSOR_MODEL
+>>>>>>> a5f9101 (Feature: Add Support for Hesai Lidar (#250))
 
     MODEL = {
         VELODYNE_LIDAR: VelodyneLidar,
+<<<<<<< HEAD
         OUSTER_OS1: OusterOS1,
+=======
+        HESAI_LIDAR: HesaiLidar,
+>>>>>>> a5f9101 (Feature: Add Support for Hesai Lidar (#250))
     }
 
     @classmethod
