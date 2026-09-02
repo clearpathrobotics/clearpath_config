@@ -480,6 +480,25 @@ sensors:
           port: 2111
 
   lidar3d:
+    # Hesai LiDAR
+    - model: hesai_lidar
+      urdf_enabled: true
+      launch_enabled: true
+      parent: lidar3d_row_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        hesai_driver:
+          config_path: /path/to/hesai/config/file0.yaml
+    - model: hesai_lidar
+      urdf_enabled: true
+      launch_enabled: true
+      parent: lidar3d_row_link
+      xyz: [0.1, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ros_parameters:
+        hesai_driver:
+          config_path: /path/to/hesai/config/file1.yaml
     # Ouster OS1
     - model: ouster_os1
       urdf_enabled: true
