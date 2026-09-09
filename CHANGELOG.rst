@@ -2,6 +2,19 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feature: Add Support for Hesai Lidar (`#250 <https://github.com/clearpathrobotics/clearpath_config/issues/250>`_)
+* Add Realsense d405 as option (`#251 <https://github.com/clearpathrobotics/clearpath_config/issues/251>`_)
+* Added notes about the CI. (`#253 <https://github.com/clearpathrobotics/clearpath_config/issues/253>`_)
+* Fix: Merge Dict (`#246 <https://github.com/clearpathrobotics/clearpath_config/issues/246>`_)
+  Recursively apply priority in dictionary merge
+* Bump https://github.com/igorshubovych/markdownlint-cli from v0.44.0 to 0.49.1 (`#248 <https://github.com/clearpathrobotics/clearpath_config/issues/248>`_)
+* Bump https://github.com/PyCQA/flake8 from 7.1.2 to 7.3.0 (`#247 <https://github.com/clearpathrobotics/clearpath_config/issues/247>`_)
+* Bump https://github.com/pre-commit/pre-commit-hooks from v5.0.0 to 6.0.0 (`#249 <https://github.com/clearpathrobotics/clearpath_config/issues/249>`_)
+* Added PR template, updated issue template and README. (`#245 <https://github.com/clearpathrobotics/clearpath_config/issues/245>`_)
+* Contributors: Tony Baltovski, dependabot[bot], luis-camero, mibrahim-cpr
+
 2.9.6 (2026-08-07)
 ------------------
 * Updated default robot.yaml samples to include the joy controller. (`#243 <https://github.com/clearpathrobotics/clearpath_config/issues/243>`_)
