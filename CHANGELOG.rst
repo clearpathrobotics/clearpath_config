@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.9.7 (2026-09-09)
+------------------
 * Feature: Add Support for Hesai Lidar (`#250 <https://github.com/clearpathrobotics/clearpath_config/issues/250>`_)
 * Add Realsense d405 as option (`#251 <https://github.com/clearpathrobotics/clearpath_config/issues/251>`_)
 * Added notes about the CI. (`#253 <https://github.com/clearpathrobotics/clearpath_config/issues/253>`_)
