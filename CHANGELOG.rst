@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.3.4 (2026-09-09)
+------------------
 * Fix: Merge Dict (`#246 <https://github.com/clearpathrobotics/clearpath_config/issues/246>`_) (`#252 <https://github.com/clearpathrobotics/clearpath_config/issues/252>`_)
 * [Humble] Changed to rostooling/setup-ros-docker:ubuntu-noble-latest for CI image. (`#217 <https://github.com/clearpathrobotics/clearpath_config/issues/217>`_)
 * Contributors: mergify[bot]
