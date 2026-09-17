@@ -2,6 +2,12 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Feature: Franka V2 (`#256 <https://github.com/clearpathrobotics/clearpath_config/issues/256>`_)
+  Update config entries with new URDF parameters
+* Contributors: luis-camero
+
 2.9.7 (2026-09-09)
 ------------------
 * Feature: Add Support for Hesai Lidar (`#250 <https://github.com/clearpathrobotics/clearpath_config/issues/250>`_)
