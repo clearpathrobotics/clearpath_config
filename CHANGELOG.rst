@@ -2,8 +2,8 @@
 Changelog for package clearpath_config
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.9.8 (2026-09-17)
+------------------
 * Feature: Franka V2 (`#256 <https://github.com/clearpathrobotics/clearpath_config/issues/256>`_)
   Update config entries with new URDF parameters
 * Contributors: luis-camero
