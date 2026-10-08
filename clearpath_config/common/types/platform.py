@@ -42,13 +42,24 @@ class IndexingProfile:
             gps: int = 0,
             imu: int = 0,
             lidar2d: int = 0,
+<<<<<<< HEAD
             lidar3d: int = 0
+=======
+            lidar3d: int = 0,
+            ins: int = 0,
+            ptu: int = 0,
+>>>>>>> 6fada9d (Feature: PTU (#222))
             ) -> None:
         self.camera = camera
         self.gps = gps
         self.imu = imu
         self.lidar2d = lidar2d
         self.lidar3d = lidar3d
+<<<<<<< HEAD
+=======
+        self.ins = ins
+        self.ptu = ptu
+>>>>>>> 6fada9d (Feature: PTU (#222))
 
 
 # Platform

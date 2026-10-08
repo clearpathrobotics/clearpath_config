@@ -1,0 +1,21 @@
+serial_number: a300-0000
+version: 0
+platform:
+  mcu:
+    protocol: proton
+sensors:
+  ptu:
+    - model: flir_ptu
+      urdf_enabled: true
+      launch_enabled: true
+      parent: default_mount
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, 0.0]
+      ptu_model: ptu5
+      ros_parameters:
+        ptu_driver:
+          connection_type: tcp
+          ip_addr: 192.168.131.70
+          tcp_port: 4000
+          port: /dev/ptu
+          limits_enabled: false
