@@ -179,6 +179,10 @@ class CANAdapterListConfig(ListConfig[PhysicalCANAdapter, str]):
         )
 
 
+# Platforms whose vcan0 defaults apply only if enable_mcu_can_bridge is explicitly true
+MCU_CAN_BRIDGE_OPT_IN = [Platform.W200]
+
+
 class CANAdapterConfig:
     VCAN0_DEFAULT = {
         'type': VirtualCANAdapter.TYPE,
@@ -204,7 +208,7 @@ class CANAdapterConfig:
         Platform.GENERIC: [],
         Platform.J100: [],
         Platform.R100: [VCAN0_DEFAULT],
-        Platform.W200: [],
+        Platform.W200: [VCAN0_DEFAULT],
     }
 
     def __init__(
@@ -234,9 +238,12 @@ class CANAdapterConfig:
             adapter.from_dict(d)
             self._can_adapters.set(adapter)
 
-    def update(self, serial_number: bool = False) -> None:
-        if serial_number:
-            self.config = self.DEFAULTS[BaseConfig.get_platform_model()]
+    def update(self, serial_number: bool = False, mcu_can_bridge: bool = None) -> None:
+        model = BaseConfig.get_platform_model()
+        # Unset keeps the platform defaults, except opt-in platforms; false uses can0 directly
+        if serial_number and (
+                mcu_can_bridge or (mcu_can_bridge is None and model not in MCU_CAN_BRIDGE_OPT_IN)):
+            self.config = self.DEFAULTS[model]
 
 
 class CANBridge:
@@ -407,7 +414,7 @@ class CANBridgeConfig:
         Platform.GENERIC: [],
         Platform.J100: [],
         Platform.R100: SINGLE_VCAN_DEFAULT,
-        Platform.W200: [],
+        Platform.W200: SINGLE_VCAN_DEFAULT,
     }
 
     def __init__(
@@ -435,6 +442,13 @@ class CANBridgeConfig:
             bridge.from_dict(b)
             self._can_bridges.set(bridge)
 
-    def update(self, serial_number: bool = False) -> None:
+    def update(self, serial_number: bool = False, mcu_can_bridge: bool = None) -> None:
         if serial_number:
-            self.config = self.DEFAULTS[BaseConfig.get_platform_model()]
+            model = BaseConfig.get_platform_model()
+            defaults = self.DEFAULTS[model]
+            if mcu_can_bridge is None and model in MCU_CAN_BRIDGE_OPT_IN:
+                defaults = []
+            elif mcu_can_bridge is False:
+                # Redirect the default vcan bridge to the physical can0
+                defaults = [{**d, CANBridge.INTERFACE: 'can0'} for d in defaults[:1]]
+            self.config = defaults
