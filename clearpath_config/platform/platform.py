@@ -104,6 +104,7 @@ class PlatformConfig(BaseConfig):
 
     CONTROLLER = 'controller'
     ATTACHMENTS = 'attachments'
+    ENABLE_MCU_CAN_BRIDGE = 'enable_mcu_can_bridge'
     CAN_ADAPTERS = 'can_adapters'
     CAN_BRIDGES = 'can_bridges'
 
@@ -138,6 +139,7 @@ class PlatformConfig(BaseConfig):
         PLATFORM: {
             CONTROLLER: CONTROLLER,
             ATTACHMENTS: ATTACHMENTS,
+            ENABLE_MCU_CAN_BRIDGE: ENABLE_MCU_CAN_BRIDGE,
             CAN_ADAPTERS: CAN_ADAPTERS,
             CAN_BRIDGES: CAN_BRIDGES,
             EXTRAS: EXTRAS,
@@ -160,6 +162,7 @@ class PlatformConfig(BaseConfig):
         # PLATFORM
         CONTROLLER: PS4,
         ATTACHMENTS: {},
+        ENABLE_MCU_CAN_BRIDGE: None,
         CAN_ADAPTERS: {},
         CAN_BRIDGES: {},
         EXTRAS: ExtrasConfig.DEFAULTS,
@@ -180,6 +183,7 @@ class PlatformConfig(BaseConfig):
             config: dict = {},
             controller: str = DEFAULTS[CONTROLLER],
             attachments: dict = DEFAULTS[ATTACHMENTS],
+            enable_mcu_can_bridge: bool = DEFAULTS[ENABLE_MCU_CAN_BRIDGE],
             can_adapters: dict = DEFAULTS[CAN_ADAPTERS],
             can_bridges: dict = DEFAULTS[CAN_BRIDGES],
             battery: dict = DEFAULTS[BATTERY],
@@ -195,6 +199,7 @@ class PlatformConfig(BaseConfig):
         self._config = {}
         self.controller = controller
         self.attachments = attachments
+        self.enable_mcu_can_bridge = enable_mcu_can_bridge
         self.can_adapters = can_adapters
         self.can_bridges = can_bridges
         self._battery = BatteryConfig(battery)
@@ -217,6 +222,7 @@ class PlatformConfig(BaseConfig):
         setters = {
             self.KEYS[self.CONTROLLER]: PlatformConfig.controller,
             self.KEYS[self.ATTACHMENTS]: PlatformConfig.attachments,
+            self.KEYS[self.ENABLE_MCU_CAN_BRIDGE]: PlatformConfig.enable_mcu_can_bridge,
             self.KEYS[self.CAN_ADAPTERS]: PlatformConfig.can_adapters,
             self.KEYS[self.CAN_BRIDGES]: PlatformConfig.can_bridges,
             self.KEYS[self.BATTERY]: PlatformConfig.battery,
@@ -259,8 +265,10 @@ class PlatformConfig(BaseConfig):
                 self.template = template
             # Reload battery
             self.battery.update(serial_number=serial_number)
-            self.can_adapters.update(serial_number=serial_number)
-            self.can_bridges.update(serial_number=serial_number)
+            self.can_adapters.update(
+                serial_number=serial_number, mcu_can_bridge=self._mcu_can_bridge_enabled)
+            self.can_bridges.update(
+                serial_number=serial_number, mcu_can_bridge=self._mcu_can_bridge_enabled)
             self.drivetrain.update(serial_number=serial_number)
 
     @property
@@ -291,6 +299,29 @@ class PlatformConfig(BaseConfig):
             self.get_platform_model(), value)
 
     @property
+    def enable_mcu_can_bridge(self) -> bool | None:
+        # Only written to the config when explicitly specified
+        if self._enable_mcu_can_bridge is not None:
+            self.set_config_param(
+                key=self.KEYS[self.ENABLE_MCU_CAN_BRIDGE],
+                value=self._enable_mcu_can_bridge
+            )
+        return self._enable_mcu_can_bridge
+
+    @property
+    def _mcu_can_bridge_enabled(self) -> bool | None:
+        # None (unspecified) lets the platform decide its defaults
+        return self._enable_mcu_can_bridge
+
+    @enable_mcu_can_bridge.setter
+    def enable_mcu_can_bridge(self, value: bool) -> None:
+        self._enable_mcu_can_bridge = value
+        # Regenerate platform defaults for the new mode
+        if hasattr(self, '_can_adapters'):
+            self.can_adapters = {}
+            self.can_bridges = {}
+
+    @property
     def can_adapters(self) -> CANAdapterConfig:
         self.set_config_param(
             key=self.KEYS[self.CAN_ADAPTERS],
@@ -301,7 +332,7 @@ class PlatformConfig(BaseConfig):
     @can_adapters.setter
     def can_adapters(self, value: dict) -> None:
         self._can_adapters = CANAdapterConfig()
-        self._can_adapters.update(True)
+        self._can_adapters.update(True, self._mcu_can_bridge_enabled)
         self._can_adapters.config = value
 
     @property
@@ -315,7 +346,7 @@ class PlatformConfig(BaseConfig):
     @can_bridges.setter
     def can_bridges(self, value: dict) -> None:
         self._can_bridges = CANBridgeConfig()
-        self._can_bridges.update(True)
+        self._can_bridges.update(True, self._mcu_can_bridge_enabled)
         self._can_bridges.config = value
 
     @property
