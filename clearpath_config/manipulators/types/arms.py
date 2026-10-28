@@ -245,15 +245,21 @@ class UniversalRobots(BaseArm):
     UR3E = 'ur3e'
     UR5 = 'ur5'
     UR5E = 'ur5e'
+    UR7E = 'ur7e'
+    UR8_LONG = 'ur8long'
     UR10 = 'ur10'
     UR10E = 'ur10e'
+    UR12E = 'ur12e'
     UR15 = 'ur15'
     UR16E = 'ur16e'
     UR20 = 'ur20'
     UR20E = 'ur20e'
     UR30 = 'ur30'
     DEFAULT_UR_TYPE = UR5E
-    UR_TYPES = [UR3, UR3E, UR5, UR5E, UR10, UR10E, UR15, UR16E, UR20, UR20E, UR30]
+    UR_TYPES = [
+        UR3, UR3E, UR5, UR5E, UR7E, UR8_LONG, UR10, UR10E, UR12E,
+        UR15, UR16E, UR20, UR20E, UR30
+    ]
 
     # URDF Parameters
     URDF_PARAMETERS = {
