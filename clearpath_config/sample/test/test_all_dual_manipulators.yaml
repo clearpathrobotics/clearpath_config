@@ -26,6 +26,8 @@ links:
       xyz: [0.0, 0.0, 0.0]
     - name: ur_row_2
       xyz: [0.0, -2.0, 0.0]
+    - name: ur_row_3
+      xyz: [0.0, -4.0, 0.0]
 
 manipulators:
   lifts:
@@ -359,6 +361,75 @@ manipulators:
       xyz: [5.0, 0.0, 0.0]
       rpy: [0.0, 0.0, -1.5707]
       ur_type: ur30
+      robot_ip: 192.168.131.40
+      gripper:
+        model: robotiq_2f_140
+    # UR7e
+    - model: universal_robots
+      parent: ur_row_3_link
+      xyz: [0.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, -1.5707]
+      ur_type: ur7e
+      robot_ip: 192.168.131.40
+    - model: universal_robots
+      parent: ur_row_3_link
+      xyz: [0.5, 0.0, 0.0]
+      rpy: [0.0, 0.0, -1.5707]
+      ur_type: ur7e
+      robot_ip: 192.168.131.40
+      gripper:
+        model: robotiq_2f_85
+    - model: universal_robots
+      parent: ur_row_3_link
+      xyz: [1.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, -1.5707]
+      ur_type: ur7e
+      robot_ip: 192.168.131.40
+      gripper:
+        model: robotiq_2f_140
+    # UR8 Long
+    - model: universal_robots
+      parent: ur_row_3_link
+      xyz: [2.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, -1.5707]
+      ur_type: ur8long
+      robot_ip: 192.168.131.40
+    - model: universal_robots
+      parent: ur_row_3_link
+      xyz: [2.5, 0.0, 0.0]
+      rpy: [0.0, 0.0, -1.5707]
+      ur_type: ur8long
+      robot_ip: 192.168.131.40
+      gripper:
+        model: robotiq_2f_85
+    - model: universal_robots
+      parent: ur_row_3_link
+      xyz: [3.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, -1.5707]
+      ur_type: ur8long
+      robot_ip: 192.168.131.40
+      gripper:
+        model: robotiq_2f_140
+    # UR12e
+    - model: universal_robots
+      parent: ur_row_3_link
+      xyz: [4.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, -1.5707]
+      ur_type: ur12e
+      robot_ip: 192.168.131.40
+    - model: universal_robots
+      parent: ur_row_3_link
+      xyz: [4.5, 0.0, 0.0]
+      rpy: [0.0, 0.0, -1.5707]
+      ur_type: ur12e
+      robot_ip: 192.168.131.40
+      gripper:
+        model: robotiq_2f_85
+    - model: universal_robots
+      parent: ur_row_3_link
+      xyz: [5.0, 0.0, 0.0]
+      rpy: [0.0, 0.0, -1.5707]
+      ur_type: ur12e
       robot_ip: 192.168.131.40
       gripper:
         model: robotiq_2f_140
