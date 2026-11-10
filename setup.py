@@ -54,6 +54,7 @@ setup(
         package_name + '.mounts.types',
         package_name + '.platform',
         package_name + '.platform.attachments',
+        package_name + '.platform.definitions',
         package_name + '.platform.types',
         package_name + '.sensors',
         package_name + '.sensors.types',

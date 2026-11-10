@@ -1,0 +1,68 @@
+# Software License Agreement (BSD)
+#
+# @author    Luis Camero <lcamero@clearpathrobotics.com>
+# @copyright (c) 2023, Clearpath Robotics, Inc., All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+# * Redistributions of source code must retain the above copyright notice,
+#   this list of conditions and the following disclaimer.
+# * Redistributions in binary form must reproduce the above copyright notice,
+#   this list of conditions and the following disclaimer in the documentation
+#   and/or other materials provided with the distribution.
+# * Neither the name of Clearpath Robotics nor the names of its contributors
+#   may be used to endorse or promote products derived from this software
+#   without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+# POSSIBILITY OF SUCH DAMAGE.
+from clearpath_config.common.types.platform import (
+    IndexingProfile,
+    PACSProfile,
+    Platform,
+)
+from clearpath_config.platform.attachments.w200 import (
+    W200ArmPlate,
+    W200Bulkhead,
+    W200Generator,
+)
+from clearpath_config.platform.battery import BatteryConfig
+from clearpath_config.platform.drivetrain import DrivetrainConfig
+from clearpath_config.platform.platform import BasePlatformConfig
+
+
+class W200PlatformConfig(BasePlatformConfig):
+    NAME = 'w200'
+    PACS = PACSProfile(rows=100, columns=100)
+    INDEXING = IndexingProfile(imu=1)
+    VALID_BATTERIES = {
+        BatteryConfig.U1_35: [BatteryConfig.S4P3],
+        BatteryConfig.NEC_ALM12V35: [BatteryConfig.S4P3],
+        BatteryConfig.VALENCE_U24_12XP: [BatteryConfig.S4P1],
+        BatteryConfig.VALENCE_U27_12XP: [BatteryConfig.S4P1],
+    }
+    VALID_DRIVETRAIN = {
+        DrivetrainConfig.CONTROL: [DrivetrainConfig.DIFF_4WD],
+        DrivetrainConfig.WHEELS: {
+            DrivetrainConfig.FRONT: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.TRACKS],
+            DrivetrainConfig.REAR: [DrivetrainConfig.OUTDOOR, DrivetrainConfig.TRACKS],
+        },
+    }
+    DEFAULT_CAN_ADAPTERS = []
+    DEFAULT_CAN_BRIDGES = []
+    DEFAULT_ATTACHMENTS = []
+
+
+Platform.register(W200PlatformConfig)
+W200PlatformConfig.register_attachment(W200Generator)
+W200PlatformConfig.register_attachment(W200Bulkhead)
+W200PlatformConfig.register_attachment(W200ArmPlate)

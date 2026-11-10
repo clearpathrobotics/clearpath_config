@@ -29,7 +29,6 @@ from typing import List
 
 from clearpath_config.common.types.config import BaseConfig
 from clearpath_config.common.types.package_path import PackagePath
-from clearpath_config.common.types.platform import Platform
 from clearpath_config.common.utils.dictionary import (
     flatten_dict,
     flip_dict,
@@ -149,21 +148,21 @@ class ROSParameterDefaults:
     }
 
     DEFAULTS = {
-        Platform.A200: A200,
-        Platform.A300: A300,
-        Platform.DD100: DD100,
-        Platform.DO100: DO100,
-        Platform.DD150: DD150,
-        Platform.DO150: DO150,
-        Platform.J100: J100,
-        Platform.GENERIC: GENERIC,
-        Platform.R100: R100,
-        Platform.W200: W200,
+        'a200': A200,
+        'a300': A300,
+        'dd100': DD100,
+        'do100': DO100,
+        'dd150': DD150,
+        'do150': DO150,
+        'j100': J100,
+        'generic': GENERIC,
+        'r100': R100,
+        'w200': W200,
     }
 
     def __new__(cls, platform: str) -> dict:
-        if platform not in Platform.ALL:
-            raise ValueError(f'Platform {platform} must be one of {Platform.ALL}')
+        if platform not in cls.DEFAULTS:
+            raise ValueError(f'Platform {platform} must be one of {list(cls.DEFAULTS.keys())}')
         return cls.DEFAULTS[platform]
 
 

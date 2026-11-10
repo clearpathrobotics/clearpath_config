@@ -28,12 +28,10 @@
 from typing import List
 
 from clearpath_config.common.types.accessory import Accessory
-from clearpath_config.common.types.platform import Platform
 
 
 class BaseAttachment(Accessory):
-    PLATFORM = Platform.GENERIC
-    ATTACHMENT_MODEL = '%s.attachment' % PLATFORM
+    TYPE = 'attachment'
     ENABLED = True
     # Models
     DEFAULT = 'default'
@@ -41,7 +39,7 @@ class BaseAttachment(Accessory):
 
     def __init__(
             self,
-            name: str = ATTACHMENT_MODEL,
+            name: str = TYPE,
             model: str = DEFAULT,
             enabled: bool = ENABLED,
             parent: str = ...,
@@ -86,7 +84,7 @@ class BaseAttachment(Accessory):
 
 
 class PlatformAttachment(BaseAttachment):
-    PLATFORM = Platform.GENERIC
+    PLATFORM = 'generic'
     TYPES = {}
 
     @classmethod

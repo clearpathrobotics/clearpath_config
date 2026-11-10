@@ -54,10 +54,10 @@ class AttachmentsConfig:
 
     def __init__(
             self,
-            attachment,
+            platform_cls,
             config: dict = {}
             ) -> None:
-        self._attach_type = attachment
+        self._platform_cls = platform_cls
         self._attachments = AttachmentListConfig()
         self.config = config
 
@@ -78,7 +78,8 @@ class AttachmentsConfig:
         self._attachments.remove_all()
         # Load New
         for a in attachments:
-            if self._attach_type.is_valid(a['type']):
-                attachment = self._attach_type(a['type'])()
+            if self._platform_cls.is_valid_attachment(a['type']):
+                att_cls = self._platform_cls.get_attachment_class(a['type'])
+                attachment = att_cls()
                 attachment.from_dict(a)
                 self._attachments.add(attachment)

@@ -134,11 +134,13 @@ class ManipulatorConfig(BaseConfig):
     MANIPULATORS = 'manipulators'
     ARMS = 'arms'
     LIFTS = 'lifts'
+    CONTROL_DELAY = 'control_delay'
     TEMPLATE = {
         MANIPULATORS: {
             MOVEIT: MOVEIT,
             ARMS: ARMS,
-            LIFTS: LIFTS
+            LIFTS: LIFTS,
+            CONTROL_DELAY: CONTROL_DELAY,
         }
     }
 
@@ -148,6 +150,7 @@ class ManipulatorConfig(BaseConfig):
         MOVEIT: MoveItConfig.DEFAULTS,
         ARMS: [],
         LIFTS: [],
+        CONTROL_DELAY: 1.0,
     }
 
     def __init__(
@@ -157,10 +160,12 @@ class ManipulatorConfig(BaseConfig):
         # List Initialization
         self._arms = ManipulatorListConfig()
         self._lifts = ManipulatorListConfig()
+        self._control_delay = self.DEFAULTS[self.CONTROL_DELAY]
         template = {
             self.KEYS[self.MOVEIT]: ManipulatorConfig.moveit,
             self.KEYS[self.ARMS]: ManipulatorConfig.arms,
-            self.KEYS[self.LIFTS]: ManipulatorConfig.lifts
+            self.KEYS[self.LIFTS]: ManipulatorConfig.lifts,
+            self.KEYS[self.CONTROL_DELAY]: ManipulatorConfig.control_delay,
         }
         super().__init__(template, config, self.MANIPULATORS)
 
@@ -222,6 +227,28 @@ class ManipulatorConfig(BaseConfig):
             lift.from_dict(d)
             lifts_list.append(lift)
         self._lifts.set_all(lifts_list)
+
+    @property
+    def control_delay(self) -> float:
+        self.set_config_param(
+            key=self.KEYS[self.CONTROL_DELAY],
+            value=self._control_delay
+        )
+        return self._control_delay
+
+    @control_delay.setter
+    def control_delay(self, value: float) -> None:
+        try:
+            value = float(value)
+        except (TypeError, ValueError):
+            raise TypeError(
+                f'Manipulators control_delay must be a number. Got {value}'
+            )
+        if value < 0.0:
+            raise ValueError(
+                f'Manipulators control_delay must be greater than or equal to 0.0. Got {value}'
+            )
+        self._control_delay = value
 
     def get_all_manipulators(self) -> List[BaseManipulator]:
         manipulators = []
