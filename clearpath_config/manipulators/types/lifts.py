@@ -61,7 +61,7 @@ class Ewellix(BaseLift):
     INITIAL_POSITIONS = 'initial_positions'
     INITIAL_POSITIONS_FILE = 'initial_positions_file'
     GENERATE_ROS2_CONTROL_TAG = 'generate_ros2_control_tag'
-    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    USE_MOCK_HARDWARE = 'use_mock_hardware'
     SIM_IGNITION = 'sim_ignition'
     PORT = 'port'
     BAUD = 'baud'
@@ -78,7 +78,7 @@ class Ewellix(BaseLift):
         INITIAL_POSITIONS: '',
         INITIAL_POSITIONS_FILE: '',
         GENERATE_ROS2_CONTROL_TAG: '',
-        USE_FAKE_HARDWARE: '',
+        USE_MOCK_HARDWARE: '',
         SIM_IGNITION: '',
         PORT: '',
         BAUD: '',

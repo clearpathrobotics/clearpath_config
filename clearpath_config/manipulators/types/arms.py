@@ -142,9 +142,9 @@ class BaseKinova(BaseArm):
     GRIPPER_JOINT_NAME = 'gripper_joint_name'
     GRIPPER_MAX_VELOCITY = 'gripper_max_velocity'
     GRIPPER_MAX_FORCE = 'gripper_max_force'
-    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    USE_MOCK_HARDWARE = 'use_mock_hardware'
     USE_CONTROLLERS = 'use_controllers'
-    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    MOCK_SENSOR_COMMANDS = 'mock_sensor_commands'
     SIM_GAZEBO = 'sim_gazebo'
     SIM_IGNITION = 'sim_ignition'
     SIM_ISAAC = 'sim_isaac'
@@ -167,9 +167,9 @@ class BaseKinova(BaseArm):
         GRIPPER_JOINT_NAME: '',
         GRIPPER_MAX_VELOCITY: '',
         GRIPPER_MAX_FORCE: '',
-        USE_FAKE_HARDWARE: '',
+        USE_MOCK_HARDWARE: '',
         USE_CONTROLLERS: '',
-        FAKE_SENSOR_COMMANDS: '',
+        MOCK_SENSOR_COMMANDS: '',
         SIM_GAZEBO: '',
         SIM_IGNITION: '',
         SIM_ISAAC: '',
@@ -361,8 +361,8 @@ class Franka(BaseArm):
     GAZEBO = 'gazebo'
     ROS2_CONTROL = 'ros2_control'
     IP_ADDRESS = 'robot_ip'
-    USE_FAKE_HARDWARE = 'use_fake_hardware'
-    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    USE_MOCK_HARDWARE = 'use_mock_hardware'
+    MOCK_SENSOR_COMMANDS = 'mock_sensor_commands'
     GAZEBO_EFFORT = 'gazebo_effort'
     SAFETY_DISTANCE = 'safety_distance'
     WITH_SC = 'with_sc'
@@ -383,8 +383,8 @@ class Franka(BaseArm):
         ACCELEROMETER_CONFIG: '',
         ROS2_CONTROL: '',
         IP_ADDRESS: '',
-        USE_FAKE_HARDWARE: '',
-        FAKE_SENSOR_COMMANDS: '',
+        USE_MOCK_HARDWARE: '',
+        MOCK_SENSOR_COMMANDS: '',
         GAZEBO: '',
         GAZEBO_EFFORT: '',
         SAFETY_DISTANCE: '',

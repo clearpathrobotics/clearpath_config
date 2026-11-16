@@ -75,18 +75,18 @@ class Kinova2FLite(BaseGripper):
     MANIPULATOR_MODEL = 'kinova_2f_lite'
     JOINT_COUNT = 1
 
-    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    USE_MOCK_HARDWARE = 'use_mock_hardware'
     USE_CONTROLLERS = 'use_controllers'
-    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    MOCK_SENSOR_COMMANDS = 'mock_sensor_commands'
     SIM_IGNITION = 'sim_ignition'
     SIM_GAZEBO = 'sim_gazebo'
     SIM_ISAAC = 'sim_isaac'
     ISAAC_JOINT_COMMANDS = 'isaac_joint_commands'
     ISAAC_JOINT_STATES = 'isaac_joint_states'
     URDF_PARAMETERS = {
-        USE_FAKE_HARDWARE: '',
+        USE_MOCK_HARDWARE: '',
         USE_CONTROLLERS: '',
-        FAKE_SENSOR_COMMANDS: '',
+        MOCK_SENSOR_COMMANDS: '',
         SIM_IGNITION: '',
         SIM_GAZEBO: '',
         SIM_ISAAC: '',
@@ -99,9 +99,9 @@ class Robotiq2F85(BaseGripper):
     MANIPULATOR_MODEL = 'robotiq_2f_85'
     JOINT_COUNT = 1
 
-    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    USE_MOCK_HARDWARE = 'use_mock_hardware'
     USE_CONTROLLERS = 'use_controllers'
-    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    MOCK_SENSOR_COMMANDS = 'mock_sensor_commands'
     SIM_IGNITION = 'sim_ignition'
     SIM_GAZEBO = 'sim_gazebo'
     SIM_ISAAC = 'sim_isaac'
@@ -109,9 +109,9 @@ class Robotiq2F85(BaseGripper):
     ISAAC_JOINT_STATES = 'isaac_joint_states'
     COM_PORT = 'com_port'
     URDF_PARAMETERS = {
-        USE_FAKE_HARDWARE: '',
+        USE_MOCK_HARDWARE: '',
         USE_CONTROLLERS: '',
-        FAKE_SENSOR_COMMANDS: '',
+        MOCK_SENSOR_COMMANDS: '',
         SIM_IGNITION: '',
         SIM_GAZEBO: '',
         SIM_ISAAC: '',
@@ -124,9 +124,9 @@ class Robotiq2F85(BaseGripper):
 class Robotiq2F140(BaseGripper):
     MANIPULATOR_MODEL = 'robotiq_2f_140'
     JOINT_COUNT = 1
-    USE_FAKE_HARDWARE = 'use_fake_hardware'
+    USE_MOCK_HARDWARE = 'use_mock_hardware'
     USE_CONTROLLERS = 'use_controllers'
-    FAKE_SENSOR_COMMANDS = 'fake_sensor_commands'
+    MOCK_SENSOR_COMMANDS = 'mock_sensor_commands'
     SIM_IGNITION = 'sim_ignition'
     SIM_GAZEBO = 'sim_gazebo'
     SIM_ISAAC = 'sim_isaac'
@@ -135,9 +135,9 @@ class Robotiq2F140(BaseGripper):
     COM_PORT = 'com_port'
     PADDING = 'padding'
     URDF_PARAMETERS = {
-        USE_FAKE_HARDWARE: '',
+        USE_MOCK_HARDWARE: '',
         USE_CONTROLLERS: '',
-        FAKE_SENSOR_COMMANDS: '',
+        MOCK_SENSOR_COMMANDS: '',
         SIM_IGNITION: '',
         SIM_GAZEBO: '',
         SIM_ISAAC: '',
